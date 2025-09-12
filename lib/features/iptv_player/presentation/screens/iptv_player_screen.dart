@@ -4,12 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
-import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pusoo/shared/data/datasources/drift_database.dart';
 import 'package:video_player/video_player.dart';
-
-// https://github.com/iptv-org/iptv/blob/master/streams/id.m3u
 
 class IPTVPlayerScreen extends StatefulWidget {
   final ChannelData channel;
@@ -28,21 +25,6 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
   @override
   void initState() {
     super.initState();
-
-    // player.open(
-    //   Media(
-    //     'https://ott-balancer.tvri.go.id/live/eds/Nasional/hls/Nasional.m3u8',
-    //     httpHeaders: {'User-Agent': 'VLC/3.0.0 LibVLC/3.0.0'},
-    //   ),
-    // );
-
-    // Paksa landscape saat video dimulai
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.landscapeLeft,
-    //   DeviceOrientation.landscapeRight,
-    // ]);
-
-    // Ganti URL IPTV kamu di sini
 
     final List urls = (jsonDecode(widget.channel.streamUrl) as List<dynamic>);
 
@@ -68,31 +50,15 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
 
   @override
   void dispose() {
-    // _videoPlayerController.dispose();
-    // _chewieController?.dispose();
-    // _betterPlayerController.dispose();
-    // controller.player.dispose();
-    // player.dispose();
     _chewieController?.pause();
     _chewieController?.dispose();
     _videoPlayerController.pause();
     _videoPlayerController.dispose();
-
-    // Kembalikan ke portrait setelah keluar
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.portraitUp,
-    //   DeviceOrientation.portraitDown,
-    // ]);
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // if (!_videoPlayerController.value.isInitialized) {
-    //   return const Center(child: FProgress.circularIcon());
-    // }
-
     return FScaffold(
       header: FHeader.nested(
         title: Text("Pusoo IPTV"),
@@ -146,21 +112,6 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                   color: context.theme.colors.foreground,
-                  // image: DecorationImage(
-                  //   image: CachedNetworkImageProvider(
-                  //     channel['tvg-logo'],
-                  //     // placeholder: (_, __) =>
-                  //     //     const Center(child: FProgress.circularIcon()),
-                  //     // errorWidget: (_, __, ___) => Center(
-                  //     //   child: Icon(
-                  //     //     FIcons.imageOff,
-                  //     //     color: context.theme.colors.background.withAlpha(200),
-                  //     //     size: 40,
-                  //     //   ),
-                  //     // ),
-                  //     // fit: BoxFit.fitWidth,
-                  //   ),
-                  // ),
                 ),
                 clipBehavior: Clip.antiAlias,
                 child: CachedNetworkImage(imageUrl: channel.logo ?? ""),
@@ -190,60 +141,18 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
             ),
           ],
         ),
-        SizedBox.shrink(),
-
-        // showAds
-        //     ? Expanded(
-        //         child: Column(
-        //           children: [
-        //             Row(
-        //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //               children: [
-        //                 Text("Ads"),
-        //                 FButton.icon(
-        //                   onPress: () {
-        //                     setState(() {
-        //                       showAds = false;
-        //                     });
-        //                   },
-        //                   child: Icon(FIcons.x),
-        //                 ),
-        //               ],
-        //             ),
-        //             SizedBox(
-        //               height: 200,
-        //               width: double.infinity,
-        //               child: CachedNetworkImage(
-        //                 imageUrl: "https://placehold.co/400x600.png",
-        //                 placeholder: (_, __) =>
-        //                     const Center(child: FProgress.circularIcon()),
-        //                 errorWidget: (_, __, ___) => Center(
-        //                   child: Icon(
-        //                     FIcons.imageOff,
-        //                     color: context.theme.colors.background.withAlpha(
-        //                       200,
-        //                     ),
-        //                     size: 40,
-        //                   ),
-        //                 ),
-        //                 fit: BoxFit.fitHeight,
-        //               ),
-        //             ),
-        //             Gap(10),
-        //             SafeArea(
-        //               top: false,
-        //               child: Align(
-        //                 alignment: Alignment.centerRight,
-        //                 child: Text(
-        //                   "Ads by Lorem Ipsum Inc.",
-        //                   style: context.theme.typography.xs,
-        //                 ),
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //       )
-        //     : SizedBox.shrink(),
+        Expanded(
+          child: Center(
+            child: Text(
+              "No Information",
+              style: context.theme.typography.base.copyWith(
+                color: context.theme.colors.disable(
+                  context.theme.colors.foreground,
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
