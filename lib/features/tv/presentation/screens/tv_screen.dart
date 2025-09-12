@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +22,11 @@ class _TvScreenState extends State<TvScreen> {
   @override
   void initState() {
     super.initState();
+
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitDown,
+    // ]);
 
     loadM3U();
     // https://github.com/iptv-org/iptv/blob/master/streams/id.m3u
@@ -171,6 +177,8 @@ class _TvScreenState extends State<TvScreen> {
               await driftDb.delete(driftDb.channel).go();
 
               debugPrint("All rows has been deleted");
+
+              loadM3U();
             },
           ),
           FHeaderAction(
@@ -184,8 +192,21 @@ class _TvScreenState extends State<TvScreen> {
           ),
           FHeaderAction(
             icon: Icon(FIcons.plus),
-            onPress: () {
-              context.pushNamed(RouteName.addPlaylist.name);
+            onPress: () async {
+              final result = await context.pushNamed(
+                RouteName.addPlaylist.name,
+              );
+
+              if (result is bool && result) {
+                loadM3U();
+
+                showFToast(
+                  context: context,
+                  alignment: FToastAlignment.bottomCenter,
+                  title: const Text('Playlist Loaded'),
+                  description: const Text('Lorem ipsum dolor sit amet'),
+                );
+              }
             },
           ),
         ],
@@ -218,7 +239,7 @@ class _TvScreenState extends State<TvScreen> {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: context.theme.colors.border,
                               width: 1,
@@ -226,7 +247,7 @@ class _TvScreenState extends State<TvScreen> {
                             color: context.theme.colors.foreground,
                           ),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(10),
                             child: Stack(
                               children: [
                                 SizedBox(

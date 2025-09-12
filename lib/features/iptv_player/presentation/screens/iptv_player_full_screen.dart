@@ -1,24 +1,21 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 // import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:forui/forui.dart';
-import 'package:go_router/go_router.dart';
-import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/drift_database.dart';
 // import 'package:video_player/video_player.dart';
 
-class IPTVPlayerScreen extends StatefulWidget {
+class IPTVPlayerFullScreen extends StatefulWidget {
   final ChannelData channel;
-  const IPTVPlayerScreen({super.key, required this.channel});
+  const IPTVPlayerFullScreen({super.key, required this.channel});
 
   @override
-  State<IPTVPlayerScreen> createState() => _IPTVPlayerScreenState();
+  State<IPTVPlayerFullScreen> createState() => _IPTVPlayerFullScreenState();
 }
 
-class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
+class _IPTVPlayerFullScreenState extends State<IPTVPlayerFullScreen> {
   // late VideoPlayerController _videoPlayerController;
   // ChewieController? _chewieController;
 
@@ -32,6 +29,14 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
   void initState() {
     super.initState();
 
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.landscapeLeft,
+    //   DeviceOrientation.landscapeRight,
+    // ]);
+
+    // Sembunyikan status bar dan navigation bar
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
     final List urls = (jsonDecode(widget.channel.streamUrl) as List<dynamic>);
 
     debugPrint("urls.toString(): $urls");
@@ -41,12 +46,7 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
       hwAcc: HwAcc.full, // hardware acceleration
       autoPlay: true, // otomatis mulai
       options: VlcPlayerOptions(
-        // http: VlcHttpOptions([
-        //   // User-Agent modern, mirip browser / ExoPlayer
-        //   'user-agent=Mozilla/5.0 (Linux; Android 13; Pixel 7 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36',
-        // ]),
         extras: [
-          '--http-user-agent=Mozilla/5.0 (Linux; Android 13; Pixel 7 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36',
           '--network-caching=2000', // 2 detik buffer
           '--file-caching=2000',
           '--drop-late-frames',
@@ -54,7 +54,6 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
           '--avcodec-hw=any', // paksa hardware decoding jika tersedia
           '--no-sub-autodetect-file', // matikan deteksi subtitle otomatis
           '--no-stats', // matikan statistik untuk performa
-          '--http-continuous',
         ],
       ), // caching untuk streaming HLS
     );
@@ -84,6 +83,11 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
     // _videoPlayerController.pause();
     // _videoPlayerController.dispose();
 
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitDown,
+    // ]);
+
     _vlcController.stop();
     _vlcController.dispose();
     super.dispose();
@@ -96,30 +100,17 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
   }
 
   void _toggleFullscreen() {
-    context.pushNamed(RouteName.iptvPlayerFull.name, extra: widget.channel);
+    // _vlcController.
   }
 
   @override
   Widget build(BuildContext context) {
     return FScaffold(
-      header: FHeader.nested(
-        title: Text("Pusoo IPTV"),
-        prefixes: [
-          FHeaderAction.back(
-            onPress: () {
-              context.pop();
-            },
-          ),
-        ],
-      ),
+      childPad: false,
       // appBar: AppBar(title: const Text('Chewie IPTV Player')),
-      child: Column(
-        children: [
-          // AspectRatio(
-          //   aspectRatio: _videoPlayerController.value.aspectRatio,
-          //   child: Chewie(controller: _chewieController!),
-          // ),
-          Stack(
+      child: Expanded(
+        child: Center(
+          child: Stack(
             children: [
               VlcPlayer(
                 controller: _vlcController,
@@ -179,72 +170,8 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
                 ),
             ],
           ),
-
-          FDivider(),
-          Expanded(child: buildDescription(widget.channel)),
-        ],
+        ),
       ),
-    );
-  }
-
-  Widget buildDescription(ChannelData channel) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 10,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 10,
-          children: [
-            SizedBox(
-              width: 45,
-              height: 45,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  color: context.theme.colors.foreground,
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: CachedNetworkImage(imageUrl: channel.logo ?? ""),
-              ),
-            ),
-            Expanded(
-              child: Column(
-                spacing: 5,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    channel.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false,
-                  ),
-                  Text(
-                    channel.tvgId ?? channel.name,
-                    style: context.theme.typography.xs.copyWith(
-                      color: context.theme.colors.disable(
-                        context.theme.colors.foreground,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        Expanded(
-          child: Center(
-            child: Text(
-              "No Information",
-              style: context.theme.typography.base.copyWith(
-                color: context.theme.colors.disable(
-                  context.theme.colors.foreground,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

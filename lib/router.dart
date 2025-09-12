@@ -2,11 +2,19 @@ import 'package:go_router/go_router.dart';
 import 'package:pusoo/features/add_playlist/presentation/screens/add_playlist_screen.dart';
 import 'package:pusoo/features/detail/presentation/screens/detail_screen.dart';
 import 'package:pusoo/features/home/presentation/screens/home_screen.dart';
+import 'package:pusoo/features/iptv_player/presentation/screens/iptv_player_full_screen.dart';
 import 'package:pusoo/features/iptv_player/presentation/screens/iptv_player_screen.dart';
 import 'package:pusoo/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:pusoo/shared/data/datasources/drift_database.dart';
 
-enum RouteName { welcome, home, detail, iptvPlayer, addPlaylist }
+enum RouteName {
+  welcome,
+  home,
+  detail,
+  iptvPlayer,
+  iptvPlayerFull,
+  addPlaylist,
+}
 
 final List<GoRoute> defaultRouter = [
   GoRoute(
@@ -36,6 +44,13 @@ final List<GoRoute> defaultRouter = [
     name: RouteName.iptvPlayer.name,
     builder: (context, state) {
       return IPTVPlayerScreen(channel: state.extra as ChannelData);
+    },
+  ),
+  GoRoute(
+    path: '/iptv-player-full',
+    name: RouteName.iptvPlayerFull.name,
+    builder: (context, state) {
+      return IPTVPlayerFullScreen(channel: state.extra as ChannelData);
     },
   ),
 ];

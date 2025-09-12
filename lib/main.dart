@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
 import 'package:forui/forui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pusoo/router.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // inisialisasi binding
   // WidgetsFlutterBinding.ensureInitialized();
 
   // Wajib: inisialisasi MediaKit sebelum dipakai
   // MediaKit.ensureInitialized();
+
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]);
 
   runApp(ProviderScope(child: Application()));
 }

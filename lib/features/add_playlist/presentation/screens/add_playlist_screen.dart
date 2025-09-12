@@ -25,7 +25,7 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
   widget.Widget build(widget.BuildContext context) {
     final nameController = useTextEditingController();
     final urlController = useTextEditingController(
-      // text: "https://iptv-org.github.io/iptv/languages/ind.m3u",
+      text: "https://iptv-org.github.io/iptv/languages/ind.m3u",
     );
 
     return FScaffold(
@@ -34,7 +34,7 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
         prefixes: [
           FHeaderAction.back(
             onPress: () {
-              context.pop();
+              context.pop(false);
             },
           ),
         ],
@@ -113,6 +113,10 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                     //     'Friday, May 23, 2025 at 9:00 AM',
                     //   ),
                     // );
+
+                    if (context.mounted) {
+                      context.pop(true);
+                    }
                   } else {
                     throw Exception('Failed to load M3U');
                   }
