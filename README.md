@@ -7,16 +7,12 @@ It is designed to make IPTV streaming simple, lightweight, and modern - running 
 
 ## Features
 
-- **Cross-Platform** – Works on Android, iOS, Web, and Desktop (Flutter).
-- **Playlist Support** – Import M3U/M3U8 files or URLs.
-- **Quick Search** – Easily find channels.
-- **Favorites** – Save favorite channels for quick access.
 - **Modern UI** – Clean and minimal design powered by [Forui](https://forui.dev/).
 - **Open Source** – Free to use and contribute.
 
 ---
 
-## 📦 Installation
+## Installation
 
 ### 1. Clone the Repository
 
@@ -24,3 +20,9 @@ It is designed to make IPTV streaming simple, lightweight, and modern - running 
 git clone https://github.com/username/Pusoo.git
 cd pusoo
 ```
+
+## Screenshoot
+
+  Screen | Pictures
+ --- | ---
+ Home | <img src="screens/home.png" height= "800"/>

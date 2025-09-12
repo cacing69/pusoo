@@ -1,9 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:forui/forui.dart';
-import 'package:forui/widgets/scaffold.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pusoo/core/utils/m3u_parse.dart';
+// import 'package:pusoo/core/utils/m3u_parse.dart';
 import 'package:pusoo/router.dart';
 import 'package:http/http.dart' as http;
 
@@ -53,9 +53,18 @@ class _ExploreScreenState extends State<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
     return FScaffold(
+      resizeToAvoidBottomInset: false,
       header: FHeader(
         title: const Text('Explore'),
-        suffixes: [FHeaderAction(icon: Icon(FIcons.refreshCw), onPress: () {})],
+        suffixes: [
+          FHeaderAction(icon: Icon(FIcons.refreshCw, size: 25), onPress: () {}),
+          FHeaderAction(
+            icon: Icon(FIcons.plus),
+            onPress: () {
+              context.pushNamed(RouteName.addPlaylist.name);
+            },
+          ),
+        ],
       ),
       child: Column(
         spacing: 10,
@@ -78,10 +87,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         onTap: () {
                           context.pushNamed(
                             RouteName.iptvPlayer.name,
-                            queryParameters: {
-                              "url": channels[index]['urls'].first,
-                              "title": channels[index]['name'],
-                            },
+                            extra: channels[index],
+                            // queryParameters: {
+                            //   "url": channels[index]['urls'].first,
+                            //   "title": channels[index]['name'],
+                            // },
                           );
                         },
                         child: Container(
@@ -91,41 +101,67 @@ class _ExploreScreenState extends State<ExploreScreen> {
                               color: context.theme.colors.border,
                               width: 1,
                             ),
+                            color: context.theme.colors.foreground,
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(4),
                             child: Stack(
                               children: [
-                                channels[index]['tvg-logo'].isEmpty
-                                    ? const Center(
-                                        child: Icon(FIcons.tv, size: 40),
-                                      )
-                                    : Image.network(
-                                        channels[index]['tvg-logo'],
-                                        fit: BoxFit.fitWidth,
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                              return Center(
-                                                child: Icon(
-                                                  FIcons.imageOff,
-                                                  size: 40,
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 120, // tinggi tetap
+                                  child:
+                                      channels[index]['tvg-logo']?.isNotEmpty ??
+                                          false
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                channels[index]['tvg-logo'],
+                                            placeholder: (_, __) =>
+                                                const Center(
+                                                  child:
+                                                      FProgress.circularIcon(),
                                                 ),
-                                              );
-                                            },
-                                      ),
+                                            errorWidget: (_, __, ___) => Center(
+                                              child: Icon(
+                                                FIcons.imageOff,
+                                                color: context
+                                                    .theme
+                                                    .colors
+                                                    .background
+                                                    .withAlpha(200),
+                                                size: 40,
+                                              ),
+                                            ),
+                                            fit: BoxFit.fitWidth,
+                                          ),
+                                        )
+                                      : Center(
+                                          child: Icon(
+                                            FIcons.imageOff,
+                                            size: 40,
+                                            color: context
+                                                .theme
+                                                .colors
+                                                .background
+                                                .withAlpha(200),
+                                          ),
+                                        ),
+                                ),
                                 Positioned(
                                   left: 0,
                                   right: 0,
                                   bottom: 0,
                                   child: Container(
                                     padding: const EdgeInsets.all(6),
-                                    color: Colors.black.withOpacity(0.5),
+                                    color: context.theme.colors.background
+                                        .withAlpha(125),
                                     child: Text(
                                       channels[index]['name'],
+                                      maxLines: 1,
                                       style: TextStyle(
-                                        color: Colors.white,
+                                        color: context.theme.colors.foreground,
                                         fontSize: 10,
                                         fontWeight: FontWeight.w600,
                                       ),

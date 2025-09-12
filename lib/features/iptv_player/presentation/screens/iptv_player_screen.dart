@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
@@ -7,9 +8,8 @@ import 'package:video_player/video_player.dart';
 // https://github.com/iptv-org/iptv/blob/master/streams/id.m3u
 
 class IPTVPlayerScreen extends StatefulWidget {
-  final String url;
-  final String title;
-  const IPTVPlayerScreen({super.key, required this.url, required this.title});
+  final Map channel;
+  const IPTVPlayerScreen({super.key, required this.channel});
 
   @override
   State<IPTVPlayerScreen> createState() => _IPTVPlayerScreenState();
@@ -38,7 +38,9 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
 
     // Ganti URL IPTV kamu di sini
     _videoPlayerController =
-        VideoPlayerController.networkUrl(Uri.parse(widget.url))
+        VideoPlayerController.networkUrl(
+            Uri.parse(widget.channel["urls"].first),
+          )
           ..initialize().then((_) {
             setState(() {}); // refresh setelah video siap
             _videoPlayerController.play();
@@ -95,17 +97,80 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
       ),
       // appBar: AppBar(title: const Text('Chewie IPTV Player')),
       child: !_videoPlayerController.value.isInitialized
-          ? const Center(child: FProgress.circularIcon())
+          ? Column(
+              children: [
+                AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: Center(child: FProgress.circularIcon()),
+                ),
+                FDivider(),
+                // Konten lain di bawah video
+                buildDescription(widget.channel),
+              ],
+            )
           : Column(
               children: [
                 AspectRatio(
                   aspectRatio: _videoPlayerController.value.aspectRatio,
                   child: Chewie(controller: _chewieController!),
                 ),
-                // Konten lain di bawah video
-                Expanded(child: Center(child: Text('Konten lain di sini'))),
+                FDivider(),
+                buildDescription(widget.channel),
               ],
             ),
+    );
+  }
+
+  Widget buildDescription(Map channel) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 10,
+      children: [
+        SizedBox(
+          width: 45,
+          height: 45,
+          child: Container(
+            decoration: BoxDecoration(
+              color: context.theme.colors.foreground,
+              shape: BoxShape.circle,
+              // image: DecorationImage(
+              //   image: CachedNetworkImageProvider(
+              //     channel['tvg-logo'],
+              //     // placeholder: (_, __) =>
+              //     //     const Center(child: FProgress.circularIcon()),
+              //     // errorWidget: (_, __, ___) => Center(
+              //     //   child: Icon(
+              //     //     FIcons.imageOff,
+              //     //     color: context.theme.colors.background.withAlpha(200),
+              //     //     size: 40,
+              //     //   ),
+              //     // ),
+              //     // fit: BoxFit.fitWidth,
+              //   ),
+              // ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: CachedNetworkImage(imageUrl: channel['tvg-logo']),
+            ),
+          ),
+        ),
+        Column(
+          spacing: 5,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(channel["name"], maxLines: 1),
+            Text(
+              channel["tvg-id"] ?? channel["tvg-name"],
+              style: context.theme.typography.xs.copyWith(
+                color: context.theme.colors.disable(
+                  context.theme.colors.foreground,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
