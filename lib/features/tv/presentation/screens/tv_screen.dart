@@ -9,17 +9,16 @@ import 'package:go_router/go_router.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/drift_database.dart';
 
-class ExploreScreen extends StatefulWidget {
-  const ExploreScreen({super.key});
+class TvScreen extends StatefulWidget {
+  const TvScreen({super.key});
 
   @override
-  State<ExploreScreen> createState() => _ExploreScreenState();
+  State<TvScreen> createState() => _TvScreenState();
 }
 
-class _ExploreScreenState extends State<ExploreScreen> {
+class _TvScreenState extends State<TvScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     loadM3U();
@@ -31,27 +30,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
   Map<dynamic, dynamic> categories = {};
 
   Future<void> loadM3U() async {
-    // try {
-    //   final response = await http.get(
-    //     Uri.parse("https://iptv-org.github.io/iptv/languages/ind.m3u"),
-    //   );
-    //   if (response.statusCode == 200) {
-    //     // debugPrint(response.body);
-    //     final channel = M3uUtils.parse(response.body);
-
-    //     debugPrint(channel["items"].toString());
-
-    //     setState(() {
-    //       // channels = urls;
-    //       channels = List<Map<String, dynamic>>.from(channel["items"]);
-    //     });
-    //   } else {
-    //     throw Exception('Failed to load M3U');
-    //   }
-    // } catch (e) {
-    //   print('Error loading M3U: $e');
-    // }
-
     final channelTv = await (driftDb.select(
       driftDb.channel,
     )..where((tbl) => tbl.tvgId.isNotNull())).get();
@@ -75,9 +53,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
       categories = groupBy(expandedChannels, (row) => row['category']);
     });
-    // });
-
-    // final categories = ;
   }
 
   @override
@@ -154,13 +129,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                     title: Text(categoryName),
                                     suffix: Icon(FIcons.chevronRight),
                                     onPress: () async {
-                                      // Bisa navigasi ke halaman detail channel per kategori
-                                      // debugPrint("$categoryName selected");
-
-                                      // setState(() {
-                                      //   channels = categories[categoryName];
-                                      // });
-
                                       final channelTv =
                                           await (driftDb.select(driftDb.channel)
                                                 ..where(
@@ -201,16 +169,15 @@ class _ExploreScreenState extends State<ExploreScreen> {
               debugPrint("All rows has been deleted");
             },
           ),
-          // FHeaderAction(
-          //   icon: Icon(FIcons.refreshCw, size: 25),
-          //   onPress: () async {
-          //     // Hapus semua isi tabel 'playlist'
-          //     // await dirftDb.delete(dirftDb.playlist).go();
-          //     // await dirftDb.delete(dirftDb.channel).go();
-
-          //     debugPrint(channelTv.toString());
-          //   },
-          // ),
+          FHeaderAction(
+            icon: Icon(FIcons.refreshCw, size: 25),
+            onPress: () async {
+              setState(() {
+                channels = [];
+              });
+              loadM3U();
+            },
+          ),
           FHeaderAction(
             icon: Icon(FIcons.plus),
             onPress: () {
@@ -238,18 +205,16 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
+                          // debugPrint(channels[index].toString());
+
                           context.pushNamed(
                             RouteName.iptvPlayer.name,
                             extra: channels[index],
-                            // queryParameters: {
-                            //   "url": channels[index]['urls'].first,
-                            //   "title": channels[index]['name'],
-                            // },
                           );
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
+                            borderRadius: BorderRadius.circular(8),
                             border: Border.all(
                               color: context.theme.colors.border,
                               width: 1,

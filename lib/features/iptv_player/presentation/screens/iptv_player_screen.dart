@@ -43,12 +43,13 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
     // ]);
 
     // Ganti URL IPTV kamu di sini
+
+    final List urls = (jsonDecode(widget.channel.streamUrl) as List<dynamic>);
+
+    debugPrint("urls.toString(): $urls");
+
     _videoPlayerController =
-        VideoPlayerController.networkUrl(
-            Uri.parse(
-              (jsonDecode(widget.channel.streamUrl) as List<dynamic>).first,
-            ),
-          )
+        VideoPlayerController.networkUrl(Uri.parse(urls.first))
           ..initialize().then((_) {
             setState(() {}); // refresh setelah video siap
             _videoPlayerController.play();
@@ -59,7 +60,7 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
       autoPlay: true,
       looping: false,
       allowFullScreen: true,
-      allowPlaybackSpeedChanging: true,
+      allowPlaybackSpeedChanging: false,
       aspectRatio: 16 / 9,
       fullScreenByDefault: false,
     );
@@ -143,8 +144,8 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
               height: 45,
               child: Container(
                 decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
                   color: context.theme.colors.foreground,
-                  shape: BoxShape.circle,
                   // image: DecorationImage(
                   //   image: CachedNetworkImageProvider(
                   //     channel['tvg-logo'],
@@ -161,10 +162,8 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
                   //   ),
                   // ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: CachedNetworkImage(imageUrl: channel.logo ?? ""),
-                ),
+                clipBehavior: Clip.antiAlias,
+                child: CachedNetworkImage(imageUrl: channel.logo ?? ""),
               ),
             ),
             Expanded(
