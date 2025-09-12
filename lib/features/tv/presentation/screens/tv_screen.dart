@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pusoo/core/extensions/string_ext.dart';
 // import 'package:pusoo/core/utils/m3u_parse.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/drift_database.dart';
@@ -126,7 +127,10 @@ class _TvScreenState extends State<TvScreen> {
                                 ...categories.keys.map((categoryName) {
                                   return FTile(
                                     prefix: Icon(FIcons.tag),
-                                    title: Text(categoryName),
+                                    title: Text(
+                                      (categoryName as String)
+                                          .capitalizeWords(),
+                                    ),
                                     suffix: Icon(FIcons.chevronRight),
                                     onPress: () async {
                                       final channelTv =
@@ -199,7 +203,7 @@ class _TvScreenState extends State<TvScreen> {
                           crossAxisCount: 4,
                           crossAxisSpacing: 5,
                           mainAxisSpacing: 5,
-                          childAspectRatio: 0.75,
+                          childAspectRatio: 0.95,
                         ),
                     itemCount: channels.length,
                     itemBuilder: (context, index) {
@@ -214,7 +218,7 @@ class _TvScreenState extends State<TvScreen> {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(10),
                             border: Border.all(
                               color: context.theme.colors.border,
                               width: 1,
