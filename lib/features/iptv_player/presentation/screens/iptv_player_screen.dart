@@ -1,14 +1,18 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pusoo/shared/data/datasources/drift_database.dart';
 import 'package:video_player/video_player.dart';
 
 // https://github.com/iptv-org/iptv/blob/master/streams/id.m3u
 
 class IPTVPlayerScreen extends StatefulWidget {
-  final Map channel;
+  final ChannelData channel;
   const IPTVPlayerScreen({super.key, required this.channel});
 
   @override
@@ -18,6 +22,8 @@ class IPTVPlayerScreen extends StatefulWidget {
 class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
   late VideoPlayerController _videoPlayerController;
   ChewieController? _chewieController;
+
+  bool showAds = true;
 
   @override
   void initState() {
@@ -39,7 +45,9 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
     // Ganti URL IPTV kamu di sini
     _videoPlayerController =
         VideoPlayerController.networkUrl(
-            Uri.parse(widget.channel["urls"].first),
+            Uri.parse(
+              (jsonDecode(widget.channel.streamUrl) as List<dynamic>).first,
+            ),
           )
           ..initialize().then((_) {
             setState(() {}); // refresh setelah video siap
@@ -105,7 +113,7 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
                 ),
                 FDivider(),
                 // Konten lain di bawah video
-                buildDescription(widget.channel),
+                Expanded(child: buildDescription(widget.channel)),
               ],
             )
           : Column(
@@ -115,61 +123,126 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
                   child: Chewie(controller: _chewieController!),
                 ),
                 FDivider(),
-                buildDescription(widget.channel),
+                Expanded(child: buildDescription(widget.channel)),
               ],
             ),
     );
   }
 
-  Widget buildDescription(Map channel) {
-    return Row(
+  Widget buildDescription(ChannelData channel) {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
       children: [
-        SizedBox(
-          width: 45,
-          height: 45,
-          child: Container(
-            decoration: BoxDecoration(
-              color: context.theme.colors.foreground,
-              shape: BoxShape.circle,
-              // image: DecorationImage(
-              //   image: CachedNetworkImageProvider(
-              //     channel['tvg-logo'],
-              //     // placeholder: (_, __) =>
-              //     //     const Center(child: FProgress.circularIcon()),
-              //     // errorWidget: (_, __, ___) => Center(
-              //     //   child: Icon(
-              //     //     FIcons.imageOff,
-              //     //     color: context.theme.colors.background.withAlpha(200),
-              //     //     size: 40,
-              //     //   ),
-              //     // ),
-              //     // fit: BoxFit.fitWidth,
-              //   ),
-              // ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: CachedNetworkImage(imageUrl: channel['tvg-logo']),
-            ),
-          ),
-        ),
-        Column(
-          spacing: 5,
+        Row(
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 10,
           children: [
-            Text(channel["name"], maxLines: 1),
-            Text(
-              channel["tvg-id"] ?? channel["tvg-name"],
-              style: context.theme.typography.xs.copyWith(
-                color: context.theme.colors.disable(
-                  context.theme.colors.foreground,
+            SizedBox(
+              width: 45,
+              height: 45,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: context.theme.colors.foreground,
+                  shape: BoxShape.circle,
+                  // image: DecorationImage(
+                  //   image: CachedNetworkImageProvider(
+                  //     channel['tvg-logo'],
+                  //     // placeholder: (_, __) =>
+                  //     //     const Center(child: FProgress.circularIcon()),
+                  //     // errorWidget: (_, __, ___) => Center(
+                  //     //   child: Icon(
+                  //     //     FIcons.imageOff,
+                  //     //     color: context.theme.colors.background.withAlpha(200),
+                  //     //     size: 40,
+                  //     //   ),
+                  //     // ),
+                  //     // fit: BoxFit.fitWidth,
+                  //   ),
+                  // ),
                 ),
+                child: Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: CachedNetworkImage(imageUrl: channel.logo ?? ""),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Column(
+                spacing: 5,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    channel.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                  ),
+                  Text(
+                    channel.tvgId ?? channel.name,
+                    style: context.theme.typography.xs.copyWith(
+                      color: context.theme.colors.disable(
+                        context.theme.colors.foreground,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
+        showAds
+            ? Expanded(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Ads"),
+                        FButton.icon(
+                          onPress: () {
+                            setState(() {
+                              showAds = false;
+                            });
+                          },
+                          child: Icon(FIcons.x),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 200,
+                      width: double.infinity,
+                      child: CachedNetworkImage(
+                        imageUrl: "https://placehold.co/400x600.png",
+                        placeholder: (_, __) =>
+                            const Center(child: FProgress.circularIcon()),
+                        errorWidget: (_, __, ___) => Center(
+                          child: Icon(
+                            FIcons.imageOff,
+                            color: context.theme.colors.background.withAlpha(
+                              200,
+                            ),
+                            size: 40,
+                          ),
+                        ),
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                    Gap(10),
+                    SafeArea(
+                      top: false,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "Ads by Lorem Ipsum Inc.",
+                          style: context.theme.typography.xs,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : SizedBox.shrink(),
       ],
     );
   }

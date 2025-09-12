@@ -4,6 +4,7 @@ import 'package:pusoo/features/detail/presentation/screens/detail_screen.dart';
 import 'package:pusoo/features/home/presentation/screens/home_screen.dart';
 import 'package:pusoo/features/iptv_player/presentation/screens/iptv_player_screen.dart';
 import 'package:pusoo/features/welcome/presentation/screens/welcome_screen.dart';
+import 'package:pusoo/shared/data/datasources/drift_database.dart';
 
 enum RouteName { welcome, home, detail, iptvPlayer, addPlaylist }
 
@@ -34,7 +35,7 @@ final List<GoRoute> defaultRouter = [
     path: '/iptv-player',
     name: RouteName.iptvPlayer.name,
     builder: (context, state) {
-      return IPTVPlayerScreen(channel: state.extra as Map);
+      return IPTVPlayerScreen(channel: state.extra as ChannelData);
     },
   ),
 ];

@@ -27,10 +27,10 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(FIcons.monitorCheck),
             label: Text('Series'),
           ),
-          FBottomNavigationBarItem(
-            icon: Icon(FIcons.boomBox),
-            label: Text('Radio'),
-          ),
+          // FBottomNavigationBarItem(
+          //   icon: Icon(FIcons.boomBox),
+          //   label: Text('Radio'),
+          // ),
           // FBottomNavigationBarItem(
           //   icon: Icon(FIcons.heart),
           //   label: Text('Favorites'),

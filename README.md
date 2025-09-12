@@ -25,4 +25,5 @@ cd pusoo
 
   Screen | Pictures
  --- | ---
+ Add Playlist | <img src="screens/add_playlist.png" height= "800"/>
  Home | <img src="screens/home.png" height= "800"/>

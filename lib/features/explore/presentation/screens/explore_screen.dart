@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:collection/collection.dart';
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pusoo/core/utils/m3u_parse.dart';
 // import 'package:pusoo/core/utils/m3u_parse.dart';
 import 'package:pusoo/router.dart';
-import 'package:http/http.dart' as http;
+import 'package:pusoo/shared/data/datasources/drift_database.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -25,29 +27,57 @@ class _ExploreScreenState extends State<ExploreScreen> {
     //http://ogietv.biz.id:80/get.php?username=maksin&password=123456&type=m3u_plus&output=mpegts
   }
 
-  List<dynamic> channels = [];
+  List<ChannelData> channels = [];
+  Map<dynamic, dynamic> categories = {};
 
   Future<void> loadM3U() async {
-    try {
-      final response = await http.get(
-        Uri.parse("https://iptv-org.github.io/iptv/languages/ind.m3u"),
-      );
-      if (response.statusCode == 200) {
-        // debugPrint(response.body);
-        final channel = M3uUtils.parse(response.body);
+    // try {
+    //   final response = await http.get(
+    //     Uri.parse("https://iptv-org.github.io/iptv/languages/ind.m3u"),
+    //   );
+    //   if (response.statusCode == 200) {
+    //     // debugPrint(response.body);
+    //     final channel = M3uUtils.parse(response.body);
 
-        debugPrint(channel["items"].toString());
+    //     debugPrint(channel["items"].toString());
 
-        setState(() {
-          // channels = urls;
-          channels = List<Map<String, dynamic>>.from(channel["items"]);
-        });
-      } else {
-        throw Exception('Failed to load M3U');
+    //     setState(() {
+    //       // channels = urls;
+    //       channels = List<Map<String, dynamic>>.from(channel["items"]);
+    //     });
+    //   } else {
+    //     throw Exception('Failed to load M3U');
+    //   }
+    // } catch (e) {
+    //   print('Error loading M3U: $e');
+    // }
+
+    final channelTv = await (driftDb.select(
+      driftDb.channel,
+    )..where((tbl) => tbl.tvgId.isNotNull())).get();
+
+    // channelTv.then((data) {
+    setState(() {
+      channels = channelTv;
+
+      // Flatten kategori yang dipisah titik koma
+      List<Map> expandedChannels = [];
+
+      for (var ch in channelTv) {
+        final rawCategories = ch.category?.split(';') ?? ["Miscellaneous"];
+        for (var cat in rawCategories) {
+          // buat salinan channel tapi dengan kategori tunggal
+          final newCh = Map<String, dynamic>.from(ch.toJson());
+          newCh['category'] = cat.trim();
+          expandedChannels.add(newCh);
+        }
       }
-    } catch (e) {
-      print('Error loading M3U: $e');
-    }
+
+      categories = groupBy(expandedChannels, (row) => row['category']);
+    });
+    // });
+
+    // final categories = ;
   }
 
   @override
@@ -55,9 +85,132 @@ class _ExploreScreenState extends State<ExploreScreen> {
     return FScaffold(
       resizeToAvoidBottomInset: false,
       header: FHeader(
-        title: const Text('Explore'),
+        title: const Text('Pusoo IPTV'),
         suffixes: [
-          FHeaderAction(icon: Icon(FIcons.refreshCw, size: 25), onPress: () {}),
+          FHeaderAction(
+            icon: Icon(FIcons.menu, size: 25),
+            onPress: () async {
+              showFSheet(
+                context: context,
+                side: FLayout.ltr,
+                useRootNavigator: true,
+                useSafeArea: false,
+                mainAxisMaxRatio: null,
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.8,
+                  maxHeight: double.infinity,
+                ),
+                barrierDismissible: true,
+                draggable: true,
+                builder: (context) => FScaffold(
+                  child: SafeArea(
+                    child: Column(
+                      spacing: 5,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Category",
+                          style: context.theme.typography.lg.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Gap(1),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              spacing: 5,
+                              children: [
+                                FTile(
+                                  prefix: Icon(FIcons.tags),
+                                  title: Text("All Channel"),
+                                  suffix: Icon(FIcons.chevronRight),
+                                  onPress: () async {
+                                    // Bisa navigasi ke halaman detail channel per kategori
+                                    debugPrint("All channel selected");
+
+                                    final channelTv =
+                                        await (driftDb.select(driftDb.channel)
+                                              ..where(
+                                                (tbl) => tbl.tvgId.isNotNull(),
+                                              ))
+                                            .get();
+
+                                    // channelTv.then((data) {
+                                    setState(() {
+                                      channels = channelTv;
+
+                                      context.pop();
+                                    });
+                                    // });
+
+                                    // setState(() {
+                                    //   channels = categories[categoryName];
+                                    // });
+                                  },
+                                ),
+                                ...categories.keys.map((categoryName) {
+                                  return FTile(
+                                    prefix: Icon(FIcons.tag),
+                                    title: Text(categoryName),
+                                    suffix: Icon(FIcons.chevronRight),
+                                    onPress: () async {
+                                      // Bisa navigasi ke halaman detail channel per kategori
+                                      // debugPrint("$categoryName selected");
+
+                                      // setState(() {
+                                      //   channels = categories[categoryName];
+                                      // });
+
+                                      final channelTv =
+                                          await (driftDb.select(driftDb.channel)
+                                                ..where(
+                                                  (tbl) => tbl.category.like(
+                                                    "%$categoryName%",
+                                                  ),
+                                                ))
+                                              .get();
+
+                                      // channelTv.then((data) {
+                                      setState(() {
+                                        channels = channelTv;
+
+                                        context.pop();
+                                      });
+                                      // });
+                                    },
+                                  );
+                                }).toList(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          FHeaderAction(
+            icon: Icon(FIcons.power, size: 25),
+            onPress: () async {
+              // Hapus semua isi tabel 'playlist'
+              await driftDb.delete(driftDb.playlist).go();
+              await driftDb.delete(driftDb.channel).go();
+
+              debugPrint("All rows has been deleted");
+            },
+          ),
+          // FHeaderAction(
+          //   icon: Icon(FIcons.refreshCw, size: 25),
+          //   onPress: () async {
+          //     // Hapus semua isi tabel 'playlist'
+          //     // await dirftDb.delete(dirftDb.playlist).go();
+          //     // await dirftDb.delete(dirftDb.channel).go();
+
+          //     debugPrint(channelTv.toString());
+          //   },
+          // ),
           FHeaderAction(
             icon: Icon(FIcons.plus),
             onPress: () {
@@ -111,13 +264,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                   width: double.infinity,
                                   height: 120, // tinggi tetap
                                   child:
-                                      channels[index]['tvg-logo']?.isNotEmpty ??
-                                          false
+                                      channels[index].logo?.isNotEmpty ?? false
                                       ? Padding(
-                                          padding: const EdgeInsets.all(8.0),
+                                          padding: const EdgeInsets.all(5.0),
                                           child: CachedNetworkImage(
                                             imageUrl:
-                                                channels[index]['tvg-logo'],
+                                                channels[index].logo ?? "",
                                             placeholder: (_, __) =>
                                                 const Center(
                                                   child:
@@ -134,7 +286,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                                 size: 40,
                                               ),
                                             ),
-                                            fit: BoxFit.fitWidth,
+                                            fit: BoxFit.scaleDown,
                                           ),
                                         )
                                       : Center(
@@ -158,7 +310,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                     color: context.theme.colors.background
                                         .withAlpha(125),
                                     child: Text(
-                                      channels[index]['name'],
+                                      channels[index].name,
                                       maxLines: 1,
                                       style: TextStyle(
                                         color: context.theme.colors.foreground,
