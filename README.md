@@ -1,6 +1,6 @@
-# Pusoo TV
+# Pusoo
 
-**Pusoo TV** is an **open-source IPTV Player** built with **Flutter**.
+**Pusoo** is an **open-source IPTV Player** built with **Flutter**.
 It is designed to make IPTV streaming simple, lightweight, and modern - running across multiple platforms.
 
 ---
