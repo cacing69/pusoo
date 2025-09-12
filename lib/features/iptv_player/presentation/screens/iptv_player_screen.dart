@@ -191,58 +191,60 @@ class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
             ),
           ],
         ),
-        showAds
-            ? Expanded(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Ads"),
-                        FButton.icon(
-                          onPress: () {
-                            setState(() {
-                              showAds = false;
-                            });
-                          },
-                          child: Icon(FIcons.x),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 200,
-                      width: double.infinity,
-                      child: CachedNetworkImage(
-                        imageUrl: "https://placehold.co/400x600.png",
-                        placeholder: (_, __) =>
-                            const Center(child: FProgress.circularIcon()),
-                        errorWidget: (_, __, ___) => Center(
-                          child: Icon(
-                            FIcons.imageOff,
-                            color: context.theme.colors.background.withAlpha(
-                              200,
-                            ),
-                            size: 40,
-                          ),
-                        ),
-                        fit: BoxFit.fitHeight,
-                      ),
-                    ),
-                    Gap(10),
-                    SafeArea(
-                      top: false,
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          "Ads by Lorem Ipsum Inc.",
-                          style: context.theme.typography.xs,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            : SizedBox.shrink(),
+        SizedBox.shrink(),
+
+        // showAds
+        //     ? Expanded(
+        //         child: Column(
+        //           children: [
+        //             Row(
+        //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //               children: [
+        //                 Text("Ads"),
+        //                 FButton.icon(
+        //                   onPress: () {
+        //                     setState(() {
+        //                       showAds = false;
+        //                     });
+        //                   },
+        //                   child: Icon(FIcons.x),
+        //                 ),
+        //               ],
+        //             ),
+        //             SizedBox(
+        //               height: 200,
+        //               width: double.infinity,
+        //               child: CachedNetworkImage(
+        //                 imageUrl: "https://placehold.co/400x600.png",
+        //                 placeholder: (_, __) =>
+        //                     const Center(child: FProgress.circularIcon()),
+        //                 errorWidget: (_, __, ___) => Center(
+        //                   child: Icon(
+        //                     FIcons.imageOff,
+        //                     color: context.theme.colors.background.withAlpha(
+        //                       200,
+        //                     ),
+        //                     size: 40,
+        //                   ),
+        //                 ),
+        //                 fit: BoxFit.fitHeight,
+        //               ),
+        //             ),
+        //             Gap(10),
+        //             SafeArea(
+        //               top: false,
+        //               child: Align(
+        //                 alignment: Alignment.centerRight,
+        //                 child: Text(
+        //                   "Ads by Lorem Ipsum Inc.",
+        //                   style: context.theme.typography.xs,
+        //                 ),
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //       )
+        //     : SizedBox.shrink(),
       ],
     );
   }

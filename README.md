@@ -27,3 +27,5 @@ cd pusoo
  --- | ---
  Add Playlist | <img src="screens/add_playlist.png" height= "800"/>
  Home | <img src="screens/home.png" height= "800"/>
+ Home Category | <img src="screens/home_category.png" height= "800"/>
+ IPTV Player | <img src="screens/iptv_player.png" height= "800"/>
