@@ -1,4 +1,4 @@
-package com.example.pusoo
+package com.cacing69.pusoo
 
 import io.flutter.embedding.android.FlutterActivity
 

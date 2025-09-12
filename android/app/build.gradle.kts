@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.pusoo"
+    namespace = "com.cacing69.pusoo"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
