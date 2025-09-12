@@ -46,13 +46,13 @@ final List<GoRoute> defaultRouter = [
       return IPTVPlayerScreen(channel: state.extra as ChannelData);
     },
   ),
-  GoRoute(
-    path: '/iptv-player-full',
-    name: RouteName.iptvPlayerFull.name,
-    builder: (context, state) {
-      return IPTVPlayerFullScreen(channel: state.extra as ChannelData);
-    },
-  ),
+  // GoRoute(
+  //   path: '/iptv-player-full',
+  //   name: RouteName.iptvPlayerFull.name,
+  //   builder: (context, state) {
+  //     // return IPTVPlayerFullScreen(channel: state.extra as ChannelData);
+  //   },
+  // ),
 ];
 
 final router = GoRouter(

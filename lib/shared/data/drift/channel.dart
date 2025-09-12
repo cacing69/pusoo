@@ -8,8 +8,8 @@ class Channel extends Table {
       text().customConstraint('REFERENCES playlist(id) NOT NULL')();
   // late final playlistId = integer().references(Playlist, #id)();
   TextColumn get name => text()(); // display name
-  TextColumn get tvgName => text().nullable()();
   TextColumn get tvgId => text().nullable()();
+  TextColumn get tvgName => text().nullable()();
   TextColumn get logo => text().nullable()();
   TextColumn get groupTitle => text().nullable()();
   TextColumn get streamUrl => text()();

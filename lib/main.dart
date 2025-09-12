@@ -3,10 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pusoo/router.dart';
+import 'package:video_player_media_kit/video_player_media_kit.dart';
 
-void main() async {
+// import 'package:media_kit/media_kit.dart';
+
+void main() {
   WidgetsFlutterBinding.ensureInitialized(); // inisialisasi binding
   // WidgetsFlutterBinding.ensureInitialized();
+
+  // MediaKit.ensureInitialized();
+
+  VideoPlayerMediaKit.ensureInitialized(
+    android: true,
+    // windows: true,
+    // linux: true,
+  );
 
   // Wajib: inisialisasi MediaKit sebelum dipakai
   // MediaKit.ensureInitialized();

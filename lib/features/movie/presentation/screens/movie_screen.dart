@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -11,14 +10,14 @@ import 'package:pusoo/core/extensions/string_ext.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/drift_database.dart';
 
-class TvScreen extends StatefulWidget {
-  const TvScreen({super.key});
+class MovieScreen extends StatefulWidget {
+  const MovieScreen({super.key});
 
   @override
-  State<TvScreen> createState() => _TvScreenState();
+  State<MovieScreen> createState() => _MovieScreenState();
 }
 
-class _TvScreenState extends State<TvScreen> {
+class _MovieScreenState extends State<MovieScreen> {
   @override
   void initState() {
     super.initState();
@@ -33,36 +32,51 @@ class _TvScreenState extends State<TvScreen> {
     //http://ogietv.biz.id:80/get.php?username=maksin&password=123456&type=m3u_plus&output=mpegts
   }
 
-  List<ChannelData> channels = [];
+  List<ChannelData> movies = [];
   Map<dynamic, dynamic> categories = {};
 
   Future<void> loadM3U() async {
-    final test = await (driftDb.select(driftDb.channel)).get();
+    // const condition = drift.CustomExpression<bool>(
+    //   '(tvg_id IS NULL OR tvg_id = "")',
+    // );
 
-    debugPrint("test.toString() : $test");
-
-    final channelTv = await (driftDb.select(
+    final filtered = await (driftDb.select(
       driftDb.channel,
-    )..where((tbl) => tbl.tvgId.isNotNull())).get();
+    )..where((tbl) => tbl.streamUrl.like("%movie%"))).get();
 
-    // channelTv.then((data) {
+    // await driftDb.select(driftDb.channel).get();
+
+    // final filtered = allRows
+    //     .where(
+    //       (c) =>
+    //           (c.tvgId == null || c.tvgId?.trim() == "") &&
+    //           !RegExp(r'S\d\dE\d\d').hasMatch(c.name) &&
+    //           !(c.category ?? "").contains(
+    //             RegExp(
+    //               r'\(Match Only\)|\(Only Match\)|\(OnlyMatch\)|\(Onlymatch\)|\(Event Only\)|\(Astro \& Optus\)',
+    //             ),
+    //           ),
+    //     )
+    //     .toList();
+
+    // moviesRow.then((data) {
     setState(() {
-      channels = channelTv;
+      movies = filtered;
 
       // Flatten kategori yang dipisah titik koma
-      List<Map> expandedChannels = [];
+      List<Map> expandedMovies = [];
 
-      for (var ch in channelTv) {
+      for (var ch in filtered) {
         final rawCategories = ch.category?.split(';') ?? ["Miscellaneous"];
         for (var cat in rawCategories) {
           // buat salinan channel tapi dengan kategori tunggal
           final newCh = Map<String, dynamic>.from(ch.toJson());
           newCh['category'] = cat.trim();
-          expandedChannels.add(newCh);
+          expandedMovies.add(newCh);
         }
       }
 
-      categories = groupBy(expandedChannels, (row) => row['category']);
+      categories = groupBy(expandedMovies, (row) => row['category']);
     });
   }
 
@@ -71,7 +85,7 @@ class _TvScreenState extends State<TvScreen> {
     return FScaffold(
       resizeToAvoidBottomInset: false,
       header: FHeader(
-        title: const Text('Live TV'),
+        title: const Text('Movies'),
         suffixes: [
           FHeaderAction(
             icon: Icon(FIcons.menu, size: 25),
@@ -114,19 +128,18 @@ class _TvScreenState extends State<TvScreen> {
                                     // Bisa navigasi ke halaman detail channel per kategori
                                     debugPrint("All channel selected");
 
-                                    final filtered =
-                                        await (driftDb.select(
-                                              driftDb.channel,
-                                            )..where(
-                                              (tbl) => drift.CustomExpression(
-                                                "stream_url NOT LIKE '%movie%' AND stream_url NOT LIKE '%series%'",
-                                              ),
-                                            ))
+                                    final channelTv =
+                                        await (driftDb.select(driftDb.channel)
+                                              ..where(
+                                                (tbl) =>
+                                                    tbl.tvgId.isNotNull() |
+                                                    tbl.tvgId.isNotIn([""]),
+                                              ))
                                             .get();
 
                                     // channelTv.then((data) {
                                     setState(() {
-                                      channels = filtered;
+                                      movies = channelTv;
 
                                       context.pop();
                                     });
@@ -157,7 +170,7 @@ class _TvScreenState extends State<TvScreen> {
 
                                       // channelTv.then((data) {
                                       setState(() {
-                                        channels = channelTv;
+                                        movies = channelTv;
 
                                         context.pop();
                                       });
@@ -192,7 +205,7 @@ class _TvScreenState extends State<TvScreen> {
             icon: Icon(FIcons.refreshCw, size: 25),
             onPress: () async {
               setState(() {
-                channels = [];
+                movies = [];
               });
               loadM3U();
             },
@@ -223,7 +236,7 @@ class _TvScreenState extends State<TvScreen> {
         children: [
           FTextField(hint: "Find something to watch..."),
           Expanded(
-            child: channels.isEmpty
+            child: movies.isEmpty
                 ? Center(child: FProgress.circularIcon())
                 : GridView.builder(
                     gridDelegate:
@@ -233,7 +246,7 @@ class _TvScreenState extends State<TvScreen> {
                           mainAxisSpacing: 5,
                           childAspectRatio: 0.75,
                         ),
-                    itemCount: channels.length,
+                    itemCount: movies.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
@@ -241,7 +254,7 @@ class _TvScreenState extends State<TvScreen> {
 
                           context.pushNamed(
                             RouteName.iptvPlayer.name,
-                            extra: channels[index],
+                            extra: movies[index],
                           );
                         },
                         child: Container(
@@ -263,8 +276,7 @@ class _TvScreenState extends State<TvScreen> {
                                 SizedBox(
                                   width: double.infinity,
                                   height: 120, // tinggi tetap
-                                  child:
-                                      channels[index].logo?.isNotEmpty ?? false
+                                  child: movies[index].logo?.isNotEmpty ?? false
                                       ? Padding(
                                           padding: const EdgeInsets.all(1.0),
                                           child: Container(
@@ -275,7 +287,7 @@ class _TvScreenState extends State<TvScreen> {
                                             clipBehavior: Clip.antiAlias,
                                             child: CachedNetworkImage(
                                               imageUrl:
-                                                  channels[index].logo ?? "",
+                                                  movies[index].logo ?? "",
                                               placeholder: (_, __) =>
                                                   const Center(
                                                     child:
@@ -318,7 +330,7 @@ class _TvScreenState extends State<TvScreen> {
                                     color: context.theme.colors.background
                                         .withAlpha(125),
                                     child: Text(
-                                      channels[index].name,
+                                      movies[index].name,
                                       // maxLines: 1,
                                       style: TextStyle(
                                         color: context.theme.colors.foreground,
