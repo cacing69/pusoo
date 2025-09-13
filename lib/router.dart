@@ -1,11 +1,12 @@
 import 'package:go_router/go_router.dart';
-import 'package:pusoo/features/add_playlist/presentation/screens/add_playlist_screen.dart';
+import 'package:pusoo/features/manage_playlist/presentation/screens/add_new_provider_screen.dart';
+import 'package:pusoo/features/manage_playlist/presentation/screens/add_playlist_screen.dart';
 import 'package:pusoo/features/detail/presentation/screens/detail_screen.dart';
 import 'package:pusoo/features/home/presentation/screens/home_screen.dart';
+import 'package:pusoo/features/manage_playlist/presentation/screens/manage_provider_screen.dart';
 import 'package:pusoo/features/movie/presentation/screens/movie_detail_screen.dart';
 import 'package:pusoo/features/tv/presentation/screens/tv_player_full_screen.dart';
-// import 'package:pusoo/features/iptv_player/presentation/screens/iptv_player_full_screen.dart';
-import 'package:pusoo/features/video_player/presentation/screens/video_player_screen.dart';
+import 'package:pusoo/features/video_player/presentation/screens/video_player_full_screen.dart';
 import 'package:pusoo/features/tv/presentation/screens/tv_player_screen.dart';
 import 'package:pusoo/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
@@ -16,10 +17,13 @@ enum RouteName {
   home,
   detail,
   videoPlayer,
+  videoPlayerFull,
   tvPlayer,
   tvPlayerFull,
   addPlaylist,
   movieDetail,
+  manageProvider,
+  addNewProvider,
   youtubeIframePlayer,
 }
 
@@ -68,10 +72,10 @@ final List<GoRoute> defaultRouter = [
     },
   ),
   GoRoute(
-    path: '/iptv-player',
-    name: RouteName.videoPlayer.name,
+    path: '/video-player-full',
+    name: RouteName.videoPlayerFull.name,
     builder: (context, state) {
-      return VideoPlayerScreen(channel: state.extra as ChannelData);
+      return VideoPlayerFullScreen(channel: state.extra as ChannelData);
     },
   ),
   GoRoute(
@@ -82,6 +86,21 @@ final List<GoRoute> defaultRouter = [
         videoId: state.pathParameters["videoId"]!,
         title: state.uri.queryParameters["title"],
       );
+    },
+  ),
+
+  GoRoute(
+    path: '/manage-provider',
+    name: RouteName.manageProvider.name,
+    builder: (context, state) {
+      return ManageProviderScreen();
+    },
+  ),
+  GoRoute(
+    path: '/add-new-provider',
+    name: RouteName.addNewProvider.name,
+    builder: (context, state) {
+      return AddNewProviderScreen();
     },
   ),
   // GoRoute(

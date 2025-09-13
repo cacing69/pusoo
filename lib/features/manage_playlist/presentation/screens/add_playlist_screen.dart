@@ -23,7 +23,8 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
   @override
   Widget build(BuildContext context) {
     final nameController = useTextEditingController();
-    final urlController = useTextEditingController(text: "");
+    final urlController = useTextEditingController();
+    final epgLinkController = useTextEditingController();
 
     return FScaffold(
       header: FHeader.nested(
@@ -36,16 +37,27 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
           ),
         ],
       ),
-      child: Column(
-        spacing: 10,
+      child: ListView(
+        padding: EdgeInsets.zero,
         children: [
-          FTextField(controller: nameController, label: Text("Name")),
+          FTextField(
+            controller: nameController,
+            label: Text("Name"),
+            description: Text("Lorem ipsum dolor sit amet"),
+          ),
           FTextField.multiline(
             controller: urlController,
             label: Text("URL"),
-            minLines: 10,
+            minLines: 5,
+            description: Text("Lorem ipsum dolor sit amet"),
           ),
-          Spacer(),
+          FTextField.multiline(
+            controller: epgLinkController,
+            label: Text("EPG Link (Optional)"),
+            minLines: 3,
+            description: Text("Lorem ipsum dolor sit amet"),
+          ),
+          Gap(10),
           SafeArea(
             child: FButton(
               onPress: () async {
@@ -55,6 +67,18 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
 
                 final String playlistId = Ulid().toString();
 
+                // cek jika belum ada playlist maka set default
+                final countExpression = driftDb.playlist.id.count();
+
+                // Menggunakan selectOnly dan membaca hasilnya secara langsung
+                final count =
+                    await (driftDb.selectOnly(driftDb.playlist)
+                          ..addColumns([countExpression]))
+                        .map(
+                          (row) => row.read(countExpression),
+                        ) // Mengambil nilai count dari hasil
+                        .getSingle();
+
                 await driftDb
                     .into(driftDb.playlist)
                     .insert(
@@ -62,6 +86,8 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                         id: drift.Value(playlistId),
                         name: nameController.text.trim(),
                         url: urlController.text.trim(),
+                        isSelected: drift.Value(count == 0),
+                        type: drift.Value("m3u_playlist"),
                       ),
                     );
 

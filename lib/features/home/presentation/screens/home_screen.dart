@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:forui/forui.dart';
 import 'package:pusoo/features/movie/presentation/screens/movie_screen.dart';
 import 'package:pusoo/features/serie/presentation/screens/serie_screen.dart';
+import 'package:pusoo/features/setting/presentation/screens/setting_screen.dart';
 import 'package:pusoo/features/tv/presentation/screens/tv_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -78,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: IndexedStack(
         index: selectedIndex,
-        children: [TvScreen(), MovieScreen(), SerieScreen()],
+        children: [TvScreen(), MovieScreen(), SerieScreen(), SettingScreen()],
       ),
     );
   }

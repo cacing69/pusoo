@@ -1,11 +1,9 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 // import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:forui/forui.dart';
-import 'package:go_router/go_router.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 // import 'package:pusoo/router.dart';

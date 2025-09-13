@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
@@ -20,46 +18,28 @@ class TvPlayerScreen extends ConsumerStatefulWidget {
 }
 
 class _TvPlayerScreenState extends ConsumerState<TvPlayerScreen> {
-  // late Player _player;
-  // late VideoController controller;
-  bool _isBuffering = true;
-
   @override
   void initState() {
     super.initState();
-    // _player = Player();
-    // _player.stream.buffering.listen((isBuffering) {
-    //   if (mounted) {
-    //     setState(() {
-    //       _isBuffering = isBuffering;
-    //     });
-    //   }
-    // });
-    // final List urls = (jsonDecode(widget.channel.streamUrl) as List<dynamic>);
-    // _player.open(Media(urls.first));
-    // controller = VideoController(_player);
-
-    // Buka stream dari provider saat screen ini dimuat
     openMediaStream(ref, widget.channel);
   }
 
   @override
   void dispose() {
-    // _player.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
-    final isPortrait = orientation == Orientation.portrait;
+    final isPotrait = orientation == Orientation.portrait;
 
     // Watch provider untuk mendapatkan state terbaru
     final isBuffering = ref.watch(isBufferingProvider);
     final controller = ref.watch(videoControllerProvider);
 
     return FScaffold(
-      header: isPortrait
+      header: isPotrait
           ? FHeader.nested(
               title: Text("Live TV"),
               prefixes: [
@@ -71,7 +51,7 @@ class _TvPlayerScreenState extends ConsumerState<TvPlayerScreen> {
               ],
             )
           : const SizedBox.shrink(), // Header disembunyikan di mode landscape
-      child: isPortrait
+      child: isPotrait
           ? _buildPortraitLayout(context, isBuffering, controller)
           : _buildLandscapeLayout(context, isBuffering, controller),
     );

@@ -2,22 +2,28 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
+import 'package:flutter_debouncer/flutter_debouncer.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pusoo/core/extensions/string_ext.dart';
 // import 'package:pusoo/core/utils/m3u_parse.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 
-class TvScreen extends StatefulWidget {
+class TvScreen extends StatefulHookConsumerWidget {
   const TvScreen({super.key});
 
   @override
-  State<TvScreen> createState() => _TvScreenState();
+  ConsumerState<TvScreen> createState() => _TvScreenState();
 }
 
-class _TvScreenState extends State<TvScreen> {
+class _TvScreenState extends ConsumerState<TvScreen> {
+  final Debouncer _debouncer = Debouncer();
+  final Duration _debounceDuration = const Duration(milliseconds: 500);
+
   @override
   void initState() {
     super.initState();
@@ -35,44 +41,75 @@ class _TvScreenState extends State<TvScreen> {
   List<ChannelData> channels = [];
   Map<dynamic, dynamic> categories = {};
 
-  Future<void> loadM3U() async {
+  Future<void> loadM3U({String? search}) async {
     final test = await (driftDb.select(driftDb.channel)).get();
 
     debugPrint("test.toString() : $test");
 
-    final channelTv = await (driftDb.select(
-      driftDb.channel,
-    )..where((tbl) => tbl.tvgId.isNotNull())).get();
+    // get playlist selected
+    final selectedPlaylist = await (driftDb.select(
+      driftDb.playlist,
+    )..where((tbl) => tbl.isSelected.equals(true))).get();
 
-    // channelTv.then((data) {
-    setState(() {
-      channels = channelTv;
+    if (selectedPlaylist.isNotEmpty) {
+      final String playlistId = selectedPlaylist.first.id;
 
-      // Flatten kategori yang dipisah titik koma
-      List<Map> expandedChannels = [];
+      // maksin pattern
+      late final filtered;
 
-      for (var ch in channelTv) {
-        final rawCategories = ch.category?.split(';') ?? ["Miscellaneous"];
-        for (var cat in rawCategories) {
-          // buat salinan channel tapi dengan kategori tunggal
-          final newCh = Map<String, dynamic>.from(ch.toJson());
-          newCh['category'] = cat.trim();
-          expandedChannels.add(newCh);
-        }
+      if (search != null) {
+        filtered =
+            await (driftDb.select(driftDb.channel)..where(
+                  (tbl) =>
+                      tbl.playlistId.equals(playlistId) &
+                      tbl.streamUrl.like('%movie%').not() &
+                      tbl.streamUrl.like('%series%').not() &
+                      tbl.name.like('%$search%'),
+                ))
+                .get();
+      } else {
+        filtered =
+            await (driftDb.select(driftDb.channel)..where(
+                  (tbl) =>
+                      tbl.playlistId.equals(playlistId) &
+                      tbl.streamUrl.like('%movie%').not() &
+                      tbl.streamUrl.like('%series%').not(),
+                ))
+                .get();
       }
 
-      categories = groupBy(expandedChannels, (row) => row['category']);
-    });
+      // channelTv.then((data) {
+      setState(() {
+        channels = filtered;
+
+        // Flatten kategori yang dipisah titik koma
+        List<Map> expandedChannels = [];
+
+        for (var ch in filtered) {
+          final rawCategories = ch.category?.split(';') ?? ["Miscellaneous"];
+          for (var cat in rawCategories) {
+            // buat salinan channel tapi dengan kategori tunggal
+            final newCh = Map<String, dynamic>.from(ch.toJson());
+            newCh['category'] = cat.trim();
+            expandedChannels.add(newCh);
+          }
+        }
+
+        categories = groupBy(expandedChannels, (row) => row['category']);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isPortrait =
+    final searchController = useTextEditingController();
+
+    // final screenWidth = MediaQuery.of(context).size.width;
+    final isPotrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
-    final double itemWidth = 120;
-    final int crossAxisCount = (screenWidth / itemWidth).floor();
+    // final double itemWidth = 120;
+    // final int crossAxisCount = (screenWidth / itemWidth).floor();
 
     return FScaffold(
       resizeToAvoidBottomInset: false,
@@ -100,13 +137,22 @@ class _TvScreenState extends State<TvScreen> {
                       spacing: 5,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Category",
-                          style: context.theme.typography.lg.copyWith(
-                            fontWeight: FontWeight.bold,
+                        Row(
+                          children: [
+                            Gap(10),
+                            Text(
+                              "Category",
+                              style: context.theme.typography.base.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        FDivider(
+                          style: (style) => style.copyWith(
+                            padding: EdgeInsets.symmetric(vertical: 5),
                           ),
                         ),
-                        Gap(1),
                         Expanded(
                           child: SingleChildScrollView(
                             child: Column(
@@ -121,13 +167,16 @@ class _TvScreenState extends State<TvScreen> {
                                     debugPrint("All channel selected");
 
                                     final filtered =
-                                        await (driftDb.select(
-                                              driftDb.channel,
-                                            )..where(
-                                              (tbl) => drift.CustomExpression(
-                                                "stream_url NOT LIKE '%movie%' AND stream_url NOT LIKE '%series%'",
-                                              ),
-                                            ))
+                                        await (driftDb.select(driftDb.channel)
+                                              ..where(
+                                                (tbl) =>
+                                                    tbl.streamUrl
+                                                        .like('%movie%')
+                                                        .not() &
+                                                    tbl.streamUrl
+                                                        .like('%series%')
+                                                        .not(),
+                                              ))
                                             .get();
 
                                     // channelTv.then((data) {
@@ -214,12 +263,12 @@ class _TvScreenState extends State<TvScreen> {
                 loadM3U();
 
                 if (context.mounted) {
-                  showFToast(
-                    context: context,
-                    alignment: FToastAlignment.topCenter,
-                    title: const Text('Playlist Loaded'),
-                    description: const Text('Lorem ipsum dolor sit amet'),
-                  );
+                  // showFToast(
+                  //   context: context,
+                  //   alignment: FToastAlignment.topCenter,
+                  //   title: const Text('Playlist Loaded'),
+                  //   description: const Text('Lorem ipsum dolor sit amet'),
+                  // );
                 }
               }
             },
@@ -229,13 +278,216 @@ class _TvScreenState extends State<TvScreen> {
       child: Column(
         spacing: 0,
         children: [
-          FTextField(hint: "Find something to watch..."),
+          FTile(
+            prefix: SizedBox(
+              width: 20,
+              height: 20,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.green[800],
+                ),
+              ),
+            ),
+            title: Text("IPTV-ORG COUNTRY"),
+            // subtitle: Text("Active playlist"),
+            subtitle: Text("2.250 channel"),
+            suffix: Icon(FIcons.chevronRight),
+            onPress: () async {
+              showFDialog(
+                context: context,
+                builder: (context, style, animation) => FDialog(
+                  animation: animation,
+                  direction: Axis.horizontal,
+                  title: const Text('Change playlist'),
+                  body: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FDivider(
+                        style: (style) => style.copyWith(
+                          padding: EdgeInsets.symmetric(vertical: 5),
+                        ),
+                      ),
+                      FItemGroup(
+                        children: [
+                          FItem(
+                            prefix: Icon(FIcons.circleDashed),
+                            title: Text("IPTV-ORG ID"),
+                            suffix: Icon(FIcons.check),
+                            onPress: () async {
+                              // update data old selected as false
+                              // await (driftDb.update(driftDb.playlist)..where(
+                              //       (tbl) => tbl.isSelected.equals(true),
+                              //     ))
+                              //     .write(
+                              //       const PlaylistCompanion(
+                              //         isSelected: drift.Value(false),
+                              //       ),
+                              //     );
+
+                              // update data old selected as false
+                              // await (driftDb.update(
+                              //   driftDb.playlist,
+                              // )..where((tbl) => tbl.id.equals(e.id))).write(
+                              //   const PlaylistCompanion(
+                              //     isSelected: drift.Value(true),
+                              //   ),
+                              // );
+
+                              // loadPlaylist();
+
+                              if (context.mounted) {
+                                context.pop();
+
+                                // showFToast(
+                                //   context: context,
+                                //   alignment:
+                                //       FToastAlignment
+                                //           .topCenter,
+                                //   title: Text(
+                                //     "Set ${e.name} as active playlist",
+                                //   ),
+                                // );
+                                // showFlutterToast(
+                                //   context: context,
+                                //   message: "Set ${e.name} as active playlist",
+                                // );
+                              }
+                            },
+                          ),
+                          FItem(
+                            prefix: Icon(FIcons.circleDashed),
+                            title: Text("IPTV-ORG MY"),
+                            onPress: () async {
+                              // delete channel first
+                              // await (driftDb.delete(
+                              //   driftDb.playlist,
+                              // )..where((tbl) => tbl.id.equals(e.id))).go();
+
+                              // // delete channel first
+                              // await (driftDb.delete(driftDb.channel)..where(
+                              //       (tbl) => tbl.playlistId.equals(e.id),
+                              //     ))
+                              //     .go();
+
+                              // loadPlaylist();
+
+                              if (context.mounted) {
+                                context.pop();
+
+                                // showFToast(
+                                //   context: context,
+                                //   alignment:
+                                //       FToastAlignment
+                                //           .topCenter,
+                                //   title: Text(
+                                //     "Removed ${e.name} from playlist",
+                                //   ),
+                                // );
+                                // showFlutterToast(
+                                //   context: context,
+                                //   message: "Removed ${e.name} from playlist",
+                                // );
+                              }
+                            },
+                          ),
+                          FItem(
+                            prefix: Icon(FIcons.circleDashed),
+                            title: Text("IPTV-ORG PE"),
+                            onPress: () async {
+                              // delete channel first
+                              // await (driftDb.delete(
+                              //   driftDb.playlist,
+                              // )..where((tbl) => tbl.id.equals(e.id))).go();
+
+                              // // delete channel first
+                              // await (driftDb.delete(driftDb.channel)..where(
+                              //       (tbl) => tbl.playlistId.equals(e.id),
+                              //     ))
+                              //     .go();
+
+                              // loadPlaylist();
+
+                              if (context.mounted) {
+                                context.pop();
+
+                                // showFToast(
+                                //   context: context,
+                                //   alignment:
+                                //       FToastAlignment
+                                //           .topCenter,
+                                //   title: Text(
+                                //     "Removed ${e.name} from playlist",
+                                //   ),
+                                // );
+                                // showFlutterToast(
+                                //   context: context,
+                                //   message: "Removed ${e.name} from playlist",
+                                // );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    FButton(
+                      style: FButtonStyle.outline(),
+                      onPress: () => context.pop(),
+                      child: const Text('Close'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          Gap(5),
+          FTextField(
+            controller: searchController,
+            hint: "Find something to watch...",
+            label: Text("Search"),
+            clearable: (e) => e.text.isNotEmpty,
+            onChange: (String value) {
+              _debouncer.debounce(
+                duration: _debounceDuration,
+                onDebounce: () async {
+                  // await ref
+                  //     .read(blockNominatimSearchNotifierProvider.notifier)
+                  //     .perform(query.text);
+                  // completer.complete();
+                  // debugPrint(value);
+                  loadM3U(search: value);
+                },
+              );
+            },
+          ),
+          Gap(10),
           Expanded(
             child: channels.isEmpty
-                ? Center(child: FProgress.circularIcon())
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("No Data"),
+                        Gap(10),
+                        SizedBox(
+                          width: 100,
+                          child: FButton(
+                            style: FButtonStyle.outline(),
+                            onPress: () {
+                              loadM3U();
+                            },
+                            child: Text("Refresh"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 : GridView.builder(
+                    padding: EdgeInsets.zero,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: isPortrait ? 4 : 8,
+                      crossAxisCount: isPotrait ? 4 : 8,
                       crossAxisSpacing: 5,
                       mainAxisSpacing: 5,
                       childAspectRatio: 1,

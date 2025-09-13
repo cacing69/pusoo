@@ -16,7 +16,24 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 5;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) {
+        return m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        // Hapus semua tabel jika ada perubahan skema
+        // Ini adalah cara untuk "reset" database
+        for (final table in allTables) {
+          await m.deleteTable(table.actualTableName);
+        }
+        await m.createAll();
+      },
+    );
+  }
 
   static QueryExecutor _openConnection() {
     return driftDatabase(

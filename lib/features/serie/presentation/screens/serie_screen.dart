@@ -80,6 +80,9 @@ class _SerieScreenState extends State<SerieScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isPotrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
     return FScaffold(
       resizeToAvoidBottomInset: false,
       header: FHeader(
@@ -106,13 +109,22 @@ class _SerieScreenState extends State<SerieScreen> {
                       spacing: 5,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Category",
-                          style: context.theme.typography.lg.copyWith(
-                            fontWeight: FontWeight.bold,
+                        Row(
+                          children: [
+                            Gap(10),
+                            Text(
+                              "Category",
+                              style: context.theme.typography.base.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        FDivider(
+                          style: (style) => style.copyWith(
+                            padding: EdgeInsets.symmetric(vertical: 5),
                           ),
                         ),
-                        Gap(1),
                         Expanded(
                           child: SingleChildScrollView(
                             child: Column(
@@ -120,7 +132,7 @@ class _SerieScreenState extends State<SerieScreen> {
                               children: [
                                 FTile(
                                   prefix: Icon(FIcons.tags),
-                                  title: Text("All Channel"),
+                                  title: Text("All Series"),
                                   suffix: Icon(FIcons.chevronRight),
                                   onPress: () async {
                                     // Bisa navigasi ke halaman detail channel per kategori
@@ -149,7 +161,7 @@ class _SerieScreenState extends State<SerieScreen> {
                                   },
                                 ),
                                 ...categories.keys.map((categoryName) {
-                                  return FTile(
+                                  return FItem(
                                     prefix: Icon(FIcons.tag),
                                     title: Text(
                                       (categoryName as String)
@@ -218,12 +230,12 @@ class _SerieScreenState extends State<SerieScreen> {
               if (result is bool && result) {
                 loadM3U();
 
-                showFToast(
-                  context: context,
-                  alignment: FToastAlignment.bottomCenter,
-                  title: const Text('Playlist Loaded'),
-                  description: const Text('Lorem ipsum dolor sit amet'),
-                );
+                // showFToast(
+                //   context: context,
+                //   alignment: FToastAlignment.bottomCenter,
+                //   title: const Text('Playlist Loaded'),
+                //   description: const Text('Lorem ipsum dolor sit amet'),
+                // );
               }
             },
           ),
@@ -237,13 +249,13 @@ class _SerieScreenState extends State<SerieScreen> {
             child: seriesTitle.isEmpty
                 ? Center(child: FProgress.circularIcon())
                 : GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          crossAxisSpacing: 5,
-                          mainAxisSpacing: 5,
-                          childAspectRatio: 0.75,
-                        ),
+                    padding: EdgeInsets.zero,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: isPotrait ? 4 : 8,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 5,
+                      childAspectRatio: 0.75,
+                    ),
                     itemCount: seriesTitle.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(

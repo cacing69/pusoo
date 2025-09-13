@@ -1,0 +1,273 @@
+import 'package:flutter/material.dart';
+import 'package:forui/forui.dart';
+import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pusoo/core/utils/helpers.dart';
+import 'package:pusoo/router.dart';
+import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
+import 'package:drift/drift.dart' as drift;
+
+class ManageProviderScreen extends StatefulWidget {
+  const ManageProviderScreen({super.key});
+
+  @override
+  State<ManageProviderScreen> createState() => _ManageProviderScreenState();
+}
+
+class _ManageProviderScreenState extends State<ManageProviderScreen> {
+  List<PlaylistData> playlist = [];
+
+  void loadPlaylist() async {
+    final allPlaylists = await driftDb.select(driftDb.playlist).get();
+
+    setState(() {
+      playlist = allPlaylists;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    loadPlaylist();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FScaffold(
+      header: FHeader.nested(
+        title: Text("Manage Provider"),
+        prefixes: [
+          FHeaderAction.back(
+            onPress: () {
+              context.pop(false);
+            },
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          FButton(
+            style: FButtonStyle.outline(),
+            onPress: () async {
+              final result = await context.pushNamed(
+                RouteName.addNewProvider.name,
+              );
+
+              if (result is bool && result) {
+                // reload available
+                loadPlaylist();
+
+                if (context.mounted) {
+                  showFlutterToast(context: context, message: "Playlist Saved");
+                  // showFToast(
+                  //   context: context,
+                  //   alignment: FToastAlignment.topCenter,
+                  //   title: const Text('Playlist Saved'),
+                  // );
+                }
+              }
+            },
+            prefix: Icon(FIcons.plus),
+            child: Text("Add new Provider"),
+          ),
+          Gap(10),
+          Expanded(
+            child: Builder(
+              builder: (context) {
+                if (playlist.isEmpty) {
+                  return Expanded(child: Center(child: Text("No Data")));
+                } else {
+                  return SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 5,
+                      children: [
+                        ...playlist.map((e) {
+                          return FTile(
+                            prefix: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: e.isSelected
+                                      ? Colors.green[800]
+                                      : context.theme.colors.destructive,
+                                ),
+                              ),
+                            ),
+                            title: Text(e.name),
+                            subtitle: Text(e.url),
+                            suffix: Icon(FIcons.chevronRight),
+                            onPress: e.isSelected
+                                ? () {
+                                    showFlutterToast(
+                                      context: context,
+                                      message:
+                                          "This is the active playlist. Please select another.",
+                                    );
+                                  }
+                                : () {
+                                    showFDialog(
+                                      context: context,
+                                      builder: (context, style, animation) => FDialog(
+                                        animation: animation,
+                                        direction: Axis.horizontal,
+                                        title: const Text('Select an action'),
+                                        body: Column(
+                                          children: [
+                                            Text(
+                                              "Please choose an action to perform on this playlist.",
+                                            ),
+                                            FDivider(
+                                              style: (style) => style.copyWith(
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: 5,
+                                                ),
+                                              ),
+                                            ),
+                                            FItemGroup(
+                                              children: [
+                                                FItem(
+                                                  prefix: Icon(
+                                                    FIcons.circleDashed,
+                                                  ),
+                                                  title: Text(
+                                                    "Set as active playlist",
+                                                  ),
+                                                  suffix: Icon(FIcons.check),
+                                                  onPress: () async {
+                                                    // update data old selected as false
+                                                    await (driftDb.update(
+                                                          driftDb.playlist,
+                                                        )..where(
+                                                          (tbl) => tbl
+                                                              .isSelected
+                                                              .equals(true),
+                                                        ))
+                                                        .write(
+                                                          const PlaylistCompanion(
+                                                            isSelected:
+                                                                drift.Value(
+                                                                  false,
+                                                                ),
+                                                          ),
+                                                        );
+
+                                                    // update data old selected as false
+                                                    await (driftDb.update(
+                                                          driftDb.playlist,
+                                                        )..where(
+                                                          (tbl) => tbl.id
+                                                              .equals(e.id),
+                                                        ))
+                                                        .write(
+                                                          const PlaylistCompanion(
+                                                            isSelected:
+                                                                drift.Value(
+                                                                  true,
+                                                                ),
+                                                          ),
+                                                        );
+
+                                                    loadPlaylist();
+
+                                                    if (context.mounted) {
+                                                      context.pop();
+
+                                                      // showFToast(
+                                                      //   context: context,
+                                                      //   alignment:
+                                                      //       FToastAlignment
+                                                      //           .topCenter,
+                                                      //   title: Text(
+                                                      //     "Set ${e.name} as active playlist",
+                                                      //   ),
+                                                      // );
+                                                      showFlutterToast(
+                                                        context: context,
+                                                        message:
+                                                            "Set ${e.name} as active playlist",
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                                FItem(
+                                                  prefix: Icon(
+                                                    FIcons.circleDashed,
+                                                  ),
+                                                  title: Text(
+                                                    "Remove from playlist",
+                                                  ),
+                                                  suffix: Icon(FIcons.trash),
+                                                  onPress: () async {
+                                                    // delete channel first
+                                                    await (driftDb.delete(
+                                                          driftDb.playlist,
+                                                        )..where(
+                                                          (tbl) => tbl.id
+                                                              .equals(e.id),
+                                                        ))
+                                                        .go();
+
+                                                    // delete channel first
+                                                    await (driftDb.delete(
+                                                          driftDb.channel,
+                                                        )..where(
+                                                          (tbl) => tbl
+                                                              .playlistId
+                                                              .equals(e.id),
+                                                        ))
+                                                        .go();
+
+                                                    loadPlaylist();
+
+                                                    if (context.mounted) {
+                                                      context.pop();
+
+                                                      // showFToast(
+                                                      //   context: context,
+                                                      //   alignment:
+                                                      //       FToastAlignment
+                                                      //           .topCenter,
+                                                      //   title: Text(
+                                                      //     "Removed ${e.name} from playlist",
+                                                      //   ),
+                                                      // );
+                                                      showFlutterToast(
+                                                        context: context,
+                                                        message:
+                                                            "Removed ${e.name} from playlist",
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        actions: [
+                                          FButton(
+                                            style: FButtonStyle.outline(),
+                                            onPress: () => context.pop(),
+                                            child: const Text('Close'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                          );
+                        }),
+                      ],
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

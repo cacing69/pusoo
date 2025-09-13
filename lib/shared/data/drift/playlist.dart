@@ -8,6 +8,8 @@ class Playlist extends Table {
       text().clientDefault(() => Ulid().toString())(); // ULID as primary key
 
   TextColumn get name => text()();
+  TextColumn get type => text().nullable()();
+  TextColumn get epgLink => text().nullable()();
   TextColumn get url => text()();
   DateTimeColumn get lastUpdated => dateTime().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();

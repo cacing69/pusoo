@@ -28,6 +28,26 @@ class $PlaylistTable extends Playlist
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _epgLinkMeta = const VerificationMeta(
+    'epgLink',
+  );
+  @override
+  late final GeneratedColumn<String> epgLink = GeneratedColumn<String>(
+    'epg_link',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _urlMeta = const VerificationMeta('url');
   @override
   late final GeneratedColumn<String> url = GeneratedColumn<String>(
@@ -79,6 +99,8 @@ class $PlaylistTable extends Playlist
   List<GeneratedColumn> get $columns => [
     id,
     name,
+    type,
+    epgLink,
     url,
     lastUpdated,
     createdAt,
@@ -106,6 +128,18 @@ class $PlaylistTable extends Playlist
       );
     } else if (isInserting) {
       context.missing(_nameMeta);
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    }
+    if (data.containsKey('epg_link')) {
+      context.handle(
+        _epgLinkMeta,
+        epgLink.isAcceptableOrUnknown(data['epg_link']!, _epgLinkMeta),
+      );
     }
     if (data.containsKey('url')) {
       context.handle(
@@ -153,6 +187,14 @@ class $PlaylistTable extends Playlist
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      ),
+      epgLink: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}epg_link'],
+      ),
       url: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}url'],
@@ -181,6 +223,8 @@ class $PlaylistTable extends Playlist
 class PlaylistData extends DataClass implements Insertable<PlaylistData> {
   final String id;
   final String name;
+  final String? type;
+  final String? epgLink;
   final String url;
   final DateTime? lastUpdated;
   final DateTime createdAt;
@@ -188,6 +232,8 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
   const PlaylistData({
     required this.id,
     required this.name,
+    this.type,
+    this.epgLink,
     required this.url,
     this.lastUpdated,
     required this.createdAt,
@@ -198,6 +244,12 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['name'] = Variable<String>(name);
+    if (!nullToAbsent || type != null) {
+      map['type'] = Variable<String>(type);
+    }
+    if (!nullToAbsent || epgLink != null) {
+      map['epg_link'] = Variable<String>(epgLink);
+    }
     map['url'] = Variable<String>(url);
     if (!nullToAbsent || lastUpdated != null) {
       map['last_updated'] = Variable<DateTime>(lastUpdated);
@@ -211,6 +263,10 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
     return PlaylistCompanion(
       id: Value(id),
       name: Value(name),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      epgLink: epgLink == null && nullToAbsent
+          ? const Value.absent()
+          : Value(epgLink),
       url: Value(url),
       lastUpdated: lastUpdated == null && nullToAbsent
           ? const Value.absent()
@@ -228,6 +284,8 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
     return PlaylistData(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      type: serializer.fromJson<String?>(json['type']),
+      epgLink: serializer.fromJson<String?>(json['epgLink']),
       url: serializer.fromJson<String>(json['url']),
       lastUpdated: serializer.fromJson<DateTime?>(json['lastUpdated']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -240,6 +298,8 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
+      'type': serializer.toJson<String?>(type),
+      'epgLink': serializer.toJson<String?>(epgLink),
       'url': serializer.toJson<String>(url),
       'lastUpdated': serializer.toJson<DateTime?>(lastUpdated),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -250,6 +310,8 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
   PlaylistData copyWith({
     String? id,
     String? name,
+    Value<String?> type = const Value.absent(),
+    Value<String?> epgLink = const Value.absent(),
     String? url,
     Value<DateTime?> lastUpdated = const Value.absent(),
     DateTime? createdAt,
@@ -257,6 +319,8 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
   }) => PlaylistData(
     id: id ?? this.id,
     name: name ?? this.name,
+    type: type.present ? type.value : this.type,
+    epgLink: epgLink.present ? epgLink.value : this.epgLink,
     url: url ?? this.url,
     lastUpdated: lastUpdated.present ? lastUpdated.value : this.lastUpdated,
     createdAt: createdAt ?? this.createdAt,
@@ -266,6 +330,8 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
     return PlaylistData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
+      type: data.type.present ? data.type.value : this.type,
+      epgLink: data.epgLink.present ? data.epgLink.value : this.epgLink,
       url: data.url.present ? data.url.value : this.url,
       lastUpdated: data.lastUpdated.present
           ? data.lastUpdated.value
@@ -282,6 +348,8 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
     return (StringBuffer('PlaylistData(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('epgLink: $epgLink, ')
           ..write('url: $url, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('createdAt: $createdAt, ')
@@ -291,14 +359,24 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, name, url, lastUpdated, createdAt, isSelected);
+  int get hashCode => Object.hash(
+    id,
+    name,
+    type,
+    epgLink,
+    url,
+    lastUpdated,
+    createdAt,
+    isSelected,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is PlaylistData &&
           other.id == this.id &&
           other.name == this.name &&
+          other.type == this.type &&
+          other.epgLink == this.epgLink &&
           other.url == this.url &&
           other.lastUpdated == this.lastUpdated &&
           other.createdAt == this.createdAt &&
@@ -308,6 +386,8 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
 class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
   final Value<String> id;
   final Value<String> name;
+  final Value<String?> type;
+  final Value<String?> epgLink;
   final Value<String> url;
   final Value<DateTime?> lastUpdated;
   final Value<DateTime> createdAt;
@@ -316,6 +396,8 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
   const PlaylistCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.epgLink = const Value.absent(),
     this.url = const Value.absent(),
     this.lastUpdated = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -325,6 +407,8 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
   PlaylistCompanion.insert({
     this.id = const Value.absent(),
     required String name,
+    this.type = const Value.absent(),
+    this.epgLink = const Value.absent(),
     required String url,
     this.lastUpdated = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -335,6 +419,8 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
   static Insertable<PlaylistData> custom({
     Expression<String>? id,
     Expression<String>? name,
+    Expression<String>? type,
+    Expression<String>? epgLink,
     Expression<String>? url,
     Expression<DateTime>? lastUpdated,
     Expression<DateTime>? createdAt,
@@ -344,6 +430,8 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (type != null) 'type': type,
+      if (epgLink != null) 'epg_link': epgLink,
       if (url != null) 'url': url,
       if (lastUpdated != null) 'last_updated': lastUpdated,
       if (createdAt != null) 'created_at': createdAt,
@@ -355,6 +443,8 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
   PlaylistCompanion copyWith({
     Value<String>? id,
     Value<String>? name,
+    Value<String?>? type,
+    Value<String?>? epgLink,
     Value<String>? url,
     Value<DateTime?>? lastUpdated,
     Value<DateTime>? createdAt,
@@ -364,6 +454,8 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
     return PlaylistCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
+      type: type ?? this.type,
+      epgLink: epgLink ?? this.epgLink,
       url: url ?? this.url,
       lastUpdated: lastUpdated ?? this.lastUpdated,
       createdAt: createdAt ?? this.createdAt,
@@ -380,6 +472,12 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (epgLink.present) {
+      map['epg_link'] = Variable<String>(epgLink.value);
     }
     if (url.present) {
       map['url'] = Variable<String>(url.value);
@@ -404,6 +502,8 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
     return (StringBuffer('PlaylistCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('epgLink: $epgLink, ')
           ..write('url: $url, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('createdAt: $createdAt, ')
@@ -1190,6 +1290,8 @@ typedef $$PlaylistTableCreateCompanionBuilder =
     PlaylistCompanion Function({
       Value<String> id,
       required String name,
+      Value<String?> type,
+      Value<String?> epgLink,
       required String url,
       Value<DateTime?> lastUpdated,
       Value<DateTime> createdAt,
@@ -1200,6 +1302,8 @@ typedef $$PlaylistTableUpdateCompanionBuilder =
     PlaylistCompanion Function({
       Value<String> id,
       Value<String> name,
+      Value<String?> type,
+      Value<String?> epgLink,
       Value<String> url,
       Value<DateTime?> lastUpdated,
       Value<DateTime> createdAt,
@@ -1223,6 +1327,16 @@ class $$PlaylistTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get epgLink => $composableBuilder(
+    column: $table.epgLink,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1266,6 +1380,16 @@ class $$PlaylistTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get epgLink => $composableBuilder(
+    column: $table.epgLink,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get url => $composableBuilder(
     column: $table.url,
     builder: (column) => ColumnOrderings(column),
@@ -1301,6 +1425,12 @@ class $$PlaylistTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get epgLink =>
+      $composableBuilder(column: $table.epgLink, builder: (column) => column);
 
   GeneratedColumn<String> get url =>
       $composableBuilder(column: $table.url, builder: (column) => column);
@@ -1352,6 +1482,8 @@ class $$PlaylistTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> epgLink = const Value.absent(),
                 Value<String> url = const Value.absent(),
                 Value<DateTime?> lastUpdated = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -1360,6 +1492,8 @@ class $$PlaylistTableTableManager
               }) => PlaylistCompanion(
                 id: id,
                 name: name,
+                type: type,
+                epgLink: epgLink,
                 url: url,
                 lastUpdated: lastUpdated,
                 createdAt: createdAt,
@@ -1370,6 +1504,8 @@ class $$PlaylistTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 required String name,
+                Value<String?> type = const Value.absent(),
+                Value<String?> epgLink = const Value.absent(),
                 required String url,
                 Value<DateTime?> lastUpdated = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -1378,6 +1514,8 @@ class $$PlaylistTableTableManager
               }) => PlaylistCompanion.insert(
                 id: id,
                 name: name,
+                type: type,
+                epgLink: epgLink,
                 url: url,
                 lastUpdated: lastUpdated,
                 createdAt: createdAt,

@@ -311,7 +311,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             prefix: Icon(FIcons.play),
             onPress: () {
               context.pushNamed(
-                RouteName.videoPlayer.name,
+                RouteName.videoPlayerFull.name,
                 extra: widget.channel,
               );
             },
