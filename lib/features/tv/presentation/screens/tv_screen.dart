@@ -67,6 +67,13 @@ class _TvScreenState extends State<TvScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    final double itemWidth = 120;
+    final int crossAxisCount = (screenWidth / itemWidth).floor();
+
     return FScaffold(
       resizeToAvoidBottomInset: false,
       header: FHeader(
@@ -103,7 +110,7 @@ class _TvScreenState extends State<TvScreen> {
                         Expanded(
                           child: SingleChildScrollView(
                             child: Column(
-                              spacing: 5,
+                              spacing: 0,
                               children: [
                                 FItem(
                                   prefix: Icon(FIcons.tags),
@@ -227,13 +234,12 @@ class _TvScreenState extends State<TvScreen> {
             child: channels.isEmpty
                 ? Center(child: FProgress.circularIcon())
                 : GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          crossAxisSpacing: 5,
-                          mainAxisSpacing: 5,
-                          childAspectRatio: 1,
-                        ),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: isPortrait ? 4 : 8,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 5,
+                      childAspectRatio: 1,
+                    ),
                     itemCount: channels.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(

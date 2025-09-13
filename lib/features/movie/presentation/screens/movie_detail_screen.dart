@@ -564,60 +564,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
               ),
             ],
           ),
-          // const SizedBox(height: 16),
-          // // Deskripsi
-          // Text(
-          //   'A thriller set two hundred years in the future following the case of a missing young woman who brings a hardened detective and a rogue ship\'s captain together ...',
-          //   style: TextStyle(color: Colors.grey[300]),
-          // ),
-          // const SizedBox(height: 16),
-          // Genres
-          // Wrap(
-          //   spacing: 8,
-          //   children: [
-          //     Chip(label: Text('Drama')),
-          //     Chip(label: Text('Mystery')),
-          //     Chip(label: Text('Sci-Fi & Fantasy')),
-          //   ],
-          // ),
-          // const SizedBox(height: 16),
-          // Networks
-          // Wrap(
-          //   spacing: 8,
-          //   children: [
-          //     Chip(label: Text('Syfy')),
-          //     Chip(label: Text('Amazon')),
-          //   ],
-          // ),
-          // const SizedBox(height: 24),
-          // Last episode
-          // Column(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   children: [
-          //     Text(
-          //       'Last episode',
-          //       style: TextStyle(
-          //         color: Colors.white,
-          //         fontWeight: FontWeight.bold,
-          //       ),
-          //     ),
-          //     const SizedBox(height: 8),
-          //     // ListTile(
-          //     //   contentPadding: EdgeInsets.zero,
-          //     //   leading: Image.network(
-          //     //     'https://s.studiobinder.com/wp-content/uploads/2017/12/Movie-Poster-Template-Dark-with-Image.jpg?x81279',
-          //     //     width: 100,
-          //     //     fit: BoxFit.cover,
-          //     //   ),
-          //     //   title: Text('Tribes', style: TextStyle(color: Colors.white)),
-          //     //   subtitle: Text(
-          //     //     'S05E06 • 6 Jan 2021',
-          //     //     style: TextStyle(color: Colors.grey[400]),
-          //     //   ),
-          //     //   trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
-          //     // ),
-          //   ],
-          // ),
         ],
       ),
     );

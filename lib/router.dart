@@ -3,6 +3,7 @@ import 'package:pusoo/features/add_playlist/presentation/screens/add_playlist_sc
 import 'package:pusoo/features/detail/presentation/screens/detail_screen.dart';
 import 'package:pusoo/features/home/presentation/screens/home_screen.dart';
 import 'package:pusoo/features/movie/presentation/screens/movie_detail_screen.dart';
+import 'package:pusoo/features/tv/presentation/screens/tv_player_full_screen.dart';
 // import 'package:pusoo/features/iptv_player/presentation/screens/iptv_player_full_screen.dart';
 import 'package:pusoo/features/video_player/presentation/screens/video_player_screen.dart';
 import 'package:pusoo/features/tv/presentation/screens/tv_player_screen.dart';
@@ -16,6 +17,7 @@ enum RouteName {
   detail,
   videoPlayer,
   tvPlayer,
+  tvPlayerFull,
   addPlaylist,
   movieDetail,
   youtubeIframePlayer,
@@ -49,6 +51,13 @@ final List<GoRoute> defaultRouter = [
     name: RouteName.tvPlayer.name,
     builder: (context, state) {
       return TvPlayerScreen(channel: state.extra as ChannelData);
+    },
+  ),
+  GoRoute(
+    path: '/tv-player-full',
+    name: RouteName.tvPlayerFull.name,
+    builder: (context, state) {
+      return TvPlayerFullScreen(channel: state.extra as ChannelData);
     },
   ),
   GoRoute(
