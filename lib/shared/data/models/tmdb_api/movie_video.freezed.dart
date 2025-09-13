@@ -217,7 +217,7 @@ return $default(_that.iso6391,_that.iso31661,_that.name,_that.key,_that.site,_th
 @JsonSerializable()
 
 class _MovieVideo implements MovieVideo {
-  const _MovieVideo({@JsonKey(name: "iso_639_1") this.iso6391 = null, @JsonKey(name: "iso_3166_1") this.iso31661 = null, this.name = null, this.key = null, this.site = null, this.size = null, this.type = null, this.oficial = false, @JsonKey(name: "published_at") this.publishedAt = null});
+  const _MovieVideo({@JsonKey(name: "iso_639_1") this.iso6391, @JsonKey(name: "iso_3166_1") this.iso31661, this.name = null, this.key = null, this.site = null, this.size = null, this.type = null, this.oficial = false, @JsonKey(name: "published_at") this.publishedAt});
   factory _MovieVideo.fromJson(Map<String, dynamic> json) => _$MovieVideoFromJson(json);
 
 @override@JsonKey(name: "iso_639_1") final  String? iso6391;

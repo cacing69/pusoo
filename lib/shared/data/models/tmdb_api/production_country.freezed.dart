@@ -210,7 +210,7 @@ return $default(_that.name,_that.iso31661);case _:
 @JsonSerializable()
 
 class _ProductionCountry implements ProductionCountry {
-  const _ProductionCountry({this.name = null, @JsonKey(name: "iso_3166_1") this.iso31661 = null});
+  const _ProductionCountry({this.name = null, @JsonKey(name: "iso_3166_1") this.iso31661});
   factory _ProductionCountry.fromJson(Map<String, dynamic> json) => _$ProductionCountryFromJson(json);
 
 @override@JsonKey() final  String? name;

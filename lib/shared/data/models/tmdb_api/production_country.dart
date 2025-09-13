@@ -7,7 +7,7 @@ part 'production_country.freezed.dart';
 abstract class ProductionCountry with _$ProductionCountry {
   const factory ProductionCountry({
     @Default(null) String? name,
-    @Default(null) @JsonKey(name: "iso_3166_1") String? iso31661,
+    @JsonKey(name: "iso_3166_1") String? iso31661,
   }) = _ProductionCountry;
 
   factory ProductionCountry.fromJson(Map<String, dynamic> json) =>

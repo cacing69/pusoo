@@ -220,7 +220,7 @@ return $default(_that.adult,_that.gender,_that.id,_that.knownForDepartment,_that
 @JsonSerializable()
 
 class _MovieCast implements MovieCast {
-  const _MovieCast({this.adult = true, this.gender = 0, this.id = 0, @JsonKey(name: "known_for_department") this.knownForDepartment = null, this.name = null, @JsonKey(name: "original_name") this.originalName = null, this.popularity = 0, @JsonKey(name: "profile_path") this.profilePath = null, @JsonKey(name: "cast_id") this.castId = 0, this.character = null, @JsonKey(name: "credit_id") this.creditId = null, this.order = 0});
+  const _MovieCast({this.adult = true, this.gender = 0, this.id = 0, @JsonKey(name: "known_for_department") this.knownForDepartment = null, this.name = null, @JsonKey(name: "original_name") this.originalName, this.popularity = 0, @JsonKey(name: "profile_path") this.profilePath, @JsonKey(name: "cast_id") this.castId = 0, this.character = null, @JsonKey(name: "credit_id") this.creditId, this.order = 0});
   factory _MovieCast.fromJson(Map<String, dynamic> json) => _$MovieCastFromJson(json);
 
 @override@JsonKey() final  bool adult;

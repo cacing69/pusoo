@@ -1,16 +1,16 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'movie_detail_response.dart';
+part of 'movie_details_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_MovieDetailResponse _$MovieDetailResponseFromJson(
+_MovieDetailsResponse _$MovieDetailsResponseFromJson(
   Map<String, dynamic> json,
-) => _MovieDetailResponse(
+) => _MovieDetailsResponse(
   adult: json['adult'] as bool? ?? null,
-  backdropPath: json['backdrop_path'] as String? ?? null,
+  backdropPath: json['backdrop_path'] as String?,
   budget: (json['budget'] as num?)?.toInt() ?? null,
   genres:
       (json['genres'] as List<dynamic>?)
@@ -19,17 +19,15 @@ _MovieDetailResponse _$MovieDetailResponseFromJson(
       null,
   homepage: json['homepage'] as String? ?? null,
   id: (json['id'] as num?)?.toInt() ?? null,
-  imdbId: json['imdb_id'] as String? ?? null,
-  originCountry:
-      (json['origin_country'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList() ??
-      null,
-  originalLanguage: json['original_language'] as String? ?? null,
-  originalTitle: json['original_title'] as String? ?? null,
+  imdbId: json['imdb_id'] as String?,
+  originCountry: (json['origin_country'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  originalLanguage: json['original_language'] as String?,
+  originalTitle: json['original_title'] as String?,
   overview: json['overview'] as String? ?? null,
   popularity: (json['popularity'] as num?)?.toDouble() ?? null,
-  posterPath: json['poster_path'] as String? ?? null,
+  posterPath: json['poster_path'] as String?,
   productionCompanies:
       (json['production_companies'] as List<dynamic>?)
           ?.map((e) => ProductionCompany.fromJson(e as Map<String, dynamic>))
@@ -40,7 +38,7 @@ _MovieDetailResponse _$MovieDetailResponseFromJson(
           ?.map((e) => ProductionCountry.fromJson(e as Map<String, dynamic>))
           .toList() ??
       null,
-  releaseDate: json['release_date'] as String? ?? null,
+  releaseDate: json['release_date'] as String?,
   revenue: (json['revenue'] as num?)?.toInt() ?? null,
   runtime: (json['runtime'] as num?)?.toInt() ?? null,
   spokenLanguages:
@@ -52,12 +50,12 @@ _MovieDetailResponse _$MovieDetailResponseFromJson(
   tagline: json['tagline'] as String? ?? null,
   title: json['title'] as String? ?? null,
   video: json['video'] as bool? ?? null,
-  voteAverage: (json['vote_average'] as num?)?.toDouble() ?? null,
-  voteCount: (json['vote_count'] as num?)?.toInt() ?? null,
+  voteAverage: (json['vote_average'] as num?)?.toDouble(),
+  voteCount: (json['vote_count'] as num?)?.toInt(),
 );
 
-Map<String, dynamic> _$MovieDetailResponseToJson(
-  _MovieDetailResponse instance,
+Map<String, dynamic> _$MovieDetailsResponseToJson(
+  _MovieDetailsResponse instance,
 ) => <String, dynamic>{
   'adult': instance.adult,
   'backdrop_path': instance.backdropPath,

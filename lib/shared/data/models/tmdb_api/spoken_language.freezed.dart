@@ -211,7 +211,7 @@ return $default(_that.iso6391,_that.name,_that.englishName);case _:
 @JsonSerializable()
 
 class _SpokenLanguage implements SpokenLanguage {
-  const _SpokenLanguage({@JsonKey(name: "iso_639_1") this.iso6391 = null, this.name = null, @JsonKey(name: "english_name") this.englishName = null});
+  const _SpokenLanguage({@JsonKey(name: "iso_639_1") this.iso6391, this.name = null, @JsonKey(name: "english_name") this.englishName});
   factory _SpokenLanguage.fromJson(Map<String, dynamic> json) => _$SpokenLanguageFromJson(json);
 
 @override@JsonKey(name: "iso_639_1") final  String? iso6391;

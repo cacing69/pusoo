@@ -212,7 +212,7 @@ return $default(_that.id,_that.name,_that.logoPath,_that.originCountry);case _:
 @JsonSerializable()
 
 class _ProductionCompany implements ProductionCompany {
-  const _ProductionCompany({this.id = null, this.name = null, @JsonKey(name: "logo_path") this.logoPath = null, @JsonKey(name: "production_companies") this.originCountry = null});
+  const _ProductionCompany({this.id = null, this.name = null, @JsonKey(name: "logo_path") this.logoPath, @JsonKey(name: "production_companies") this.originCountry});
   factory _ProductionCompany.fromJson(Map<String, dynamic> json) => _$ProductionCompanyFromJson(json);
 
 @override@JsonKey() final  int? id;

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'movie_detail_response.dart';
+part of 'movie_details_response.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,22 +13,22 @@ part of 'movie_detail_response.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$MovieDetailResponse {
+mixin _$MovieDetailsResponse {
 
  bool? get adult;@JsonKey(name: 'backdrop_path') String? get backdropPath; int? get budget; List<Genre>? get genres; String? get homepage; int? get id;@JsonKey(name: 'imdb_id') String? get imdbId;@JsonKey(name: 'origin_country') List<String>? get originCountry;@JsonKey(name: 'original_language') String? get originalLanguage;@JsonKey(name: 'original_title') String? get originalTitle; String? get overview; double? get popularity;@JsonKey(name: 'poster_path') String? get posterPath;@JsonKey(name: 'production_companies') List<ProductionCompany>? get productionCompanies;@JsonKey(name: 'production_countries') List<ProductionCountry>? get productionCountries;@JsonKey(name: 'release_date') String? get releaseDate; int? get revenue; int? get runtime;@JsonKey(name: 'spoken_languages') List<SpokenLanguage>? get spokenLanguages; String? get status; String? get tagline; String? get title; bool? get video;@JsonKey(name: 'vote_average') double? get voteAverage;@JsonKey(name: 'vote_count') int? get voteCount;
-/// Create a copy of MovieDetailResponse
+/// Create a copy of MovieDetailsResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$MovieDetailResponseCopyWith<MovieDetailResponse> get copyWith => _$MovieDetailResponseCopyWithImpl<MovieDetailResponse>(this as MovieDetailResponse, _$identity);
+$MovieDetailsResponseCopyWith<MovieDetailsResponse> get copyWith => _$MovieDetailsResponseCopyWithImpl<MovieDetailsResponse>(this as MovieDetailsResponse, _$identity);
 
-  /// Serializes this MovieDetailResponse to a JSON map.
+  /// Serializes this MovieDetailsResponse to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MovieDetailResponse&&(identical(other.adult, adult) || other.adult == adult)&&(identical(other.backdropPath, backdropPath) || other.backdropPath == backdropPath)&&(identical(other.budget, budget) || other.budget == budget)&&const DeepCollectionEquality().equals(other.genres, genres)&&(identical(other.homepage, homepage) || other.homepage == homepage)&&(identical(other.id, id) || other.id == id)&&(identical(other.imdbId, imdbId) || other.imdbId == imdbId)&&const DeepCollectionEquality().equals(other.originCountry, originCountry)&&(identical(other.originalLanguage, originalLanguage) || other.originalLanguage == originalLanguage)&&(identical(other.originalTitle, originalTitle) || other.originalTitle == originalTitle)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.popularity, popularity) || other.popularity == popularity)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&const DeepCollectionEquality().equals(other.productionCompanies, productionCompanies)&&const DeepCollectionEquality().equals(other.productionCountries, productionCountries)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.revenue, revenue) || other.revenue == revenue)&&(identical(other.runtime, runtime) || other.runtime == runtime)&&const DeepCollectionEquality().equals(other.spokenLanguages, spokenLanguages)&&(identical(other.status, status) || other.status == status)&&(identical(other.tagline, tagline) || other.tagline == tagline)&&(identical(other.title, title) || other.title == title)&&(identical(other.video, video) || other.video == video)&&(identical(other.voteAverage, voteAverage) || other.voteAverage == voteAverage)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MovieDetailsResponse&&(identical(other.adult, adult) || other.adult == adult)&&(identical(other.backdropPath, backdropPath) || other.backdropPath == backdropPath)&&(identical(other.budget, budget) || other.budget == budget)&&const DeepCollectionEquality().equals(other.genres, genres)&&(identical(other.homepage, homepage) || other.homepage == homepage)&&(identical(other.id, id) || other.id == id)&&(identical(other.imdbId, imdbId) || other.imdbId == imdbId)&&const DeepCollectionEquality().equals(other.originCountry, originCountry)&&(identical(other.originalLanguage, originalLanguage) || other.originalLanguage == originalLanguage)&&(identical(other.originalTitle, originalTitle) || other.originalTitle == originalTitle)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.popularity, popularity) || other.popularity == popularity)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&const DeepCollectionEquality().equals(other.productionCompanies, productionCompanies)&&const DeepCollectionEquality().equals(other.productionCountries, productionCountries)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.revenue, revenue) || other.revenue == revenue)&&(identical(other.runtime, runtime) || other.runtime == runtime)&&const DeepCollectionEquality().equals(other.spokenLanguages, spokenLanguages)&&(identical(other.status, status) || other.status == status)&&(identical(other.tagline, tagline) || other.tagline == tagline)&&(identical(other.title, title) || other.title == title)&&(identical(other.video, video) || other.video == video)&&(identical(other.voteAverage, voteAverage) || other.voteAverage == voteAverage)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -37,15 +37,15 @@ int get hashCode => Object.hashAll([runtimeType,adult,backdropPath,budget,const 
 
 @override
 String toString() {
-  return 'MovieDetailResponse(adult: $adult, backdropPath: $backdropPath, budget: $budget, genres: $genres, homepage: $homepage, id: $id, imdbId: $imdbId, originCountry: $originCountry, originalLanguage: $originalLanguage, originalTitle: $originalTitle, overview: $overview, popularity: $popularity, posterPath: $posterPath, productionCompanies: $productionCompanies, productionCountries: $productionCountries, releaseDate: $releaseDate, revenue: $revenue, runtime: $runtime, spokenLanguages: $spokenLanguages, status: $status, tagline: $tagline, title: $title, video: $video, voteAverage: $voteAverage, voteCount: $voteCount)';
+  return 'MovieDetailsResponse(adult: $adult, backdropPath: $backdropPath, budget: $budget, genres: $genres, homepage: $homepage, id: $id, imdbId: $imdbId, originCountry: $originCountry, originalLanguage: $originalLanguage, originalTitle: $originalTitle, overview: $overview, popularity: $popularity, posterPath: $posterPath, productionCompanies: $productionCompanies, productionCountries: $productionCountries, releaseDate: $releaseDate, revenue: $revenue, runtime: $runtime, spokenLanguages: $spokenLanguages, status: $status, tagline: $tagline, title: $title, video: $video, voteAverage: $voteAverage, voteCount: $voteCount)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $MovieDetailResponseCopyWith<$Res>  {
-  factory $MovieDetailResponseCopyWith(MovieDetailResponse value, $Res Function(MovieDetailResponse) _then) = _$MovieDetailResponseCopyWithImpl;
+abstract mixin class $MovieDetailsResponseCopyWith<$Res>  {
+  factory $MovieDetailsResponseCopyWith(MovieDetailsResponse value, $Res Function(MovieDetailsResponse) _then) = _$MovieDetailsResponseCopyWithImpl;
 @useResult
 $Res call({
  bool? adult,@JsonKey(name: 'backdrop_path') String? backdropPath, int? budget, List<Genre>? genres, String? homepage, int? id,@JsonKey(name: 'imdb_id') String? imdbId,@JsonKey(name: 'origin_country') List<String>? originCountry,@JsonKey(name: 'original_language') String? originalLanguage,@JsonKey(name: 'original_title') String? originalTitle, String? overview, double? popularity,@JsonKey(name: 'poster_path') String? posterPath,@JsonKey(name: 'production_companies') List<ProductionCompany>? productionCompanies,@JsonKey(name: 'production_countries') List<ProductionCountry>? productionCountries,@JsonKey(name: 'release_date') String? releaseDate, int? revenue, int? runtime,@JsonKey(name: 'spoken_languages') List<SpokenLanguage>? spokenLanguages, String? status, String? tagline, String? title, bool? video,@JsonKey(name: 'vote_average') double? voteAverage,@JsonKey(name: 'vote_count') int? voteCount
@@ -56,14 +56,14 @@ $Res call({
 
 }
 /// @nodoc
-class _$MovieDetailResponseCopyWithImpl<$Res>
-    implements $MovieDetailResponseCopyWith<$Res> {
-  _$MovieDetailResponseCopyWithImpl(this._self, this._then);
+class _$MovieDetailsResponseCopyWithImpl<$Res>
+    implements $MovieDetailsResponseCopyWith<$Res> {
+  _$MovieDetailsResponseCopyWithImpl(this._self, this._then);
 
-  final MovieDetailResponse _self;
-  final $Res Function(MovieDetailResponse) _then;
+  final MovieDetailsResponse _self;
+  final $Res Function(MovieDetailsResponse) _then;
 
-/// Create a copy of MovieDetailResponse
+/// Create a copy of MovieDetailsResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? adult = freezed,Object? backdropPath = freezed,Object? budget = freezed,Object? genres = freezed,Object? homepage = freezed,Object? id = freezed,Object? imdbId = freezed,Object? originCountry = freezed,Object? originalLanguage = freezed,Object? originalTitle = freezed,Object? overview = freezed,Object? popularity = freezed,Object? posterPath = freezed,Object? productionCompanies = freezed,Object? productionCountries = freezed,Object? releaseDate = freezed,Object? revenue = freezed,Object? runtime = freezed,Object? spokenLanguages = freezed,Object? status = freezed,Object? tagline = freezed,Object? title = freezed,Object? video = freezed,Object? voteAverage = freezed,Object? voteCount = freezed,}) {
   return _then(_self.copyWith(
@@ -99,8 +99,8 @@ as int?,
 }
 
 
-/// Adds pattern-matching-related methods to [MovieDetailResponse].
-extension MovieDetailResponsePatterns on MovieDetailResponse {
+/// Adds pattern-matching-related methods to [MovieDetailsResponse].
+extension MovieDetailsResponsePatterns on MovieDetailsResponse {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -113,10 +113,10 @@ extension MovieDetailResponsePatterns on MovieDetailResponse {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MovieDetailResponse value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MovieDetailsResponse value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _MovieDetailResponse() when $default != null:
+case _MovieDetailsResponse() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -135,10 +135,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MovieDetailResponse value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MovieDetailsResponse value)  $default,){
 final _that = this;
 switch (_that) {
-case _MovieDetailResponse():
+case _MovieDetailsResponse():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -156,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MovieDetailResponse value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MovieDetailsResponse value)?  $default,){
 final _that = this;
 switch (_that) {
-case _MovieDetailResponse() when $default != null:
+case _MovieDetailsResponse() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -179,7 +179,7 @@ return $default(_that);case _:
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool? adult, @JsonKey(name: 'backdrop_path')  String? backdropPath,  int? budget,  List<Genre>? genres,  String? homepage,  int? id, @JsonKey(name: 'imdb_id')  String? imdbId, @JsonKey(name: 'origin_country')  List<String>? originCountry, @JsonKey(name: 'original_language')  String? originalLanguage, @JsonKey(name: 'original_title')  String? originalTitle,  String? overview,  double? popularity, @JsonKey(name: 'poster_path')  String? posterPath, @JsonKey(name: 'production_companies')  List<ProductionCompany>? productionCompanies, @JsonKey(name: 'production_countries')  List<ProductionCountry>? productionCountries, @JsonKey(name: 'release_date')  String? releaseDate,  int? revenue,  int? runtime, @JsonKey(name: 'spoken_languages')  List<SpokenLanguage>? spokenLanguages,  String? status,  String? tagline,  String? title,  bool? video, @JsonKey(name: 'vote_average')  double? voteAverage, @JsonKey(name: 'vote_count')  int? voteCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _MovieDetailResponse() when $default != null:
+case _MovieDetailsResponse() when $default != null:
 return $default(_that.adult,_that.backdropPath,_that.budget,_that.genres,_that.homepage,_that.id,_that.imdbId,_that.originCountry,_that.originalLanguage,_that.originalTitle,_that.overview,_that.popularity,_that.posterPath,_that.productionCompanies,_that.productionCountries,_that.releaseDate,_that.revenue,_that.runtime,_that.spokenLanguages,_that.status,_that.tagline,_that.title,_that.video,_that.voteAverage,_that.voteCount);case _:
   return orElse();
 
@@ -200,7 +200,7 @@ return $default(_that.adult,_that.backdropPath,_that.budget,_that.genres,_that.h
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool? adult, @JsonKey(name: 'backdrop_path')  String? backdropPath,  int? budget,  List<Genre>? genres,  String? homepage,  int? id, @JsonKey(name: 'imdb_id')  String? imdbId, @JsonKey(name: 'origin_country')  List<String>? originCountry, @JsonKey(name: 'original_language')  String? originalLanguage, @JsonKey(name: 'original_title')  String? originalTitle,  String? overview,  double? popularity, @JsonKey(name: 'poster_path')  String? posterPath, @JsonKey(name: 'production_companies')  List<ProductionCompany>? productionCompanies, @JsonKey(name: 'production_countries')  List<ProductionCountry>? productionCountries, @JsonKey(name: 'release_date')  String? releaseDate,  int? revenue,  int? runtime, @JsonKey(name: 'spoken_languages')  List<SpokenLanguage>? spokenLanguages,  String? status,  String? tagline,  String? title,  bool? video, @JsonKey(name: 'vote_average')  double? voteAverage, @JsonKey(name: 'vote_count')  int? voteCount)  $default,) {final _that = this;
 switch (_that) {
-case _MovieDetailResponse():
+case _MovieDetailsResponse():
 return $default(_that.adult,_that.backdropPath,_that.budget,_that.genres,_that.homepage,_that.id,_that.imdbId,_that.originCountry,_that.originalLanguage,_that.originalTitle,_that.overview,_that.popularity,_that.posterPath,_that.productionCompanies,_that.productionCountries,_that.releaseDate,_that.revenue,_that.runtime,_that.spokenLanguages,_that.status,_that.tagline,_that.title,_that.video,_that.voteAverage,_that.voteCount);case _:
   throw StateError('Unexpected subclass');
 
@@ -220,7 +220,7 @@ return $default(_that.adult,_that.backdropPath,_that.budget,_that.genres,_that.h
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool? adult, @JsonKey(name: 'backdrop_path')  String? backdropPath,  int? budget,  List<Genre>? genres,  String? homepage,  int? id, @JsonKey(name: 'imdb_id')  String? imdbId, @JsonKey(name: 'origin_country')  List<String>? originCountry, @JsonKey(name: 'original_language')  String? originalLanguage, @JsonKey(name: 'original_title')  String? originalTitle,  String? overview,  double? popularity, @JsonKey(name: 'poster_path')  String? posterPath, @JsonKey(name: 'production_companies')  List<ProductionCompany>? productionCompanies, @JsonKey(name: 'production_countries')  List<ProductionCountry>? productionCountries, @JsonKey(name: 'release_date')  String? releaseDate,  int? revenue,  int? runtime, @JsonKey(name: 'spoken_languages')  List<SpokenLanguage>? spokenLanguages,  String? status,  String? tagline,  String? title,  bool? video, @JsonKey(name: 'vote_average')  double? voteAverage, @JsonKey(name: 'vote_count')  int? voteCount)?  $default,) {final _that = this;
 switch (_that) {
-case _MovieDetailResponse() when $default != null:
+case _MovieDetailsResponse() when $default != null:
 return $default(_that.adult,_that.backdropPath,_that.budget,_that.genres,_that.homepage,_that.id,_that.imdbId,_that.originCountry,_that.originalLanguage,_that.originalTitle,_that.overview,_that.popularity,_that.posterPath,_that.productionCompanies,_that.productionCountries,_that.releaseDate,_that.revenue,_that.runtime,_that.spokenLanguages,_that.status,_that.tagline,_that.title,_that.video,_that.voteAverage,_that.voteCount);case _:
   return null;
 
@@ -232,9 +232,9 @@ return $default(_that.adult,_that.backdropPath,_that.budget,_that.genres,_that.h
 /// @nodoc
 @JsonSerializable()
 
-class _MovieDetailResponse implements MovieDetailResponse {
-  const _MovieDetailResponse({this.adult = null, @JsonKey(name: 'backdrop_path') this.backdropPath = null, this.budget = null, final  List<Genre>? genres = null, this.homepage = null, this.id = null, @JsonKey(name: 'imdb_id') this.imdbId = null, @JsonKey(name: 'origin_country') final  List<String>? originCountry = null, @JsonKey(name: 'original_language') this.originalLanguage = null, @JsonKey(name: 'original_title') this.originalTitle = null, this.overview = null, this.popularity = null, @JsonKey(name: 'poster_path') this.posterPath = null, @JsonKey(name: 'production_companies') final  List<ProductionCompany>? productionCompanies = null, @JsonKey(name: 'production_countries') final  List<ProductionCountry>? productionCountries = null, @JsonKey(name: 'release_date') this.releaseDate = null, this.revenue = null, this.runtime = null, @JsonKey(name: 'spoken_languages') final  List<SpokenLanguage>? spokenLanguages = null, this.status = null, this.tagline = null, this.title = null, this.video = null, @JsonKey(name: 'vote_average') this.voteAverage = null, @JsonKey(name: 'vote_count') this.voteCount = null}): _genres = genres,_originCountry = originCountry,_productionCompanies = productionCompanies,_productionCountries = productionCountries,_spokenLanguages = spokenLanguages;
-  factory _MovieDetailResponse.fromJson(Map<String, dynamic> json) => _$MovieDetailResponseFromJson(json);
+class _MovieDetailsResponse implements MovieDetailsResponse {
+  const _MovieDetailsResponse({this.adult = null, @JsonKey(name: 'backdrop_path') this.backdropPath, this.budget = null, final  List<Genre>? genres = null, this.homepage = null, this.id = null, @JsonKey(name: 'imdb_id') this.imdbId, @JsonKey(name: 'origin_country') final  List<String>? originCountry, @JsonKey(name: 'original_language') this.originalLanguage, @JsonKey(name: 'original_title') this.originalTitle, this.overview = null, this.popularity = null, @JsonKey(name: 'poster_path') this.posterPath, @JsonKey(name: 'production_companies') final  List<ProductionCompany>? productionCompanies = null, @JsonKey(name: 'production_countries') final  List<ProductionCountry>? productionCountries = null, @JsonKey(name: 'release_date') this.releaseDate, this.revenue = null, this.runtime = null, @JsonKey(name: 'spoken_languages') final  List<SpokenLanguage>? spokenLanguages = null, this.status = null, this.tagline = null, this.title = null, this.video = null, @JsonKey(name: 'vote_average') this.voteAverage, @JsonKey(name: 'vote_count') this.voteCount}): _genres = genres,_originCountry = originCountry,_productionCompanies = productionCompanies,_productionCountries = productionCountries,_spokenLanguages = spokenLanguages;
+  factory _MovieDetailsResponse.fromJson(Map<String, dynamic> json) => _$MovieDetailsResponseFromJson(json);
 
 @override@JsonKey() final  bool? adult;
 @override@JsonKey(name: 'backdrop_path') final  String? backdropPath;
@@ -302,20 +302,20 @@ class _MovieDetailResponse implements MovieDetailResponse {
 @override@JsonKey(name: 'vote_average') final  double? voteAverage;
 @override@JsonKey(name: 'vote_count') final  int? voteCount;
 
-/// Create a copy of MovieDetailResponse
+/// Create a copy of MovieDetailsResponse
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$MovieDetailResponseCopyWith<_MovieDetailResponse> get copyWith => __$MovieDetailResponseCopyWithImpl<_MovieDetailResponse>(this, _$identity);
+_$MovieDetailsResponseCopyWith<_MovieDetailsResponse> get copyWith => __$MovieDetailsResponseCopyWithImpl<_MovieDetailsResponse>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$MovieDetailResponseToJson(this, );
+  return _$MovieDetailsResponseToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MovieDetailResponse&&(identical(other.adult, adult) || other.adult == adult)&&(identical(other.backdropPath, backdropPath) || other.backdropPath == backdropPath)&&(identical(other.budget, budget) || other.budget == budget)&&const DeepCollectionEquality().equals(other._genres, _genres)&&(identical(other.homepage, homepage) || other.homepage == homepage)&&(identical(other.id, id) || other.id == id)&&(identical(other.imdbId, imdbId) || other.imdbId == imdbId)&&const DeepCollectionEquality().equals(other._originCountry, _originCountry)&&(identical(other.originalLanguage, originalLanguage) || other.originalLanguage == originalLanguage)&&(identical(other.originalTitle, originalTitle) || other.originalTitle == originalTitle)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.popularity, popularity) || other.popularity == popularity)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&const DeepCollectionEquality().equals(other._productionCompanies, _productionCompanies)&&const DeepCollectionEquality().equals(other._productionCountries, _productionCountries)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.revenue, revenue) || other.revenue == revenue)&&(identical(other.runtime, runtime) || other.runtime == runtime)&&const DeepCollectionEquality().equals(other._spokenLanguages, _spokenLanguages)&&(identical(other.status, status) || other.status == status)&&(identical(other.tagline, tagline) || other.tagline == tagline)&&(identical(other.title, title) || other.title == title)&&(identical(other.video, video) || other.video == video)&&(identical(other.voteAverage, voteAverage) || other.voteAverage == voteAverage)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MovieDetailsResponse&&(identical(other.adult, adult) || other.adult == adult)&&(identical(other.backdropPath, backdropPath) || other.backdropPath == backdropPath)&&(identical(other.budget, budget) || other.budget == budget)&&const DeepCollectionEquality().equals(other._genres, _genres)&&(identical(other.homepage, homepage) || other.homepage == homepage)&&(identical(other.id, id) || other.id == id)&&(identical(other.imdbId, imdbId) || other.imdbId == imdbId)&&const DeepCollectionEquality().equals(other._originCountry, _originCountry)&&(identical(other.originalLanguage, originalLanguage) || other.originalLanguage == originalLanguage)&&(identical(other.originalTitle, originalTitle) || other.originalTitle == originalTitle)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.popularity, popularity) || other.popularity == popularity)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&const DeepCollectionEquality().equals(other._productionCompanies, _productionCompanies)&&const DeepCollectionEquality().equals(other._productionCountries, _productionCountries)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.revenue, revenue) || other.revenue == revenue)&&(identical(other.runtime, runtime) || other.runtime == runtime)&&const DeepCollectionEquality().equals(other._spokenLanguages, _spokenLanguages)&&(identical(other.status, status) || other.status == status)&&(identical(other.tagline, tagline) || other.tagline == tagline)&&(identical(other.title, title) || other.title == title)&&(identical(other.video, video) || other.video == video)&&(identical(other.voteAverage, voteAverage) || other.voteAverage == voteAverage)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -324,15 +324,15 @@ int get hashCode => Object.hashAll([runtimeType,adult,backdropPath,budget,const 
 
 @override
 String toString() {
-  return 'MovieDetailResponse(adult: $adult, backdropPath: $backdropPath, budget: $budget, genres: $genres, homepage: $homepage, id: $id, imdbId: $imdbId, originCountry: $originCountry, originalLanguage: $originalLanguage, originalTitle: $originalTitle, overview: $overview, popularity: $popularity, posterPath: $posterPath, productionCompanies: $productionCompanies, productionCountries: $productionCountries, releaseDate: $releaseDate, revenue: $revenue, runtime: $runtime, spokenLanguages: $spokenLanguages, status: $status, tagline: $tagline, title: $title, video: $video, voteAverage: $voteAverage, voteCount: $voteCount)';
+  return 'MovieDetailsResponse(adult: $adult, backdropPath: $backdropPath, budget: $budget, genres: $genres, homepage: $homepage, id: $id, imdbId: $imdbId, originCountry: $originCountry, originalLanguage: $originalLanguage, originalTitle: $originalTitle, overview: $overview, popularity: $popularity, posterPath: $posterPath, productionCompanies: $productionCompanies, productionCountries: $productionCountries, releaseDate: $releaseDate, revenue: $revenue, runtime: $runtime, spokenLanguages: $spokenLanguages, status: $status, tagline: $tagline, title: $title, video: $video, voteAverage: $voteAverage, voteCount: $voteCount)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$MovieDetailResponseCopyWith<$Res> implements $MovieDetailResponseCopyWith<$Res> {
-  factory _$MovieDetailResponseCopyWith(_MovieDetailResponse value, $Res Function(_MovieDetailResponse) _then) = __$MovieDetailResponseCopyWithImpl;
+abstract mixin class _$MovieDetailsResponseCopyWith<$Res> implements $MovieDetailsResponseCopyWith<$Res> {
+  factory _$MovieDetailsResponseCopyWith(_MovieDetailsResponse value, $Res Function(_MovieDetailsResponse) _then) = __$MovieDetailsResponseCopyWithImpl;
 @override @useResult
 $Res call({
  bool? adult,@JsonKey(name: 'backdrop_path') String? backdropPath, int? budget, List<Genre>? genres, String? homepage, int? id,@JsonKey(name: 'imdb_id') String? imdbId,@JsonKey(name: 'origin_country') List<String>? originCountry,@JsonKey(name: 'original_language') String? originalLanguage,@JsonKey(name: 'original_title') String? originalTitle, String? overview, double? popularity,@JsonKey(name: 'poster_path') String? posterPath,@JsonKey(name: 'production_companies') List<ProductionCompany>? productionCompanies,@JsonKey(name: 'production_countries') List<ProductionCountry>? productionCountries,@JsonKey(name: 'release_date') String? releaseDate, int? revenue, int? runtime,@JsonKey(name: 'spoken_languages') List<SpokenLanguage>? spokenLanguages, String? status, String? tagline, String? title, bool? video,@JsonKey(name: 'vote_average') double? voteAverage,@JsonKey(name: 'vote_count') int? voteCount
@@ -343,17 +343,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$MovieDetailResponseCopyWithImpl<$Res>
-    implements _$MovieDetailResponseCopyWith<$Res> {
-  __$MovieDetailResponseCopyWithImpl(this._self, this._then);
+class __$MovieDetailsResponseCopyWithImpl<$Res>
+    implements _$MovieDetailsResponseCopyWith<$Res> {
+  __$MovieDetailsResponseCopyWithImpl(this._self, this._then);
 
-  final _MovieDetailResponse _self;
-  final $Res Function(_MovieDetailResponse) _then;
+  final _MovieDetailsResponse _self;
+  final $Res Function(_MovieDetailsResponse) _then;
 
-/// Create a copy of MovieDetailResponse
+/// Create a copy of MovieDetailsResponse
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? adult = freezed,Object? backdropPath = freezed,Object? budget = freezed,Object? genres = freezed,Object? homepage = freezed,Object? id = freezed,Object? imdbId = freezed,Object? originCountry = freezed,Object? originalLanguage = freezed,Object? originalTitle = freezed,Object? overview = freezed,Object? popularity = freezed,Object? posterPath = freezed,Object? productionCompanies = freezed,Object? productionCountries = freezed,Object? releaseDate = freezed,Object? revenue = freezed,Object? runtime = freezed,Object? spokenLanguages = freezed,Object? status = freezed,Object? tagline = freezed,Object? title = freezed,Object? video = freezed,Object? voteAverage = freezed,Object? voteCount = freezed,}) {
-  return _then(_MovieDetailResponse(
+  return _then(_MovieDetailsResponse(
 adult: freezed == adult ? _self.adult : adult // ignore: cast_nullable_to_non_nullable
 as bool?,backdropPath: freezed == backdropPath ? _self.backdropPath : backdropPath // ignore: cast_nullable_to_non_nullable
 as String?,budget: freezed == budget ? _self.budget : budget // ignore: cast_nullable_to_non_nullable

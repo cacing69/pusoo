@@ -13,12 +13,12 @@ abstract class MovieCast with _$MovieCast {
     @JsonKey(name: "known_for_department")
     String? knownForDepartment,
     @Default(null) String? name,
-    @Default(null) @JsonKey(name: "original_name") String? originalName,
+    @JsonKey(name: "original_name") String? originalName,
     @Default(0) double popularity,
-    @Default(null) @JsonKey(name: "profile_path") String? profilePath,
+    @JsonKey(name: "profile_path") String? profilePath,
     @Default(0) @JsonKey(name: "cast_id") int castId,
     @Default(null) String? character,
-    @Default(null) @JsonKey(name: "credit_id") String? creditId,
+    @JsonKey(name: "credit_id") String? creditId,
     @Default(0) int order,
   }) = _MovieCast;
 

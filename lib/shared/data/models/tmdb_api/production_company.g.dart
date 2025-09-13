@@ -10,8 +10,8 @@ _ProductionCompany _$ProductionCompanyFromJson(Map<String, dynamic> json) =>
     _ProductionCompany(
       id: (json['id'] as num?)?.toInt() ?? null,
       name: json['name'] as String? ?? null,
-      logoPath: json['logo_path'] as String? ?? null,
-      originCountry: json['production_companies'] as String? ?? null,
+      logoPath: json['logo_path'] as String?,
+      originCountry: json['production_companies'] as String?,
     );
 
 Map<String, dynamic> _$ProductionCompanyToJson(_ProductionCompany instance) =>

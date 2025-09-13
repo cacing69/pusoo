@@ -13,10 +13,10 @@ abstract class MovieCrew with _$MovieCrew {
     @JsonKey(name: "known_for_department")
     String? knownForDepartment,
     @Default(null) String? name,
-    @Default(null) @JsonKey(name: "original_name") String? originalName,
+    @JsonKey(name: "original_name") String? originalName,
     @Default(0) double popularity,
-    @Default(null) @JsonKey(name: "profile_path") String? profilePath,
-    @Default(null) @JsonKey(name: "credit_id") String? creditId,
+    @JsonKey(name: "profile_path") String? profilePath,
+    @JsonKey(name: "credit_id") String? creditId,
     @Default(null) String? department,
     @Default(null) String? job,
   }) = _MovieCrew;

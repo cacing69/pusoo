@@ -223,7 +223,7 @@ return $default(_that.adult,_that.backdropPath,_that.budget,_that.genreIds,_that
 @JsonSerializable()
 
 class _SearchMovieResponse implements SearchMovieResponse {
-  const _SearchMovieResponse({this.adult = null, @JsonKey(name: 'backdrop_path') this.backdropPath = null, this.budget = null, @JsonKey(name: 'genre_ids') final  List<int>? genreIds = null, this.id = null, @JsonKey(name: 'original_language') this.originalLanguage = null, @JsonKey(name: 'original_title') this.originalTitle = null, this.overview = null, this.popularity = null, @JsonKey(name: 'poster_path') this.posterPath = null, @JsonKey(name: 'release_date') this.releaseDate = null, this.title = null, this.video = null, @JsonKey(name: 'vote_average') this.voteAverage = null, @JsonKey(name: 'vote_count') this.voteCount = null}): _genreIds = genreIds;
+  const _SearchMovieResponse({this.adult = null, @JsonKey(name: 'backdrop_path') this.backdropPath, this.budget = null, @JsonKey(name: 'genre_ids') final  List<int>? genreIds, this.id = null, @JsonKey(name: 'original_language') this.originalLanguage, @JsonKey(name: 'original_title') this.originalTitle, this.overview = null, this.popularity = null, @JsonKey(name: 'poster_path') this.posterPath, @JsonKey(name: 'release_date') this.releaseDate, this.title = null, this.video = null, @JsonKey(name: 'vote_average') this.voteAverage, @JsonKey(name: 'vote_count') this.voteCount}): _genreIds = genreIds;
   factory _SearchMovieResponse.fromJson(Map<String, dynamic> json) => _$SearchMovieResponseFromJson(json);
 
 @override@JsonKey() final  bool? adult;

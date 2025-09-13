@@ -219,7 +219,7 @@ return $default(_that.adult,_that.gender,_that.id,_that.knownForDepartment,_that
 @JsonSerializable()
 
 class _MovieCrew implements MovieCrew {
-  const _MovieCrew({this.adult = true, this.gender = 0, this.id = 0, @JsonKey(name: "known_for_department") this.knownForDepartment = null, this.name = null, @JsonKey(name: "original_name") this.originalName = null, this.popularity = 0, @JsonKey(name: "profile_path") this.profilePath = null, @JsonKey(name: "credit_id") this.creditId = null, this.department = null, this.job = null});
+  const _MovieCrew({this.adult = true, this.gender = 0, this.id = 0, @JsonKey(name: "known_for_department") this.knownForDepartment = null, this.name = null, @JsonKey(name: "original_name") this.originalName, this.popularity = 0, @JsonKey(name: "profile_path") this.profilePath, @JsonKey(name: "credit_id") this.creditId, this.department = null, this.job = null});
   factory _MovieCrew.fromJson(Map<String, dynamic> json) => _$MovieCrewFromJson(json);
 
 @override@JsonKey() final  bool adult;

@@ -8,8 +8,8 @@ part of 'tmdb_api_client.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter
 
-class _TmdbApiClient implements TmdbApiClient {
-  _TmdbApiClient(this._dio, {this.baseUrl, this.errorLogger});
+class _TMDBApiClient implements TMDBApiClient {
+  _TMDBApiClient(this._dio, {this.baseUrl, this.errorLogger});
 
   final Dio _dio;
 
@@ -18,16 +18,16 @@ class _TmdbApiClient implements TmdbApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<MovieDetailResponse> movieDetail(
+  Future<MovieDetailsResponse> movieDetails(
     String movieId,
-    MovieDetailQueryParams queryParams,
+    MovieDetailsQueryParams queryParams,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     queryParameters.addAll(queryParams.toJson());
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<MovieDetailResponse>(
+    final _options = _setStreamType<MovieDetailsResponse>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -38,9 +38,9 @@ class _TmdbApiClient implements TmdbApiClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late MovieDetailResponse _value;
+    late MovieDetailsResponse _value;
     try {
-      _value = MovieDetailResponse.fromJson(_result.data!);
+      _value = MovieDetailsResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -49,36 +49,13 @@ class _TmdbApiClient implements TmdbApiClient {
   }
 
   @override
-  Future<MovieVideosResponse> movieVideos(String movieId) async {
+  Future<MovieCreditsResponse> movieCredits(
+    String movieId,
+    MovieCreditsQueryParams queryParams,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<MovieVideosResponse>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/3/movie/${movieId}/videos',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late MovieVideosResponse _value;
-    try {
-      _value = MovieVideosResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<MovieCreditsResponse> movieCredits(String movieId) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    queryParameters.addAll(queryParams.toJson());
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<MovieCreditsResponse>(
@@ -103,9 +80,40 @@ class _TmdbApiClient implements TmdbApiClient {
   }
 
   @override
+  Future<MovieVideosResponse> movieVideos(
+    String movieId,
+    MovieVideosQueryParams queryParams,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.addAll(queryParams.toJson());
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<MovieVideosResponse>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/3/movie/${movieId}/videos',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late MovieVideosResponse _value;
+    try {
+      _value = MovieVideosResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<TSeaerchResponse<SearchMovieResponse>> searchMovie(
     String movieId,
-    MovieDetailQueryParams queryParams,
+    SearchMovieQueryParams queryParams,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -175,8 +183,8 @@ class _TmdbApiClient implements TmdbApiClient {
 const tmdbApiClientProvider = TmdbApiClientProvider._();
 
 final class TmdbApiClientProvider
-    extends $FunctionalProvider<TmdbApiClient, TmdbApiClient, TmdbApiClient>
-    with $Provider<TmdbApiClient> {
+    extends $FunctionalProvider<TMDBApiClient, TMDBApiClient, TMDBApiClient>
+    with $Provider<TMDBApiClient> {
   const TmdbApiClientProvider._()
     : super(
         from: null,
@@ -193,21 +201,21 @@ final class TmdbApiClientProvider
 
   @$internal
   @override
-  $ProviderElement<TmdbApiClient> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<TMDBApiClient> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  TmdbApiClient create(Ref ref) {
+  TMDBApiClient create(Ref ref) {
     return tmdbApiClient(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(TmdbApiClient value) {
+  Override overrideWithValue(TMDBApiClient value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<TmdbApiClient>(value),
+      providerOverride: $SyncValueProvider<TMDBApiClient>(value),
     );
   }
 }
 
-String _$tmdbApiClientHash() => r'd13d7a24ca7e9bf17d3457d48ae2f688759e0aad';
+String _$tmdbApiClientHash() => r'32b1a716fee873c5184cac13d982d6f72089397b';
