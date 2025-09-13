@@ -9,7 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:pusoo/router.dart';
-import 'package:pusoo/shared/data/datasources/drift_database.dart';
+import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MovieDetailScreen extends StatefulWidget {

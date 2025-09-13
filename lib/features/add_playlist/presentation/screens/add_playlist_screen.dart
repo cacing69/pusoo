@@ -8,7 +8,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pusoo/core/utils/m3u_parse.dart';
-import 'package:pusoo/shared/data/datasources/drift_database.dart';
+import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:ulid/ulid.dart';
 

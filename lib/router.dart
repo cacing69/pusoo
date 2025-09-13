@@ -7,7 +7,7 @@ import 'package:pusoo/features/movie/presentation/screens/movie_detail_screen.da
 import 'package:pusoo/features/video_player/presentation/screens/video_player_screen.dart';
 import 'package:pusoo/features/tv/presentation/screens/tv_player_screen.dart';
 import 'package:pusoo/features/welcome/presentation/screens/welcome_screen.dart';
-import 'package:pusoo/shared/data/datasources/drift_database.dart';
+import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 import 'package:pusoo/shared/presentation/screens/youtube_iframe_player_screen.dart';
 
 enum RouteName {

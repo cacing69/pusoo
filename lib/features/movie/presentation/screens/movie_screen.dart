@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pusoo/core/extensions/string_ext.dart';
 // import 'package:pusoo/core/utils/m3u_parse.dart';
 import 'package:pusoo/router.dart';
-import 'package:pusoo/shared/data/datasources/drift_database.dart';
+import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 
 class MovieScreen extends StatefulWidget {
   const MovieScreen({super.key});

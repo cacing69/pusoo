@@ -6,7 +6,7 @@ import 'package:forui/forui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:pusoo/shared/data/datasources/drift_database.dart';
+import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 
 class TvPlayerScreen extends StatefulWidget {
   final ChannelData channel;

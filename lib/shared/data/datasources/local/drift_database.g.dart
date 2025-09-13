@@ -450,21 +450,30 @@ class $ChannelTable extends Channel with TableInfo<$ChannelTable, ChannelData> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _tvgIdMeta = const VerificationMeta('tvgId');
+  @override
+  late final GeneratedColumn<String> tvgId = GeneratedColumn<String>(
+    'tvg_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tmdbIdMeta = const VerificationMeta('tmdbId');
+  @override
+  late final GeneratedColumn<String> tmdbId = GeneratedColumn<String>(
+    'tmdb_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _tvgNameMeta = const VerificationMeta(
     'tvgName',
   );
   @override
   late final GeneratedColumn<String> tvgName = GeneratedColumn<String>(
     'tvg_name',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _tvgIdMeta = const VerificationMeta('tvgId');
-  @override
-  late final GeneratedColumn<String> tvgId = GeneratedColumn<String>(
-    'tvg_id',
     aliasedName,
     true,
     type: DriftSqlType.string,
@@ -558,8 +567,9 @@ class $ChannelTable extends Channel with TableInfo<$ChannelTable, ChannelData> {
     id,
     playlistId,
     name,
-    tvgName,
     tvgId,
+    tmdbId,
+    tvgName,
     logo,
     groupTitle,
     streamUrl,
@@ -599,16 +609,22 @@ class $ChannelTable extends Channel with TableInfo<$ChannelTable, ChannelData> {
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('tvg_name')) {
-      context.handle(
-        _tvgNameMeta,
-        tvgName.isAcceptableOrUnknown(data['tvg_name']!, _tvgNameMeta),
-      );
-    }
     if (data.containsKey('tvg_id')) {
       context.handle(
         _tvgIdMeta,
         tvgId.isAcceptableOrUnknown(data['tvg_id']!, _tvgIdMeta),
+      );
+    }
+    if (data.containsKey('tmdb_id')) {
+      context.handle(
+        _tmdbIdMeta,
+        tmdbId.isAcceptableOrUnknown(data['tmdb_id']!, _tmdbIdMeta),
+      );
+    }
+    if (data.containsKey('tvg_name')) {
+      context.handle(
+        _tvgNameMeta,
+        tvgName.isAcceptableOrUnknown(data['tvg_name']!, _tvgNameMeta),
       );
     }
     if (data.containsKey('logo')) {
@@ -679,13 +695,17 @@ class $ChannelTable extends Channel with TableInfo<$ChannelTable, ChannelData> {
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
-      tvgName: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}tvg_name'],
-      ),
       tvgId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}tvg_id'],
+      ),
+      tmdbId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tmdb_id'],
+      ),
+      tvgName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tvg_name'],
       ),
       logo: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -728,8 +748,9 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
   final String id;
   final String playlistId;
   final String name;
-  final String? tvgName;
   final String? tvgId;
+  final String? tmdbId;
+  final String? tvgName;
   final String? logo;
   final String? groupTitle;
   final String streamUrl;
@@ -741,8 +762,9 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
     required this.id,
     required this.playlistId,
     required this.name,
-    this.tvgName,
     this.tvgId,
+    this.tmdbId,
+    this.tvgName,
     this.logo,
     this.groupTitle,
     required this.streamUrl,
@@ -757,11 +779,14 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
     map['id'] = Variable<String>(id);
     map['playlist_id'] = Variable<String>(playlistId);
     map['name'] = Variable<String>(name);
-    if (!nullToAbsent || tvgName != null) {
-      map['tvg_name'] = Variable<String>(tvgName);
-    }
     if (!nullToAbsent || tvgId != null) {
       map['tvg_id'] = Variable<String>(tvgId);
+    }
+    if (!nullToAbsent || tmdbId != null) {
+      map['tmdb_id'] = Variable<String>(tmdbId);
+    }
+    if (!nullToAbsent || tvgName != null) {
+      map['tvg_name'] = Variable<String>(tvgName);
     }
     if (!nullToAbsent || logo != null) {
       map['logo'] = Variable<String>(logo);
@@ -786,12 +811,15 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
       id: Value(id),
       playlistId: Value(playlistId),
       name: Value(name),
-      tvgName: tvgName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(tvgName),
       tvgId: tvgId == null && nullToAbsent
           ? const Value.absent()
           : Value(tvgId),
+      tmdbId: tmdbId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tmdbId),
+      tvgName: tvgName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tvgName),
       logo: logo == null && nullToAbsent ? const Value.absent() : Value(logo),
       groupTitle: groupTitle == null && nullToAbsent
           ? const Value.absent()
@@ -817,8 +845,9 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
       id: serializer.fromJson<String>(json['id']),
       playlistId: serializer.fromJson<String>(json['playlistId']),
       name: serializer.fromJson<String>(json['name']),
-      tvgName: serializer.fromJson<String?>(json['tvgName']),
       tvgId: serializer.fromJson<String?>(json['tvgId']),
+      tmdbId: serializer.fromJson<String?>(json['tmdbId']),
+      tvgName: serializer.fromJson<String?>(json['tvgName']),
       logo: serializer.fromJson<String?>(json['logo']),
       groupTitle: serializer.fromJson<String?>(json['groupTitle']),
       streamUrl: serializer.fromJson<String>(json['streamUrl']),
@@ -835,8 +864,9 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
       'id': serializer.toJson<String>(id),
       'playlistId': serializer.toJson<String>(playlistId),
       'name': serializer.toJson<String>(name),
-      'tvgName': serializer.toJson<String?>(tvgName),
       'tvgId': serializer.toJson<String?>(tvgId),
+      'tmdbId': serializer.toJson<String?>(tmdbId),
+      'tvgName': serializer.toJson<String?>(tvgName),
       'logo': serializer.toJson<String?>(logo),
       'groupTitle': serializer.toJson<String?>(groupTitle),
       'streamUrl': serializer.toJson<String>(streamUrl),
@@ -851,8 +881,9 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
     String? id,
     String? playlistId,
     String? name,
-    Value<String?> tvgName = const Value.absent(),
     Value<String?> tvgId = const Value.absent(),
+    Value<String?> tmdbId = const Value.absent(),
+    Value<String?> tvgName = const Value.absent(),
     Value<String?> logo = const Value.absent(),
     Value<String?> groupTitle = const Value.absent(),
     String? streamUrl,
@@ -864,8 +895,9 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
     id: id ?? this.id,
     playlistId: playlistId ?? this.playlistId,
     name: name ?? this.name,
-    tvgName: tvgName.present ? tvgName.value : this.tvgName,
     tvgId: tvgId.present ? tvgId.value : this.tvgId,
+    tmdbId: tmdbId.present ? tmdbId.value : this.tmdbId,
+    tvgName: tvgName.present ? tvgName.value : this.tvgName,
     logo: logo.present ? logo.value : this.logo,
     groupTitle: groupTitle.present ? groupTitle.value : this.groupTitle,
     streamUrl: streamUrl ?? this.streamUrl,
@@ -881,8 +913,9 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
           ? data.playlistId.value
           : this.playlistId,
       name: data.name.present ? data.name.value : this.name,
-      tvgName: data.tvgName.present ? data.tvgName.value : this.tvgName,
       tvgId: data.tvgId.present ? data.tvgId.value : this.tvgId,
+      tmdbId: data.tmdbId.present ? data.tmdbId.value : this.tmdbId,
+      tvgName: data.tvgName.present ? data.tvgName.value : this.tvgName,
       logo: data.logo.present ? data.logo.value : this.logo,
       groupTitle: data.groupTitle.present
           ? data.groupTitle.value
@@ -905,8 +938,9 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
           ..write('id: $id, ')
           ..write('playlistId: $playlistId, ')
           ..write('name: $name, ')
-          ..write('tvgName: $tvgName, ')
           ..write('tvgId: $tvgId, ')
+          ..write('tmdbId: $tmdbId, ')
+          ..write('tvgName: $tvgName, ')
           ..write('logo: $logo, ')
           ..write('groupTitle: $groupTitle, ')
           ..write('streamUrl: $streamUrl, ')
@@ -923,8 +957,9 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
     id,
     playlistId,
     name,
-    tvgName,
     tvgId,
+    tmdbId,
+    tvgName,
     logo,
     groupTitle,
     streamUrl,
@@ -940,8 +975,9 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
           other.id == this.id &&
           other.playlistId == this.playlistId &&
           other.name == this.name &&
-          other.tvgName == this.tvgName &&
           other.tvgId == this.tvgId &&
+          other.tmdbId == this.tmdbId &&
+          other.tvgName == this.tvgName &&
           other.logo == this.logo &&
           other.groupTitle == this.groupTitle &&
           other.streamUrl == this.streamUrl &&
@@ -955,8 +991,9 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
   final Value<String> id;
   final Value<String> playlistId;
   final Value<String> name;
-  final Value<String?> tvgName;
   final Value<String?> tvgId;
+  final Value<String?> tmdbId;
+  final Value<String?> tvgName;
   final Value<String?> logo;
   final Value<String?> groupTitle;
   final Value<String> streamUrl;
@@ -969,8 +1006,9 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
     this.id = const Value.absent(),
     this.playlistId = const Value.absent(),
     this.name = const Value.absent(),
-    this.tvgName = const Value.absent(),
     this.tvgId = const Value.absent(),
+    this.tmdbId = const Value.absent(),
+    this.tvgName = const Value.absent(),
     this.logo = const Value.absent(),
     this.groupTitle = const Value.absent(),
     this.streamUrl = const Value.absent(),
@@ -984,8 +1022,9 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
     this.id = const Value.absent(),
     required String playlistId,
     required String name,
-    this.tvgName = const Value.absent(),
     this.tvgId = const Value.absent(),
+    this.tmdbId = const Value.absent(),
+    this.tvgName = const Value.absent(),
     this.logo = const Value.absent(),
     this.groupTitle = const Value.absent(),
     required String streamUrl,
@@ -1001,8 +1040,9 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
     Expression<String>? id,
     Expression<String>? playlistId,
     Expression<String>? name,
-    Expression<String>? tvgName,
     Expression<String>? tvgId,
+    Expression<String>? tmdbId,
+    Expression<String>? tvgName,
     Expression<String>? logo,
     Expression<String>? groupTitle,
     Expression<String>? streamUrl,
@@ -1016,8 +1056,9 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
       if (id != null) 'id': id,
       if (playlistId != null) 'playlist_id': playlistId,
       if (name != null) 'name': name,
-      if (tvgName != null) 'tvg_name': tvgName,
       if (tvgId != null) 'tvg_id': tvgId,
+      if (tmdbId != null) 'tmdb_id': tmdbId,
+      if (tvgName != null) 'tvg_name': tvgName,
       if (logo != null) 'logo': logo,
       if (groupTitle != null) 'group_title': groupTitle,
       if (streamUrl != null) 'stream_url': streamUrl,
@@ -1033,8 +1074,9 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
     Value<String>? id,
     Value<String>? playlistId,
     Value<String>? name,
-    Value<String?>? tvgName,
     Value<String?>? tvgId,
+    Value<String?>? tmdbId,
+    Value<String?>? tvgName,
     Value<String?>? logo,
     Value<String?>? groupTitle,
     Value<String>? streamUrl,
@@ -1048,8 +1090,9 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
       id: id ?? this.id,
       playlistId: playlistId ?? this.playlistId,
       name: name ?? this.name,
-      tvgName: tvgName ?? this.tvgName,
       tvgId: tvgId ?? this.tvgId,
+      tmdbId: tmdbId ?? this.tmdbId,
+      tvgName: tvgName ?? this.tvgName,
       logo: logo ?? this.logo,
       groupTitle: groupTitle ?? this.groupTitle,
       streamUrl: streamUrl ?? this.streamUrl,
@@ -1073,11 +1116,14 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (tvgName.present) {
-      map['tvg_name'] = Variable<String>(tvgName.value);
-    }
     if (tvgId.present) {
       map['tvg_id'] = Variable<String>(tvgId.value);
+    }
+    if (tmdbId.present) {
+      map['tmdb_id'] = Variable<String>(tmdbId.value);
+    }
+    if (tvgName.present) {
+      map['tvg_name'] = Variable<String>(tvgName.value);
     }
     if (logo.present) {
       map['logo'] = Variable<String>(logo.value);
@@ -1112,8 +1158,9 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
           ..write('id: $id, ')
           ..write('playlistId: $playlistId, ')
           ..write('name: $name, ')
-          ..write('tvgName: $tvgName, ')
           ..write('tvgId: $tvgId, ')
+          ..write('tmdbId: $tmdbId, ')
+          ..write('tvgName: $tvgName, ')
           ..write('logo: $logo, ')
           ..write('groupTitle: $groupTitle, ')
           ..write('streamUrl: $streamUrl, ')
@@ -1367,8 +1414,9 @@ typedef $$ChannelTableCreateCompanionBuilder =
       Value<String> id,
       required String playlistId,
       required String name,
-      Value<String?> tvgName,
       Value<String?> tvgId,
+      Value<String?> tmdbId,
+      Value<String?> tvgName,
       Value<String?> logo,
       Value<String?> groupTitle,
       required String streamUrl,
@@ -1383,8 +1431,9 @@ typedef $$ChannelTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> playlistId,
       Value<String> name,
-      Value<String?> tvgName,
       Value<String?> tvgId,
+      Value<String?> tmdbId,
+      Value<String?> tvgName,
       Value<String?> logo,
       Value<String?> groupTitle,
       Value<String> streamUrl,
@@ -1419,13 +1468,18 @@ class $$ChannelTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get tvgName => $composableBuilder(
-    column: $table.tvgName,
+  ColumnFilters<String> get tvgId => $composableBuilder(
+    column: $table.tvgId,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get tvgId => $composableBuilder(
-    column: $table.tvgId,
+  ColumnFilters<String> get tmdbId => $composableBuilder(
+    column: $table.tmdbId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tvgName => $composableBuilder(
+    column: $table.tvgName,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1489,13 +1543,18 @@ class $$ChannelTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get tvgName => $composableBuilder(
-    column: $table.tvgName,
+  ColumnOrderings<String> get tvgId => $composableBuilder(
+    column: $table.tvgId,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get tvgId => $composableBuilder(
-    column: $table.tvgId,
+  ColumnOrderings<String> get tmdbId => $composableBuilder(
+    column: $table.tmdbId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tvgName => $composableBuilder(
+    column: $table.tvgName,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1555,11 +1614,14 @@ class $$ChannelTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<String> get tvgName =>
-      $composableBuilder(column: $table.tvgName, builder: (column) => column);
-
   GeneratedColumn<String> get tvgId =>
       $composableBuilder(column: $table.tvgId, builder: (column) => column);
+
+  GeneratedColumn<String> get tmdbId =>
+      $composableBuilder(column: $table.tmdbId, builder: (column) => column);
+
+  GeneratedColumn<String> get tvgName =>
+      $composableBuilder(column: $table.tvgName, builder: (column) => column);
 
   GeneratedColumn<String> get logo =>
       $composableBuilder(column: $table.logo, builder: (column) => column);
@@ -1623,8 +1685,9 @@ class $$ChannelTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> playlistId = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<String?> tvgName = const Value.absent(),
                 Value<String?> tvgId = const Value.absent(),
+                Value<String?> tmdbId = const Value.absent(),
+                Value<String?> tvgName = const Value.absent(),
                 Value<String?> logo = const Value.absent(),
                 Value<String?> groupTitle = const Value.absent(),
                 Value<String> streamUrl = const Value.absent(),
@@ -1637,8 +1700,9 @@ class $$ChannelTableTableManager
                 id: id,
                 playlistId: playlistId,
                 name: name,
-                tvgName: tvgName,
                 tvgId: tvgId,
+                tmdbId: tmdbId,
+                tvgName: tvgName,
                 logo: logo,
                 groupTitle: groupTitle,
                 streamUrl: streamUrl,
@@ -1653,8 +1717,9 @@ class $$ChannelTableTableManager
                 Value<String> id = const Value.absent(),
                 required String playlistId,
                 required String name,
-                Value<String?> tvgName = const Value.absent(),
                 Value<String?> tvgId = const Value.absent(),
+                Value<String?> tmdbId = const Value.absent(),
+                Value<String?> tvgName = const Value.absent(),
                 Value<String?> logo = const Value.absent(),
                 Value<String?> groupTitle = const Value.absent(),
                 required String streamUrl,
@@ -1667,8 +1732,9 @@ class $$ChannelTableTableManager
                 id: id,
                 playlistId: playlistId,
                 name: name,
-                tvgName: tvgName,
                 tvgId: tvgId,
+                tmdbId: tmdbId,
+                tvgName: tvgName,
                 logo: logo,
                 groupTitle: groupTitle,
                 streamUrl: streamUrl,
