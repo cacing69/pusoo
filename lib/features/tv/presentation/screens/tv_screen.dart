@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -106,7 +105,7 @@ class _TvScreenState extends State<TvScreen> {
                             child: Column(
                               spacing: 5,
                               children: [
-                                FTile(
+                                FItem(
                                   prefix: Icon(FIcons.tags),
                                   title: Text("All Channel"),
                                   suffix: Icon(FIcons.chevronRight),
@@ -138,7 +137,7 @@ class _TvScreenState extends State<TvScreen> {
                                   },
                                 ),
                                 ...categories.keys.map((categoryName) {
-                                  return FTile(
+                                  return FItem(
                                     prefix: Icon(FIcons.tag),
                                     title: Text(
                                       (categoryName as String)
@@ -164,7 +163,7 @@ class _TvScreenState extends State<TvScreen> {
                                       // });
                                     },
                                   );
-                                }).toList(),
+                                }),
                               ],
                             ),
                           ),
@@ -207,19 +206,21 @@ class _TvScreenState extends State<TvScreen> {
               if (result is bool && result) {
                 loadM3U();
 
-                showFToast(
-                  context: context,
-                  alignment: FToastAlignment.bottomCenter,
-                  title: const Text('Playlist Loaded'),
-                  description: const Text('Lorem ipsum dolor sit amet'),
-                );
+                if (context.mounted) {
+                  showFToast(
+                    context: context,
+                    alignment: FToastAlignment.topCenter,
+                    title: const Text('Playlist Loaded'),
+                    description: const Text('Lorem ipsum dolor sit amet'),
+                  );
+                }
               }
             },
           ),
         ],
       ),
       child: Column(
-        spacing: 10,
+        spacing: 0,
         children: [
           FTextField(hint: "Find something to watch..."),
           Expanded(
@@ -231,7 +232,7 @@ class _TvScreenState extends State<TvScreen> {
                           crossAxisCount: 4,
                           crossAxisSpacing: 5,
                           mainAxisSpacing: 5,
-                          childAspectRatio: 0.75,
+                          childAspectRatio: 1,
                         ),
                     itemCount: channels.length,
                     itemBuilder: (context, index) {
@@ -240,7 +241,7 @@ class _TvScreenState extends State<TvScreen> {
                           // debugPrint(series[index].toString());
 
                           context.pushNamed(
-                            RouteName.iptvPlayer.name,
+                            RouteName.tvPlayer.name,
                             extra: channels[index],
                           );
                         },
@@ -293,7 +294,7 @@ class _TvScreenState extends State<TvScreen> {
                                                       size: 40,
                                                     ),
                                                   ),
-                                              fit: BoxFit.cover,
+                                              fit: BoxFit.fitWidth,
                                             ),
                                           ),
                                         )
@@ -319,10 +320,15 @@ class _TvScreenState extends State<TvScreen> {
                                         .withAlpha(125),
                                     child: Text(
                                       channels[index].name,
-                                      // maxLines: 1,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: context.theme.colors.foreground,
-                                        fontSize: 10,
+                                        fontSize: context
+                                            .theme
+                                            .typography
+                                            .xs
+                                            .fontSize,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),

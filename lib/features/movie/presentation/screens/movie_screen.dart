@@ -177,7 +177,7 @@ class _MovieScreenState extends State<MovieScreen> {
                                       // });
                                     },
                                   );
-                                }).toList(),
+                                }),
                               ],
                             ),
                           ),
@@ -253,7 +253,7 @@ class _MovieScreenState extends State<MovieScreen> {
                           // debugPrint(series[index].toString());
 
                           context.pushNamed(
-                            RouteName.iptvPlayer.name,
+                            RouteName.movieDetail.name,
                             extra: movies[index],
                           );
                         },
@@ -331,10 +331,15 @@ class _MovieScreenState extends State<MovieScreen> {
                                         .withAlpha(125),
                                     child: Text(
                                       movies[index].name,
-                                      // maxLines: 1,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: context.theme.colors.foreground,
-                                        fontSize: 10,
+                                        fontSize: context
+                                            .theme
+                                            .typography
+                                            .xs
+                                            .fontSize,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),

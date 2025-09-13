@@ -175,7 +175,7 @@ class _SerieScreenState extends State<SerieScreen> {
                                       // });
                                     },
                                   );
-                                }).toList(),
+                                }),
                               ],
                             ),
                           ),
@@ -251,7 +251,7 @@ class _SerieScreenState extends State<SerieScreen> {
                           // debugPrint(series[index].toString());
 
                           context.pushNamed(
-                            RouteName.iptvPlayer.name,
+                            RouteName.videoPlayer.name,
                             extra: seriesTitle[index],
                           );
                         },
@@ -331,10 +331,15 @@ class _SerieScreenState extends State<SerieScreen> {
                                         .withAlpha(125),
                                     child: Text(
                                       seriesTitle[index].name,
-                                      // maxLines: 1,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: context.theme.colors.foreground,
-                                        fontSize: 10,
+                                        fontSize: context
+                                            .theme
+                                            .typography
+                                            .xs
+                                            .fontSize,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),

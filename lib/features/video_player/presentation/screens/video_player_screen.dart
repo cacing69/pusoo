@@ -12,15 +12,15 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:pusoo/shared/data/datasources/drift_database.dart';
 // import 'package:video_player/video_player.dart';
 
-class IPTVPlayerScreen extends StatefulWidget {
+class VideoPlayerScreen extends StatefulWidget {
   final ChannelData channel;
-  const IPTVPlayerScreen({super.key, required this.channel});
+  const VideoPlayerScreen({super.key, required this.channel});
 
   @override
-  State<IPTVPlayerScreen> createState() => _IPTVPlayerScreenState();
+  State<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
 }
 
-class _IPTVPlayerScreenState extends State<IPTVPlayerScreen> {
+class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   // Create a [Player] to control playback.
   late Player _player;
 

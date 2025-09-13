@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text(
                       'Live',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         color: context.theme.colors.background,
                       ),
                     ),
