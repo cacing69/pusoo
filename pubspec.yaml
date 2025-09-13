@@ -56,6 +56,10 @@ dependencies:
   media_kit_libs_video: ^1.0.6
   flutter_launcher_icons: ^0.14.4
   video_player_media_kit: ^1.0.6
+  youtube_player_iframe: ^5.2.2
+  country_flags: ^4.0.0
+  url_launcher: ^6.3.2
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

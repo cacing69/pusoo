@@ -8,6 +8,7 @@ import 'package:pusoo/features/video_player/presentation/screens/video_player_sc
 import 'package:pusoo/features/tv/presentation/screens/tv_player_screen.dart';
 import 'package:pusoo/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:pusoo/shared/data/datasources/drift_database.dart';
+import 'package:pusoo/shared/presentation/screens/youtube_iframe_player_screen.dart';
 
 enum RouteName {
   welcome,
@@ -17,6 +18,7 @@ enum RouteName {
   tvPlayer,
   addPlaylist,
   movieDetail,
+  youtubeIframePlayer,
 }
 
 final List<GoRoute> defaultRouter = [
@@ -61,6 +63,16 @@ final List<GoRoute> defaultRouter = [
     name: RouteName.videoPlayer.name,
     builder: (context, state) {
       return VideoPlayerScreen(channel: state.extra as ChannelData);
+    },
+  ),
+  GoRoute(
+    path: '/youtube-iframe-player/:videoId',
+    name: RouteName.youtubeIframePlayer.name,
+    builder: (context, state) {
+      return YoutubeIframePlayerScreen(
+        videoId: state.pathParameters["videoId"]!,
+        title: state.uri.queryParameters["title"],
+      );
     },
   ),
   // GoRoute(

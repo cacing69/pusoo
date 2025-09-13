@@ -1,13 +1,16 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-// import 'package:media_kit/media_kit.dart';
-// import 'package:media_kit_video/media_kit_video.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/drift_database.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MovieDetailScreen extends StatefulWidget {
   final ChannelData channel;
@@ -18,112 +21,135 @@ class MovieDetailScreen extends StatefulWidget {
 }
 
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
-  // Create a [Player] to control playback.
-  // late Player _player;
-
-  // // Create a [VideoController] to handle video output from [Player].
-  // late VideoController controller;
-
-  // bool _isLoading = true;
-
-  // bool _isBuffering = true;
-
-  // late VideoPlayerController _videoPlayerController;
-  // ChewieController? _chewieController;
-
-  // late VlcPlayerController _vlcController;
-  // bool _showControls = false;
-  // bool _isPaused = false;
-
-  // bool showAds = true;
-
   @override
   void initState() {
     super.initState();
 
-    // _player = Player();
+    setState(() {
+      poster = widget.channel.logo!;
+    });
 
-    // _player.stream.buffering.listen((isPlaying) {
-    //   if (isPlaying && _isBuffering) {
-    //     setState(() {
-    //       _isBuffering = false;
-    //     });
-    //   }
-    // });
-
-    final List urls = (jsonDecode(widget.channel.streamUrl) as List<dynamic>);
-    debugPrint("urls.toString(): $urls");
-
-    // _player.open(Media(urls.first));
-
-    // controller = VideoController(_player);
-
-    // _vlcController = VlcPlayerController.network(
-    //   urls.first,
-    //   hwAcc: HwAcc.full, // hardware acceleration
-    //   autoPlay: true, // otomatis mulai
-    //   options: VlcPlayerOptions(
-    //     // http: VlcHttpOptions([
-    //     //   // User-Agent modern, mirip browser / ExoPlayer
-    //     //   'user-agent=Mozilla/5.0 (Linux; Android 13; Pixel 7 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36',
-    //     // ]),
-    //     extras: [
-    //       '--http-user-agent=Mozilla/5.0 (Linux; Android 13; Pixel 7 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36',
-    //       '--network-caching=2000', // 2 detik buffer
-    //       '--file-caching=2000',
-    //       '--drop-late-frames',
-    //       '--skip-frames', // skip frame jika decoding lambat
-    //       '--avcodec-hw=any', // paksa hardware decoding jika tersedia
-    //       '--no-sub-autodetect-file', // matikan deteksi subtitle otomatis
-    //       '--no-stats', // matikan statistik untuk performa
-    //       '--http-continuous',
-    //     ],
-    //   ), // caching untuk streaming HLS
-    // );
-
-    // _videoPlayerController =
-    //     VideoPlayerController.networkUrl(Uri.parse(urls.first))
-    //       ..initialize().then((_) {
-    //         setState(() {}); // refresh setelah video siap
-    //         _videoPlayerController.play();
-    //       });
-
-    // _chewieController = ChewieController(
-    //   videoPlayerController: _videoPlayerController,
-    //   autoPlay: true,
-    //   looping: false,
-    //   allowFullScreen: true,
-    //   allowPlaybackSpeedChanging: false,
-    //   aspectRatio: 16 / 9,
-    //   fullScreenByDefault: false,
-    // );
+    loadTmdb(widget.channel);
   }
 
-  void loadTmdb() {}
+  Map<dynamic, dynamic> tmdbRes = {};
+  Map<dynamic, dynamic> trailerRes = {};
+  String poster = "";
+  String backDrop = "";
+  String tagline = "";
+  String cleanedTitle = "";
 
-  @override
-  void dispose() {
-    // _chewieController?.pause();
-    // _chewieController?.dispose();
-    // _videoPlayerController.pause();
-    // _videoPlayerController.dispose();
+  void loadTmdb(ChannelData channel) async {
+    final String title = channel.name
+        .replaceAll(RegExp(r'\(\d{4}\)$'), "")
+        .trim();
 
-    // _vlcController.stop();
-    // _vlcController.dispose();
-    // controller.;
-    // _player.dispose();
-    super.dispose();
+    setState(() {
+      cleanedTitle = title;
+    });
+
+    String year = "";
+
+    final yearRegex = RegExp(r'\((\d{4})\)$');
+    final matchYear = yearRegex.firstMatch(channel.name);
+
+    if (matchYear != null) {
+      year = "${matchYear.group(1)}";
+      debugPrint("Extracted year: $year"); // Output: 2001
+    } else {
+      year = "";
+      debugPrint("No year found");
+    }
+
+    // final String year = channel.name
+    //     .replaceAll(RegExp(r'\(\d{4}\)$'), "")
+    //     .trim();
+
+    final Uri url = Uri.parse(
+      "https://api.themoviedb.org/3/search/movie?query=${title}&include_adult=true&language=en-US&page=1&year=$year",
+    );
+
+    // debugPrint("url.toString(): $url");
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          "Authorization":
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5OGRiOTFmZjdmYjg1OGI5NThjYWJiMjIzYjYzNWY1YSIsIm5iZiI6MTc1NzczNTgyNS41ODUsInN1YiI6IjY4YzRlYjkxMTUzMzljYjRjZDg1NjI1NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.JNfOMZqbQAVTt5u0UZhSNWgwfpvlwfwwRil5QMaHJXA",
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseSearch = jsonDecode(response.body);
+
+        if (("${responseSearch['results'][0]['id'] ?? ''}").isNotEmpty) {
+          final String movieId = "${responseSearch['results'][0]['id']}";
+          // get detail with ID
+          final Uri urlDetail = Uri.parse(
+            "https://api.themoviedb.org/3/movie/$movieId?language=en-US",
+          );
+
+          debugPrint("$urlDetail");
+
+          final responseDetail = await http.get(
+            urlDetail,
+            headers: {
+              "Authorization":
+                  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5OGRiOTFmZjdmYjg1OGI5NThjYWJiMjIzYjYzNWY1YSIsIm5iZiI6MTc1NzczNTgyNS41ODUsInN1YiI6IjY4YzRlYjkxMTUzMzljYjRjZDg1NjI1NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.JNfOMZqbQAVTt5u0UZhSNWgwfpvlwfwwRil5QMaHJXA",
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+            },
+          );
+
+          if (responseDetail.statusCode == 200) {
+            // debugPrint(responseDetail.body);
+
+            setState(() {
+              tmdbRes = jsonDecode(responseDetail.body);
+              poster =
+                  "https://image.tmdb.org/t/p/w342/${tmdbRes["poster_path"]}";
+
+              backDrop =
+                  "https://image.tmdb.org/t/p/w500/${tmdbRes["backdrop_path"]}";
+
+              tagline = tmdbRes["tagline"];
+            });
+          }
+
+          // Trailer
+          // get detail with ID
+          final Uri urlVideos = Uri.parse(
+            "https://api.themoviedb.org/3/movie/$movieId/videos",
+          );
+
+          debugPrint("$urlVideos");
+
+          final responseVideos = await http.get(
+            urlVideos,
+            headers: {
+              "Authorization":
+                  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5OGRiOTFmZjdmYjg1OGI5NThjYWJiMjIzYjYzNWY1YSIsIm5iZiI6MTc1NzczNTgyNS41ODUsInN1YiI6IjY4YzRlYjkxMTUzMzljYjRjZDg1NjI1NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.JNfOMZqbQAVTt5u0UZhSNWgwfpvlwfwwRil5QMaHJXA",
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+            },
+          );
+
+          if (responseVideos.statusCode == 200) {
+            debugPrint(responseVideos.body);
+
+            setState(() {
+              trailerRes = jsonDecode(responseVideos.body);
+            });
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Error loading TMDB: $e');
+    }
   }
-
-  // void _toggleControls() {
-  //   setState(() {
-  //     _showControls = !_showControls;
-  //   });
-  // }
-
-  // void _toggleFullscreen() {
-  //   context.pushNamed(RouteName.iptvPlayerFull.name, extra: widget.channel);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -141,31 +167,137 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       child: ListView(
         children: [
           // Header dengan poster dan nama
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Stack(
             children: [
-              // Poster
-              ClipRRect(
-                borderRadius: BorderRadius.circular(2),
-                child: Image.network(
-                  widget.channel.logo!,
-                  width: 100,
-                  height: 150,
+              SizedBox(
+                width: double.infinity,
+                height: 300,
+                child: CachedNetworkImage(
+                  imageUrl: backDrop,
+                  placeholder: (_, __) =>
+                      const Center(child: FProgress.circularIcon()),
+                  errorWidget: (_, __, ___) => Center(
+                    child: Icon(
+                      FIcons.imageOff,
+                      color: context.theme.colors.background.withAlpha(200),
+                      size: 40,
+                    ),
+                  ),
                   fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(width: 16),
-              // Judul dan rating
-              Expanded(
-                child: Column(
+              Container(
+                width: double.infinity,
+                height: 300,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [
+                      Colors.black, // paling gelap di bawah
+                      Colors.transparent, // transparan ke atas
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 10,
+                bottom: 0,
+                child: Text(
+                  "${tmdbRes["release_date"] ?? "-"}",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 10,
+                right: 10, // optional biar gak mepet kanan
+                bottom: 25,
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.channel.name,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                    // Poster
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: CachedNetworkImage(
+                        imageUrl: poster,
+                        width: 100,
+                        height: 150,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    // Judul dan rating
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: context.theme.colors.foreground,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 2.0,
+                                    horizontal: 3,
+                                  ),
+                                  child: Text(
+                                    "${(tmdbRes["vote_average"] ?? "0,0").toString().substring(0, 3).replaceAll(".", ",")}/${NumberFormat.decimalPattern('id').format(num.tryParse((tmdbRes["vote_count"] ?? "0").toString()))}",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: context.theme.colors.background,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: context.theme.colors.foreground,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 2.0,
+                                    horizontal: 3,
+                                  ),
+                                  child: Text(
+                                    "${tmdbRes["status"] ?? "-"}",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: context.theme.colors.background,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          Text(
+                            cleanedTitle,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            tagline,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -177,20 +309,15 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           FButton(
             style: FButtonStyle.outline(),
             prefix: Icon(FIcons.play),
-            onPress: () {},
+            onPress: () {
+              context.pushNamed(
+                RouteName.videoPlayer.name,
+                extra: widget.channel,
+              );
+            },
             child: Text("Watch Now"),
           ),
           Gap(10),
-          // Tab navigasi (About, Seasons, Cast, ...)
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: const [
-          //     Text('About', style: TextStyle(color: Colors.white)),
-          //     Text('Seasons', style: TextStyle(color: Colors.grey)),
-          //     Text('Cast', style: TextStyle(color: Colors.grey)),
-          //     Text('Comments', style: TextStyle(color: Colors.grey)),
-          //   ],
-          // ),
           FTabs(
             children: [
               FTabEntry(
@@ -198,115 +325,223 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Synopsis"),
                     Gap(5),
-                    Text(
-                      'A thriller set two hundred years in the future following the case of a missing young woman who brings a hardened detective and a rogue ship\'s captain together ...',
-                      style: TextStyle(color: Colors.grey[300]),
+                    FTile(
+                      prefix: Icon(FIcons.globe),
+                      title: Text("Homepage"),
+                      suffix: Icon(FIcons.externalLink),
+                      onPress: () async {
+                        final uri = Uri.parse(tmdbRes["homepage"]);
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(
+                            uri,
+                            mode: LaunchMode
+                                .externalApplication, // buka di browser/app lain
+                          );
+                        } else {
+                          throw 'Could not launch $uri';
+                        }
+                      },
+                    ),
+                    Gap(5),
+                    SizedBox(width: double.infinity, child: Text("Overview")),
+                    Gap(5),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        tmdbRes["overview"] ?? "-",
+                        style: TextStyle(color: Colors.grey[300]),
+                      ),
                     ),
                     Gap(10),
-                    Text("Genres"),
+                    SizedBox(width: double.infinity, child: Text("Genres")),
                     Gap(5),
                     Wrap(
                       spacing: 3,
                       runSpacing: 3,
                       children: [
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
+                        ...(tmdbRes["genres"] ?? []).map(
+                          (genre) => FBadge(child: Text("${genre['name']}")),
+                        ),
                       ],
                     ),
                     Gap(10),
-                    Text("Networks"),
+                    SizedBox(width: double.infinity, child: Text("Countries")),
                     Gap(5),
-                    Wrap(
-                      spacing: 3,
-                      runSpacing: 3,
-                      children: [
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                        FBadge(child: const Text('New')),
-                      ],
+                    ...(tmdbRes["production_countries"] ?? []).map(
+                      (country) => FItem(
+                        prefix: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: SizedBox(
+                            width: 25,
+                            height: 25,
+                            child: CountryFlag.fromCountryCode(
+                              country['iso_3166_1'],
+                            ),
+                          ),
+                        ),
+                        title: Text("${country['name']}"),
+                      ),
                     ),
-                    Placeholder(),
-                    Placeholder(),
-                    Placeholder(),
-                    Placeholder(),
-                    Placeholder(),
-                    Placeholder(),
-                    Placeholder(),
-                    Placeholder(),
-                    Placeholder(),
-                    Placeholder(),
+                    Gap(10),
+                    SizedBox(width: double.infinity, child: Text("Languages")),
+                    Gap(5),
+                    ...(tmdbRes["spoken_languages"] ?? []).map(
+                      (lang) => FItem(
+                        prefix: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: SizedBox(
+                            width: 25,
+                            height: 25,
+                            child: CountryFlag.fromLanguageCode(
+                              lang['iso_639_1'],
+                            ),
+                          ),
+                        ),
+                        title: Text("${lang['english_name']}"),
+                        subtitle: Text("${lang['name']}"),
+                      ),
+                    ),
+                    Gap(10),
+                    SizedBox(width: double.infinity, child: Text("Companies")),
+                    Gap(5),
+                    ...(tmdbRes["production_companies"] ?? []).map(
+                      (company) => FItem(
+                        prefix: Builder(
+                          builder: (context) {
+                            if (((company["logo_path"] ?? "") as String)
+                                .isNotEmpty) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  color: context.theme.colors.foreground,
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child: SizedBox(
+                                  height: 25,
+                                  width: 25,
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        "https://image.tmdb.org/t/p/w92/${company["logo_path"]}",
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  color: context.theme.colors.foreground,
+                                ),
+                                child: SizedBox(
+                                  height: 25,
+                                  width: 25,
+                                  child: Icon(
+                                    FIcons.building2,
+                                    size: 20,
+                                    color: context.theme.colors.background,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                        title: Text("${company['name']}"),
+                      ),
+                    ),
                   ],
                 ),
               ),
               FTabEntry(
                 label: const Text('Trailer'),
-                child: FCard(
-                  title: const Text('Password'),
-                  subtitle: const Text(
-                    'Change your password here. After saving, you will be logged out.',
-                  ),
-                  child: Column(
-                    children: [
-                      const FTextField(label: Text('Current password')),
-                      const SizedBox(height: 10),
-                      const FTextField(label: Text('New password')),
-                      const SizedBox(height: 16),
-                      FButton(onPress: () {}, child: const Text('Save')),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: Text("Youtube", textAlign: TextAlign.start),
+                    ),
+                    ...(trailerRes["results"] ?? []).map((vid) {
+                      if ((vid["site"] as String).toLowerCase() == "youtube" &&
+                          ((vid["type"] as String).toLowerCase() ==
+                              "trailer")) {
+                        return GestureDetector(
+                          onTap: () {
+                            context.pushNamed(
+                              RouteName.youtubeIframePlayer.name,
+                              pathParameters: {"videoId": vid["key"]},
+                              queryParameters: {"title": vid["name"]},
+                            );
+                          },
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${vid["type"]} - ${vid["name"]}",
+                                  textAlign: TextAlign.start,
+                                ),
+                                Gap(10),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 200,
+                                  child: Stack(
+                                    children: [
+                                      SizedBox(
+                                        width: double.infinity,
+                                        height: 200,
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              "https://img.youtube.com/vi/${vid["key"]}/mqdefault.jpg",
+                                          fit: BoxFit.fitWidth,
+                                        ),
+                                      ),
+                                      Positioned.fill(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: context
+                                                .theme
+                                                .colors
+                                                .background
+                                                .withAlpha(50),
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: context
+                                                .theme
+                                                .colors
+                                                .background
+                                                .withAlpha(180),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(15.0),
+                                            child: Icon(FIcons.play, size: 35),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                FDivider(),
+                              ],
+                            ),
+                          ),
+                        );
+                      } else {
+                        return SizedBox.shrink();
+                      }
+                    }),
+                  ],
                 ),
               ),
               FTabEntry(
