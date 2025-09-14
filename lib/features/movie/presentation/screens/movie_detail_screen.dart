@@ -13,7 +13,7 @@ import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MovieDetailScreen extends StatefulWidget {
-  final ChannelData channel;
+  final ChannelDriftData channel;
   const MovieDetailScreen({super.key, required this.channel});
 
   @override
@@ -39,7 +39,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   String tagline = "";
   String cleanedTitle = "";
 
-  void loadTmdb(ChannelData channel) async {
+  void loadTmdb(ChannelDriftData channel) async {
     final String title = channel.name
         .replaceAll(RegExp(r'\(\d{4}\)$'), "")
         .trim();

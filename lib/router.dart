@@ -54,28 +54,28 @@ final List<GoRoute> defaultRouter = [
     path: '/tv-player',
     name: RouteName.tvPlayer.name,
     builder: (context, state) {
-      return TvPlayerScreen(channel: state.extra as ChannelData);
+      return TvPlayerScreen(channel: state.extra as ChannelDriftData);
     },
   ),
   GoRoute(
     path: '/tv-player-full',
     name: RouteName.tvPlayerFull.name,
     builder: (context, state) {
-      return TvPlayerFullScreen(channel: state.extra as ChannelData);
+      return TvPlayerFullScreen(channel: state.extra as ChannelDriftData);
     },
   ),
   GoRoute(
     path: '/movie-detail',
     name: RouteName.movieDetail.name,
     builder: (context, state) {
-      return MovieDetailScreen(channel: state.extra as ChannelData);
+      return MovieDetailScreen(channel: state.extra as ChannelDriftData);
     },
   ),
   GoRoute(
     path: '/video-player-full',
     name: RouteName.videoPlayerFull.name,
     builder: (context, state) {
-      return VideoPlayerFullScreen(channel: state.extra as ChannelData);
+      return VideoPlayerFullScreen(channel: state.extra as ChannelDriftData);
     },
   ),
   GoRoute(
@@ -107,7 +107,7 @@ final List<GoRoute> defaultRouter = [
   //   path: '/iptv-player-full',
   //   name: RouteName.iptvPlayerFull.name,
   //   builder: (context, state) {
-  //     // return IPTVPlayerFullScreen(channel: state.extra as ChannelData);
+  //     // return IPTVPlayerFullScreen(channel: state.extra as ChannelDriftData);
   //   },
   // ),
 ];

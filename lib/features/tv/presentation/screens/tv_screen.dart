@@ -38,18 +38,18 @@ class _TvScreenState extends ConsumerState<TvScreen> {
     //http://ogietv.biz.id:80/get.php?username=maksin&password=123456&type=m3u_plus&output=mpegts
   }
 
-  List<ChannelData> channels = [];
+  List<ChannelDriftData> channels = [];
   Map<dynamic, dynamic> categories = {};
 
   Future<void> loadM3U({String? search}) async {
-    final test = await (driftDb.select(driftDb.channel)).get();
+    final test = await (driftDb.select(driftDb.channelDrift)).get();
 
     debugPrint("test.toString() : $test");
 
     // get playlist selected
     final selectedPlaylist = await (driftDb.select(
-      driftDb.playlist,
-    )..where((tbl) => tbl.isSelected.equals(true))).get();
+      driftDb.playlistDrift,
+    )..where((tbl) => tbl.isActive.equals(true))).get();
 
     if (selectedPlaylist.isNotEmpty) {
       final String playlistId = selectedPlaylist.first.id;
@@ -59,7 +59,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
 
       if (search != null) {
         filtered =
-            await (driftDb.select(driftDb.channel)..where(
+            await (driftDb.select(driftDb.channelDrift)..where(
                   (tbl) =>
                       tbl.playlistId.equals(playlistId) &
                       tbl.streamUrl.like('%movie%').not() &
@@ -69,7 +69,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                 .get();
       } else {
         filtered =
-            await (driftDb.select(driftDb.channel)..where(
+            await (driftDb.select(driftDb.channelDrift)..where(
                   (tbl) =>
                       tbl.playlistId.equals(playlistId) &
                       tbl.streamUrl.like('%movie%').not() &
@@ -167,16 +167,17 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                                     debugPrint("All channel selected");
 
                                     final filtered =
-                                        await (driftDb.select(driftDb.channel)
-                                              ..where(
-                                                (tbl) =>
-                                                    tbl.streamUrl
-                                                        .like('%movie%')
-                                                        .not() &
-                                                    tbl.streamUrl
-                                                        .like('%series%')
-                                                        .not(),
-                                              ))
+                                        await (driftDb.select(
+                                              driftDb.channelDrift,
+                                            )..where(
+                                              (tbl) =>
+                                                  tbl.streamUrl
+                                                      .like('%movie%')
+                                                      .not() &
+                                                  tbl.streamUrl
+                                                      .like('%series%')
+                                                      .not(),
+                                            ))
                                             .get();
 
                                     // channelTv.then((data) {
@@ -202,12 +203,13 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                                     suffix: Icon(FIcons.chevronRight),
                                     onPress: () async {
                                       final channelTv =
-                                          await (driftDb.select(driftDb.channel)
-                                                ..where(
-                                                  (tbl) => tbl.category.like(
-                                                    "%$categoryName%",
-                                                  ),
-                                                ))
+                                          await (driftDb.select(
+                                                driftDb.channelDrift,
+                                              )..where(
+                                                (tbl) => tbl.groupTitle.like(
+                                                  "%$categoryName%",
+                                                ),
+                                              ))
                                               .get();
 
                                       // channelTv.then((data) {
@@ -235,8 +237,8 @@ class _TvScreenState extends ConsumerState<TvScreen> {
             icon: Icon(FIcons.power, size: 25),
             onPress: () async {
               // Hapus semua isi tabel 'playlist'
-              await driftDb.delete(driftDb.playlist).go();
-              await driftDb.delete(driftDb.channel).go();
+              await driftDb.delete(driftDb.playlistDrift).go();
+              await driftDb.delete(driftDb.channelDrift).go();
 
               debugPrint("All rows has been deleted");
 

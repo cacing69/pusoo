@@ -3,12 +3,12 @@
 part of 'drift_database.dart';
 
 // ignore_for_file: type=lint
-class $PlaylistTable extends Playlist
-    with TableInfo<$PlaylistTable, PlaylistData> {
+class $PlaylistDriftTable extends PlaylistDrift
+    with TableInfo<$PlaylistDriftTable, PlaylistDriftData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $PlaylistTable(this.attachedDatabase, [this._alias]);
+  $PlaylistDriftTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -80,18 +80,18 @@ class $PlaylistTable extends Playlist
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
-  static const VerificationMeta _isSelectedMeta = const VerificationMeta(
-    'isSelected',
+  static const VerificationMeta _isActiveMeta = const VerificationMeta(
+    'isActive',
   );
   @override
-  late final GeneratedColumn<bool> isSelected = GeneratedColumn<bool>(
-    'is_selected',
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+    'is_active',
     aliasedName,
     false,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_selected" IN (0, 1))',
+      'CHECK ("is_active" IN (0, 1))',
     ),
     clientDefault: () => false,
   );
@@ -104,16 +104,16 @@ class $PlaylistTable extends Playlist
     url,
     lastUpdated,
     createdAt,
-    isSelected,
+    isActive,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'playlist';
+  static const String $name = 'playlist_drift';
   @override
   VerificationContext validateIntegrity(
-    Insertable<PlaylistData> instance, {
+    Insertable<PlaylistDriftData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -164,10 +164,10 @@ class $PlaylistTable extends Playlist
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
     }
-    if (data.containsKey('is_selected')) {
+    if (data.containsKey('is_active')) {
       context.handle(
-        _isSelectedMeta,
-        isSelected.isAcceptableOrUnknown(data['is_selected']!, _isSelectedMeta),
+        _isActiveMeta,
+        isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
       );
     }
     return context;
@@ -176,9 +176,9 @@ class $PlaylistTable extends Playlist
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  PlaylistData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  PlaylistDriftData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return PlaylistData(
+    return PlaylistDriftData(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
@@ -207,20 +207,21 @@ class $PlaylistTable extends Playlist
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
-      isSelected: attachedDatabase.typeMapping.read(
+      isActive: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
-        data['${effectivePrefix}is_selected'],
+        data['${effectivePrefix}is_active'],
       )!,
     );
   }
 
   @override
-  $PlaylistTable createAlias(String alias) {
-    return $PlaylistTable(attachedDatabase, alias);
+  $PlaylistDriftTable createAlias(String alias) {
+    return $PlaylistDriftTable(attachedDatabase, alias);
   }
 }
 
-class PlaylistData extends DataClass implements Insertable<PlaylistData> {
+class PlaylistDriftData extends DataClass
+    implements Insertable<PlaylistDriftData> {
   final String id;
   final String name;
   final String? type;
@@ -228,8 +229,8 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
   final String url;
   final DateTime? lastUpdated;
   final DateTime createdAt;
-  final bool isSelected;
-  const PlaylistData({
+  final bool isActive;
+  const PlaylistDriftData({
     required this.id,
     required this.name,
     this.type,
@@ -237,7 +238,7 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
     required this.url,
     this.lastUpdated,
     required this.createdAt,
-    required this.isSelected,
+    required this.isActive,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -255,12 +256,12 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
       map['last_updated'] = Variable<DateTime>(lastUpdated);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
-    map['is_selected'] = Variable<bool>(isSelected);
+    map['is_active'] = Variable<bool>(isActive);
     return map;
   }
 
-  PlaylistCompanion toCompanion(bool nullToAbsent) {
-    return PlaylistCompanion(
+  PlaylistDriftCompanion toCompanion(bool nullToAbsent) {
+    return PlaylistDriftCompanion(
       id: Value(id),
       name: Value(name),
       type: type == null && nullToAbsent ? const Value.absent() : Value(type),
@@ -272,16 +273,16 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
           ? const Value.absent()
           : Value(lastUpdated),
       createdAt: Value(createdAt),
-      isSelected: Value(isSelected),
+      isActive: Value(isActive),
     );
   }
 
-  factory PlaylistData.fromJson(
+  factory PlaylistDriftData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return PlaylistData(
+    return PlaylistDriftData(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       type: serializer.fromJson<String?>(json['type']),
@@ -289,7 +290,7 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
       url: serializer.fromJson<String>(json['url']),
       lastUpdated: serializer.fromJson<DateTime?>(json['lastUpdated']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      isSelected: serializer.fromJson<bool>(json['isSelected']),
+      isActive: serializer.fromJson<bool>(json['isActive']),
     );
   }
   @override
@@ -303,11 +304,11 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
       'url': serializer.toJson<String>(url),
       'lastUpdated': serializer.toJson<DateTime?>(lastUpdated),
       'createdAt': serializer.toJson<DateTime>(createdAt),
-      'isSelected': serializer.toJson<bool>(isSelected),
+      'isActive': serializer.toJson<bool>(isActive),
     };
   }
 
-  PlaylistData copyWith({
+  PlaylistDriftData copyWith({
     String? id,
     String? name,
     Value<String?> type = const Value.absent(),
@@ -315,8 +316,8 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
     String? url,
     Value<DateTime?> lastUpdated = const Value.absent(),
     DateTime? createdAt,
-    bool? isSelected,
-  }) => PlaylistData(
+    bool? isActive,
+  }) => PlaylistDriftData(
     id: id ?? this.id,
     name: name ?? this.name,
     type: type.present ? type.value : this.type,
@@ -324,10 +325,10 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
     url: url ?? this.url,
     lastUpdated: lastUpdated.present ? lastUpdated.value : this.lastUpdated,
     createdAt: createdAt ?? this.createdAt,
-    isSelected: isSelected ?? this.isSelected,
+    isActive: isActive ?? this.isActive,
   );
-  PlaylistData copyWithCompanion(PlaylistCompanion data) {
-    return PlaylistData(
+  PlaylistDriftData copyWithCompanion(PlaylistDriftCompanion data) {
+    return PlaylistDriftData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       type: data.type.present ? data.type.value : this.type,
@@ -337,15 +338,13 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
           ? data.lastUpdated.value
           : this.lastUpdated,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      isSelected: data.isSelected.present
-          ? data.isSelected.value
-          : this.isSelected,
+      isActive: data.isActive.present ? data.isActive.value : this.isActive,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('PlaylistData(')
+    return (StringBuffer('PlaylistDriftData(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('type: $type, ')
@@ -353,7 +352,7 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
           ..write('url: $url, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('createdAt: $createdAt, ')
-          ..write('isSelected: $isSelected')
+          ..write('isActive: $isActive')
           ..write(')'))
         .toString();
   }
@@ -367,12 +366,12 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
     url,
     lastUpdated,
     createdAt,
-    isSelected,
+    isActive,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is PlaylistData &&
+      (other is PlaylistDriftData &&
           other.id == this.id &&
           other.name == this.name &&
           other.type == this.type &&
@@ -380,10 +379,10 @@ class PlaylistData extends DataClass implements Insertable<PlaylistData> {
           other.url == this.url &&
           other.lastUpdated == this.lastUpdated &&
           other.createdAt == this.createdAt &&
-          other.isSelected == this.isSelected);
+          other.isActive == this.isActive);
 }
 
-class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
+class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
   final Value<String> id;
   final Value<String> name;
   final Value<String?> type;
@@ -391,9 +390,9 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
   final Value<String> url;
   final Value<DateTime?> lastUpdated;
   final Value<DateTime> createdAt;
-  final Value<bool> isSelected;
+  final Value<bool> isActive;
   final Value<int> rowid;
-  const PlaylistCompanion({
+  const PlaylistDriftCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.type = const Value.absent(),
@@ -401,10 +400,10 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
     this.url = const Value.absent(),
     this.lastUpdated = const Value.absent(),
     this.createdAt = const Value.absent(),
-    this.isSelected = const Value.absent(),
+    this.isActive = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  PlaylistCompanion.insert({
+  PlaylistDriftCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     this.type = const Value.absent(),
@@ -412,11 +411,11 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
     required String url,
     this.lastUpdated = const Value.absent(),
     this.createdAt = const Value.absent(),
-    this.isSelected = const Value.absent(),
+    this.isActive = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : name = Value(name),
        url = Value(url);
-  static Insertable<PlaylistData> custom({
+  static Insertable<PlaylistDriftData> custom({
     Expression<String>? id,
     Expression<String>? name,
     Expression<String>? type,
@@ -424,7 +423,7 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
     Expression<String>? url,
     Expression<DateTime>? lastUpdated,
     Expression<DateTime>? createdAt,
-    Expression<bool>? isSelected,
+    Expression<bool>? isActive,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -435,12 +434,12 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
       if (url != null) 'url': url,
       if (lastUpdated != null) 'last_updated': lastUpdated,
       if (createdAt != null) 'created_at': createdAt,
-      if (isSelected != null) 'is_selected': isSelected,
+      if (isActive != null) 'is_active': isActive,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
-  PlaylistCompanion copyWith({
+  PlaylistDriftCompanion copyWith({
     Value<String>? id,
     Value<String>? name,
     Value<String?>? type,
@@ -448,10 +447,10 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
     Value<String>? url,
     Value<DateTime?>? lastUpdated,
     Value<DateTime>? createdAt,
-    Value<bool>? isSelected,
+    Value<bool>? isActive,
     Value<int>? rowid,
   }) {
-    return PlaylistCompanion(
+    return PlaylistDriftCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       type: type ?? this.type,
@@ -459,7 +458,7 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
       url: url ?? this.url,
       lastUpdated: lastUpdated ?? this.lastUpdated,
       createdAt: createdAt ?? this.createdAt,
-      isSelected: isSelected ?? this.isSelected,
+      isActive: isActive ?? this.isActive,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -488,8 +487,8 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
-    if (isSelected.present) {
-      map['is_selected'] = Variable<bool>(isSelected.value);
+    if (isActive.present) {
+      map['is_active'] = Variable<bool>(isActive.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -499,7 +498,7 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
 
   @override
   String toString() {
-    return (StringBuffer('PlaylistCompanion(')
+    return (StringBuffer('PlaylistDriftCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('type: $type, ')
@@ -507,18 +506,19 @@ class PlaylistCompanion extends UpdateCompanion<PlaylistData> {
           ..write('url: $url, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('createdAt: $createdAt, ')
-          ..write('isSelected: $isSelected, ')
+          ..write('isActive: $isActive, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
 }
 
-class $ChannelTable extends Channel with TableInfo<$ChannelTable, ChannelData> {
+class $ChannelDriftTable extends ChannelDrift
+    with TableInfo<$ChannelDriftTable, ChannelDriftData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ChannelTable(this.attachedDatabase, [this._alias]);
+  $ChannelDriftTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -610,17 +610,6 @@ class $ChannelTable extends Channel with TableInfo<$ChannelTable, ChannelData> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _categoryMeta = const VerificationMeta(
-    'category',
-  );
-  @override
-  late final GeneratedColumn<String> category = GeneratedColumn<String>(
-    'category',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _isFavoriteMeta = const VerificationMeta(
     'isFavorite',
   );
@@ -673,7 +662,6 @@ class $ChannelTable extends Channel with TableInfo<$ChannelTable, ChannelData> {
     logo,
     groupTitle,
     streamUrl,
-    category,
     isFavorite,
     isWatched,
     lastUpdated,
@@ -682,10 +670,10 @@ class $ChannelTable extends Channel with TableInfo<$ChannelTable, ChannelData> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'channel';
+  static const String $name = 'channel_drift';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ChannelData> instance, {
+    Insertable<ChannelDriftData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -747,12 +735,6 @@ class $ChannelTable extends Channel with TableInfo<$ChannelTable, ChannelData> {
     } else if (isInserting) {
       context.missing(_streamUrlMeta);
     }
-    if (data.containsKey('category')) {
-      context.handle(
-        _categoryMeta,
-        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
-      );
-    }
     if (data.containsKey('is_favorite')) {
       context.handle(
         _isFavoriteMeta,
@@ -780,9 +762,9 @@ class $ChannelTable extends Channel with TableInfo<$ChannelTable, ChannelData> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ChannelData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ChannelDriftData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ChannelData(
+    return ChannelDriftData(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
@@ -819,10 +801,6 @@ class $ChannelTable extends Channel with TableInfo<$ChannelTable, ChannelData> {
         DriftSqlType.string,
         data['${effectivePrefix}stream_url'],
       )!,
-      category: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}category'],
-      ),
       isFavorite: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_favorite'],
@@ -839,12 +817,13 @@ class $ChannelTable extends Channel with TableInfo<$ChannelTable, ChannelData> {
   }
 
   @override
-  $ChannelTable createAlias(String alias) {
-    return $ChannelTable(attachedDatabase, alias);
+  $ChannelDriftTable createAlias(String alias) {
+    return $ChannelDriftTable(attachedDatabase, alias);
   }
 }
 
-class ChannelData extends DataClass implements Insertable<ChannelData> {
+class ChannelDriftData extends DataClass
+    implements Insertable<ChannelDriftData> {
   final String id;
   final String playlistId;
   final String name;
@@ -854,11 +833,10 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
   final String? logo;
   final String? groupTitle;
   final String streamUrl;
-  final String? category;
   final bool isFavorite;
   final bool isWatched;
   final DateTime? lastUpdated;
-  const ChannelData({
+  const ChannelDriftData({
     required this.id,
     required this.playlistId,
     required this.name,
@@ -868,7 +846,6 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
     this.logo,
     this.groupTitle,
     required this.streamUrl,
-    this.category,
     required this.isFavorite,
     required this.isWatched,
     this.lastUpdated,
@@ -895,9 +872,6 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
       map['group_title'] = Variable<String>(groupTitle);
     }
     map['stream_url'] = Variable<String>(streamUrl);
-    if (!nullToAbsent || category != null) {
-      map['category'] = Variable<String>(category);
-    }
     map['is_favorite'] = Variable<bool>(isFavorite);
     map['is_watched'] = Variable<bool>(isWatched);
     if (!nullToAbsent || lastUpdated != null) {
@@ -906,8 +880,8 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
     return map;
   }
 
-  ChannelCompanion toCompanion(bool nullToAbsent) {
-    return ChannelCompanion(
+  ChannelDriftCompanion toCompanion(bool nullToAbsent) {
+    return ChannelDriftCompanion(
       id: Value(id),
       playlistId: Value(playlistId),
       name: Value(name),
@@ -925,9 +899,6 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
           ? const Value.absent()
           : Value(groupTitle),
       streamUrl: Value(streamUrl),
-      category: category == null && nullToAbsent
-          ? const Value.absent()
-          : Value(category),
       isFavorite: Value(isFavorite),
       isWatched: Value(isWatched),
       lastUpdated: lastUpdated == null && nullToAbsent
@@ -936,12 +907,12 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
     );
   }
 
-  factory ChannelData.fromJson(
+  factory ChannelDriftData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ChannelData(
+    return ChannelDriftData(
       id: serializer.fromJson<String>(json['id']),
       playlistId: serializer.fromJson<String>(json['playlistId']),
       name: serializer.fromJson<String>(json['name']),
@@ -951,7 +922,6 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
       logo: serializer.fromJson<String?>(json['logo']),
       groupTitle: serializer.fromJson<String?>(json['groupTitle']),
       streamUrl: serializer.fromJson<String>(json['streamUrl']),
-      category: serializer.fromJson<String?>(json['category']),
       isFavorite: serializer.fromJson<bool>(json['isFavorite']),
       isWatched: serializer.fromJson<bool>(json['isWatched']),
       lastUpdated: serializer.fromJson<DateTime?>(json['lastUpdated']),
@@ -970,14 +940,13 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
       'logo': serializer.toJson<String?>(logo),
       'groupTitle': serializer.toJson<String?>(groupTitle),
       'streamUrl': serializer.toJson<String>(streamUrl),
-      'category': serializer.toJson<String?>(category),
       'isFavorite': serializer.toJson<bool>(isFavorite),
       'isWatched': serializer.toJson<bool>(isWatched),
       'lastUpdated': serializer.toJson<DateTime?>(lastUpdated),
     };
   }
 
-  ChannelData copyWith({
+  ChannelDriftData copyWith({
     String? id,
     String? playlistId,
     String? name,
@@ -987,11 +956,10 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
     Value<String?> logo = const Value.absent(),
     Value<String?> groupTitle = const Value.absent(),
     String? streamUrl,
-    Value<String?> category = const Value.absent(),
     bool? isFavorite,
     bool? isWatched,
     Value<DateTime?> lastUpdated = const Value.absent(),
-  }) => ChannelData(
+  }) => ChannelDriftData(
     id: id ?? this.id,
     playlistId: playlistId ?? this.playlistId,
     name: name ?? this.name,
@@ -1001,13 +969,12 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
     logo: logo.present ? logo.value : this.logo,
     groupTitle: groupTitle.present ? groupTitle.value : this.groupTitle,
     streamUrl: streamUrl ?? this.streamUrl,
-    category: category.present ? category.value : this.category,
     isFavorite: isFavorite ?? this.isFavorite,
     isWatched: isWatched ?? this.isWatched,
     lastUpdated: lastUpdated.present ? lastUpdated.value : this.lastUpdated,
   );
-  ChannelData copyWithCompanion(ChannelCompanion data) {
-    return ChannelData(
+  ChannelDriftData copyWithCompanion(ChannelDriftCompanion data) {
+    return ChannelDriftData(
       id: data.id.present ? data.id.value : this.id,
       playlistId: data.playlistId.present
           ? data.playlistId.value
@@ -1021,7 +988,6 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
           ? data.groupTitle.value
           : this.groupTitle,
       streamUrl: data.streamUrl.present ? data.streamUrl.value : this.streamUrl,
-      category: data.category.present ? data.category.value : this.category,
       isFavorite: data.isFavorite.present
           ? data.isFavorite.value
           : this.isFavorite,
@@ -1034,7 +1000,7 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
 
   @override
   String toString() {
-    return (StringBuffer('ChannelData(')
+    return (StringBuffer('ChannelDriftData(')
           ..write('id: $id, ')
           ..write('playlistId: $playlistId, ')
           ..write('name: $name, ')
@@ -1044,7 +1010,6 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
           ..write('logo: $logo, ')
           ..write('groupTitle: $groupTitle, ')
           ..write('streamUrl: $streamUrl, ')
-          ..write('category: $category, ')
           ..write('isFavorite: $isFavorite, ')
           ..write('isWatched: $isWatched, ')
           ..write('lastUpdated: $lastUpdated')
@@ -1063,7 +1028,6 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
     logo,
     groupTitle,
     streamUrl,
-    category,
     isFavorite,
     isWatched,
     lastUpdated,
@@ -1071,7 +1035,7 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ChannelData &&
+      (other is ChannelDriftData &&
           other.id == this.id &&
           other.playlistId == this.playlistId &&
           other.name == this.name &&
@@ -1081,13 +1045,12 @@ class ChannelData extends DataClass implements Insertable<ChannelData> {
           other.logo == this.logo &&
           other.groupTitle == this.groupTitle &&
           other.streamUrl == this.streamUrl &&
-          other.category == this.category &&
           other.isFavorite == this.isFavorite &&
           other.isWatched == this.isWatched &&
           other.lastUpdated == this.lastUpdated);
 }
 
-class ChannelCompanion extends UpdateCompanion<ChannelData> {
+class ChannelDriftCompanion extends UpdateCompanion<ChannelDriftData> {
   final Value<String> id;
   final Value<String> playlistId;
   final Value<String> name;
@@ -1097,12 +1060,11 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
   final Value<String?> logo;
   final Value<String?> groupTitle;
   final Value<String> streamUrl;
-  final Value<String?> category;
   final Value<bool> isFavorite;
   final Value<bool> isWatched;
   final Value<DateTime?> lastUpdated;
   final Value<int> rowid;
-  const ChannelCompanion({
+  const ChannelDriftCompanion({
     this.id = const Value.absent(),
     this.playlistId = const Value.absent(),
     this.name = const Value.absent(),
@@ -1112,13 +1074,12 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
     this.logo = const Value.absent(),
     this.groupTitle = const Value.absent(),
     this.streamUrl = const Value.absent(),
-    this.category = const Value.absent(),
     this.isFavorite = const Value.absent(),
     this.isWatched = const Value.absent(),
     this.lastUpdated = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  ChannelCompanion.insert({
+  ChannelDriftCompanion.insert({
     this.id = const Value.absent(),
     required String playlistId,
     required String name,
@@ -1128,7 +1089,6 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
     this.logo = const Value.absent(),
     this.groupTitle = const Value.absent(),
     required String streamUrl,
-    this.category = const Value.absent(),
     this.isFavorite = const Value.absent(),
     this.isWatched = const Value.absent(),
     this.lastUpdated = const Value.absent(),
@@ -1136,7 +1096,7 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
   }) : playlistId = Value(playlistId),
        name = Value(name),
        streamUrl = Value(streamUrl);
-  static Insertable<ChannelData> custom({
+  static Insertable<ChannelDriftData> custom({
     Expression<String>? id,
     Expression<String>? playlistId,
     Expression<String>? name,
@@ -1146,7 +1106,6 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
     Expression<String>? logo,
     Expression<String>? groupTitle,
     Expression<String>? streamUrl,
-    Expression<String>? category,
     Expression<bool>? isFavorite,
     Expression<bool>? isWatched,
     Expression<DateTime>? lastUpdated,
@@ -1162,7 +1121,6 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
       if (logo != null) 'logo': logo,
       if (groupTitle != null) 'group_title': groupTitle,
       if (streamUrl != null) 'stream_url': streamUrl,
-      if (category != null) 'category': category,
       if (isFavorite != null) 'is_favorite': isFavorite,
       if (isWatched != null) 'is_watched': isWatched,
       if (lastUpdated != null) 'last_updated': lastUpdated,
@@ -1170,7 +1128,7 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
     });
   }
 
-  ChannelCompanion copyWith({
+  ChannelDriftCompanion copyWith({
     Value<String>? id,
     Value<String>? playlistId,
     Value<String>? name,
@@ -1180,13 +1138,12 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
     Value<String?>? logo,
     Value<String?>? groupTitle,
     Value<String>? streamUrl,
-    Value<String?>? category,
     Value<bool>? isFavorite,
     Value<bool>? isWatched,
     Value<DateTime?>? lastUpdated,
     Value<int>? rowid,
   }) {
-    return ChannelCompanion(
+    return ChannelDriftCompanion(
       id: id ?? this.id,
       playlistId: playlistId ?? this.playlistId,
       name: name ?? this.name,
@@ -1196,7 +1153,6 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
       logo: logo ?? this.logo,
       groupTitle: groupTitle ?? this.groupTitle,
       streamUrl: streamUrl ?? this.streamUrl,
-      category: category ?? this.category,
       isFavorite: isFavorite ?? this.isFavorite,
       isWatched: isWatched ?? this.isWatched,
       lastUpdated: lastUpdated ?? this.lastUpdated,
@@ -1234,9 +1190,6 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
     if (streamUrl.present) {
       map['stream_url'] = Variable<String>(streamUrl.value);
     }
-    if (category.present) {
-      map['category'] = Variable<String>(category.value);
-    }
     if (isFavorite.present) {
       map['is_favorite'] = Variable<bool>(isFavorite.value);
     }
@@ -1254,7 +1207,7 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
 
   @override
   String toString() {
-    return (StringBuffer('ChannelCompanion(')
+    return (StringBuffer('ChannelDriftCompanion(')
           ..write('id: $id, ')
           ..write('playlistId: $playlistId, ')
           ..write('name: $name, ')
@@ -1264,7 +1217,6 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
           ..write('logo: $logo, ')
           ..write('groupTitle: $groupTitle, ')
           ..write('streamUrl: $streamUrl, ')
-          ..write('category: $category, ')
           ..write('isFavorite: $isFavorite, ')
           ..write('isWatched: $isWatched, ')
           ..write('lastUpdated: $lastUpdated, ')
@@ -1277,17 +1229,20 @@ class ChannelCompanion extends UpdateCompanion<ChannelData> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
-  late final $PlaylistTable playlist = $PlaylistTable(this);
-  late final $ChannelTable channel = $ChannelTable(this);
+  late final $PlaylistDriftTable playlistDrift = $PlaylistDriftTable(this);
+  late final $ChannelDriftTable channelDrift = $ChannelDriftTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [playlist, channel];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    playlistDrift,
+    channelDrift,
+  ];
 }
 
-typedef $$PlaylistTableCreateCompanionBuilder =
-    PlaylistCompanion Function({
+typedef $$PlaylistDriftTableCreateCompanionBuilder =
+    PlaylistDriftCompanion Function({
       Value<String> id,
       required String name,
       Value<String?> type,
@@ -1295,11 +1250,11 @@ typedef $$PlaylistTableCreateCompanionBuilder =
       required String url,
       Value<DateTime?> lastUpdated,
       Value<DateTime> createdAt,
-      Value<bool> isSelected,
+      Value<bool> isActive,
       Value<int> rowid,
     });
-typedef $$PlaylistTableUpdateCompanionBuilder =
-    PlaylistCompanion Function({
+typedef $$PlaylistDriftTableUpdateCompanionBuilder =
+    PlaylistDriftCompanion Function({
       Value<String> id,
       Value<String> name,
       Value<String?> type,
@@ -1307,13 +1262,13 @@ typedef $$PlaylistTableUpdateCompanionBuilder =
       Value<String> url,
       Value<DateTime?> lastUpdated,
       Value<DateTime> createdAt,
-      Value<bool> isSelected,
+      Value<bool> isActive,
       Value<int> rowid,
     });
 
-class $$PlaylistTableFilterComposer
-    extends Composer<_$AppDatabase, $PlaylistTable> {
-  $$PlaylistTableFilterComposer({
+class $$PlaylistDriftTableFilterComposer
+    extends Composer<_$AppDatabase, $PlaylistDriftTable> {
+  $$PlaylistDriftTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1355,15 +1310,15 @@ class $$PlaylistTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<bool> get isSelected => $composableBuilder(
-    column: $table.isSelected,
+  ColumnFilters<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
     builder: (column) => ColumnFilters(column),
   );
 }
 
-class $$PlaylistTableOrderingComposer
-    extends Composer<_$AppDatabase, $PlaylistTable> {
-  $$PlaylistTableOrderingComposer({
+class $$PlaylistDriftTableOrderingComposer
+    extends Composer<_$AppDatabase, $PlaylistDriftTable> {
+  $$PlaylistDriftTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1405,15 +1360,15 @@ class $$PlaylistTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get isSelected => $composableBuilder(
-    column: $table.isSelected,
+  ColumnOrderings<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
     builder: (column) => ColumnOrderings(column),
   );
 }
 
-class $$PlaylistTableAnnotationComposer
-    extends Composer<_$AppDatabase, $PlaylistTable> {
-  $$PlaylistTableAnnotationComposer({
+class $$PlaylistDriftTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PlaylistDriftTable> {
+  $$PlaylistDriftTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1443,41 +1398,43 @@ class $$PlaylistTableAnnotationComposer
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  GeneratedColumn<bool> get isSelected => $composableBuilder(
-    column: $table.isSelected,
-    builder: (column) => column,
-  );
+  GeneratedColumn<bool> get isActive =>
+      $composableBuilder(column: $table.isActive, builder: (column) => column);
 }
 
-class $$PlaylistTableTableManager
+class $$PlaylistDriftTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $PlaylistTable,
-          PlaylistData,
-          $$PlaylistTableFilterComposer,
-          $$PlaylistTableOrderingComposer,
-          $$PlaylistTableAnnotationComposer,
-          $$PlaylistTableCreateCompanionBuilder,
-          $$PlaylistTableUpdateCompanionBuilder,
+          $PlaylistDriftTable,
+          PlaylistDriftData,
+          $$PlaylistDriftTableFilterComposer,
+          $$PlaylistDriftTableOrderingComposer,
+          $$PlaylistDriftTableAnnotationComposer,
+          $$PlaylistDriftTableCreateCompanionBuilder,
+          $$PlaylistDriftTableUpdateCompanionBuilder,
           (
-            PlaylistData,
-            BaseReferences<_$AppDatabase, $PlaylistTable, PlaylistData>,
+            PlaylistDriftData,
+            BaseReferences<
+              _$AppDatabase,
+              $PlaylistDriftTable,
+              PlaylistDriftData
+            >,
           ),
-          PlaylistData,
+          PlaylistDriftData,
           PrefetchHooks Function()
         > {
-  $$PlaylistTableTableManager(_$AppDatabase db, $PlaylistTable table)
+  $$PlaylistDriftTableTableManager(_$AppDatabase db, $PlaylistDriftTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$PlaylistTableFilterComposer($db: db, $table: table),
+              $$PlaylistDriftTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$PlaylistTableOrderingComposer($db: db, $table: table),
+              $$PlaylistDriftTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$PlaylistTableAnnotationComposer($db: db, $table: table),
+              $$PlaylistDriftTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
@@ -1487,9 +1444,9 @@ class $$PlaylistTableTableManager
                 Value<String> url = const Value.absent(),
                 Value<DateTime?> lastUpdated = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
-                Value<bool> isSelected = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => PlaylistCompanion(
+              }) => PlaylistDriftCompanion(
                 id: id,
                 name: name,
                 type: type,
@@ -1497,7 +1454,7 @@ class $$PlaylistTableTableManager
                 url: url,
                 lastUpdated: lastUpdated,
                 createdAt: createdAt,
-                isSelected: isSelected,
+                isActive: isActive,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -1509,9 +1466,9 @@ class $$PlaylistTableTableManager
                 required String url,
                 Value<DateTime?> lastUpdated = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
-                Value<bool> isSelected = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => PlaylistCompanion.insert(
+              }) => PlaylistDriftCompanion.insert(
                 id: id,
                 name: name,
                 type: type,
@@ -1519,7 +1476,7 @@ class $$PlaylistTableTableManager
                 url: url,
                 lastUpdated: lastUpdated,
                 createdAt: createdAt,
-                isSelected: isSelected,
+                isActive: isActive,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -1530,25 +1487,25 @@ class $$PlaylistTableTableManager
       );
 }
 
-typedef $$PlaylistTableProcessedTableManager =
+typedef $$PlaylistDriftTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $PlaylistTable,
-      PlaylistData,
-      $$PlaylistTableFilterComposer,
-      $$PlaylistTableOrderingComposer,
-      $$PlaylistTableAnnotationComposer,
-      $$PlaylistTableCreateCompanionBuilder,
-      $$PlaylistTableUpdateCompanionBuilder,
+      $PlaylistDriftTable,
+      PlaylistDriftData,
+      $$PlaylistDriftTableFilterComposer,
+      $$PlaylistDriftTableOrderingComposer,
+      $$PlaylistDriftTableAnnotationComposer,
+      $$PlaylistDriftTableCreateCompanionBuilder,
+      $$PlaylistDriftTableUpdateCompanionBuilder,
       (
-        PlaylistData,
-        BaseReferences<_$AppDatabase, $PlaylistTable, PlaylistData>,
+        PlaylistDriftData,
+        BaseReferences<_$AppDatabase, $PlaylistDriftTable, PlaylistDriftData>,
       ),
-      PlaylistData,
+      PlaylistDriftData,
       PrefetchHooks Function()
     >;
-typedef $$ChannelTableCreateCompanionBuilder =
-    ChannelCompanion Function({
+typedef $$ChannelDriftTableCreateCompanionBuilder =
+    ChannelDriftCompanion Function({
       Value<String> id,
       required String playlistId,
       required String name,
@@ -1558,14 +1515,13 @@ typedef $$ChannelTableCreateCompanionBuilder =
       Value<String?> logo,
       Value<String?> groupTitle,
       required String streamUrl,
-      Value<String?> category,
       Value<bool> isFavorite,
       Value<bool> isWatched,
       Value<DateTime?> lastUpdated,
       Value<int> rowid,
     });
-typedef $$ChannelTableUpdateCompanionBuilder =
-    ChannelCompanion Function({
+typedef $$ChannelDriftTableUpdateCompanionBuilder =
+    ChannelDriftCompanion Function({
       Value<String> id,
       Value<String> playlistId,
       Value<String> name,
@@ -1575,16 +1531,15 @@ typedef $$ChannelTableUpdateCompanionBuilder =
       Value<String?> logo,
       Value<String?> groupTitle,
       Value<String> streamUrl,
-      Value<String?> category,
       Value<bool> isFavorite,
       Value<bool> isWatched,
       Value<DateTime?> lastUpdated,
       Value<int> rowid,
     });
 
-class $$ChannelTableFilterComposer
-    extends Composer<_$AppDatabase, $ChannelTable> {
-  $$ChannelTableFilterComposer({
+class $$ChannelDriftTableFilterComposer
+    extends Composer<_$AppDatabase, $ChannelDriftTable> {
+  $$ChannelDriftTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1636,11 +1591,6 @@ class $$ChannelTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get category => $composableBuilder(
-    column: $table.category,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<bool> get isFavorite => $composableBuilder(
     column: $table.isFavorite,
     builder: (column) => ColumnFilters(column),
@@ -1657,9 +1607,9 @@ class $$ChannelTableFilterComposer
   );
 }
 
-class $$ChannelTableOrderingComposer
-    extends Composer<_$AppDatabase, $ChannelTable> {
-  $$ChannelTableOrderingComposer({
+class $$ChannelDriftTableOrderingComposer
+    extends Composer<_$AppDatabase, $ChannelDriftTable> {
+  $$ChannelDriftTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1711,11 +1661,6 @@ class $$ChannelTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get category => $composableBuilder(
-    column: $table.category,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<bool> get isFavorite => $composableBuilder(
     column: $table.isFavorite,
     builder: (column) => ColumnOrderings(column),
@@ -1732,9 +1677,9 @@ class $$ChannelTableOrderingComposer
   );
 }
 
-class $$ChannelTableAnnotationComposer
-    extends Composer<_$AppDatabase, $ChannelTable> {
-  $$ChannelTableAnnotationComposer({
+class $$ChannelDriftTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ChannelDriftTable> {
+  $$ChannelDriftTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1772,9 +1717,6 @@ class $$ChannelTableAnnotationComposer
   GeneratedColumn<String> get streamUrl =>
       $composableBuilder(column: $table.streamUrl, builder: (column) => column);
 
-  GeneratedColumn<String> get category =>
-      $composableBuilder(column: $table.category, builder: (column) => column);
-
   GeneratedColumn<bool> get isFavorite => $composableBuilder(
     column: $table.isFavorite,
     builder: (column) => column,
@@ -1789,35 +1731,35 @@ class $$ChannelTableAnnotationComposer
   );
 }
 
-class $$ChannelTableTableManager
+class $$ChannelDriftTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $ChannelTable,
-          ChannelData,
-          $$ChannelTableFilterComposer,
-          $$ChannelTableOrderingComposer,
-          $$ChannelTableAnnotationComposer,
-          $$ChannelTableCreateCompanionBuilder,
-          $$ChannelTableUpdateCompanionBuilder,
+          $ChannelDriftTable,
+          ChannelDriftData,
+          $$ChannelDriftTableFilterComposer,
+          $$ChannelDriftTableOrderingComposer,
+          $$ChannelDriftTableAnnotationComposer,
+          $$ChannelDriftTableCreateCompanionBuilder,
+          $$ChannelDriftTableUpdateCompanionBuilder,
           (
-            ChannelData,
-            BaseReferences<_$AppDatabase, $ChannelTable, ChannelData>,
+            ChannelDriftData,
+            BaseReferences<_$AppDatabase, $ChannelDriftTable, ChannelDriftData>,
           ),
-          ChannelData,
+          ChannelDriftData,
           PrefetchHooks Function()
         > {
-  $$ChannelTableTableManager(_$AppDatabase db, $ChannelTable table)
+  $$ChannelDriftTableTableManager(_$AppDatabase db, $ChannelDriftTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ChannelTableFilterComposer($db: db, $table: table),
+              $$ChannelDriftTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ChannelTableOrderingComposer($db: db, $table: table),
+              $$ChannelDriftTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ChannelTableAnnotationComposer($db: db, $table: table),
+              $$ChannelDriftTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
@@ -1829,12 +1771,11 @@ class $$ChannelTableTableManager
                 Value<String?> logo = const Value.absent(),
                 Value<String?> groupTitle = const Value.absent(),
                 Value<String> streamUrl = const Value.absent(),
-                Value<String?> category = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
                 Value<bool> isWatched = const Value.absent(),
                 Value<DateTime?> lastUpdated = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => ChannelCompanion(
+              }) => ChannelDriftCompanion(
                 id: id,
                 playlistId: playlistId,
                 name: name,
@@ -1844,7 +1785,6 @@ class $$ChannelTableTableManager
                 logo: logo,
                 groupTitle: groupTitle,
                 streamUrl: streamUrl,
-                category: category,
                 isFavorite: isFavorite,
                 isWatched: isWatched,
                 lastUpdated: lastUpdated,
@@ -1861,12 +1801,11 @@ class $$ChannelTableTableManager
                 Value<String?> logo = const Value.absent(),
                 Value<String?> groupTitle = const Value.absent(),
                 required String streamUrl,
-                Value<String?> category = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
                 Value<bool> isWatched = const Value.absent(),
                 Value<DateTime?> lastUpdated = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => ChannelCompanion.insert(
+              }) => ChannelDriftCompanion.insert(
                 id: id,
                 playlistId: playlistId,
                 name: name,
@@ -1876,7 +1815,6 @@ class $$ChannelTableTableManager
                 logo: logo,
                 groupTitle: groupTitle,
                 streamUrl: streamUrl,
-                category: category,
                 isFavorite: isFavorite,
                 isWatched: isWatched,
                 lastUpdated: lastUpdated,
@@ -1890,26 +1828,29 @@ class $$ChannelTableTableManager
       );
 }
 
-typedef $$ChannelTableProcessedTableManager =
+typedef $$ChannelDriftTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $ChannelTable,
-      ChannelData,
-      $$ChannelTableFilterComposer,
-      $$ChannelTableOrderingComposer,
-      $$ChannelTableAnnotationComposer,
-      $$ChannelTableCreateCompanionBuilder,
-      $$ChannelTableUpdateCompanionBuilder,
-      (ChannelData, BaseReferences<_$AppDatabase, $ChannelTable, ChannelData>),
-      ChannelData,
+      $ChannelDriftTable,
+      ChannelDriftData,
+      $$ChannelDriftTableFilterComposer,
+      $$ChannelDriftTableOrderingComposer,
+      $$ChannelDriftTableAnnotationComposer,
+      $$ChannelDriftTableCreateCompanionBuilder,
+      $$ChannelDriftTableUpdateCompanionBuilder,
+      (
+        ChannelDriftData,
+        BaseReferences<_$AppDatabase, $ChannelDriftTable, ChannelDriftData>,
+      ),
+      ChannelDriftData,
       PrefetchHooks Function()
     >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
-  $$PlaylistTableTableManager get playlist =>
-      $$PlaylistTableTableManager(_db, _db.playlist);
-  $$ChannelTableTableManager get channel =>
-      $$ChannelTableTableManager(_db, _db.channel);
+  $$PlaylistDriftTableTableManager get playlistDrift =>
+      $$PlaylistDriftTableTableManager(_db, _db.playlistDrift);
+  $$ChannelDriftTableTableManager get channelDrift =>
+      $$ChannelDriftTableTableManager(_db, _db.channelDrift);
 }

@@ -40,7 +40,7 @@ final isBufferingProvider = StateNotifierProvider<PlaybackNotifier, bool>((
 });
 
 // Fungsi untuk membuka media stream
-void openMediaStream(WidgetRef ref, ChannelData channel) {
+void openMediaStream(WidgetRef ref, ChannelDriftData channel) {
   final player = ref.read(videoPlayerProvider);
   final List urls = jsonDecode(channel.streamUrl) as List<dynamic>;
   player.open(Media(urls.first));

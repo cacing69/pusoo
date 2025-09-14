@@ -3,7 +3,7 @@ import 'package:ulid/ulid.dart';
 
 // part 'playlist.g.dart';
 
-class Playlist extends Table {
+class PlaylistDrift extends Table {
   TextColumn get id =>
       text().clientDefault(() => Ulid().toString())(); // ULID as primary key
 
@@ -14,7 +14,7 @@ class Playlist extends Table {
   DateTimeColumn get lastUpdated => dateTime().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
-  BoolColumn get isSelected => boolean().clientDefault(() => false)();
+  BoolColumn get isActive => boolean().clientDefault(() => false)();
 
   @override
   Set<Column> get primaryKey => {id};

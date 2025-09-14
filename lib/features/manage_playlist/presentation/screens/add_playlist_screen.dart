@@ -68,11 +68,11 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                 final String playlistId = Ulid().toString();
 
                 // cek jika belum ada playlist maka set default
-                final countExpression = driftDb.playlist.id.count();
+                final countExpression = driftDb.playlistDrift.id.count();
 
                 // Menggunakan selectOnly dan membaca hasilnya secara langsung
                 final count =
-                    await (driftDb.selectOnly(driftDb.playlist)
+                    await (driftDb.selectOnly(driftDb.playlistDrift)
                           ..addColumns([countExpression]))
                         .map(
                           (row) => row.read(countExpression),
@@ -80,13 +80,13 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                         .getSingle();
 
                 await driftDb
-                    .into(driftDb.playlist)
+                    .into(driftDb.playlistDrift)
                     .insert(
-                      PlaylistCompanion.insert(
+                      PlaylistDriftCompanion.insert(
                         id: drift.Value(playlistId),
                         name: nameController.text.trim(),
                         url: urlController.text.trim(),
-                        isSelected: drift.Value(count == 0),
+                        isActive: drift.Value(count == 0),
                         type: drift.Value("m3u_playlist"),
                       ),
                     );
@@ -130,17 +130,17 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
 
                     await driftDb.batch((batch) {
                       batch.insertAll(
-                        driftDb.channel,
-                        channel["items"].map<ChannelCompanion>((ch) {
+                        driftDb.channelDrift,
+                        channel["items"].map<ChannelDriftCompanion>((ch) {
                           // debugPrint(ch.toString());
 
-                          return ChannelCompanion(
+                          return ChannelDriftCompanion(
                             id: drift.Value(Ulid().toString()),
                             playlistId: drift.Value(playlistId),
                             name: drift.Value(ch["name"]),
                             tvgId: drift.Value(ch["tvgId"]),
                             logo: drift.Value(ch["tvgLogo"]),
-                            category: drift.Value(ch["groupTitle"]),
+                            groupTitle: drift.Value(ch["groupTitle"]),
                             streamUrl: drift.Value(jsonEncode(ch["urls"])),
                           );
                         }).toList(),

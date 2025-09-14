@@ -1,14 +1,14 @@
 // Drift Database
 import 'package:drift/drift.dart';
-import 'package:pusoo/shared/data/drift/channel.dart';
-import 'package:pusoo/shared/data/drift/playlist.dart';
+import 'package:pusoo/shared/data/models/drift/channel_drift.dart';
+import 'package:pusoo/shared/data/models/drift/playlist_drift.dart';
 import 'package:ulid/ulid.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 part 'drift_database.g.dart';
 
-@DriftDatabase(tables: [Playlist, Channel])
+@DriftDatabase(tables: [PlaylistDrift, ChannelDrift])
 class AppDatabase extends _$AppDatabase {
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
@@ -16,7 +16,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration {

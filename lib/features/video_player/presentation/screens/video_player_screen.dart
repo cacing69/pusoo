@@ -11,7 +11,7 @@ import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 // import 'package:video_player/video_player.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
-  final ChannelData channel;
+  final ChannelDriftData channel;
   const VideoPlayerScreen({super.key, required this.channel});
 
   @override

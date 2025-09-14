@@ -10,7 +10,7 @@ import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 import 'package:pusoo/shared/presentation/providers/video_playback_notifier.dart';
 
 class TvPlayerScreen extends ConsumerStatefulWidget {
-  final ChannelData channel;
+  final ChannelDriftData channel;
   const TvPlayerScreen({super.key, required this.channel});
 
   @override

@@ -15,10 +15,10 @@ class ManageProviderScreen extends StatefulWidget {
 }
 
 class _ManageProviderScreenState extends State<ManageProviderScreen> {
-  List<PlaylistData> playlist = [];
+  List<PlaylistDriftData> playlist = [];
 
   void loadPlaylist() async {
-    final allPlaylists = await driftDb.select(driftDb.playlist).get();
+    final allPlaylists = await driftDb.select(driftDb.playlistDrift).get();
 
     setState(() {
       playlist = allPlaylists;
@@ -91,7 +91,7 @@ class _ManageProviderScreenState extends State<ManageProviderScreen> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: e.isSelected
+                                  color: e.isActive
                                       ? Colors.green[800]
                                       : context.theme.colors.destructive,
                                 ),
@@ -100,7 +100,7 @@ class _ManageProviderScreenState extends State<ManageProviderScreen> {
                             title: Text(e.name),
                             subtitle: Text(e.url),
                             suffix: Icon(FIcons.chevronRight),
-                            onPress: e.isSelected
+                            onPress: e.isActive
                                 ? () {
                                     showFlutterToast(
                                       context: context,
@@ -140,15 +140,14 @@ class _ManageProviderScreenState extends State<ManageProviderScreen> {
                                                   onPress: () async {
                                                     // update data old selected as false
                                                     await (driftDb.update(
-                                                          driftDb.playlist,
+                                                          driftDb.playlistDrift,
                                                         )..where(
-                                                          (tbl) => tbl
-                                                              .isSelected
+                                                          (tbl) => tbl.isActive
                                                               .equals(true),
                                                         ))
                                                         .write(
-                                                          const PlaylistCompanion(
-                                                            isSelected:
+                                                          const PlaylistDriftCompanion(
+                                                            isActive:
                                                                 drift.Value(
                                                                   false,
                                                                 ),
@@ -157,14 +156,14 @@ class _ManageProviderScreenState extends State<ManageProviderScreen> {
 
                                                     // update data old selected as false
                                                     await (driftDb.update(
-                                                          driftDb.playlist,
+                                                          driftDb.playlistDrift,
                                                         )..where(
                                                           (tbl) => tbl.id
                                                               .equals(e.id),
                                                         ))
                                                         .write(
-                                                          const PlaylistCompanion(
-                                                            isSelected:
+                                                          const PlaylistDriftCompanion(
+                                                            isActive:
                                                                 drift.Value(
                                                                   true,
                                                                 ),
@@ -204,7 +203,7 @@ class _ManageProviderScreenState extends State<ManageProviderScreen> {
                                                   onPress: () async {
                                                     // delete channel first
                                                     await (driftDb.delete(
-                                                          driftDb.playlist,
+                                                          driftDb.playlistDrift,
                                                         )..where(
                                                           (tbl) => tbl.id
                                                               .equals(e.id),
@@ -213,7 +212,7 @@ class _ManageProviderScreenState extends State<ManageProviderScreen> {
 
                                                     // delete channel first
                                                     await (driftDb.delete(
-                                                          driftDb.channel,
+                                                          driftDb.channelDrift,
                                                         )..where(
                                                           (tbl) => tbl
                                                               .playlistId

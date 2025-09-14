@@ -32,9 +32,9 @@ class _SerieScreenState extends State<SerieScreen> {
     //http://ogietv.biz.id:80/get.php?username=maksin&password=123456&type=m3u_plus&output=mpegts
   }
 
-  List<ChannelData> series = [];
+  List<ChannelDriftData> series = [];
 
-  List<ChannelData> seriesTitle = [];
+  List<ChannelDriftData> seriesTitle = [];
 
   Map<dynamic, dynamic> categories = {};
 
@@ -44,7 +44,7 @@ class _SerieScreenState extends State<SerieScreen> {
     // );
 
     final filtered = await (driftDb.select(
-      driftDb.channel,
+      driftDb.channelDrift,
     )..where((tbl) => tbl.streamUrl.like("%series%"))).get();
 
     // seriesRow.then((data) {
@@ -55,7 +55,7 @@ class _SerieScreenState extends State<SerieScreen> {
       List<Map> expandedSeries = [];
 
       for (var ch in filtered) {
-        final rawCategories = ch.category?.split(';') ?? ["Miscellaneous"];
+        final rawCategories = ch.groupTitle?.split(';') ?? ["Miscellaneous"];
         for (var cat in rawCategories) {
           // buat salinan channel tapi dengan kategori tunggal
           final newCh = Map<String, dynamic>.from(ch.toJson());
@@ -139,12 +139,13 @@ class _SerieScreenState extends State<SerieScreen> {
                                     debugPrint("All channel selected");
 
                                     final channelTv =
-                                        await (driftDb.select(driftDb.channel)
-                                              ..where(
-                                                (tbl) =>
-                                                    tbl.tvgId.isNotNull() |
-                                                    tbl.tvgId.isNotIn([""]),
-                                              ))
+                                        await (driftDb.select(
+                                              driftDb.channelDrift,
+                                            )..where(
+                                              (tbl) =>
+                                                  tbl.tvgId.isNotNull() |
+                                                  tbl.tvgId.isNotIn([""]),
+                                            ))
                                             .get();
 
                                     // channelTv.then((data) {
@@ -170,12 +171,13 @@ class _SerieScreenState extends State<SerieScreen> {
                                     suffix: Icon(FIcons.chevronRight),
                                     onPress: () async {
                                       final channelTv =
-                                          await (driftDb.select(driftDb.channel)
-                                                ..where(
-                                                  (tbl) => tbl.category.like(
-                                                    "%$categoryName%",
-                                                  ),
-                                                ))
+                                          await (driftDb.select(
+                                                driftDb.channelDrift,
+                                              )..where(
+                                                (tbl) => tbl.groupTitle.like(
+                                                  "%$categoryName%",
+                                                ),
+                                              ))
                                               .get();
 
                                       // channelTv.then((data) {
@@ -203,8 +205,8 @@ class _SerieScreenState extends State<SerieScreen> {
             icon: Icon(FIcons.power, size: 25),
             onPress: () async {
               // Hapus semua isi tabel 'playlist'
-              await driftDb.delete(driftDb.playlist).go();
-              await driftDb.delete(driftDb.channel).go();
+              await driftDb.delete(driftDb.playlistDrift).go();
+              await driftDb.delete(driftDb.channelDrift).go();
 
               debugPrint("All rows has been deleted");
 
