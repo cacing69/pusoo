@@ -1,0 +1,305 @@
+import 'dart:io';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:pusoo/core/utils/m3u_parser.dart';
+import 'package:pusoo/shared/data/models/m3u_track.dart';
+
+void main() {
+  group('M3UParser Test', () {
+    test('testLastTrack', () async {
+      final file = File('samples/sample_playlist.txt');
+      final m3uContent = await file.readAsString();
+
+      List<M3UTrack> check = M3UParser.parse(m3uContent);
+
+      M3UTrack item = check[check.length - 1];
+
+      expect("Hanacaraka, Lorem Ipsum", equals(item.title));
+    });
+
+    test('testUrlIncludeHttpHeaderUserAgent', () async {
+      final String content = r'''
+#EXTINF:-1 group-title="CHANNEL | VISION+" ch-number="12" tvg-logo="https://raw.githubusercontent.com/MayToko/Kopi/main/Logo%20maytoko.png",SCTV
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 14; SM-A245F Build/UP1A.231005.007; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/124.0.6367.204 Mobile Safari/537.36
+https://op-group1-swiftservehd-1.dens.tv/h/h217/02.m3u8|user-agent=DENSGO/3.00.00 (Linux;Android 15.0.0;) ExoPlayerLib/2.19.1
+''';
+      List<M3UTrack> result = M3UParser.parse(content);
+
+      M3UTrack item = result.first;
+
+      Map<String, String> httpHeaders = item.httpHeaders.first;
+
+      expect(
+        "https://op-group1-swiftservehd-1.dens.tv/h/h217/02.m3u8",
+        equals(item.links.first),
+      );
+
+      expect(true, equals(httpHeaders.containsKey("user-agent")));
+
+      expect(
+        "DENSGO/3.00.00 (Linux;Android 15.0.0;) ExoPlayerLib/2.19.1",
+        equals(httpHeaders["user-agent"]),
+      );
+    });
+
+    test('testUrlIncludeHttpHeaderReferrer', () async {
+      final String content = r'''
+#EXTINF:0 tvg-id="SS4" tvg-logo="https://i.imgur.com/qUYLcS8.png" group-title="CHANNEL | SPORT INDO", SPORTSTARS 4 HD
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=b576e5f5f1bc4cbaa866e5b0face5a30:3377be6c3b5f688ebed687312c9b9d95
+https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/index.mpd|referrer=https://visionplus.id/
+
+''';
+      List<M3UTrack> result = M3UParser.parse(content);
+
+      M3UTrack item = result.first;
+
+      Map<String, String> httpHeaders = item.httpHeaders.first;
+
+      expect(
+        "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/index.mpd",
+        equals(item.links.first),
+      );
+
+      expect(true, equals(httpHeaders.containsKey("referrer")));
+
+      expect("https://visionplus.id/", equals(httpHeaders["referrer"]));
+    });
+
+    test('testKodiPropTypeDashAndClearKey', () async {
+      final String content = r'''
+#EXTINF:0 tvg-id="SS4" tvg-logo="https://i.imgur.com/qUYLcS8.png" group-title="CHANNEL | SPORT INDO", SPORTSTARS 4 HD
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=b576e5f5f1bc4cbaa866e5b0face5a30:3377be6c3b5f688ebed687312c9b9d95
+https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/index.mpd|referrer=https://visionplus.id/
+
+''';
+      List<M3UTrack> result = M3UParser.parse(content);
+
+      M3UTrack item = result.first;
+
+      Map<String, String> kodiProps = item.kodiProp.first;
+
+      expect(true, equals(kodiProps.containsKey("inputstreamaddon")));
+      expect(
+        true,
+        equals(kodiProps.containsKey("inputstream.adaptive.manifest_type")),
+      );
+      expect(
+        true,
+        equals(kodiProps.containsKey("inputstream.adaptive.license_type")),
+      );
+      expect(
+        true,
+        equals(kodiProps.containsKey("inputstream.adaptive.license_key")),
+      );
+
+      // Test Value
+      expect("inputstream.adaptive", equals(kodiProps["inputstreamaddon"]));
+
+      expect("dash", equals(kodiProps["inputstream.adaptive.manifest_type"]));
+
+      expect(
+        "clearkey",
+        equals(kodiProps["inputstream.adaptive.license_type"]),
+      );
+
+      expect(
+        "b576e5f5f1bc4cbaa866e5b0face5a30:3377be6c3b5f688ebed687312c9b9d95",
+        equals(kodiProps["inputstream.adaptive.license_key"]),
+      );
+    });
+
+    test('testExtVlcOptWhereHasHttpUserAgent:1', () async {
+      final String content = r'''
+#EXTINF:0 tvg-id="SS4" tvg-logo="https://i.imgur.com/qUYLcS8.png" group-title="CHANNEL | SPORT INDO", SPORTSTARS 4 HD
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=b576e5f5f1bc4cbaa866e5b0face5a30:3377be6c3b5f688ebed687312c9b9d95
+https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/index.mpd|referrer=https://visionplus.id/
+
+''';
+      List<M3UTrack> result = M3UParser.parse(content);
+
+      M3UTrack item = result.first;
+
+      Map<String, String> extVlcOpt = item.extVlcOpt.first;
+
+      expect(true, equals(extVlcOpt.containsKey("http-user-agent")));
+
+      // Test Value
+      expect(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
+        equals(extVlcOpt["http-user-agent"]),
+      );
+    });
+
+    test('testExtVlcOptWhereHasHttpUserAgentAndReferrer:1', () async {
+      final String content = r'''
+#EXTINF:0 tvg-logo="https://i.imgur.com/A1hlnLA.png" group-title="CHANNEL | SPORT INDO",Sportstars 2 HD
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=911e72adf36946afbdbb4f80782a8394:08aec548a851ba64b7172ae7f05cb91c
+#EXTVLCOPT:http-referrer=https://visionplus.id/
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+https://d3b0v7fggu5zwm.cloudfront.net/out/v1/d2c68a3dfb644808b416bd90dcc92d5f/index.mpd
+
+''';
+      List<M3UTrack> result = M3UParser.parse(content);
+
+      M3UTrack item = result.first;
+
+      Map<String, String> extVlcOpt = item.extVlcOpt.first;
+
+      expect(true, equals(extVlcOpt.containsKey("http-user-agent")));
+      expect(true, equals(extVlcOpt.containsKey("http-referrer")));
+
+      // Test Value
+      expect(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+        equals(extVlcOpt["http-user-agent"]),
+      );
+
+      expect("https://visionplus.id/", equals(extVlcOpt["http-referrer"]));
+    });
+
+    test('testKodiPropsWhereHasDoubleLicenseKeyAndDoubleUrl:1', () async {
+      final String content = r'''
+#KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha
+#KODIPROP:inputstream.adaptive.license_key=https://kingtvpremium.my.id/play/pision/drm.php?id=115
+#KODIPROP:inputstream.adaptive.license_key=https://drm-vision2025.tvrusak1992.workers.dev/?no=115&type=drm
+##KODIPROP:inputstream.adaptive.license_key=https://terabit.web.id/drmkv.php?id=115&type=drm
+#EXTINF:-1 tvg-logo="https://www.visionplus.id/images/repository/655/655-LOGO-m.png" group-title="CHANNEL | SPORT INDO",Soccer Channel (V+)
+https://d2xz2v5wuvgur6.cloudfront.net/out/v1/63c0da12bb4d48afbaf053f51dff2353/index.mpd|Referer=https://www.visionplus.id/&user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36
+https://fta4-cdn-flr.visionplus.id/out/v1/63c0da12bb4d48afbaf053f51dff2353/index.mpd|Referer=https://www.visionplus.id/&user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36
+''';
+      List<M3UTrack> result = M3UParser.parse(content);
+
+      M3UTrack item = result.first;
+
+      expect(2, equals(item.links.length));
+      expect(2, equals(item.httpHeaders.length));
+      expect(2, equals(item.kodiProp.length));
+
+      // LICENSE_KEY
+      expect(
+        "https://kingtvpremium.my.id/play/pision/drm.php?id=115",
+        equals(item.kodiProp[0]["inputstream.adaptive.license_key"]),
+      );
+
+      expect(
+        "https://drm-vision2025.tvrusak1992.workers.dev/?no=115&type=drm",
+        equals(item.kodiProp[1]["inputstream.adaptive.license_key"]),
+      );
+
+      // URL
+      expect(
+        "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/63c0da12bb4d48afbaf053f51dff2353/index.mpd",
+        equals(item.links[0]),
+      );
+
+      expect(
+        "https://fta4-cdn-flr.visionplus.id/out/v1/63c0da12bb4d48afbaf053f51dff2353/index.mpd",
+        equals(item.links[1]),
+      );
+
+      // HTTP HEADER
+      expect(true, equals(item.httpHeaders[0].containsKey("referer")));
+      expect(true, equals(item.httpHeaders[0].containsKey("user-agent")));
+
+      expect(
+        "https://www.visionplus.id/",
+        equals(item.httpHeaders[0]["referer"]),
+      );
+      expect(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",
+        equals(item.httpHeaders[0]["user-agent"]),
+      );
+
+      expect(true, equals(item.httpHeaders[1].containsKey("referer")));
+      expect(true, equals(item.httpHeaders[1].containsKey("user-agent")));
+
+      expect(
+        "https://www.visionplus.id/",
+        equals(item.httpHeaders[1]["referer"]),
+      );
+      expect(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",
+        equals(item.httpHeaders[1]["user-agent"]),
+      );
+
+      // expect(
+      //   "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/63c0da12bb4d48afbaf053f51dff2353/index.mpd",
+      //   equals(item.httpHeaders[0]["referer"]),
+      // );
+
+      // expect(
+      //   "https://fta4-cdn-flr.visionplus.id/out/v1/63c0da12bb4d48afbaf053f51dff2353/index.mpd",
+      //   equals(item.links[1]),
+      // );
+    });
+
+    test('testKodiPropsWhereNoHashSignOnKodiProps', () async {
+      final String content = r'''
+KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha
+#KODIPROP:inputstream.adaptive.license_key=https://cubmu-cindo.cenc16995.workers.dev/
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Xstream XGO/1.22 (Linux;Android 9) ExoPlayerLib/2.10.5
+#EXTINF:-1 tvg-logo="https://cdnjkt913.transvision.co.id:1000/image/web/channel/4028c6857e04fca5017ec40cec31736f/7a5da94bdbd24ff790b84f892d4aa1e6.png" group-title="CHANNEL | SPORT INDO",Golf+
+https://cdnjkt913.transvision.co.id:1000/live/master/3/4028c68571b3914b01720e7ff4376d21/manifest.mpd
+
+''';
+      List<M3UTrack> result = M3UParser.parse(content);
+
+      M3UTrack item = result.first;
+
+      Map<String, String> kodiProps = item.kodiProp.first;
+
+      expect(
+        true,
+        equals(kodiProps.containsKey("inputstream.adaptive.license_type")),
+      );
+
+      expect(
+        true,
+        equals(kodiProps.containsKey("inputstream.adaptive.license_key")),
+      );
+
+      expect(
+        true,
+        equals(kodiProps.containsKey("inputstream.adaptive.stream_headers")),
+      );
+
+      expect(
+        "com.widevine.alpha",
+        equals(kodiProps["inputstream.adaptive.license_type"]),
+      );
+
+      expect(
+        "https://cubmu-cindo.cenc16995.workers.dev/",
+        equals(kodiProps["inputstream.adaptive.license_key"]),
+      );
+
+      expect(
+        "user-agent=Xstream XGO/1.22 (Linux;Android 9) ExoPlayerLib/2.10.5",
+        equals(kodiProps["inputstream.adaptive.stream_headers"]),
+      );
+
+      // expect(true, equals(extVlcOpt.containsKey("http-referrer")));
+
+      // Test Value
+      // expect(
+      //   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+      //   equals(extVlcOpt["http-user-agent"]),
+      // );
+
+      // expect("https://visionplus.id/", equals(extVlcOpt["http-referrer"]));
+    });
+  });
+}

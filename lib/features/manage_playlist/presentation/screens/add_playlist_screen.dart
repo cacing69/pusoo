@@ -8,7 +8,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pusoo/core/utils/helpers.dart';
-import 'package:pusoo/core/utils/m3u_parse.dart';
+import 'package:pusoo/core/utils/m3u_parser.dart';
 import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:ulid/ulid.dart';
@@ -186,13 +186,13 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                             content = latin1.decode(response.bodyBytes);
                           }
 
-                          final Map<String, dynamic> channel = M3UParse.parse(
-                            content,
-                          );
+                          final dynamic channel = M3UParser.parse(content);
 
                           setState(() {
                             isLoading = false;
                           });
+
+                          return;
 
                           // final find = channel["items"].where(
                           //   (item) =>
