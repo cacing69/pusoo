@@ -15,7 +15,13 @@ abstract class Channel with _$Channel {
     @Default(null) String? logo,
     @Default(null) String? groupTitle,
     @Default(null) bool? isFavorite,
+    @Default(null) bool? isLiveTv,
+    @Default(null) bool? isMovie,
+    @Default(null) bool? isTvSerie,
     @Default(null) bool? isWatched,
+
+    @Default(null) Map<String, String>? kodiprop,
+    @Default(null) Map<String, String>? extvlcopt,
   }) = _Channel;
 
   factory Channel.fromJson(Map<String, dynamic> json) =>

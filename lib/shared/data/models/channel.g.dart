@@ -16,7 +16,20 @@ _Channel _$ChannelFromJson(Map<String, dynamic> json) => _Channel(
   logo: json['logo'] as String? ?? null,
   groupTitle: json['groupTitle'] as String? ?? null,
   isFavorite: json['isFavorite'] as bool? ?? null,
+  isLiveTv: json['isLiveTv'] as bool? ?? null,
+  isMovie: json['isMovie'] as bool? ?? null,
+  isTvSerie: json['isTvSerie'] as bool? ?? null,
   isWatched: json['isWatched'] as bool? ?? null,
+  kodiprop:
+      (json['kodiprop'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ) ??
+      null,
+  extvlcopt:
+      (json['extvlcopt'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ) ??
+      null,
 );
 
 Map<String, dynamic> _$ChannelToJson(_Channel instance) => <String, dynamic>{
@@ -29,5 +42,10 @@ Map<String, dynamic> _$ChannelToJson(_Channel instance) => <String, dynamic>{
   'logo': instance.logo,
   'groupTitle': instance.groupTitle,
   'isFavorite': instance.isFavorite,
+  'isLiveTv': instance.isLiveTv,
+  'isMovie': instance.isMovie,
+  'isTvSerie': instance.isTvSerie,
   'isWatched': instance.isWatched,
+  'kodiprop': instance.kodiprop,
+  'extvlcopt': instance.extvlcopt,
 };

@@ -1,6 +1,7 @@
 // file: lib/shared/providers/video_player_provider.dart
 
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:media_kit/media_kit.dart';
@@ -43,7 +44,33 @@ final isBufferingProvider = StateNotifierProvider<PlaybackNotifier, bool>((
 void openMediaStream(WidgetRef ref, ChannelDriftData channel) {
   final player = ref.read(videoPlayerProvider);
   final List urls = jsonDecode(channel.streamUrl) as List<dynamic>;
-  player.open(Media(urls.first));
+
+  Map<String, String> customHttpHeaders = {};
+
+  List<String> userAgents = <String>[];
+
+  if ("${channel.extvlcopt}" != "[]") {
+    final List extvlcopt = jsonDecode("${channel.extvlcopt}");
+
+    for (var row in extvlcopt) {
+      final split = row.split("=");
+
+      if (split[0].toString().toLowerCase() == "http-user-agent") {
+        userAgents.add(split[1]);
+      } else {
+        customHttpHeaders[split[0].toString().replaceAll("http-", "")] =
+            split[1];
+      }
+    }
+
+    if (userAgents.isNotEmpty) {
+      customHttpHeaders["user-agent"] = userAgents.join(" ");
+    }
+  }
+
+  debugPrint(customHttpHeaders.toString());
+
+  player.open(Media(urls.first, httpHeaders: customHttpHeaders));
 
   // Mendengarkan state buffering
   player.stream.buffering.listen((isBuffering) {

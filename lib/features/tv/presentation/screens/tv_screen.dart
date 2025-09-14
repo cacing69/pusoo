@@ -52,31 +52,35 @@ class _TvScreenState extends ConsumerState<TvScreen> {
     )..where((tbl) => tbl.isActive.equals(true))).get();
 
     if (selectedPlaylist.isNotEmpty) {
-      final String playlistId = selectedPlaylist.first.id;
+      // final String playlistId = selectedPlaylist.first.id;
 
       // maksin pattern
-      late final filtered;
+      late final List<ChannelDriftData> filtered;
 
       if (search != null) {
         filtered =
             await (driftDb.select(driftDb.channelDrift)..where(
                   (tbl) =>
-                      tbl.playlistId.equals(playlistId) &
-                      tbl.streamUrl.like('%movie%').not() &
-                      tbl.streamUrl.like('%series%').not() &
-                      tbl.name.like('%$search%'),
+                      // tbl.playlistId.equals(playlistId) &
+                      // tbl.streamUrl.like('%movie%').not() &
+                      // tbl.streamUrl.like('%series%').not() &
+                      tbl.isLiveTv.equals(true) &
+                      tbl.name.like('%$search%') &
+                      tbl.streamUrl.equals('[]').not(),
                 ))
                 .get();
       } else {
         filtered =
             await (driftDb.select(driftDb.channelDrift)..where(
                   (tbl) =>
-                      tbl.playlistId.equals(playlistId) &
-                      tbl.streamUrl.like('%movie%').not() &
-                      tbl.streamUrl.like('%series%').not(),
+                      tbl.isLiveTv.equals(true) &
+                      // tbl.name.like("%KUALIFIKASI%"),
+                      tbl.streamUrl.equals('[]').not(),
                 ))
                 .get();
       }
+
+      debugPrint(filtered.toString());
 
       // channelTv.then((data) {
       setState(() {
@@ -86,16 +90,16 @@ class _TvScreenState extends ConsumerState<TvScreen> {
         List<Map> expandedChannels = [];
 
         for (var ch in filtered) {
-          final rawCategories = ch.category?.split(';') ?? ["Miscellaneous"];
+          final rawCategories = ch.groupTitle?.split(';') ?? ["Miscellaneous"];
           for (var cat in rawCategories) {
             // buat salinan channel tapi dengan kategori tunggal
             final newCh = Map<String, dynamic>.from(ch.toJson());
-            newCh['category'] = cat.trim();
+            newCh['groupTitle'] = cat.trim();
             expandedChannels.add(newCh);
           }
         }
 
-        categories = groupBy(expandedChannels, (row) => row['category']);
+        categories = groupBy(expandedChannels, (row) => row['groupTitle']);
       });
     }
   }
@@ -196,10 +200,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                                 ...categories.keys.map((categoryName) {
                                   return FItem(
                                     prefix: Icon(FIcons.tag),
-                                    title: Text(
-                                      (categoryName as String)
-                                          .capitalizeWords(),
-                                    ),
+                                    title: Text((categoryName as String)),
                                     suffix: Icon(FIcons.chevronRight),
                                     onPress: () async {
                                       final channelTv =
@@ -234,45 +235,12 @@ class _TvScreenState extends ConsumerState<TvScreen> {
             },
           ),
           FHeaderAction(
-            icon: Icon(FIcons.power, size: 25),
-            onPress: () async {
-              // Hapus semua isi tabel 'playlist'
-              await driftDb.delete(driftDb.playlistDrift).go();
-              await driftDb.delete(driftDb.channelDrift).go();
-
-              debugPrint("All rows has been deleted");
-
-              loadM3U();
-            },
-          ),
-          FHeaderAction(
             icon: Icon(FIcons.refreshCw, size: 25),
             onPress: () async {
               setState(() {
                 channels = [];
               });
               loadM3U();
-            },
-          ),
-          FHeaderAction(
-            icon: Icon(FIcons.plus),
-            onPress: () async {
-              final result = await context.pushNamed(
-                RouteName.addPlaylist.name,
-              );
-
-              if (result is bool && result) {
-                loadM3U();
-
-                if (context.mounted) {
-                  // showFToast(
-                  //   context: context,
-                  //   alignment: FToastAlignment.topCenter,
-                  //   title: const Text('Playlist Loaded'),
-                  //   description: const Text('Lorem ipsum dolor sit amet'),
-                  // );
-                }
-              }
             },
           ),
         ],

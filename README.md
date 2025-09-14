@@ -25,7 +25,8 @@ cd pusoo
 
   Screen | Pictures
  --- | ---
- Add Playlist | <img src="screens/add_playlist.png" height= "800"/>
- Home | <img src="screens/home.png" height= "800"/>
- Home Category | <img src="screens/home_category.png" height= "800"/>
- IPTV Player | <img src="screens/iptv_player.png" height= "800"/>
+ Setting | <img src="screens/setting.png" height= "800"/>
+ Setting (Manage Provider) | <img src="screens/setting_manage_provider.png" height= "800"/>&nbsp;<img src="screens/setting_manage_provider_add.png" height= "800"/>&nbsp;<img src="screens/setting_manage_add_playlist.png" height= "800"/>&nbsp;<img src="screens/setting_manage_provider_dialog_action_on_provider.png" height= "800"/>&nbsp;
+ Home (Live TV) | <img src="screens/home_live_tv.png" height= "800"/>&nbsp;<img src="screens/home_live_tv_filter.png" height= "800"/>&nbsp;<img src="screens/home_live_tv_dialog_change_active_playlist.png" height= "800"/>&nbsp;<img src="screens/home_live_tv_player.png" height= "800"/>&nbsp;<img src="screens/home_live_tv_category.png" height= "800"/>
+ Home (Movie) | <img src="screens/home_movie_detail_about.png" height= "800"/>&nbsp;<img src="screens/home_movie_detail_trailer.png" height= "800"/>
+ Home (Series) | <img src="screens/home_series.png" height= "800"/>

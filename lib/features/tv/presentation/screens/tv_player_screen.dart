@@ -21,6 +21,9 @@ class _TvPlayerScreenState extends ConsumerState<TvPlayerScreen> {
   @override
   void initState() {
     super.initState();
+
+    debugPrint(widget.channel.toString());
+
     openMediaStream(ref, widget.channel);
   }
 
@@ -164,6 +167,17 @@ class _TvPlayerScreenState extends ConsumerState<TvPlayerScreen> {
                       clipBehavior: Clip.antiAlias,
                       child: CachedNetworkImage(
                         imageUrl: widget.channel.logo ?? "",
+                        placeholder: (_, __) =>
+                            const Center(child: FProgress.circularIcon()),
+                        errorWidget: (_, __, ___) => Center(
+                          child: Icon(
+                            FIcons.imageOff,
+                            color: context.theme.colors.background.withAlpha(
+                              200,
+                            ),
+                            size: 20,
+                          ),
+                        ),
                         fit: BoxFit.fitWidth,
                       ),
                     ),

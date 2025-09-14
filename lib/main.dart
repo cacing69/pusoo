@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 // import 'package:flutter/services.dart';
 import 'package:forui/forui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -30,8 +31,20 @@ void main() {
   runApp(ProviderScope(child: Application()));
 }
 
-class Application extends StatelessWidget {
+class Application extends StatefulWidget {
   const Application({super.key});
+
+  @override
+  State<Application> createState() => _ApplicationState();
+}
+
+class _ApplicationState extends State<Application> {
+  @override
+  void initState() {
+    super.initState();
+
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+  }
 
   @override
   Widget build(BuildContext context) {

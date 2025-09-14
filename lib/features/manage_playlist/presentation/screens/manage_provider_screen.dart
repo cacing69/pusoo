@@ -25,6 +25,14 @@ class _ManageProviderScreenState extends State<ManageProviderScreen> {
     });
   }
 
+  void removeAllPlaylist() async {
+    // Hapus semua isi tabel 'playlist'
+    await driftDb.delete(driftDb.playlistDrift).go();
+    await driftDb.delete(driftDb.channelDrift).go();
+
+    loadPlaylist();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -36,7 +44,7 @@ class _ManageProviderScreenState extends State<ManageProviderScreen> {
   Widget build(BuildContext context) {
     return FScaffold(
       header: FHeader.nested(
-        title: Text("Manage Provider"),
+        title: Text("Manage provider"),
         prefixes: [
           FHeaderAction.back(
             onPress: () {
@@ -59,7 +67,7 @@ class _ManageProviderScreenState extends State<ManageProviderScreen> {
                 loadPlaylist();
 
                 if (context.mounted) {
-                  showFlutterToast(context: context, message: "Playlist Saved");
+                  showFlutterToast(context: context, message: "Playlist saved");
                   // showFToast(
                   //   context: context,
                   //   alignment: FToastAlignment.topCenter,
@@ -69,7 +77,45 @@ class _ManageProviderScreenState extends State<ManageProviderScreen> {
               }
             },
             prefix: Icon(FIcons.plus),
-            child: Text("Add new Provider"),
+            child: Text("Add new provider"),
+          ),
+          Gap(10),
+          FButton(
+            style: FButtonStyle.destructive(),
+            onPress: () async {
+              await showFDialog(
+                context: context,
+                builder: (context, style, animation) => FDialog(
+                  animation: animation,
+                  direction: Axis.horizontal,
+                  title: const Text('Delete all playlist'),
+                  body: Text(
+                    "This action will permanently delete all playlists. You can't undo this.",
+                  ),
+                  actions: [
+                    FButton(
+                      style: FButtonStyle.outline(),
+                      onPress: () => context.pop(),
+                      child: const Text('Cancel'),
+                    ),
+                    FButton(
+                      onPress: () async {
+                        removeAllPlaylist();
+                        context.pop();
+
+                        showFlutterToast(
+                          message: "All playlist deleted",
+                          context: context,
+                        );
+                      },
+                      child: const Text('Delete'),
+                    ),
+                  ],
+                ),
+              );
+            },
+            prefix: Icon(FIcons.shredder),
+            child: Text("Remove all playlist"),
           ),
           Gap(10),
           Expanded(

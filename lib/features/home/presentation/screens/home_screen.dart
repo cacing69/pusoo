@@ -26,30 +26,12 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         children: [
           FBottomNavigationBarItem(
+            icon: Icon(FIcons.earth),
+            label: Text('Explore'),
+          ),
+          FBottomNavigationBarItem(
             icon: Icon(FIcons.monitor),
-            label: Row(
-              spacing: 2,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: context.theme.colors.destructive,
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3),
-                    child: Text(
-                      'Live',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: context.theme.colors.background,
-                      ),
-                    ),
-                  ),
-                ),
-                Text('TV'),
-              ],
-            ),
+            label: Text('Live TV'),
           ),
           FBottomNavigationBarItem(
             icon: Icon(FIcons.monitorPlay),
@@ -79,7 +61,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: IndexedStack(
         index: selectedIndex,
-        children: [TvScreen(), MovieScreen(), SerieScreen(), SettingScreen()],
+        children: [
+          Placeholder(),
+          TvScreen(),
+          MovieScreen(),
+          SerieScreen(),
+          SettingScreen(),
+        ],
       ),
     );
   }
