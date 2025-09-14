@@ -59,24 +59,28 @@ class _TvScreenState extends ConsumerState<TvScreen> {
 
       if (search != null) {
         filtered =
-            await (driftDb.select(driftDb.channelDrift)..where(
-                  (tbl) =>
-                      // tbl.playlistId.equals(playlistId) &
-                      // tbl.streamUrl.like('%movie%').not() &
-                      // tbl.streamUrl.like('%series%').not() &
-                      tbl.isLiveTv.equals(true) &
-                      tbl.name.like('%$search%') &
-                      tbl.streamUrl.equals('[]').not(),
-                ))
+            await (driftDb.select(driftDb.channelDrift)
+                  ..where(
+                    (tbl) =>
+                        // tbl.playlistId.equals(playlistId) &
+                        // tbl.streamUrl.like('%movie%').not() &
+                        // tbl.streamUrl.like('%series%').not() &
+                        tbl.isLiveTv.equals(true) &
+                        tbl.name.like('%$search%') &
+                        tbl.streamUrl.equals('[]').not(),
+                  )
+                  ..limit(10))
                 .get();
       } else {
         filtered =
-            await (driftDb.select(driftDb.channelDrift)..where(
-                  (tbl) =>
-                      tbl.isLiveTv.equals(true) &
-                      // tbl.name.like("%KUALIFIKASI%"),
-                      tbl.streamUrl.equals('[]').not(),
-                ))
+            await (driftDb.select(driftDb.channelDrift)
+                  ..where(
+                    (tbl) =>
+                        tbl.isLiveTv.equals(true) &
+                        // tbl.name.like("%KUALIFIKASI%"),
+                        tbl.streamUrl.equals('[]').not(),
+                  )
+                  ..limit(10))
                 .get();
       }
 
@@ -469,7 +473,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                           // debugPrint(series[index].toString());
 
                           context.pushNamed(
-                            RouteName.tvPlayer.name,
+                            RouteName.tvPlayerV2.name,
                             extra: channels[index],
                           );
                         },

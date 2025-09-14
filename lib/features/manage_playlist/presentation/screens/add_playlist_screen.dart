@@ -195,7 +195,9 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                           });
 
                           // final find = channel["items"].where(
-                          //   (item) => item["name"] == "ONE HD",
+                          //   (item) =>
+                          //       item["name"] == "ONE HD" ||
+                          //       item["name"] == " ONE HD",
                           // );
 
                           // debugPrint(find.toString());

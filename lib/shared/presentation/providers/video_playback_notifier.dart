@@ -50,21 +50,23 @@ void openMediaStream(WidgetRef ref, ChannelDriftData channel) {
   List<String> userAgents = <String>[];
 
   if ("${channel.extvlcopt}" != "[]") {
-    final List extvlcopt = jsonDecode("${channel.extvlcopt}");
+    final extvlcopt = jsonDecode("${channel.extvlcopt}");
 
-    for (var row in extvlcopt) {
-      final split = row.split("=");
+    if (extvlcopt.runtimeType == List) {
+      for (var row in extvlcopt) {
+        final split = row.split("=");
 
-      if (split[0].toString().toLowerCase() == "http-user-agent") {
-        userAgents.add(split[1]);
-      } else {
-        customHttpHeaders[split[0].toString().replaceAll("http-", "")] =
-            split[1];
+        if (split[0].toString().toLowerCase() == "http-user-agent") {
+          userAgents.add(split[1]);
+        } else {
+          customHttpHeaders[split[0].toString().replaceAll("http-", "")] =
+              split[1];
+        }
       }
-    }
 
-    if (userAgents.isNotEmpty) {
-      customHttpHeaders["user-agent"] = userAgents.join(" ");
+      if (userAgents.isNotEmpty) {
+        customHttpHeaders["user-agent"] = userAgents.join(" ");
+      }
     }
   }
 

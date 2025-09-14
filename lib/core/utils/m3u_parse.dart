@@ -23,11 +23,10 @@ abstract class M3UParse {
   static Map<String, dynamic> parse(String m3u) {
     final Map<String, dynamic> output = {'items': [], 'total': 0};
 
-    // --- Clean up irrelevant data at the beginning of the file ---
     final List<String> lines = m3u.split('\n');
     int headerStartIndex = -1;
     for (int i = 0; i < lines.length; i++) {
-      if (lines[i].startsWith('#EXTM3U')) {
+      if (lines[i].trim().startsWith('#EXTM3U')) {
         headerStartIndex = i;
         break;
       }
@@ -37,52 +36,43 @@ abstract class M3UParse {
       return output;
     }
 
-    final String cleanedM3u = lines.sublist(headerStartIndex).join('\n');
-
-    final List<String> parts = cleanedM3u.split('#EXTINF:');
-
-    // --- Parsing header M3U (if present) ---
-    final String header = parts.removeAt(0);
-    final List<String> headerLines = header.split('\n');
-    for (final line in headerLines) {
-      if (line.contains('=')) {
-        final lineParts = line.replaceAll('"', '').split('=');
-        if (lineParts.length == 2 && lineParts[0].trim().isNotEmpty) {
-          output[_toCamelCase(lineParts[0].trim())] = lineParts[1].trim();
-        }
-      }
+    // --- Parsing header M3U attributes ---
+    final String headerLine = lines[headerStartIndex];
+    final headerMetadataRegex = RegExp(r'([^\s=]+)="([^"]*)"');
+    for (final match in headerMetadataRegex.allMatches(headerLine)) {
+      final key = _toCamelCase(match.group(1)!);
+      final value = match.group(2)!;
+      output[key] = value;
     }
 
     // --- Parsing each item ---
-    for (final part in parts) {
-      final Map<String, dynamic> item = {'urls': []};
-      final List<String> itemLines = part
-          .split('\n')
-          .where((l) => l.trim().isNotEmpty)
-          .toList();
+    Map<String, dynamic> currentItemProps = {};
+    for (final line in lines.sublist(headerStartIndex + 1)) {
+      final trimmedLine = line.trim();
+      if (trimmedLine.isEmpty) {
+        continue;
+      }
 
-      for (final line in itemLines) {
-        if (line.startsWith('-') || line.startsWith(RegExp(r'\d'))) {
-          // --- Extract all key="value" metadata ---
-          final Map<String, String> propsMap = {};
+      if (trimmedLine.startsWith('#')) {
+        if (trimmedLine.startsWith('#EXTINF:')) {
+          final infoLine = trimmedLine.substring(8);
+          final propsMap = <String, String>{};
           final metadataRegex = RegExp(r'([^\s=]+)="([^"]*)"');
-          for (final match in metadataRegex.allMatches(line)) {
+          for (final match in metadataRegex.allMatches(infoLine)) {
             final key = _toCamelCase(match.group(1)!);
             final value = match.group(2)!;
             propsMap[key] = value;
           }
 
-          final durationMatch = RegExp(r'^-?\d+').firstMatch(line);
-          final num duration =
-              num.tryParse(durationMatch?.group(0) ?? '0') ?? 0;
+          final durationMatch = RegExp(r'^-?\d+').firstMatch(infoLine);
+          final duration = num.tryParse(durationMatch?.group(0) ?? '0') ?? 0;
 
-          final String name =
-              propsMap['tvgName'] ??
-              (line.contains(',')
-                  ? line.substring(line.lastIndexOf(',') + 1).trim()
-                  : '');
+          String name = propsMap['tvgName'] ?? '';
+          if (name.isEmpty && infoLine.contains(',')) {
+            name = infoLine.substring(infoLine.lastIndexOf(',') + 1).trim();
+          }
 
-          item.addAll({
+          currentItemProps.addAll({
             'name': name,
             'duration': duration,
             'tvgId': propsMap['tvgId'] ?? '',
@@ -90,41 +80,45 @@ abstract class M3UParse {
             'groupTitle': propsMap['groupTitle'] ?? '',
             ...propsMap,
           });
-        } else if (line.startsWith('#')) {
-          final tagNameEndIndex = line.indexOf(':');
+        } else {
+          final tagNameEndIndex = trimmedLine.indexOf(':');
           if (tagNameEndIndex != -1) {
             final tagName = _toCamelCase(
-              line.substring(1, tagNameEndIndex).trim(),
+              trimmedLine.substring(1, tagNameEndIndex).trim(),
             );
             if (tagName.isNotEmpty) {
-              final content = line.substring(tagNameEndIndex + 1).trim();
-
-              // Perubahan: Mengelompokkan ke dalam list
-              if (!item.containsKey(tagName)) {
-                item[tagName] = [];
+              final content = trimmedLine.substring(tagNameEndIndex + 1).trim();
+              if (!currentItemProps.containsKey(tagName)) {
+                currentItemProps[tagName] = <String>[];
               }
-              (item[tagName] as List).add(content);
+              (currentItemProps[tagName] as List<String>).add(content);
             }
-          } else if (line.contains('=')) {
-            final parts = line.substring(1).split('=');
+          } else if (trimmedLine.contains('=')) {
+            final parts = trimmedLine.substring(1).split('=');
             if (parts.length == 2 && parts[0].trim().isNotEmpty) {
               final key = _toCamelCase(parts[0].trim());
               final value = parts[1].replaceAll('"', '').trim();
-              item[key] = value;
+              currentItemProps[key] = value;
             }
           } else {
-            final key = _toCamelCase(line.substring(1).trim());
+            final key = _toCamelCase(trimmedLine.substring(1).trim());
             if (key.isNotEmpty) {
-              item[key] = true;
+              currentItemProps[key] = true;
             }
           }
-        } else {
-          item['urls'].add(line.trim());
         }
-      }
+      } else {
+        // It's a URL, so we finalize the current item
+        final item = <String, dynamic>{
+          ...currentItemProps,
+          'urls': [trimmedLine],
+        };
 
-      if (item['name'] != null || (item['urls'] as List).isNotEmpty) {
-        output['items'].add(item);
+        if (item.containsKey('name') || (item['urls'] as List).isNotEmpty) {
+          output['items'].add(item);
+        }
+        
+        currentItemProps = {}; // Reset for the next entry
       }
     }
 
