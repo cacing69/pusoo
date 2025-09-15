@@ -4,13 +4,28 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
 import 'package:pusoo/shared/data/models/m3u_track.dart';
 
-void main() {
+void main() async {
+  final fileMaytoko = File('fixtures/sample_playlist_maytoko.txt');
+  final mayTokoContent = await fileMaytoko.readAsString();
+
+  final fileMaksin = File('fixtures/sample_playlist_maksin.m3u');
+  final maksinContent = await fileMaksin.readAsString();
+
+  final fileIptvOrg = File('fixtures/sample_playlist_iptv_org.m3u');
+  final iptvOrgContent = await fileIptvOrg.readAsString();
+
+  final fileNewpilem = File('fixtures/sample_playlist_newpilem.m3u');
+  final newpilemContent = await fileNewpilem.readAsString();
+
+  final fileRyantv = File('fixtures/sample_playlist_ryantv.m3u');
+  final ryanTvContent = await fileRyantv.readAsString();
+
+  final fileUdp = File('fixtures/sample_playlist_udp.txt');
+  final udpContent = await fileUdp.readAsString();
+
   group('M3UParser Test', () {
     test('testLastTrack', () async {
-      final file = File('samples/sample_playlist.txt');
-      final m3uContent = await file.readAsString();
-
-      List<M3UTrack> check = M3UParser.parse(m3uContent);
+      List<M3UTrack> check = M3UParser.parse(mayTokoContent);
 
       M3UTrack item = check[check.length - 1];
 
@@ -234,16 +249,6 @@ https://fta4-cdn-flr.visionplus.id/out/v1/63c0da12bb4d48afbaf053f51dff2353/index
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",
         equals(item.httpHeaders[1]["user-agent"]),
       );
-
-      // expect(
-      //   "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/63c0da12bb4d48afbaf053f51dff2353/index.mpd",
-      //   equals(item.httpHeaders[0]["referer"]),
-      // );
-
-      // expect(
-      //   "https://fta4-cdn-flr.visionplus.id/out/v1/63c0da12bb4d48afbaf053f51dff2353/index.mpd",
-      //   equals(item.links[1]),
-      // );
     });
 
     test('testKodiPropsWhereNoHashSignOnKodiProps', () async {
@@ -290,16 +295,197 @@ https://cdnjkt913.transvision.co.id:1000/live/master/3/4028c68571b3914b01720e7ff
         "user-agent=Xstream XGO/1.22 (Linux;Android 9) ExoPlayerLib/2.10.5",
         equals(kodiProps["inputstream.adaptive.stream_headers"]),
       );
+    });
 
-      // expect(true, equals(extVlcOpt.containsKey("http-referrer")));
+    test('testeGroupTitleMappedIntoCategory', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="--" group-title="CHANNEL | INDONESIA" tvg-logo="https://images.indihometv.com/logo_ochannel_ver1.png", Moji TV
+#EXTVLCOPT:http-user-agent=IndiHomeTV/8.7.12 (Linux;Android 15.0.0;) ExoPlayerLib/2.19.1
+#EXTVLCOPT:http-referrer=https://www.indihometv.com/
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+https://cdn08jtedge.indihometv.com/dassdvr/134/ochannel/manifest.mpd
 
-      // Test Value
-      // expect(
-      //   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
-      //   equals(extVlcOpt["http-user-agent"]),
-      // );
+''';
+      List<M3UTrack> result = M3UParser.parse(content);
 
-      // expect("https://visionplus.id/", equals(extVlcOpt["http-referrer"]));
+      M3UTrack item = result.first;
+
+      expect(item.category, equals("CHANNEL | INDONESIA"));
+    });
+
+    test('testeCheckNameAndTvgId:1', () async {
+      final String content = r'''
+#EXTINF:0 tvg-id="TNT 2" tvg-logo="https://i.ibb.co.com/zmrtkTK/tntsports2.jpg" group-title="CHANNEL | SPORTS",TNT SPORTS 2 FHD
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=6d1708b185c6c4d7b37600520c7cc93c:1aace05f58d8edef9697fd52cb09f441
+https://otte.live.fly.ww.aiv-cdn.net/lhr-nitro/live/clients/dash/enc/f0qvkrra8j/out/v1/f8fa17f087564f51aa4d5c700be43ec4/cenc.mpd
+''';
+      List<M3UTrack> result = M3UParser.parse(content);
+
+      M3UTrack item = result.first;
+
+      expect("TNT SPORTS 2 FHD", equals(item.title));
+      expect("TNT 2", equals(item.attributes["tvg-id"]));
+    });
+
+    test('testeHaveAttrXuiId', () async {
+      final String content = r'''
+#EXTINF:-1 xui-id="{XUI_ID}" tvg-id="NowSports2.hk" tvg-name="HK | Now Sports 2" tvg-logo="http://b1gchlogos.xyz/wp-content/uploads/2023/08/Now-Sports-2.png" group-title="CHANNEL | SPORTS",HK | Now Sports 2
+https://raw.githubusercontent.com/B-inal-123/s-asia/inal-22/Nowsport2.m3u8
+''';
+      List<M3UTrack> result = M3UParser.parse(content);
+
+      M3UTrack item = result.first;
+
+      expect("{XUI_ID}", equals(item.attributes["xui-id"]));
+    });
+
+    test('testeExtVlcOptHasNetworkCachingAndHttpReconnect', () async {
+      final String content = r'''
+#EXTINF:-1 group-title="LIVE | LIGA INGGRIS" tvg-logo="https://i.pinimg.com/236x/dd/7a/94/dd7a94d92ecf53bb3e56de4f7dcff80f.jpg", CH 6
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36
+#EXTVLCOPT:network-caching=1000
+#EXTVLCOPT--http-reconnect=true
+#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
+#KODIPROP:inputstream.adaptive.license_key={dc69b6159a0f9f0a4e03b3ff91cbacd5:d0dcbcd7723bc40df0bf34c9c092d51f}
+https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/out/v1/9f14895badca43e6a716db021dcd0c31/cenc.mpd
+''';
+      List<M3UTrack> result = M3UParser.parse(content);
+
+      M3UTrack item = result.first;
+
+      Map<String, String> extVlcOpt = item.extVlcOpt.first;
+
+      expect(
+        true,
+        equals(extVlcOpt.containsKey("-http-reconnect")),
+      ); // Changed to single hyphen
+      expect(
+        "true",
+        equals(extVlcOpt["-http-reconnect"]),
+      ); // Changed to single hyphen
+    });
+
+    test('testAndFindShouldGiveResult2Row:Query=ONE HD', () async {
+      List<M3UTrack> result = M3UParser.parse(mayTokoContent);
+
+      List<M3UTrack> items = result
+          .where((track) => track.title.contains("ONE HD"))
+          .toList();
+
+      expect(2, equals(items.length));
+
+      // CHECCK EVERY ITEM
+      // ONE HD : 1
+      expect(
+        "https://atemecdnbalancer-voe.sysln.id/live/eds/ONEHD/mpd/ONEHD.mpd",
+        equals(items[0].links.first),
+      );
+
+      expect(
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCDGeSdmHlQ9vXAaRORx9-fhbeCx8_81AnQQ&s",
+        equals(items[0].attributes["tvg-logo"]),
+      );
+
+      // ONE HD : 2
+      expect(
+        "https://atemecdnbalancer-voe.sysln.id/live/eds/ONEHD/mpd/ONEHD.mpd",
+        equals(items[1].links.first),
+      );
+      expect(
+        "https://www.visionplus.id/images/repository/634/634-LOGO-m.png",
+        equals(items[1].attributes["tvg-logo"]),
+      );
+    });
+
+    test('testTvgCountry:ID=115 rows', () async {
+      List<M3UTrack> result = M3UParser.parse(mayTokoContent);
+
+      List<M3UTrack> items = result.where((track) {
+        if (track.attributes.containsKey("tvg-country")) {
+          return track.attributes["tvg-country"] == "ID";
+        }
+
+        return false;
+      }).toList();
+
+      expect(115, equals(items.length));
+    });
+
+    test('testMaksinExtInf=10602', () async {
+      List<M3UTrack> result = M3UParser.parse(maksinContent);
+      expect(10602, equals(result.length));
+    });
+
+    test('testIptvOrgExtInf=11421', () async {
+      List<M3UTrack> result = M3UParser.parse(iptvOrgContent);
+
+      expect(11421, equals(result.length));
+    });
+
+    test('testRyantvExtInf=268', () async {
+      List<M3UTrack> result = M3UParser.parse(ryanTvContent);
+
+      expect(268, equals(result.length));
+    });
+
+    test('testUdpExtInf=23', () async {
+      List<M3UTrack> result = M3UParser.parse(udpContent);
+
+      expect(23, equals(result.length));
+    });
+
+    test('checkLastRowNewpilemShouldHave2Links', () async {
+      List<M3UTrack> result = M3UParser.parse(newpilemContent);
+
+      M3UTrack item = result.last;
+
+      expect("aktif malam", equals(item.title));
+
+      expect(true, equals(item.attributes.containsKey("group-title")));
+      expect("🔒 TENSI SUB 🔒", equals(item.attributes["group-title"]));
+
+      expect(true, equals(item.attributes.containsKey("tvg-logo")));
+      expect(
+        "https://www.mediafire.com/convkey/334f/6h7nlypi651hwqd5g",
+        equals(item.attributes["tvg-logo"]),
+      );
+
+      expect(2, equals(item.links.length));
+      expect(
+        "https://edge-hls.sacdnssedge.com/hls/196205035/master/196205035_auto.m3u8",
+        equals(item.links[0]),
+      );
+      expect(
+        "https://edge-hls.doppiocdn.net/hls/167924361/master/167924361_auto.m3u8",
+        equals(item.links[1]),
+      );
+    });
+
+    test('checkLastTitle:BLOOD AND SAND-S1:ShouldHave13Rows', () async {
+      List<M3UTrack> result = M3UParser.parse(
+        newpilemContent,
+      ).where((track) => track.title.contains("BLOOD AND SAND-S1")).toList();
+      expect(13, equals(result.length));
+
+      expect("BLOOD AND SAND-S1 EPS 1", equals(result[0].title));
+      expect("BLOOD AND SAND-S1 EPS 2", equals(result[1].title));
+      expect("BLOOD AND SAND-S1 EPS 3", equals(result[2].title));
+      expect("BLOOD AND SAND-S1 EPS 4", equals(result[3].title));
+      expect("BLOOD AND SAND-S1 EPS 5", equals(result[4].title));
+      expect("BLOOD AND SAND-S1 EPS 6", equals(result[5].title));
+      expect("BLOOD AND SAND-S1 EPS 7", equals(result[6].title));
+      expect("BLOOD AND SAND-S1 EPS 8", equals(result[7].title));
+      expect("BLOOD AND SAND-S1 EPS 9", equals(result[8].title));
+      expect("BLOOD AND SAND-S1 EPS 10", equals(result[9].title));
+      expect("BLOOD AND SAND-S1 EPS 11", equals(result[10].title));
+      expect("BLOOD AND SAND-S1 EPS 12", equals(result[11].title));
+      expect("BLOOD AND SAND-S1 EPS 13", equals(result[12].title));
     });
   });
 }

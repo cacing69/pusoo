@@ -11,7 +11,7 @@ _M3UTrack _$M3UTrackFromJson(Map<String, dynamic> json) => _M3UTrack(
   links:
       (json['links'] as List<dynamic>?)?.map((e) => e as String).toList() ??
       const [],
-  duration: json['duration'] as String? ?? "",
+  category: json['category'] as String? ?? "",
   attributes:
       (json['attributes'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
@@ -37,7 +37,7 @@ _M3UTrack _$M3UTrackFromJson(Map<String, dynamic> json) => _M3UTrack(
 Map<String, dynamic> _$M3UTrackToJson(_M3UTrack instance) => <String, dynamic>{
   'title': instance.title,
   'links': instance.links,
-  'duration': instance.duration,
+  'category': instance.category,
   'attributes': instance.attributes,
   'extVlcOpt': instance.extVlcOpt,
   'kodiProp': instance.kodiProp,

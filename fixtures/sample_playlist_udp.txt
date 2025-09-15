@@ -1,0 +1,47 @@
+#EXTM3U
+#EXTINF:-1,BeIN Sports 1
+udp://@225.2.0.130:1234
+#EXTINF:-1,BeIN Sports 2
+udp://@225.2.0.150:1234
+#EXTINF:-1,BeIN Sports 3
+udp://@225.2.0.175:1234
+#EXTINF:-1,BeIN Sports 4
+udp://@225.2.0.132:1234
+#EXTINF:-1,BeIN Sports 5
+udp://@225.2.0.133:1234
+#EXTINF:-1,BeIN Sports 6
+udp://@225.2.0.134:1234
+#EXTINF:-1,BeIN Sports 7
+udp://@225.2.0.135:1234
+#EXTINF:-1,BeIN Sports 8
+udp://@225.2.0.136:1234
+#EXTINF:-1,BeIN Sports 9
+udp://@225.2.0.137:1234
+#EXTINF:-1,BeIN Sports NBA
+udp://@225.2.0.229:1234
+#EXTINF:-1,PROTV Sports 1
+udp://@225.2.0.173:1234
+#EXTINF:-1,PROTV Sports 2
+udp://@225.2.0.174:1234
+#EXTINF:-1,PROTV Sports 3
+udp://@225.2.0.129:1234
+#EXTINF:-1,PROTV Sports 4
+udp://@225.2.0.172:1234
+#EXTINF:-1,PROTV Sports 5
+udp://@225.2.0.107:1234
+#EXTINF:-1,PROTV Sports 6
+udp://@225.2.0.117:1234
+#EXTINF:-1,Dubai Sports 1
+udp://@225.2.0.113:1234
+#EXTINF:-1,Dubai Sports 2
+udp://@225.2.0.114:1234
+#EXTINF:-1,AD Sports 2
+udp://@225.2.0.118:1234
+#EXTINF:-1,AlKaas Sports 4
+udp://@225.2.0.116:1234
+#EXTINF:-1,ON Sports 2
+udp://@225.2.0.119:1234
+#EXTINF:-1,8 Sports
+udp://@225.2.0.115:1234
+#EXTINF:-1,BeIN Sports News
+udp://@225.2.0.225:1234

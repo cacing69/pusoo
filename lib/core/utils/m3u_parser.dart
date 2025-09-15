@@ -1,4 +1,6 @@
 import 'dart:core';
+import 'dart:io';
+import 'dart:io';
 
 import 'package:pusoo/shared/data/models/m3u_track.dart';
 
@@ -13,6 +15,9 @@ abstract class M3UParser {
 
     Map<String, List<String>> tempExtVlcOptLists = {};
     Map<String, List<String>> tempKodiPropLists = {};
+
+    final skippedLinesFile = File('skipped_extinf_lines.txt');
+    skippedLinesFile.writeAsStringSync(''); // Clear the file at the start
 
     void finalizeAndAddTrack() {
       if (currentTrack == null) return;
@@ -99,8 +104,8 @@ abstract class M3UParser {
 
           currentTrack = M3UTrack(
             title: title,
-            duration: duration,
             attributes: attributes,
+            category: attributes['group-title'] ?? '', // Extract group-title
           );
         }
       } else if (trimmedLine.startsWith('#EXTVLCOPT')) {
@@ -111,11 +116,10 @@ abstract class M3UParser {
           final value = optionString.substring(separatorIndex + 1);
           tempExtVlcOptLists.putIfAbsent(key, () => []).add(value);
         }
-      } else if (trimmedLine.startsWith('#KODIPROP') ||
-          trimmedLine.startsWith('KODIPROP:')) {
+      } else if (trimmedLine.startsWith('KODIPROP:') || trimmedLine.startsWith('#KODIPROP:')) {
         final propString = trimmedLine.startsWith('#')
-            ? trimmedLine.substring(10)
-            : trimmedLine.substring(9);
+            ? trimmedLine.substring(10) // Skip #KODIPROP:
+            : trimmedLine.substring(9); // Skip KODIPROP:
         final separatorIndex = propString.indexOf('=');
         if (separatorIndex != -1) {
           final key = propString.substring(0, separatorIndex);
