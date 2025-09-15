@@ -51,10 +51,8 @@ class TvLocalDatasourceImpl implements TvLocalDatasource {
     // ];
 
     // // 2. Tambahkan filter dinamis berdasarkan parameter yang diberikan
-    // if (params?.playlistIds != null) {
-    //   whereClauses.add(
-    //     driftDb.trackDrift.playlistId.isIn(params!.playlistIds!),
-    //   );
+    // if (params?.playlistIds != null && params!.playlistIds!.isNotEmpty) {
+    //   whereClauses.add(driftDb.trackDrift.playlistId.isIn(params.playlistIds!));
     // }
 
     // if (params?.category != null) {
@@ -66,38 +64,34 @@ class TvLocalDatasourceImpl implements TvLocalDatasource {
     //   whereClauses.add(driftDb.trackDrift.title.like('%${params?.title}%'));
     // }
 
-    // if (params?.cursor != null) {
+    // if (params?.cursor != null && params!.cursor! > 0) {
     //   // Kita tidak memanggil query.where() di sini.
     //   // Cukup tambahkan expression-nya ke dalam list.
-    //   whereClauses.add(
-    //     driftDb.trackDrift.id.isBiggerThanValue(params!.cursor!),
-    //   );
+    //   whereClauses.add(driftDb.trackDrift.id.isBiggerThanValue(params.cursor!));
     // }
 
     // 3. Bangun query select utama
     final query = driftDb.select(driftDb.trackDrift);
 
-    // // 4. Gabungkan semua klausa WHERE jika list tidak kosong
+    // 4. Gabungkan semua klausa WHERE jika list tidak kosong
     // if (whereClauses.isNotEmpty) {
     //   // Gunakan `reduce` untuk menggabungkan semua Expression dengan operator & (AND)
     //   final finalClause = whereClauses.reduce((a, b) => a & b);
     //   query.where((_) => finalClause);
     // }
 
-    // // 5. (BARU) Terapkan Paginasi menggunakan Limit dan Offset (Cursor)
-    // if (params?.limit != null) {
-    //   // Method `limit` di Drift menerima jumlah item dan `offset` opsional.
-    //   query.limit(params!.limit!);
-    // }
+    // 5. (BARU) Terapkan Paginasi menggunakan Limit dan Offset (Cursor)
+    if (params?.limit != null) {
+      // Method `limit` di Drift menerima jumlah item dan `offset` opsional.
+      query.limit(params!.limit!);
+    }
 
     // if (params?.offset != null) {
-    //   // implement offset
+    //   query.offset(params!.offset!);
     // }
 
-    // // 5. (BARU) Terapkan Paginasi menggunakan Limit dan Offset (Cursor)
-
-    // // Opsional: Tambahkan sorting agar hasilnya konsisten
-    // query.orderBy([(t) => drift.OrderingTerm(expression: t.title)]);
+    // Opsional: Tambahkan sorting agar hasilnya konsisten
+    query.orderBy([(t) => drift.OrderingTerm(expression: t.id)]);
 
     // 5. Eksekusi query dan lakukan mapping hasil
     final trackDriftDataRows = await query.get();

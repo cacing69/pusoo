@@ -15,6 +15,7 @@ class GetTvTracksUsecase implements UseCase<List<Track>, GetTvTracksParams> {
   @override
   Future<Either<Failure, List<Track>>> call(GetTvTracksParams? params) async {
     _log.i("GetTvTracksUsecase:_repository.getTvTracks");
+    _log.i(params);
 
     final result = await _repository.getTvTracks(params);
 

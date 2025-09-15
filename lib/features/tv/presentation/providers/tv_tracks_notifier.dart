@@ -10,7 +10,7 @@ class TvTracksNotifier extends _$TvTracksNotifier {
   // Metode build ini akan dipanggil pertama kali oleh Riverpod
   @override
   AsyncValue<List<Track>?> build() {
-    perform(GetTvTracksParams());
+    // perform(GetTvTracksParams(limit: 20));
     return const AsyncValue.loading();
   }
 
