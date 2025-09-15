@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,6 +9,7 @@ import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 import 'package:pusoo/shared/data/models/track.dart';
@@ -68,6 +70,59 @@ class _TvScreenState extends ConsumerState<TvScreen> {
         //           )
         //           ..limit(10))
         //         .get();
+
+        final List<TrackDriftData> trackDriftDataRows =
+            await (driftDb.select(driftDb.trackDrift)..where(
+                  (tbl) =>
+                      // tbl.playlistId.equals(playlistId) &
+                      // tbl.streamUrl.like('%movie%').not() &
+                      // tbl.streamUrl.like('%series%').not() &
+                      // tbl.isLiveTv.equals(true) &
+                      tbl.title.like('%$search%') &
+                      tbl.links.equals('[]').not(),
+                ))
+                .get();
+
+        final List<Track> filtered = trackDriftDataRows.map((track) {
+          final json = track.toJson();
+
+          void convertStringToList(String fieldName) {
+            final dynamic fieldValue = json[fieldName];
+            if (fieldValue is String) {
+              if (fieldValue.isEmpty) {
+                json[fieldName] = [];
+              } else {
+                try {
+                  final decoded = jsonDecode(fieldValue);
+                  if (decoded is List) {
+                    json[fieldName] = decoded;
+                  } else {
+                    json[fieldName] = [decoded];
+                  }
+                } catch (e) {
+                  json[fieldName] = [fieldValue];
+                }
+              }
+            } else if (fieldValue is! List) {
+              json[fieldName] = [];
+            }
+          }
+
+          convertStringToList('links');
+          convertStringToList('extVlcOpts');
+          convertStringToList('kodiProps');
+          convertStringToList('httpHeaders');
+
+          return Track.fromJson(json);
+        }).toList();
+
+        setState(() {
+          tracks = filtered;
+          // countTracks = filtered.length.toString();
+          countTracks = NumberFormat.decimalPattern().format(
+            filtered.length.toString(),
+          );
+        });
       } else {
         // filtered =
         //     await (driftDb.select(driftDb.channelDrift)

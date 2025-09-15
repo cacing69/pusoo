@@ -81,13 +81,13 @@ final List<GoRoute> defaultRouter = [
       return MovieDetailScreen(channel: state.extra as ChannelDriftData);
     },
   ),
-  GoRoute(
-    path: '/video-player-full',
-    name: RouteName.videoPlayerFull.name,
-    builder: (context, state) {
-      return VideoPlayerFullScreen(channel: state.extra as ChannelDriftData);
-    },
-  ),
+  // GoRoute(
+  //   path: '/video-player-full',
+  //   name: RouteName.videoPlayerFull.name,
+  //   builder: (context, state) {
+  //     return VideoPlayerFullScreen(channel: state.extra as ChannelDriftData);
+  //   },
+  // ),
   GoRoute(
     path: '/youtube-iframe-player/:videoId',
     name: RouteName.youtubeIframePlayer.name,
