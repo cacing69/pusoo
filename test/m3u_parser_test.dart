@@ -487,5 +487,16 @@ https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/
       expect("BLOOD AND SAND-S1 EPS 12", equals(result[11].title));
       expect("BLOOD AND SAND-S1 EPS 13", equals(result[12].title));
     });
+
+    test('checkLastTitle:maytoko:NBA TV:ShouldHave:4 rows', () async {
+      List<M3UTrack> result = M3UParser.parse(
+        mayTokoContent,
+      ).where((track) => track.title.contains("NBA TV")).toList();
+
+      expect(2, equals(result.length));
+
+      expect("NBA TV (Indi)", equals(result[0].title));
+      expect("NBA TV", equals(result[1].title));
+    });
   });
 }
