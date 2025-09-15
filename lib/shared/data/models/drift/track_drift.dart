@@ -1,0 +1,31 @@
+import 'package:drift/drift.dart';
+import 'package:pusoo/shared/data/models/drift/playlist_drift.dart';
+// import 'package:pusoo/shared/data/drift/playlist.dart';
+import 'package:ulid/ulid.dart';
+
+class TrackDrift extends Table {
+  TextColumn get id => text().clientDefault(() => Ulid().toString())();
+  TextColumn get playlistId => text().references(PlaylistDrift, #id)();
+  TextColumn get title => text()();
+  TextColumn get contentType => text().nullable()();
+  TextColumn get links => text().nullable()();
+  TextColumn get groupTitle => text().nullable()();
+  TextColumn get imdbId => text().nullable()();
+  TextColumn get tvgId => text().nullable()();
+  TextColumn get tvgName => text().nullable()();
+  TextColumn get tvgLogo => text().nullable()();
+  IntColumn get duration => integer().nullable()();
+  BoolColumn get isNsfw => boolean().withDefault(const Constant(false))();
+
+  TextColumn get attributes => text().nullable()();
+  TextColumn get kodiProps => text().nullable()();
+  TextColumn get extVlcOpts => text().nullable()();
+  TextColumn get httpHeaders => text().nullable()();
+
+  DateTimeColumn get lastUpdated => dateTime().nullable()();
+
+  // extra field
+
+  @override
+  Set<Column> get primaryKey => {id};
+}

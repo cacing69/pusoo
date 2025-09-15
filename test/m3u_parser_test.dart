@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
-import 'package:pusoo/shared/data/models/m3u_track.dart';
+import 'package:pusoo/shared/data/models/track.dart';
 
 void main() async {
   final fileMaytoko = File('fixtures/sample_playlist_maytoko.txt');
@@ -25,9 +25,9 @@ void main() async {
 
   group('M3UParser Test', () {
     test('testLastTrack', () async {
-      List<M3UTrack> check = M3UParser.parse(mayTokoContent);
+      List<Track> check = M3UParser.parse(mayTokoContent);
 
-      M3UTrack item = check[check.length - 1];
+      Track item = check[check.length - 1];
 
       expect("Hanacaraka, Lorem Ipsum", equals(item.title));
     });
@@ -38,9 +38,9 @@ void main() async {
 #EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 14; SM-A245F Build/UP1A.231005.007; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/124.0.6367.204 Mobile Safari/537.36
 https://op-group1-swiftservehd-1.dens.tv/h/h217/02.m3u8|user-agent=DENSGO/3.00.00 (Linux;Android 15.0.0;) ExoPlayerLib/2.19.1
 ''';
-      List<M3UTrack> result = M3UParser.parse(content);
+      List<Track> result = M3UParser.parse(content);
 
-      M3UTrack item = result.first;
+      Track item = result.first;
 
       Map<String, String> httpHeaders = item.httpHeaders.first;
 
@@ -68,9 +68,9 @@ https://op-group1-swiftservehd-1.dens.tv/h/h217/02.m3u8|user-agent=DENSGO/3.00.0
 https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/index.mpd|referrer=https://visionplus.id/
 
 ''';
-      List<M3UTrack> result = M3UParser.parse(content);
+      List<Track> result = M3UParser.parse(content);
 
-      M3UTrack item = result.first;
+      Track item = result.first;
 
       Map<String, String> httpHeaders = item.httpHeaders.first;
 
@@ -95,11 +95,11 @@ https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/in
 https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/index.mpd|referrer=https://visionplus.id/
 
 ''';
-      List<M3UTrack> result = M3UParser.parse(content);
+      List<Track> result = M3UParser.parse(content);
 
-      M3UTrack item = result.first;
+      Track item = result.first;
 
-      Map<String, String> kodiProps = item.kodiProp.first;
+      Map<String, String> kodiProps = item.kodiProps.first;
 
       expect(true, equals(kodiProps.containsKey("inputstreamaddon")));
       expect(
@@ -142,18 +142,18 @@ https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/in
 https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/index.mpd|referrer=https://visionplus.id/
 
 ''';
-      List<M3UTrack> result = M3UParser.parse(content);
+      List<Track> result = M3UParser.parse(content);
 
-      M3UTrack item = result.first;
+      Track item = result.first;
 
-      Map<String, String> extVlcOpt = item.extVlcOpt.first;
+      Map<String, String> extVlcOpts = item.extVlcOpts.first;
 
-      expect(true, equals(extVlcOpt.containsKey("http-user-agent")));
+      expect(true, equals(extVlcOpts.containsKey("http-user-agent")));
 
       // Test Value
       expect(
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
-        equals(extVlcOpt["http-user-agent"]),
+        equals(extVlcOpts["http-user-agent"]),
       );
     });
 
@@ -167,22 +167,22 @@ https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/in
 https://d3b0v7fggu5zwm.cloudfront.net/out/v1/d2c68a3dfb644808b416bd90dcc92d5f/index.mpd
 
 ''';
-      List<M3UTrack> result = M3UParser.parse(content);
+      List<Track> result = M3UParser.parse(content);
 
-      M3UTrack item = result.first;
+      Track item = result.first;
 
-      Map<String, String> extVlcOpt = item.extVlcOpt.first;
+      Map<String, String> extVlcOpts = item.extVlcOpts.first;
 
-      expect(true, equals(extVlcOpt.containsKey("http-user-agent")));
-      expect(true, equals(extVlcOpt.containsKey("http-referrer")));
+      expect(true, equals(extVlcOpts.containsKey("http-user-agent")));
+      expect(true, equals(extVlcOpts.containsKey("http-referrer")));
 
       // Test Value
       expect(
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
-        equals(extVlcOpt["http-user-agent"]),
+        equals(extVlcOpts["http-user-agent"]),
       );
 
-      expect("https://visionplus.id/", equals(extVlcOpt["http-referrer"]));
+      expect("https://visionplus.id/", equals(extVlcOpts["http-referrer"]));
     });
 
     test('testKodiPropsWhereHasDoubleLicenseKeyAndDoubleUrl:1', () async {
@@ -195,23 +195,23 @@ https://d3b0v7fggu5zwm.cloudfront.net/out/v1/d2c68a3dfb644808b416bd90dcc92d5f/in
 https://d2xz2v5wuvgur6.cloudfront.net/out/v1/63c0da12bb4d48afbaf053f51dff2353/index.mpd|Referer=https://www.visionplus.id/&user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36
 https://fta4-cdn-flr.visionplus.id/out/v1/63c0da12bb4d48afbaf053f51dff2353/index.mpd|Referer=https://www.visionplus.id/&user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36
 ''';
-      List<M3UTrack> result = M3UParser.parse(content);
+      List<Track> result = M3UParser.parse(content);
 
-      M3UTrack item = result.first;
+      Track item = result.first;
 
       expect(2, equals(item.links.length));
       expect(2, equals(item.httpHeaders.length));
-      expect(2, equals(item.kodiProp.length));
+      expect(2, equals(item.kodiProps.length));
 
       // LICENSE_KEY
       expect(
         "https://kingtvpremium.my.id/play/pision/drm.php?id=115",
-        equals(item.kodiProp[0]["inputstream.adaptive.license_key"]),
+        equals(item.kodiProps[0]["inputstream.adaptive.license_key"]),
       );
 
       expect(
         "https://drm-vision2025.tvrusak1992.workers.dev/?no=115&type=drm",
-        equals(item.kodiProp[1]["inputstream.adaptive.license_key"]),
+        equals(item.kodiProps[1]["inputstream.adaptive.license_key"]),
       );
 
       // URL
@@ -260,11 +260,11 @@ KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha
 https://cdnjkt913.transvision.co.id:1000/live/master/3/4028c68571b3914b01720e7ff4376d21/manifest.mpd
 
 ''';
-      List<M3UTrack> result = M3UParser.parse(content);
+      List<Track> result = M3UParser.parse(content);
 
-      M3UTrack item = result.first;
+      Track item = result.first;
 
-      Map<String, String> kodiProps = item.kodiProp.first;
+      Map<String, String> kodiProps = item.kodiProps.first;
 
       expect(
         true,
@@ -308,11 +308,11 @@ https://cdnjkt913.transvision.co.id:1000/live/master/3/4028c68571b3914b01720e7ff
 https://cdn08jtedge.indihometv.com/dassdvr/134/ochannel/manifest.mpd
 
 ''';
-      List<M3UTrack> result = M3UParser.parse(content);
+      List<Track> result = M3UParser.parse(content);
 
-      M3UTrack item = result.first;
+      Track item = result.first;
 
-      expect(item.category, equals("CHANNEL | INDONESIA"));
+      expect(item.groupTitle, equals("CHANNEL | INDONESIA"));
     });
 
     test('testeCheckNameAndTvgId:1', () async {
@@ -325,9 +325,9 @@ https://cdn08jtedge.indihometv.com/dassdvr/134/ochannel/manifest.mpd
 #KODIPROP:inputstream.adaptive.license_key=6d1708b185c6c4d7b37600520c7cc93c:1aace05f58d8edef9697fd52cb09f441
 https://otte.live.fly.ww.aiv-cdn.net/lhr-nitro/live/clients/dash/enc/f0qvkrra8j/out/v1/f8fa17f087564f51aa4d5c700be43ec4/cenc.mpd
 ''';
-      List<M3UTrack> result = M3UParser.parse(content);
+      List<Track> result = M3UParser.parse(content);
 
-      M3UTrack item = result.first;
+      Track item = result.first;
 
       expect("TNT SPORTS 2 FHD", equals(item.title));
       expect("TNT 2", equals(item.attributes["tvg-id"]));
@@ -338,9 +338,9 @@ https://otte.live.fly.ww.aiv-cdn.net/lhr-nitro/live/clients/dash/enc/f0qvkrra8j/
 #EXTINF:-1 xui-id="{XUI_ID}" tvg-id="NowSports2.hk" tvg-name="HK | Now Sports 2" tvg-logo="http://b1gchlogos.xyz/wp-content/uploads/2023/08/Now-Sports-2.png" group-title="CHANNEL | SPORTS",HK | Now Sports 2
 https://raw.githubusercontent.com/B-inal-123/s-asia/inal-22/Nowsport2.m3u8
 ''';
-      List<M3UTrack> result = M3UParser.parse(content);
+      List<Track> result = M3UParser.parse(content);
 
-      M3UTrack item = result.first;
+      Track item = result.first;
 
       expect("{XUI_ID}", equals(item.attributes["xui-id"]));
     });
@@ -355,26 +355,26 @@ https://raw.githubusercontent.com/B-inal-123/s-asia/inal-22/Nowsport2.m3u8
 #KODIPROP:inputstream.adaptive.license_key={dc69b6159a0f9f0a4e03b3ff91cbacd5:d0dcbcd7723bc40df0bf34c9c092d51f}
 https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/out/v1/9f14895badca43e6a716db021dcd0c31/cenc.mpd
 ''';
-      List<M3UTrack> result = M3UParser.parse(content);
+      List<Track> result = M3UParser.parse(content);
 
-      M3UTrack item = result.first;
+      Track item = result.first;
 
-      Map<String, String> extVlcOpt = item.extVlcOpt.first;
+      Map<String, String> extVlcOpts = item.extVlcOpts.first;
 
       expect(
         true,
-        equals(extVlcOpt.containsKey("-http-reconnect")),
+        equals(extVlcOpts.containsKey("-http-reconnect")),
       ); // Changed to single hyphen
       expect(
         "true",
-        equals(extVlcOpt["-http-reconnect"]),
+        equals(extVlcOpts["-http-reconnect"]),
       ); // Changed to single hyphen
     });
 
     test('testAndFindShouldGiveResult2Row:Query=ONE HD', () async {
-      List<M3UTrack> result = M3UParser.parse(mayTokoContent);
+      List<Track> result = M3UParser.parse(mayTokoContent);
 
-      List<M3UTrack> items = result
+      List<Track> items = result
           .where((track) => track.title.contains("ONE HD"))
           .toList();
 
@@ -404,9 +404,9 @@ https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/
     });
 
     test('testTvgCountry:ID=115 rows', () async {
-      List<M3UTrack> result = M3UParser.parse(mayTokoContent);
+      List<Track> result = M3UParser.parse(mayTokoContent);
 
-      List<M3UTrack> items = result.where((track) {
+      List<Track> items = result.where((track) {
         if (track.attributes.containsKey("tvg-country")) {
           return track.attributes["tvg-country"] == "ID";
         }
@@ -418,32 +418,32 @@ https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/
     });
 
     test('testMaksinExtInf=10602', () async {
-      List<M3UTrack> result = M3UParser.parse(maksinContent);
+      List<Track> result = M3UParser.parse(maksinContent);
       expect(10602, equals(result.length));
     });
 
     test('testIptvOrgExtInf=11421', () async {
-      List<M3UTrack> result = M3UParser.parse(iptvOrgContent);
+      List<Track> result = M3UParser.parse(iptvOrgContent);
 
       expect(11421, equals(result.length));
     });
 
     test('testRyantvExtInf=268', () async {
-      List<M3UTrack> result = M3UParser.parse(ryanTvContent);
+      List<Track> result = M3UParser.parse(ryanTvContent);
 
       expect(268, equals(result.length));
     });
 
     test('testUdpExtInf=23', () async {
-      List<M3UTrack> result = M3UParser.parse(udpContent);
+      List<Track> result = M3UParser.parse(udpContent);
 
       expect(23, equals(result.length));
     });
 
     test('checkLastRowNewpilemShouldHave2Links', () async {
-      List<M3UTrack> result = M3UParser.parse(newpilemContent);
+      List<Track> result = M3UParser.parse(newpilemContent);
 
-      M3UTrack item = result.last;
+      Track item = result.last;
 
       expect("aktif malam", equals(item.title));
 
@@ -468,7 +468,7 @@ https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/
     });
 
     test('checkLastTitle:BLOOD AND SAND-S1:ShouldHave13Rows', () async {
-      List<M3UTrack> result = M3UParser.parse(
+      List<Track> result = M3UParser.parse(
         newpilemContent,
       ).where((track) => track.title.contains("BLOOD AND SAND-S1")).toList();
       expect(13, equals(result.length));
@@ -489,7 +489,7 @@ https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/
     });
 
     test('checkLastTitle:maytoko:NBA TV:ShouldHave:4 rows', () async {
-      List<M3UTrack> result = M3UParser.parse(
+      List<Track> result = M3UParser.parse(
         mayTokoContent,
       ).where((track) => track.title.contains("NBA TV")).toList();
 
@@ -497,6 +497,27 @@ https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/
 
       expect("NBA TV (Indi)", equals(result[0].title));
       expect("NBA TV", equals(result[1].title));
+    });
+
+    test('testTvgIdAndTvgLogoOnTrack:1', () async {
+      final String content = r'''
+#EXTINF:-1 xui-id="{XUI_ID}" tvg-id="AstroPremierLeague.my" tvg-name="MY | Astro Premier League 1 FHD" tvg-logo="https://b1gchlogos.xyz/wp-content/uploads/2024/10/Astro_Premier_League_1_2024.png" group-title="CHANNEL | SPORTS",MY | Astro Premier League 1
+##https://5nhp186eg31fofnc.chinese-restaurant-api.site/v3/variant/VE1AO1NTbu8mbv12LxEWM21ycrNWYyR3L3cTOhNmZ4UWZ2E2YtcjZ0kTLzYzN00iY0QmYtY2MmRTM3QTY/master.m3u8
+http://royalibox.com:80/plcedarkaouishbissm/px6pzjgmf8/1163984
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect("AstroPremierLeague.my", equals(item.tvgId));
+      expect("MY | Astro Premier League 1 FHD", equals(item.tvgName));
+      expect(
+        "https://b1gchlogos.xyz/wp-content/uploads/2024/10/Astro_Premier_League_1_2024.png",
+        equals(item.tvgLogo),
+      );
+      expect("CHANNEL | SPORTS", equals(item.groupTitle));
+      expect("MY | Astro Premier League 1", equals(item.title));
     });
   });
 }

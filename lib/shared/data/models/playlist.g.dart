@@ -7,19 +7,39 @@ part of 'playlist.dart';
 // **************************************************************************
 
 _Playlist _$PlaylistFromJson(Map<String, dynamic> json) => _Playlist(
-  id: json['id'] as String? ?? null,
-  name: json['name'] as String? ?? null,
-  type: json['type'] as String? ?? null,
-  epgLink: json['epgLink'] as String? ?? null,
-  url: json['url'] as String? ?? null,
+  id: json['id'] as String?,
+  name: json['name'] as String?,
+  type: json['type'] as String? ?? "m3u",
+  contentType:
+      $enumDecodeNullable(_$ContentTypeEnumMap, json['contentType']) ??
+      ContentType.unknown,
+  filePath: json['filePath'] as String? ?? "",
+  epgLink: json['epgLink'] as String?,
+  url: json['url'] as String?,
   isActive: json['isActive'] as bool? ?? false,
+  username: json['username'] as String?,
+  password: json['password'] as String?,
+  serverUrl: json['serverUrl'] as String?,
 );
 
 Map<String, dynamic> _$PlaylistToJson(_Playlist instance) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,
   'type': instance.type,
+  'contentType': _$ContentTypeEnumMap[instance.contentType]!,
+  'filePath': instance.filePath,
   'epgLink': instance.epgLink,
   'url': instance.url,
   'isActive': instance.isActive,
+  'username': instance.username,
+  'password': instance.password,
+  'serverUrl': instance.serverUrl,
+};
+
+const _$ContentTypeEnumMap = {
+  ContentType.unknown: 'unknown',
+  ContentType.live: 'live',
+  ContentType.vod: 'vod',
+  ContentType.series: 'series',
+  ContentType.audio: 'audio',
 };

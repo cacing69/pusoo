@@ -9,12 +9,14 @@ class PlaylistDrift extends Table {
 
   TextColumn get name => text()();
   TextColumn get type => text().nullable()();
+  TextColumn get contentType => text().nullable()();
+  TextColumn get filePath => text().nullable()();
   TextColumn get epgLink => text().nullable()();
   TextColumn get url => text()();
+  BoolColumn get isActive => boolean().clientDefault(() => false)();
+
   DateTimeColumn get lastUpdated => dateTime().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
-
-  BoolColumn get isActive => boolean().clientDefault(() => false)();
 
   @override
   Set<Column> get primaryKey => {id};

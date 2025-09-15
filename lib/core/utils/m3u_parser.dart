@@ -1,15 +1,15 @@
 import 'dart:core';
 
-import 'package:pusoo/shared/data/models/m3u_track.dart';
+import 'package:pusoo/shared/data/models/track.dart';
 
 abstract class M3UParser {
   static final _attributeRegex = RegExp(r'([a-zA-Z0-9_-]+)=\"([^\"]*)\"');
   static final _extInfRegex = RegExp(r'#EXTINF:(-?\d*),?(.*)');
 
-  static List<M3UTrack> parse(String m3u) {
+  static List<Track> parse(String m3u) {
     final lines = m3u.split('\n');
-    final tracks = <M3UTrack>[];
-    M3UTrack? currentTrack;
+    final tracks = <Track>[];
+    Track? currentTrack;
 
     Map<String, List<String>> tempExtVlcOptLists = {};
     Map<String, List<String>> tempKodiPropLists = {};
@@ -45,8 +45,8 @@ abstract class M3UParser {
         }
 
         currentTrack = currentTrack!.copyWith(
-          extVlcOpt: finalExtVlcOpt,
-          kodiProp: finalKodiProp,
+          extVlcOpts: finalExtVlcOpt,
+          kodiProps: finalKodiProp,
         );
       }
       tracks.add(currentTrack!);
@@ -96,11 +96,16 @@ abstract class M3UParser {
             title = titlePart.trim();
           }
 
-          currentTrack = M3UTrack(
+          currentTrack = Track(
             title: title,
             attributes: attributes,
-            category: attributes['group-title'] ?? '', // Extract group-title
+            groupTitle: attributes['group-title'] ?? '',
+            tvgId: attributes['tvg-id'] ?? '',
+            tvgName: attributes['tvg-name'] ?? '',
+            tvgLogo: attributes['tvg-logo'] ?? '',
           );
+        } else {
+          print('Skipped (regex mismatch): $trimmedLine\n');
         }
       } else if (trimmedLine.startsWith('#EXTVLCOPT')) {
         final optionString = trimmedLine.substring(11);

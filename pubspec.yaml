@@ -79,6 +79,7 @@ dependencies:
   dartz: ^0.10.1
   flutter_debouncer: ^2.0.0
   better_player_plus: ^1.0.8
+  crypto: ^3.0.6
 
 dev_dependencies:
   flutter_test:

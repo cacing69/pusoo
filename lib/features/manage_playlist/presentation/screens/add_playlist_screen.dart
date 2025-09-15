@@ -11,6 +11,8 @@ import 'package:pusoo/core/utils/helpers.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
 import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 import 'package:http/http.dart' as http;
+import 'package:pusoo/shared/data/models/playlist.dart';
+import 'package:pusoo/shared/data/models/track.dart';
 import 'package:ulid/ulid.dart';
 
 class AddPlaylistScreen extends StatefulHookConsumerWidget {
@@ -20,13 +22,11 @@ class AddPlaylistScreen extends StatefulHookConsumerWidget {
   ConsumerState<AddPlaylistScreen> createState() => _AddPlaylistScreenState();
 }
 
-enum ChannelType { unknown, liveTv, movies, tvSeries }
-
 class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
   bool isLoading = false;
 
-  final channelTypeController = FSelectTileGroupController<ChannelType>.radio(
-    ChannelType.unknown,
+  final channelTypeController = FSelectTileGroupController<ContentType>.radio(
+    ContentType.unknown,
   );
 
   @override
@@ -65,23 +65,18 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
             children: [
               FSelectTile(
                 title: const Text('Unknown'),
-                value: ChannelType.unknown,
+                value: ContentType.unknown,
                 suffix: Icon(FIcons.annoyed),
               ),
               FSelectTile(
                 title: const Text('Live TV'),
-                value: ChannelType.liveTv,
+                value: ContentType.live,
                 suffix: Icon(FIcons.monitor),
               ),
               FSelectTile(
-                title: const Text('Movies'),
-                value: ChannelType.movies,
+                title: const Text('VOD'),
+                value: ContentType.vod,
                 suffix: Icon(FIcons.monitorPlay),
-              ),
-              FSelectTile(
-                title: const Text('TV Series'),
-                value: ChannelType.tvSeries,
-                suffix: Icon(FIcons.monitorCheck),
               ),
             ],
           ),
@@ -116,32 +111,6 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
             ],
           ),
           Gap(10),
-
-          // FSelectGroup<ChannelType>(
-          //   controller: channelTypeController,
-          //   label: const Text('Playlist Type'),
-          //   validator: (values) =>
-          //       values?.isEmpty ?? true ? 'Please select a value.' : null,
-          //   children: [
-          //     FRadio.grouped(
-          //       value: ChannelType.unknown,
-          //       label: const Text('Unknown'),
-          //     ),
-          //     FRadio.grouped(
-          //       value: ChannelType.liveTv,
-          //       label: const Text('Live TV'),
-          //     ),
-          //     FRadio.grouped(
-          //       value: ChannelType.movie,
-          //       label: const Text('Movies'),
-          //     ),
-          //     FRadio.grouped(
-          //       value: ChannelType.liveTv,
-          //       label: const Text('TV Series'),
-          //     ),
-          //   ],
-          // ),
-          Gap(10),
           SafeArea(
             child: FButton(
               prefix: isLoading ? FProgress.circularIcon() : null,
@@ -151,9 +120,6 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                       setState(() {
                         isLoading = true;
                       });
-                      // await managers.users.create(
-                      //   (row) => row(username: 'firstuser'),
-                      // );
 
                       final String playlistId = Ulid().toString();
 
@@ -166,15 +132,6 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                         );
 
                         if (response.statusCode == 200) {
-                          // debugPrint(response.body);
-                          // final content = utf8
-                          //     .decode(response.bodyBytes)
-                          //     .replaceFirst('\u{FEFF}', '');
-
-                          // final Map<String, dynamic> channel = M3uUtils.parse(
-                          //   content,
-                          // );
-
                           String content;
 
                           try {
@@ -186,88 +143,32 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                             content = latin1.decode(response.bodyBytes);
                           }
 
-                          final dynamic channel = M3UParser.parse(content);
-
-                          setState(() {
-                            isLoading = false;
-                          });
-
-                          return;
-
-                          // final find = channel["items"].where(
-                          //   (item) =>
-                          //       item["name"] == "ONE HD" ||
-                          //       item["name"] == " ONE HD",
-                          // );
-
-                          // debugPrint(find.toString());
-
-                          // return;
+                          final List<Track> channel = M3UParser.parse(content);
 
                           await driftDb.batch((batch) {
                             batch.insertAll(
-                              driftDb.channelDrift,
-                              channel["items"].map<ChannelDriftCompanion>((
-                                dynamic ch,
-                              ) {
+                              driftDb.trackDrift,
+                              channel.map<TrackDriftCompanion>((Track track) {
                                 // debugPrint(ch.toString());
 
-                                return ChannelDriftCompanion(
+                                return TrackDriftCompanion(
                                   id: drift.Value(Ulid().toString()),
                                   playlistId: drift.Value(playlistId),
-                                  name: drift.Value(ch["name"] ?? ""),
-                                  tvgId: drift.Value(ch["tvgId"] ?? ""),
-                                  logo: drift.Value(
-                                    ch["tvgLogo"] ?? ch["groupLogo"] ?? "",
+                                  title: drift.Value(track.title),
+                                  tvgId: drift.Value(track.tvgId),
+                                  tvgLogo: drift.Value(track.tvgLogo),
+                                  groupTitle: drift.Value(track.groupTitle),
+                                  links: drift.Value(jsonEncode(track.links)),
+                                  kodiProps: drift.Value(
+                                    jsonEncode(track.kodiProps),
                                   ),
-                                  groupTitle: drift.Value(
-                                    ch["groupTitle"] ?? "Miscellaneous",
-                                  ),
-                                  streamUrl: drift.Value(
-                                    jsonEncode(ch["urls"] ?? ""),
-                                  ),
-                                  kodiprop: drift.Value(
-                                    jsonEncode(
-                                      ch.containsKey("kodiprop")
-                                          ? ch["kodiprop"]
-                                          : "",
-                                    ),
-                                  ),
-                                  isLiveTv: drift.Value(
-                                    channelTypeController.value.contains(
-                                      ChannelType.liveTv,
-                                    ),
-                                  ),
-                                  isMovie: drift.Value(
-                                    channelTypeController.value.contains(
-                                      ChannelType.movies,
-                                    ),
-                                  ),
-                                  isTvSerie: drift.Value(
-                                    channelTypeController.value.contains(
-                                      ChannelType.tvSeries,
-                                    ),
-                                  ),
-                                  extvlcopt: drift.Value(
-                                    jsonEncode(
-                                      ch.containsKey("extvlcopt")
-                                          ? ch["extvlcopt"]
-                                          : "",
-                                    ),
+                                  extVlcOpts: drift.Value(
+                                    jsonEncode(track.extVlcOpts),
                                   ),
                                 );
                               }).toList(),
                             );
                           });
-
-                          // showFToast(
-                          //   context: context,
-                          //   alignment: FToastAlignment.bottomCenter,
-                          //   title: const Text('Playlist Saved'),
-                          //   description: const Text(
-                          //     'Friday, May 23, 2025 at 9:00 AM',
-                          //   ),
-                          // );
 
                           // cek jika belum ada playlist maka set default
                           final countExpression = driftDb.playlistDrift.id
@@ -277,9 +178,7 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                           final count =
                               await (driftDb.selectOnly(driftDb.playlistDrift)
                                     ..addColumns([countExpression]))
-                                  .map(
-                                    (row) => row.read(countExpression),
-                                  ) // Mengambil nilai count dari hasil
+                                  .map((row) => row.read(countExpression))
                                   .getSingle();
 
                           await driftDb
@@ -288,9 +187,12 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                                 PlaylistDriftCompanion.insert(
                                   id: drift.Value(playlistId),
                                   name: nameController.text.trim(),
+                                  type: drift.Value("m3u"),
+                                  contentType: drift.Value("m3u"),
+                                  filePath: drift.Value(""),
+                                  epgLink: drift.Value(""),
                                   url: urlController.text.trim(),
                                   isActive: drift.Value(count == 0),
-                                  type: drift.Value("m3u_playlist"),
                                 ),
                               );
 
