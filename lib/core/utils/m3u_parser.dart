@@ -75,7 +75,6 @@ abstract class M3UParser {
 
         final match = _extInfRegex.firstMatch(trimmedLine);
         if (match != null) {
-          final duration = match.group(1) ?? '0';
           final titlePart = match.group(2) ?? '';
 
           final attributes = <String, String>{};
