@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:forui/forui.dart';
-import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
+import 'package:pusoo/shared/data/models/track.dart';
 
 class TvPlayerV2Screen extends StatefulWidget {
-  final ChannelDriftData channel;
-  const TvPlayerV2Screen({super.key, required this.channel});
+  final Track track;
+  const TvPlayerV2Screen({super.key, required this.track});
 
   @override
   State<TvPlayerV2Screen> createState() => _TvPlayerV2ScreenState();
@@ -29,9 +29,9 @@ class _TvPlayerV2ScreenState extends State<TvPlayerV2Screen> {
   void initState() {
     super.initState();
 
-    debugPrint(widget.channel.toString());
+    debugPrint(widget.track.toString());
 
-    final List urls = jsonDecode(widget.channel.streamUrl) as List<dynamic>;
+    // final List urls = jsonDecode(widget.track.streamUrl) as List<dynamic>;
 
     // Basic player configuration
     BetterPlayerConfiguration betterPlayerConfiguration =
@@ -44,7 +44,7 @@ class _TvPlayerV2ScreenState extends State<TvPlayerV2Screen> {
         );
 
     // 1. Siapkan data dari M3U
-    final String videoUrl = urls.first;
+    final String videoUrl = widget.track.links.first;
 
     setState(() {
       urlActive = videoUrl;
@@ -65,110 +65,107 @@ class _TvPlayerV2ScreenState extends State<TvPlayerV2Screen> {
 
     BetterPlayerDrmType? drmType;
 
-    // bool useClearKey = false;
-    // bool useWidevine = false;
+    // final kodipropDecode = jsonDecode("${widget.track.kodiProps}");
 
-    final kodipropDecode = jsonDecode("${widget.channel.kodiprop}");
+    // if (kodipropDecode.runtimeType == List) {
+    //   final bool hasLicenseType = kodipropDecode.any(
+    //     (element) =>
+    //         (element as String).contains("inputstream.adaptive.license_type"),
+    //   );
 
-    if (kodipropDecode.runtimeType == List) {
-      final bool hasLicenseType = kodipropDecode.any(
-        (element) =>
-            (element as String).contains("inputstream.adaptive.license_type"),
-      );
+    //   if (hasLicenseType) {
+    //     for (var kdProp in kodipropDecode) {
+    //       final List splitProps = kdProp.split("=");
 
-      if (hasLicenseType) {
-        for (var kdProp in kodipropDecode) {
-          final List splitProps = kdProp.split("=");
+    //       if (splitProps[0].toString().toLowerCase() ==
+    //           "inputstream.adaptive.license_type") {
+    //         if (splitProps[1].toString().toLowerCase() == "clearkey") {
+    //           drmType = BetterPlayerDrmType.clearKey;
+    //         } else if (splitProps[1].toString().toLowerCase() ==
+    //             "com.widevine.alpha") {
+    //           drmType = BetterPlayerDrmType.widevine;
+    //         }
+    //         break;
+    //       }
+    //     }
+    //   }
 
-          if (splitProps[0].toString().toLowerCase() ==
-              "inputstream.adaptive.license_type") {
-            if (splitProps[1].toString().toLowerCase() == "clearkey") {
-              drmType = BetterPlayerDrmType.clearKey;
-            } else if (splitProps[1].toString().toLowerCase() ==
-                "com.widevine.alpha") {
-              drmType = BetterPlayerDrmType.widevine;
-            }
-            break;
-          }
-        }
-      }
+    //   final bool hasLicenseKey = (kodipropDecode).any(
+    //     (element) =>
+    //         (element as String).contains("inputstream.adaptive.license_key"),
+    //   );
 
-      final bool hasLicenseKey = (kodipropDecode).any(
-        (element) =>
-            (element as String).contains("inputstream.adaptive.license_key"),
-      );
+    //   if (hasLicenseKey) {
+    //     for (var kdProp in kodipropDecode) {
+    //       final List splitProps = kdProp.split("=");
 
-      if (hasLicenseKey) {
-        for (var kdProp in kodipropDecode) {
-          final List splitProps = kdProp.split("=");
+    //       if (splitProps[0].toString().toLowerCase() ==
+    //           "inputstream.adaptive.license_key") {
+    //         if (drmType == BetterPlayerDrmType.widevine) {
+    //           licenseUrl = kdProp.toString().replaceAll(
+    //             "inputstream.adaptive.license_key=",
+    //             "",
+    //           );
+    //         } else if (drmType == BetterPlayerDrmType.clearKey) {
+    //           final licenseKey = "${splitProps[1]}".split(":");
 
-          if (splitProps[0].toString().toLowerCase() ==
-              "inputstream.adaptive.license_key") {
-            if (drmType == BetterPlayerDrmType.widevine) {
-              licenseUrl = kdProp.toString().replaceAll(
-                "inputstream.adaptive.license_key=",
-                "",
-              );
-            } else if (drmType == BetterPlayerDrmType.clearKey) {
-              final licenseKey = "${splitProps[1]}".split(":");
+    //           clearKeyHex = {licenseKey[0]: licenseKey[1]};
+    //         }
+    //         break;
+    //       }
+    //     }
+    //   }
 
-              clearKeyHex = {licenseKey[0]: licenseKey[1]};
-            }
-            break;
-          }
-        }
-      }
+    //   final bool hasManifestType = (kodipropDecode).any(
+    //     (element) =>
+    //         (element as String).contains("inputstream.adaptive.manifest_type"),
+    //   );
 
-      final bool hasManifestType = (kodipropDecode).any(
-        (element) =>
-            (element as String).contains("inputstream.adaptive.manifest_type"),
-      );
+    //   if (hasManifestType) {
+    //     for (var kdProp in kodipropDecode) {
+    //       final List splitProps = kdProp.split("=");
+    //       if (splitProps[0].toString().toLowerCase() ==
+    //           "inputstream.adaptive.manifest_type") {
+    //         if (splitProps[1].toString().toLowerCase() == "dash") {
+    //           videoFormat = BetterPlayerVideoFormat.dash;
+    //         } else {
+    //           if (splitProps[1].toString().toLowerCase() == "hls") {
+    //             videoFormat = BetterPlayerVideoFormat.hls;
+    //           }
+    //         }
+    //         break;
+    //       }
+    //     }
+    //   }
 
-      if (hasManifestType) {
-        for (var kdProp in kodipropDecode) {
-          final List splitProps = kdProp.split("=");
-          if (splitProps[0].toString().toLowerCase() ==
-              "inputstream.adaptive.manifest_type") {
-            if (splitProps[1].toString().toLowerCase() == "dash") {
-              videoFormat = BetterPlayerVideoFormat.dash;
-            } else {
-              if (splitProps[1].toString().toLowerCase() == "hls") {
-                videoFormat = BetterPlayerVideoFormat.hls;
-              }
-            }
-            break;
-          }
-        }
-      }
-
-      // clearKeyHex = {
-      //   "a7e68d7c2667465f976361eb0d6bd0c1": "32a856d04efbf93cee7b2c97643d7998",
-      // };
-    }
+    // clearKeyHex = {
+    //   "a7e68d7c2667465f976361eb0d6bd0c1": "32a856d04efbf93cee7b2c97643d7998",
+    // };
+    // }
 
     // Handling HTTP Header
 
     Map<String, String>? httpHeaders;
 
-    final extvlcoptDecode = jsonDecode("${widget.channel.extvlcopt}");
-    if (extvlcoptDecode.runtimeType == List) {
-      httpHeaders = {};
+    // final extvlcoptDecode = jsonDecode("${widget.track.extVlcOpts}");
+    // if (extvlcoptDecode.runtimeType == List) {
+    //   httpHeaders = {};
 
-      List<String> userAgents = [];
+    //   List<String> userAgents = [];
 
-      for (var extvlcopt in extvlcoptDecode) {
-        final List splitExtvlcopt = extvlcopt.split("=");
+    //   for (var extvlcopt in extvlcoptDecode) {
+    //     final List splitExtvlcopt = extvlcopt.split("=");
 
-        if (splitExtvlcopt[0].toString().toLowerCase() == "http-user-agent") {
-          userAgents.add(splitExtvlcopt[1]);
-        } else if (splitExtvlcopt[0].toString().toLowerCase() ==
-            "http-referrer") {
-          httpHeaders["Referrer"] = splitExtvlcopt[1];
-        }
-      }
+    //     if (splitExtvlcopt[0].toString().toLowerCase() == "http-user-agent") {
+    //       userAgents.add(splitExtvlcopt[1]);
+    //     } else if (splitExtvlcopt[0].toString().toLowerCase() ==
+    //         "http-referrer") {
+    //       httpHeaders["Referrer"] = splitExtvlcopt[1];
+    //     }
+    //   }
 
-      httpHeaders["User-Agent"] = userAgents.last;
-    }
+    //   httpHeaders["User-Agent"] = userAgents.last;
+    // }
 
     // // Get the video URL from the provided m3u8 info
     // String videoUrl =
@@ -182,15 +179,15 @@ class _TvPlayerV2ScreenState extends State<TvPlayerV2Screen> {
     // Create the DRM configuration using BetterPlayerClearKeyUtils.generateKey
     // Pass the Base64 URL-safe strings
 
-    debugPrint("licenseUrl:$licenseUrl");
-    // debugPrint("clearKeyHex:$clearKeyHex");
-    debugPrint("drmType:$drmType");
-    debugPrint("videoFormat:$videoFormat");
-    debugPrint("httpHeaders:$httpHeaders");
+    // debugPrint("licenseUrl:$licenseUrl");
+    // // debugPrint("clearKeyHex:$clearKeyHex");
+    // debugPrint("drmType:$drmType");
+    // debugPrint("videoFormat:$videoFormat");
+    // debugPrint("httpHeaders:$httpHeaders");
 
-    setState(() {
-      debugHttpHeaders = httpHeaders;
-    });
+    // setState(() {
+    //   debugHttpHeaders = httpHeaders;
+    // });
 
     BetterPlayerDrmConfiguration? drmConfiguration;
 
@@ -225,6 +222,7 @@ class _TvPlayerV2ScreenState extends State<TvPlayerV2Screen> {
   @override
   Widget build(BuildContext context) {
     return FScaffold(
+      childPad: false,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -234,18 +232,25 @@ class _TvPlayerV2ScreenState extends State<TvPlayerV2Screen> {
               child: BetterPlayer(controller: _betterPlayerController),
             ),
           ),
-          Text(widget.channel.name),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Text(widget.track.title),
+          ),
           FDivider(),
           Expanded(
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Text(urlActive!),
-                  FDivider(),
-                  Text(widget.channel.toString()),
-                  FDivider(),
-                  Text(debugHttpHeaders.toString()),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(urlActive!),
+                    FDivider(),
+                    Text(widget.track.toString()),
+                    FDivider(),
+                    Text(debugHttpHeaders.toString()),
+                  ],
+                ),
               ),
             ),
           ),

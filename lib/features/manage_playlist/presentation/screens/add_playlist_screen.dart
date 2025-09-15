@@ -39,8 +39,10 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
   Widget build(BuildContext context) {
     final nameController = useTextEditingController();
     final urlController = useTextEditingController(
+      // text:
+      //     "https://raw.githubusercontent.com/kshshuGyUWGG799vfaga/new-m3u/refs/heads/main/2025",
       text:
-          "https://raw.githubusercontent.com/kshshuGyUWGG799vfaga/new-m3u/refs/heads/main/2025",
+          "http://ogietv.biz.id:80/get.php?username=maksin&password=123456&type=m3u_plus&output=mpegts",
     );
     final epgLinkController = useTextEditingController();
 

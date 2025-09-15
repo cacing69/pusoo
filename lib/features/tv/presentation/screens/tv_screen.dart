@@ -1,6 +1,6 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:collection/collection.dart';
-import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,10 +8,9 @@ import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:pusoo/core/extensions/string_ext.dart';
-// import 'package:pusoo/core/utils/m3u_parse.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
+import 'package:pusoo/shared/data/models/track.dart';
 
 class TvScreen extends StatefulHookConsumerWidget {
   const TvScreen({super.key});
@@ -38,16 +37,14 @@ class _TvScreenState extends ConsumerState<TvScreen> {
     //http://ogietv.biz.id:80/get.php?username=maksin&password=123456&type=m3u_plus&output=mpegts
   }
 
-  List<ChannelDriftData> channels = [];
-  Map<dynamic, dynamic> categories = {};
+  List<Track> tracks = [];
+  String countTracks = "0";
+  List<String> groupTitles = [];
 
   Future<void> loadM3U({String? search}) async {
-    final test = await (driftDb.select(driftDb.channelDrift)).get();
+    // debugPrint("trackData.toString() : ${trackData[trackData.length - 1]}");
 
-    debugPrint("test.toString() : $test");
-
-    // get playlist selected
-    final selectedPlaylist = await (driftDb.select(
+    final List<PlaylistDriftData> selectedPlaylist = await (driftDb.select(
       driftDb.playlistDrift,
     )..where((tbl) => tbl.isActive.equals(true))).get();
 
@@ -55,56 +52,98 @@ class _TvScreenState extends ConsumerState<TvScreen> {
       // final String playlistId = selectedPlaylist.first.id;
 
       // maksin pattern
-      late final List<ChannelDriftData> filtered;
+      // List<Track> filtered = [];
 
       if (search != null) {
-        filtered =
-            await (driftDb.select(driftDb.channelDrift)
-                  ..where(
-                    (tbl) =>
-                        // tbl.playlistId.equals(playlistId) &
-                        // tbl.streamUrl.like('%movie%').not() &
-                        // tbl.streamUrl.like('%series%').not() &
-                        tbl.isLiveTv.equals(true) &
-                        tbl.name.like('%$search%') &
-                        tbl.streamUrl.equals('[]').not(),
-                  )
-                  ..limit(10))
-                .get();
+        // filtered =
+        //     await (driftDb.select(driftDb.channelDrift)
+        //           ..where(
+        //             (tbl) =>
+        //                 // tbl.playlistId.equals(playlistId) &
+        //                 // tbl.streamUrl.like('%movie%').not() &
+        //                 // tbl.streamUrl.like('%series%').not() &
+        //                 tbl.isLiveTv.equals(true) &
+        //                 tbl.name.like('%$search%') &
+        //                 tbl.streamUrl.equals('[]').not(),
+        //           )
+        //           ..limit(10))
+        //         .get();
       } else {
-        filtered =
-            await (driftDb.select(driftDb.channelDrift)
-                  ..where(
-                    (tbl) =>
-                        tbl.isLiveTv.equals(true) &
-                        // tbl.name.like("%KUALIFIKASI%"),
-                        tbl.streamUrl.equals('[]').not(),
-                  )
-                  ..limit(10))
-                .get();
+        // filtered =
+        //     await (driftDb.select(driftDb.channelDrift)
+        //           ..where(
+        //             (tbl) =>
+        //                 tbl.isLiveTv.equals(true) &
+        //                 // tbl.name.like("%KUALIFIKASI%"),
+        //                 tbl.streamUrl.equals('[]').not(),
+        //           )
+        //           ..limit(10))
+        //         .get();
+
+        final List<TrackDriftData> trackDriftDataRows = await (driftDb.select(
+          driftDb.trackDrift,
+        )).get();
+
+        final List<Track> filtered = trackDriftDataRows.map((track) {
+          final json = track.toJson();
+
+          void convertStringToList(String fieldName) {
+            final dynamic fieldValue = json[fieldName];
+            if (fieldValue is String) {
+              if (fieldValue.isEmpty) {
+                json[fieldName] = [];
+              } else {
+                try {
+                  final decoded = jsonDecode(fieldValue);
+                  if (decoded is List) {
+                    json[fieldName] = decoded;
+                  } else {
+                    json[fieldName] = [decoded];
+                  }
+                } catch (e) {
+                  json[fieldName] = [fieldValue];
+                }
+              }
+            } else if (fieldValue is! List) {
+              json[fieldName] = [];
+            }
+          }
+
+          convertStringToList('links');
+          convertStringToList('extVlcOpts');
+          convertStringToList('kodiProps');
+          convertStringToList('httpHeaders');
+
+          return Track.fromJson(json);
+        }).toList();
+
+        setState(() {
+          tracks = filtered;
+          countTracks = filtered.length.toString();
+        });
       }
 
-      debugPrint(filtered.toString());
+      // debugPrint(filtered.toString());
 
       // channelTv.then((data) {
-      setState(() {
-        channels = filtered;
+      // setState(() {
+      // tracks = filtered;
 
-        // Flatten kategori yang dipisah titik koma
-        List<Map> expandedChannels = [];
+      // Flatten kategori yang dipisah titik koma
+      // List<Map> expandedChannels = [];
 
-        for (var ch in filtered) {
-          final rawCategories = ch.groupTitle?.split(';') ?? ["Miscellaneous"];
-          for (var cat in rawCategories) {
-            // buat salinan channel tapi dengan kategori tunggal
-            final newCh = Map<String, dynamic>.from(ch.toJson());
-            newCh['groupTitle'] = cat.trim();
-            expandedChannels.add(newCh);
-          }
-        }
+      // for (var ch in filtered) {
+      //   final rawCategories = ch.groupTitle?.split(';') ?? ["Miscellaneous"];
+      //   for (var cat in rawCategories) {
+      //     // buat salinan channel tapi dengan kategori tunggal
+      //     final newCh = Map<String, dynamic>.from(ch.toJson());
+      //     newCh['groupTitle'] = cat.trim();
+      //     expandedChannels.add(newCh);
+      //   }
+      // }
 
-        categories = groupBy(expandedChannels, (row) => row['groupTitle']);
-      });
+      // groupTitles = groupBy(expandedChannels, (row) => row['groupTitle']);
+      // });
     }
   }
 
@@ -166,67 +205,67 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                             child: Column(
                               spacing: 0,
                               children: [
-                                FItem(
-                                  prefix: Icon(FIcons.tags),
-                                  title: Text("All Channel"),
-                                  suffix: Icon(FIcons.chevronRight),
-                                  onPress: () async {
-                                    // Bisa navigasi ke halaman detail channel per kategori
-                                    debugPrint("All channel selected");
+                                // FItem(
+                                //   prefix: Icon(FIcons.tags),
+                                //   title: Text("All Channel"),
+                                //   suffix: Icon(FIcons.chevronRight),
+                                //   onPress: () async {
+                                //     // Bisa navigasi ke halaman detail channel per kategori
+                                //     debugPrint("All channel selected");
 
-                                    final filtered =
-                                        await (driftDb.select(
-                                              driftDb.channelDrift,
-                                            )..where(
-                                              (tbl) =>
-                                                  tbl.streamUrl
-                                                      .like('%movie%')
-                                                      .not() &
-                                                  tbl.streamUrl
-                                                      .like('%series%')
-                                                      .not(),
-                                            ))
-                                            .get();
+                                //     final filtered =
+                                //         await (driftDb.select(
+                                //               driftDb.channelDrift,
+                                //             )..where(
+                                //               (tbl) =>
+                                //                   tbl.streamUrl
+                                //                       .like('%movie%')
+                                //                       .not() &
+                                //                   tbl.streamUrl
+                                //                       .like('%series%')
+                                //                       .not(),
+                                //             ))
+                                //             .get();
 
-                                    // channelTv.then((data) {
-                                    setState(() {
-                                      channels = filtered;
+                                //     // channelTv.then((data) {
+                                //     setState(() {
+                                //       tracks = filtered;
 
-                                      context.pop();
-                                    });
-                                    // });
+                                //       context.pop();
+                                //     });
+                                //     // });
 
-                                    // setState(() {
-                                    //   channels = categories[categoryName];
-                                    // });
-                                  },
-                                ),
-                                ...categories.keys.map((categoryName) {
-                                  return FItem(
-                                    prefix: Icon(FIcons.tag),
-                                    title: Text((categoryName as String)),
-                                    suffix: Icon(FIcons.chevronRight),
-                                    onPress: () async {
-                                      final channelTv =
-                                          await (driftDb.select(
-                                                driftDb.channelDrift,
-                                              )..where(
-                                                (tbl) => tbl.groupTitle.like(
-                                                  "%$categoryName%",
-                                                ),
-                                              ))
-                                              .get();
+                                //     // setState(() {
+                                //     //   channels = groupTitles[categoryName];
+                                //     // });
+                                //   },
+                                // ),
+                                // ...groupTitles.keys.map((categoryName) {
+                                //   return FItem(
+                                //     prefix: Icon(FIcons.tag),
+                                //     title: Text((categoryName as String)),
+                                //     suffix: Icon(FIcons.chevronRight),
+                                //     onPress: () async {
+                                //       final channelTv =
+                                //           await (driftDb.select(
+                                //                 driftDb.channelDrift,
+                                //               )..where(
+                                //                 (tbl) => tbl.groupTitle.like(
+                                //                   "%$categoryName%",
+                                //                 ),
+                                //               ))
+                                //               .get();
 
-                                      // channelTv.then((data) {
-                                      setState(() {
-                                        channels = channelTv;
+                                //       // channelTv.then((data) {
+                                //       setState(() {
+                                //         channels = channelTv;
 
-                                        context.pop();
-                                      });
-                                      // });
-                                    },
-                                  );
-                                }),
+                                //         context.pop();
+                                //       });
+                                //       // });
+                                //     },
+                                //   );
+                                // }),
                               ],
                             ),
                           ),
@@ -242,7 +281,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
             icon: Icon(FIcons.refreshCw, size: 25),
             onPress: () async {
               setState(() {
-                channels = [];
+                // channels = [];
               });
               loadM3U();
             },
@@ -265,7 +304,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
             ),
             title: Text("IPTV-ORG COUNTRY"),
             // subtitle: Text("Active playlist"),
-            subtitle: Text("2.250 channel"),
+            subtitle: Text("$countTracks channel"),
             suffix: Icon(FIcons.chevronRight),
             onPress: () async {
               showFDialog(
@@ -438,7 +477,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
           ),
           Gap(10),
           Expanded(
-            child: channels.isEmpty
+            child: tracks.isEmpty
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -466,7 +505,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                       mainAxisSpacing: 5,
                       childAspectRatio: 1,
                     ),
-                    itemCount: channels.length,
+                    itemCount: tracks.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
@@ -474,7 +513,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
 
                           context.pushNamed(
                             RouteName.tvPlayerV2.name,
-                            extra: channels[index],
+                            extra: tracks[index],
                           );
                         },
                         child: Container(
@@ -496,8 +535,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                                 SizedBox(
                                   width: double.infinity,
                                   height: 120, // tinggi tetap
-                                  child:
-                                      channels[index].logo?.isNotEmpty ?? false
+                                  child: tracks[index].tvgLogo.isNotEmpty
                                       ? Padding(
                                           padding: const EdgeInsets.all(1.0),
                                           child: Container(
@@ -507,8 +545,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                                             ),
                                             clipBehavior: Clip.antiAlias,
                                             child: CachedNetworkImage(
-                                              imageUrl:
-                                                  channels[index].logo ?? "",
+                                              imageUrl: tracks[index].tvgLogo,
                                               placeholder: (_, __) =>
                                                   const Center(
                                                     child:
@@ -551,7 +588,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                                     color: context.theme.colors.background
                                         .withAlpha(125),
                                     child: Text(
-                                      channels[index].name,
+                                      tracks[index].title,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(

@@ -16,6 +16,25 @@ enum ContentType {
   audio,
 }
 
+/// Creates a [ContentType] from a string value.
+///
+/// The method is case-insensitive and returns [ContentType.unknown]
+/// for any string that does not match.
+ContentType contentTypefromString(String type) {
+  switch (type.toLowerCase()) {
+    case "live":
+      return ContentType.live;
+    case "vod":
+      return ContentType.vod;
+    case "series":
+      return ContentType.series;
+    case "audio":
+      return ContentType.audio;
+    default:
+      return ContentType.unknown;
+  }
+}
+
 @freezed
 abstract class Playlist with _$Playlist {
   const factory Playlist({

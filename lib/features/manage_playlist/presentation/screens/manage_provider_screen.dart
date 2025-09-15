@@ -29,6 +29,7 @@ class _ManageProviderScreenState extends State<ManageProviderScreen> {
     // Hapus semua isi tabel 'playlist'
     await driftDb.delete(driftDb.playlistDrift).go();
     await driftDb.delete(driftDb.channelDrift).go();
+    await driftDb.delete(driftDb.trackDrift).go();
 
     loadPlaylist();
   }

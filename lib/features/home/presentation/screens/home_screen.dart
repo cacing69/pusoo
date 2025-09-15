@@ -35,11 +35,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           FBottomNavigationBarItem(
             icon: Icon(FIcons.monitorPlay),
-            label: Text('Movie'),
+            label: Text('VOD'),
           ),
           FBottomNavigationBarItem(
             icon: Icon(FIcons.monitorCheck),
-            label: Text('Series'),
+            label: Text('TV Series'),
           ),
           // FBottomNavigationBarItem(
           //   icon: Icon(FIcons.boomBox),
@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: IndexedStack(
         index: selectedIndex,
         children: [
-          Placeholder(),
+          SafeArea(child: Placeholder()),
           TvScreen(),
           MovieScreen(),
           SerieScreen(),

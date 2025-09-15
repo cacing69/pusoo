@@ -11,6 +11,7 @@ import 'package:pusoo/features/video_player/presentation/screens/video_player_fu
 import 'package:pusoo/features/tv/presentation/screens/tv_player_screen.dart';
 import 'package:pusoo/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
+import 'package:pusoo/shared/data/models/track.dart';
 import 'package:pusoo/shared/presentation/screens/youtube_iframe_player_screen.dart';
 
 enum RouteName {
@@ -63,7 +64,7 @@ final List<GoRoute> defaultRouter = [
     path: '/tv-player-v2',
     name: RouteName.tvPlayerV2.name,
     builder: (context, state) {
-      return TvPlayerV2Screen(channel: state.extra as ChannelDriftData);
+      return TvPlayerV2Screen(track: state.extra as Track);
     },
   ),
   GoRoute(
