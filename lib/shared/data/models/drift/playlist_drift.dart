@@ -1,13 +1,12 @@
 import 'package:drift/drift.dart';
-import 'package:ulid/ulid.dart';
 
 // part 'playlist.g.dart';
 
 class PlaylistDrift extends Table {
-  TextColumn get id =>
-      text().clientDefault(() => Ulid().toString())(); // ULID as primary key
+  IntColumn get id => integer().autoIncrement()();
 
   TextColumn get name => text()();
+  TextColumn get ulid => text()();
   TextColumn get type => text().nullable()();
   TextColumn get contentType => text().nullable()();
   TextColumn get filePath => text().nullable()();

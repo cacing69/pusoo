@@ -68,7 +68,7 @@ dependencies:
   forui_hooks: ^0.15.0
   envied: ^1.2.0
   jiffy: ^6.4.3
-  infinite_scroll_pagination: ^5.1.0
+  infinite_scroll_pagination: ^5.1.1
   shared_preferences: ^2.5.3
   fluttertoast: ^8.2.12
   hive_ce: ^2.11.3
@@ -80,6 +80,7 @@ dependencies:
   flutter_debouncer: ^2.0.0
   better_player_plus: ^1.0.8
   crypto: ^3.0.6
+  flutter_json_view: ^1.1.5
 
 dev_dependencies:
   flutter_test:

@@ -11,18 +11,30 @@ class $PlaylistDriftTable extends PlaylistDrift
   $PlaylistDriftTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
     'id',
     aliasedName,
     false,
-    type: DriftSqlType.string,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
     requiredDuringInsert: false,
-    clientDefault: () => Ulid().toString(),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
   );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
     'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ulidMeta = const VerificationMeta('ulid');
+  @override
+  late final GeneratedColumn<String> ulid = GeneratedColumn<String>(
+    'ulid',
     aliasedName,
     false,
     type: DriftSqlType.string,
@@ -121,6 +133,7 @@ class $PlaylistDriftTable extends PlaylistDrift
   List<GeneratedColumn> get $columns => [
     id,
     name,
+    ulid,
     type,
     contentType,
     filePath,
@@ -152,6 +165,14 @@ class $PlaylistDriftTable extends PlaylistDrift
       );
     } else if (isInserting) {
       context.missing(_nameMeta);
+    }
+    if (data.containsKey('ulid')) {
+      context.handle(
+        _ulidMeta,
+        ulid.isAcceptableOrUnknown(data['ulid']!, _ulidMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ulidMeta);
     }
     if (data.containsKey('type')) {
       context.handle(
@@ -219,12 +240,16 @@ class $PlaylistDriftTable extends PlaylistDrift
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return PlaylistDriftData(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
+        DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
+      )!,
+      ulid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ulid'],
       )!,
       type: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -269,8 +294,9 @@ class $PlaylistDriftTable extends PlaylistDrift
 
 class PlaylistDriftData extends DataClass
     implements Insertable<PlaylistDriftData> {
-  final String id;
+  final int id;
   final String name;
+  final String ulid;
   final String? type;
   final String? contentType;
   final String? filePath;
@@ -282,6 +308,7 @@ class PlaylistDriftData extends DataClass
   const PlaylistDriftData({
     required this.id,
     required this.name,
+    required this.ulid,
     this.type,
     this.contentType,
     this.filePath,
@@ -294,8 +321,9 @@ class PlaylistDriftData extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
+    map['ulid'] = Variable<String>(ulid);
     if (!nullToAbsent || type != null) {
       map['type'] = Variable<String>(type);
     }
@@ -321,6 +349,7 @@ class PlaylistDriftData extends DataClass
     return PlaylistDriftCompanion(
       id: Value(id),
       name: Value(name),
+      ulid: Value(ulid),
       type: type == null && nullToAbsent ? const Value.absent() : Value(type),
       contentType: contentType == null && nullToAbsent
           ? const Value.absent()
@@ -346,8 +375,9 @@ class PlaylistDriftData extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return PlaylistDriftData(
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      ulid: serializer.fromJson<String>(json['ulid']),
       type: serializer.fromJson<String?>(json['type']),
       contentType: serializer.fromJson<String?>(json['contentType']),
       filePath: serializer.fromJson<String?>(json['filePath']),
@@ -362,8 +392,9 @@ class PlaylistDriftData extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
+      'ulid': serializer.toJson<String>(ulid),
       'type': serializer.toJson<String?>(type),
       'contentType': serializer.toJson<String?>(contentType),
       'filePath': serializer.toJson<String?>(filePath),
@@ -376,8 +407,9 @@ class PlaylistDriftData extends DataClass
   }
 
   PlaylistDriftData copyWith({
-    String? id,
+    int? id,
     String? name,
+    String? ulid,
     Value<String?> type = const Value.absent(),
     Value<String?> contentType = const Value.absent(),
     Value<String?> filePath = const Value.absent(),
@@ -389,6 +421,7 @@ class PlaylistDriftData extends DataClass
   }) => PlaylistDriftData(
     id: id ?? this.id,
     name: name ?? this.name,
+    ulid: ulid ?? this.ulid,
     type: type.present ? type.value : this.type,
     contentType: contentType.present ? contentType.value : this.contentType,
     filePath: filePath.present ? filePath.value : this.filePath,
@@ -402,6 +435,7 @@ class PlaylistDriftData extends DataClass
     return PlaylistDriftData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
+      ulid: data.ulid.present ? data.ulid.value : this.ulid,
       type: data.type.present ? data.type.value : this.type,
       contentType: data.contentType.present
           ? data.contentType.value
@@ -422,6 +456,7 @@ class PlaylistDriftData extends DataClass
     return (StringBuffer('PlaylistDriftData(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('ulid: $ulid, ')
           ..write('type: $type, ')
           ..write('contentType: $contentType, ')
           ..write('filePath: $filePath, ')
@@ -438,6 +473,7 @@ class PlaylistDriftData extends DataClass
   int get hashCode => Object.hash(
     id,
     name,
+    ulid,
     type,
     contentType,
     filePath,
@@ -453,6 +489,7 @@ class PlaylistDriftData extends DataClass
       (other is PlaylistDriftData &&
           other.id == this.id &&
           other.name == this.name &&
+          other.ulid == this.ulid &&
           other.type == this.type &&
           other.contentType == this.contentType &&
           other.filePath == this.filePath &&
@@ -464,8 +501,9 @@ class PlaylistDriftData extends DataClass
 }
 
 class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
-  final Value<String> id;
+  final Value<int> id;
   final Value<String> name;
+  final Value<String> ulid;
   final Value<String?> type;
   final Value<String?> contentType;
   final Value<String?> filePath;
@@ -474,10 +512,10 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
   final Value<bool> isActive;
   final Value<DateTime?> lastUpdated;
   final Value<DateTime> createdAt;
-  final Value<int> rowid;
   const PlaylistDriftCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.ulid = const Value.absent(),
     this.type = const Value.absent(),
     this.contentType = const Value.absent(),
     this.filePath = const Value.absent(),
@@ -486,11 +524,11 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
     this.isActive = const Value.absent(),
     this.lastUpdated = const Value.absent(),
     this.createdAt = const Value.absent(),
-    this.rowid = const Value.absent(),
   });
   PlaylistDriftCompanion.insert({
     this.id = const Value.absent(),
     required String name,
+    required String ulid,
     this.type = const Value.absent(),
     this.contentType = const Value.absent(),
     this.filePath = const Value.absent(),
@@ -499,12 +537,13 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
     this.isActive = const Value.absent(),
     this.lastUpdated = const Value.absent(),
     this.createdAt = const Value.absent(),
-    this.rowid = const Value.absent(),
   }) : name = Value(name),
+       ulid = Value(ulid),
        url = Value(url);
   static Insertable<PlaylistDriftData> custom({
-    Expression<String>? id,
+    Expression<int>? id,
     Expression<String>? name,
+    Expression<String>? ulid,
     Expression<String>? type,
     Expression<String>? contentType,
     Expression<String>? filePath,
@@ -513,11 +552,11 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
     Expression<bool>? isActive,
     Expression<DateTime>? lastUpdated,
     Expression<DateTime>? createdAt,
-    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (ulid != null) 'ulid': ulid,
       if (type != null) 'type': type,
       if (contentType != null) 'content_type': contentType,
       if (filePath != null) 'file_path': filePath,
@@ -526,13 +565,13 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
       if (isActive != null) 'is_active': isActive,
       if (lastUpdated != null) 'last_updated': lastUpdated,
       if (createdAt != null) 'created_at': createdAt,
-      if (rowid != null) 'rowid': rowid,
     });
   }
 
   PlaylistDriftCompanion copyWith({
-    Value<String>? id,
+    Value<int>? id,
     Value<String>? name,
+    Value<String>? ulid,
     Value<String?>? type,
     Value<String?>? contentType,
     Value<String?>? filePath,
@@ -541,11 +580,11 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
     Value<bool>? isActive,
     Value<DateTime?>? lastUpdated,
     Value<DateTime>? createdAt,
-    Value<int>? rowid,
   }) {
     return PlaylistDriftCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
+      ulid: ulid ?? this.ulid,
       type: type ?? this.type,
       contentType: contentType ?? this.contentType,
       filePath: filePath ?? this.filePath,
@@ -554,7 +593,6 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
       isActive: isActive ?? this.isActive,
       lastUpdated: lastUpdated ?? this.lastUpdated,
       createdAt: createdAt ?? this.createdAt,
-      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -562,10 +600,13 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
+    }
+    if (ulid.present) {
+      map['ulid'] = Variable<String>(ulid.value);
     }
     if (type.present) {
       map['type'] = Variable<String>(type.value);
@@ -591,9 +632,6 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
     return map;
   }
 
@@ -602,6 +640,7 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
     return (StringBuffer('PlaylistDriftCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('ulid: $ulid, ')
           ..write('type: $type, ')
           ..write('contentType: $contentType, ')
           ..write('filePath: $filePath, ')
@@ -609,8 +648,7 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
           ..write('url: $url, ')
           ..write('isActive: $isActive, ')
           ..write('lastUpdated: $lastUpdated, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('rowid: $rowid')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
@@ -624,23 +662,26 @@ class $TrackDriftTable extends TrackDrift
   $TrackDriftTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
     'id',
     aliasedName,
     false,
-    type: DriftSqlType.string,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
     requiredDuringInsert: false,
-    clientDefault: () => Ulid().toString(),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
   );
   static const VerificationMeta _playlistIdMeta = const VerificationMeta(
     'playlistId',
   );
   @override
-  late final GeneratedColumn<String> playlistId = GeneratedColumn<String>(
+  late final GeneratedColumn<int> playlistId = GeneratedColumn<int>(
     'playlist_id',
     aliasedName,
     false,
-    type: DriftSqlType.string,
+    type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'REFERENCES playlist_drift (id)',
@@ -750,6 +791,49 @@ class $TrackDriftTable extends TrackDrift
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _isVodMeta = const VerificationMeta('isVod');
+  @override
+  late final GeneratedColumn<bool> isVod = GeneratedColumn<bool>(
+    'is_vod',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_vod" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isLiveTvMeta = const VerificationMeta(
+    'isLiveTv',
+  );
+  @override
+  late final GeneratedColumn<bool> isLiveTv = GeneratedColumn<bool>(
+    'is_live_tv',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_live_tv" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isTvSerieMeta = const VerificationMeta(
+    'isTvSerie',
+  );
+  @override
+  late final GeneratedColumn<bool> isTvSerie = GeneratedColumn<bool>(
+    'is_tv_serie',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_tv_serie" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _attributesMeta = const VerificationMeta(
     'attributes',
   );
@@ -819,6 +903,9 @@ class $TrackDriftTable extends TrackDrift
     tvgLogo,
     duration,
     isNsfw,
+    isVod,
+    isLiveTv,
+    isTvSerie,
     attributes,
     kodiProps,
     extVlcOpts,
@@ -913,6 +1000,24 @@ class $TrackDriftTable extends TrackDrift
         isNsfw.isAcceptableOrUnknown(data['is_nsfw']!, _isNsfwMeta),
       );
     }
+    if (data.containsKey('is_vod')) {
+      context.handle(
+        _isVodMeta,
+        isVod.isAcceptableOrUnknown(data['is_vod']!, _isVodMeta),
+      );
+    }
+    if (data.containsKey('is_live_tv')) {
+      context.handle(
+        _isLiveTvMeta,
+        isLiveTv.isAcceptableOrUnknown(data['is_live_tv']!, _isLiveTvMeta),
+      );
+    }
+    if (data.containsKey('is_tv_serie')) {
+      context.handle(
+        _isTvSerieMeta,
+        isTvSerie.isAcceptableOrUnknown(data['is_tv_serie']!, _isTvSerieMeta),
+      );
+    }
     if (data.containsKey('attributes')) {
       context.handle(
         _attributesMeta,
@@ -962,11 +1067,11 @@ class $TrackDriftTable extends TrackDrift
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return TrackDriftData(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
+        DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
       playlistId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
+        DriftSqlType.int,
         data['${effectivePrefix}playlist_id'],
       )!,
       title: attachedDatabase.typeMapping.read(
@@ -1009,6 +1114,18 @@ class $TrackDriftTable extends TrackDrift
         DriftSqlType.bool,
         data['${effectivePrefix}is_nsfw'],
       )!,
+      isVod: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_vod'],
+      )!,
+      isLiveTv: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_live_tv'],
+      )!,
+      isTvSerie: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_tv_serie'],
+      )!,
       attributes: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}attributes'],
@@ -1039,8 +1156,8 @@ class $TrackDriftTable extends TrackDrift
 }
 
 class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
-  final String id;
-  final String playlistId;
+  final int id;
+  final int playlistId;
   final String title;
   final String? contentType;
   final String? links;
@@ -1051,6 +1168,9 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
   final String? tvgLogo;
   final int? duration;
   final bool isNsfw;
+  final bool isVod;
+  final bool isLiveTv;
+  final bool isTvSerie;
   final String? attributes;
   final String? kodiProps;
   final String? extVlcOpts;
@@ -1069,6 +1189,9 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
     this.tvgLogo,
     this.duration,
     required this.isNsfw,
+    required this.isVod,
+    required this.isLiveTv,
+    required this.isTvSerie,
     this.attributes,
     this.kodiProps,
     this.extVlcOpts,
@@ -1078,8 +1201,8 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['playlist_id'] = Variable<String>(playlistId);
+    map['id'] = Variable<int>(id);
+    map['playlist_id'] = Variable<int>(playlistId);
     map['title'] = Variable<String>(title);
     if (!nullToAbsent || contentType != null) {
       map['content_type'] = Variable<String>(contentType);
@@ -1106,6 +1229,9 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
       map['duration'] = Variable<int>(duration);
     }
     map['is_nsfw'] = Variable<bool>(isNsfw);
+    map['is_vod'] = Variable<bool>(isVod);
+    map['is_live_tv'] = Variable<bool>(isLiveTv);
+    map['is_tv_serie'] = Variable<bool>(isTvSerie);
     if (!nullToAbsent || attributes != null) {
       map['attributes'] = Variable<String>(attributes);
     }
@@ -1154,6 +1280,9 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
           ? const Value.absent()
           : Value(duration),
       isNsfw: Value(isNsfw),
+      isVod: Value(isVod),
+      isLiveTv: Value(isLiveTv),
+      isTvSerie: Value(isTvSerie),
       attributes: attributes == null && nullToAbsent
           ? const Value.absent()
           : Value(attributes),
@@ -1178,8 +1307,8 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TrackDriftData(
-      id: serializer.fromJson<String>(json['id']),
-      playlistId: serializer.fromJson<String>(json['playlistId']),
+      id: serializer.fromJson<int>(json['id']),
+      playlistId: serializer.fromJson<int>(json['playlistId']),
       title: serializer.fromJson<String>(json['title']),
       contentType: serializer.fromJson<String?>(json['contentType']),
       links: serializer.fromJson<String?>(json['links']),
@@ -1190,6 +1319,9 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
       tvgLogo: serializer.fromJson<String?>(json['tvgLogo']),
       duration: serializer.fromJson<int?>(json['duration']),
       isNsfw: serializer.fromJson<bool>(json['isNsfw']),
+      isVod: serializer.fromJson<bool>(json['isVod']),
+      isLiveTv: serializer.fromJson<bool>(json['isLiveTv']),
+      isTvSerie: serializer.fromJson<bool>(json['isTvSerie']),
       attributes: serializer.fromJson<String?>(json['attributes']),
       kodiProps: serializer.fromJson<String?>(json['kodiProps']),
       extVlcOpts: serializer.fromJson<String?>(json['extVlcOpts']),
@@ -1201,8 +1333,8 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'playlistId': serializer.toJson<String>(playlistId),
+      'id': serializer.toJson<int>(id),
+      'playlistId': serializer.toJson<int>(playlistId),
       'title': serializer.toJson<String>(title),
       'contentType': serializer.toJson<String?>(contentType),
       'links': serializer.toJson<String?>(links),
@@ -1213,6 +1345,9 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
       'tvgLogo': serializer.toJson<String?>(tvgLogo),
       'duration': serializer.toJson<int?>(duration),
       'isNsfw': serializer.toJson<bool>(isNsfw),
+      'isVod': serializer.toJson<bool>(isVod),
+      'isLiveTv': serializer.toJson<bool>(isLiveTv),
+      'isTvSerie': serializer.toJson<bool>(isTvSerie),
       'attributes': serializer.toJson<String?>(attributes),
       'kodiProps': serializer.toJson<String?>(kodiProps),
       'extVlcOpts': serializer.toJson<String?>(extVlcOpts),
@@ -1222,8 +1357,8 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
   }
 
   TrackDriftData copyWith({
-    String? id,
-    String? playlistId,
+    int? id,
+    int? playlistId,
     String? title,
     Value<String?> contentType = const Value.absent(),
     Value<String?> links = const Value.absent(),
@@ -1234,6 +1369,9 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
     Value<String?> tvgLogo = const Value.absent(),
     Value<int?> duration = const Value.absent(),
     bool? isNsfw,
+    bool? isVod,
+    bool? isLiveTv,
+    bool? isTvSerie,
     Value<String?> attributes = const Value.absent(),
     Value<String?> kodiProps = const Value.absent(),
     Value<String?> extVlcOpts = const Value.absent(),
@@ -1252,6 +1390,9 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
     tvgLogo: tvgLogo.present ? tvgLogo.value : this.tvgLogo,
     duration: duration.present ? duration.value : this.duration,
     isNsfw: isNsfw ?? this.isNsfw,
+    isVod: isVod ?? this.isVod,
+    isLiveTv: isLiveTv ?? this.isLiveTv,
+    isTvSerie: isTvSerie ?? this.isTvSerie,
     attributes: attributes.present ? attributes.value : this.attributes,
     kodiProps: kodiProps.present ? kodiProps.value : this.kodiProps,
     extVlcOpts: extVlcOpts.present ? extVlcOpts.value : this.extVlcOpts,
@@ -1278,6 +1419,9 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
       tvgLogo: data.tvgLogo.present ? data.tvgLogo.value : this.tvgLogo,
       duration: data.duration.present ? data.duration.value : this.duration,
       isNsfw: data.isNsfw.present ? data.isNsfw.value : this.isNsfw,
+      isVod: data.isVod.present ? data.isVod.value : this.isVod,
+      isLiveTv: data.isLiveTv.present ? data.isLiveTv.value : this.isLiveTv,
+      isTvSerie: data.isTvSerie.present ? data.isTvSerie.value : this.isTvSerie,
       attributes: data.attributes.present
           ? data.attributes.value
           : this.attributes,
@@ -1309,6 +1453,9 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
           ..write('tvgLogo: $tvgLogo, ')
           ..write('duration: $duration, ')
           ..write('isNsfw: $isNsfw, ')
+          ..write('isVod: $isVod, ')
+          ..write('isLiveTv: $isLiveTv, ')
+          ..write('isTvSerie: $isTvSerie, ')
           ..write('attributes: $attributes, ')
           ..write('kodiProps: $kodiProps, ')
           ..write('extVlcOpts: $extVlcOpts, ')
@@ -1332,6 +1479,9 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
     tvgLogo,
     duration,
     isNsfw,
+    isVod,
+    isLiveTv,
+    isTvSerie,
     attributes,
     kodiProps,
     extVlcOpts,
@@ -1354,6 +1504,9 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
           other.tvgLogo == this.tvgLogo &&
           other.duration == this.duration &&
           other.isNsfw == this.isNsfw &&
+          other.isVod == this.isVod &&
+          other.isLiveTv == this.isLiveTv &&
+          other.isTvSerie == this.isTvSerie &&
           other.attributes == this.attributes &&
           other.kodiProps == this.kodiProps &&
           other.extVlcOpts == this.extVlcOpts &&
@@ -1362,8 +1515,8 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
 }
 
 class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
-  final Value<String> id;
-  final Value<String> playlistId;
+  final Value<int> id;
+  final Value<int> playlistId;
   final Value<String> title;
   final Value<String?> contentType;
   final Value<String?> links;
@@ -1374,12 +1527,14 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
   final Value<String?> tvgLogo;
   final Value<int?> duration;
   final Value<bool> isNsfw;
+  final Value<bool> isVod;
+  final Value<bool> isLiveTv;
+  final Value<bool> isTvSerie;
   final Value<String?> attributes;
   final Value<String?> kodiProps;
   final Value<String?> extVlcOpts;
   final Value<String?> httpHeaders;
   final Value<DateTime?> lastUpdated;
-  final Value<int> rowid;
   const TrackDriftCompanion({
     this.id = const Value.absent(),
     this.playlistId = const Value.absent(),
@@ -1393,16 +1548,18 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     this.tvgLogo = const Value.absent(),
     this.duration = const Value.absent(),
     this.isNsfw = const Value.absent(),
+    this.isVod = const Value.absent(),
+    this.isLiveTv = const Value.absent(),
+    this.isTvSerie = const Value.absent(),
     this.attributes = const Value.absent(),
     this.kodiProps = const Value.absent(),
     this.extVlcOpts = const Value.absent(),
     this.httpHeaders = const Value.absent(),
     this.lastUpdated = const Value.absent(),
-    this.rowid = const Value.absent(),
   });
   TrackDriftCompanion.insert({
     this.id = const Value.absent(),
-    required String playlistId,
+    required int playlistId,
     required String title,
     this.contentType = const Value.absent(),
     this.links = const Value.absent(),
@@ -1413,17 +1570,19 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     this.tvgLogo = const Value.absent(),
     this.duration = const Value.absent(),
     this.isNsfw = const Value.absent(),
+    this.isVod = const Value.absent(),
+    this.isLiveTv = const Value.absent(),
+    this.isTvSerie = const Value.absent(),
     this.attributes = const Value.absent(),
     this.kodiProps = const Value.absent(),
     this.extVlcOpts = const Value.absent(),
     this.httpHeaders = const Value.absent(),
     this.lastUpdated = const Value.absent(),
-    this.rowid = const Value.absent(),
   }) : playlistId = Value(playlistId),
        title = Value(title);
   static Insertable<TrackDriftData> custom({
-    Expression<String>? id,
-    Expression<String>? playlistId,
+    Expression<int>? id,
+    Expression<int>? playlistId,
     Expression<String>? title,
     Expression<String>? contentType,
     Expression<String>? links,
@@ -1434,12 +1593,14 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     Expression<String>? tvgLogo,
     Expression<int>? duration,
     Expression<bool>? isNsfw,
+    Expression<bool>? isVod,
+    Expression<bool>? isLiveTv,
+    Expression<bool>? isTvSerie,
     Expression<String>? attributes,
     Expression<String>? kodiProps,
     Expression<String>? extVlcOpts,
     Expression<String>? httpHeaders,
     Expression<DateTime>? lastUpdated,
-    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1454,18 +1615,20 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
       if (tvgLogo != null) 'tvg_logo': tvgLogo,
       if (duration != null) 'duration': duration,
       if (isNsfw != null) 'is_nsfw': isNsfw,
+      if (isVod != null) 'is_vod': isVod,
+      if (isLiveTv != null) 'is_live_tv': isLiveTv,
+      if (isTvSerie != null) 'is_tv_serie': isTvSerie,
       if (attributes != null) 'attributes': attributes,
       if (kodiProps != null) 'kodi_props': kodiProps,
       if (extVlcOpts != null) 'ext_vlc_opts': extVlcOpts,
       if (httpHeaders != null) 'http_headers': httpHeaders,
       if (lastUpdated != null) 'last_updated': lastUpdated,
-      if (rowid != null) 'rowid': rowid,
     });
   }
 
   TrackDriftCompanion copyWith({
-    Value<String>? id,
-    Value<String>? playlistId,
+    Value<int>? id,
+    Value<int>? playlistId,
     Value<String>? title,
     Value<String?>? contentType,
     Value<String?>? links,
@@ -1476,12 +1639,14 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     Value<String?>? tvgLogo,
     Value<int?>? duration,
     Value<bool>? isNsfw,
+    Value<bool>? isVod,
+    Value<bool>? isLiveTv,
+    Value<bool>? isTvSerie,
     Value<String?>? attributes,
     Value<String?>? kodiProps,
     Value<String?>? extVlcOpts,
     Value<String?>? httpHeaders,
     Value<DateTime?>? lastUpdated,
-    Value<int>? rowid,
   }) {
     return TrackDriftCompanion(
       id: id ?? this.id,
@@ -1496,12 +1661,14 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
       tvgLogo: tvgLogo ?? this.tvgLogo,
       duration: duration ?? this.duration,
       isNsfw: isNsfw ?? this.isNsfw,
+      isVod: isVod ?? this.isVod,
+      isLiveTv: isLiveTv ?? this.isLiveTv,
+      isTvSerie: isTvSerie ?? this.isTvSerie,
       attributes: attributes ?? this.attributes,
       kodiProps: kodiProps ?? this.kodiProps,
       extVlcOpts: extVlcOpts ?? this.extVlcOpts,
       httpHeaders: httpHeaders ?? this.httpHeaders,
       lastUpdated: lastUpdated ?? this.lastUpdated,
-      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -1509,10 +1676,10 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (playlistId.present) {
-      map['playlist_id'] = Variable<String>(playlistId.value);
+      map['playlist_id'] = Variable<int>(playlistId.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
@@ -1544,6 +1711,15 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     if (isNsfw.present) {
       map['is_nsfw'] = Variable<bool>(isNsfw.value);
     }
+    if (isVod.present) {
+      map['is_vod'] = Variable<bool>(isVod.value);
+    }
+    if (isLiveTv.present) {
+      map['is_live_tv'] = Variable<bool>(isLiveTv.value);
+    }
+    if (isTvSerie.present) {
+      map['is_tv_serie'] = Variable<bool>(isTvSerie.value);
+    }
     if (attributes.present) {
       map['attributes'] = Variable<String>(attributes.value);
     }
@@ -1558,9 +1734,6 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     }
     if (lastUpdated.present) {
       map['last_updated'] = Variable<DateTime>(lastUpdated.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -1580,12 +1753,14 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
           ..write('tvgLogo: $tvgLogo, ')
           ..write('duration: $duration, ')
           ..write('isNsfw: $isNsfw, ')
+          ..write('isVod: $isVod, ')
+          ..write('isLiveTv: $isLiveTv, ')
+          ..write('isTvSerie: $isTvSerie, ')
           ..write('attributes: $attributes, ')
           ..write('kodiProps: $kodiProps, ')
           ..write('extVlcOpts: $extVlcOpts, ')
           ..write('httpHeaders: $httpHeaders, ')
-          ..write('lastUpdated: $lastUpdated, ')
-          ..write('rowid: $rowid')
+          ..write('lastUpdated: $lastUpdated')
           ..write(')'))
         .toString();
   }
@@ -1599,13 +1774,16 @@ class $ChannelDriftTable extends ChannelDrift
   $ChannelDriftTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
     'id',
     aliasedName,
     false,
-    type: DriftSqlType.string,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
     requiredDuringInsert: false,
-    clientDefault: () => Ulid().toString(),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
   );
   static const VerificationMeta _playlistIdMeta = const VerificationMeta(
     'playlistId',
@@ -1948,7 +2126,7 @@ class $ChannelDriftTable extends ChannelDrift
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ChannelDriftData(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
+        DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
       playlistId: attachedDatabase.typeMapping.read(
@@ -2026,7 +2204,7 @@ class $ChannelDriftTable extends ChannelDrift
 
 class ChannelDriftData extends DataClass
     implements Insertable<ChannelDriftData> {
-  final String id;
+  final int id;
   final String playlistId;
   final String name;
   final String? tvgId;
@@ -2065,7 +2243,7 @@ class ChannelDriftData extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
     map['playlist_id'] = Variable<String>(playlistId);
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || tvgId != null) {
@@ -2143,7 +2321,7 @@ class ChannelDriftData extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ChannelDriftData(
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       playlistId: serializer.fromJson<String>(json['playlistId']),
       name: serializer.fromJson<String>(json['name']),
       tvgId: serializer.fromJson<String?>(json['tvgId']),
@@ -2166,7 +2344,7 @@ class ChannelDriftData extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
       'playlistId': serializer.toJson<String>(playlistId),
       'name': serializer.toJson<String>(name),
       'tvgId': serializer.toJson<String?>(tvgId),
@@ -2187,7 +2365,7 @@ class ChannelDriftData extends DataClass
   }
 
   ChannelDriftData copyWith({
-    String? id,
+    int? id,
     String? playlistId,
     String? name,
     Value<String?> tvgId = const Value.absent(),
@@ -2321,7 +2499,7 @@ class ChannelDriftData extends DataClass
 }
 
 class ChannelDriftCompanion extends UpdateCompanion<ChannelDriftData> {
-  final Value<String> id;
+  final Value<int> id;
   final Value<String> playlistId;
   final Value<String> name;
   final Value<String?> tvgId;
@@ -2338,7 +2516,6 @@ class ChannelDriftCompanion extends UpdateCompanion<ChannelDriftData> {
   final Value<DateTime?> lastUpdated;
   final Value<String?> kodiprop;
   final Value<String?> extvlcopt;
-  final Value<int> rowid;
   const ChannelDriftCompanion({
     this.id = const Value.absent(),
     this.playlistId = const Value.absent(),
@@ -2357,7 +2534,6 @@ class ChannelDriftCompanion extends UpdateCompanion<ChannelDriftData> {
     this.lastUpdated = const Value.absent(),
     this.kodiprop = const Value.absent(),
     this.extvlcopt = const Value.absent(),
-    this.rowid = const Value.absent(),
   });
   ChannelDriftCompanion.insert({
     this.id = const Value.absent(),
@@ -2377,12 +2553,11 @@ class ChannelDriftCompanion extends UpdateCompanion<ChannelDriftData> {
     this.lastUpdated = const Value.absent(),
     this.kodiprop = const Value.absent(),
     this.extvlcopt = const Value.absent(),
-    this.rowid = const Value.absent(),
   }) : playlistId = Value(playlistId),
        name = Value(name),
        streamUrl = Value(streamUrl);
   static Insertable<ChannelDriftData> custom({
-    Expression<String>? id,
+    Expression<int>? id,
     Expression<String>? playlistId,
     Expression<String>? name,
     Expression<String>? tvgId,
@@ -2399,7 +2574,6 @@ class ChannelDriftCompanion extends UpdateCompanion<ChannelDriftData> {
     Expression<DateTime>? lastUpdated,
     Expression<String>? kodiprop,
     Expression<String>? extvlcopt,
-    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2419,12 +2593,11 @@ class ChannelDriftCompanion extends UpdateCompanion<ChannelDriftData> {
       if (lastUpdated != null) 'last_updated': lastUpdated,
       if (kodiprop != null) 'kodiprop': kodiprop,
       if (extvlcopt != null) 'extvlcopt': extvlcopt,
-      if (rowid != null) 'rowid': rowid,
     });
   }
 
   ChannelDriftCompanion copyWith({
-    Value<String>? id,
+    Value<int>? id,
     Value<String>? playlistId,
     Value<String>? name,
     Value<String?>? tvgId,
@@ -2441,7 +2614,6 @@ class ChannelDriftCompanion extends UpdateCompanion<ChannelDriftData> {
     Value<DateTime?>? lastUpdated,
     Value<String?>? kodiprop,
     Value<String?>? extvlcopt,
-    Value<int>? rowid,
   }) {
     return ChannelDriftCompanion(
       id: id ?? this.id,
@@ -2461,7 +2633,6 @@ class ChannelDriftCompanion extends UpdateCompanion<ChannelDriftData> {
       lastUpdated: lastUpdated ?? this.lastUpdated,
       kodiprop: kodiprop ?? this.kodiprop,
       extvlcopt: extvlcopt ?? this.extvlcopt,
-      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -2469,7 +2640,7 @@ class ChannelDriftCompanion extends UpdateCompanion<ChannelDriftData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (playlistId.present) {
       map['playlist_id'] = Variable<String>(playlistId.value);
@@ -2519,9 +2690,6 @@ class ChannelDriftCompanion extends UpdateCompanion<ChannelDriftData> {
     if (extvlcopt.present) {
       map['extvlcopt'] = Variable<String>(extvlcopt.value);
     }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
     return map;
   }
 
@@ -2544,8 +2712,7 @@ class ChannelDriftCompanion extends UpdateCompanion<ChannelDriftData> {
           ..write('isWatched: $isWatched, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('kodiprop: $kodiprop, ')
-          ..write('extvlcopt: $extvlcopt, ')
-          ..write('rowid: $rowid')
+          ..write('extvlcopt: $extvlcopt')
           ..write(')'))
         .toString();
   }
@@ -2570,8 +2737,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 
 typedef $$PlaylistDriftTableCreateCompanionBuilder =
     PlaylistDriftCompanion Function({
-      Value<String> id,
+      Value<int> id,
       required String name,
+      required String ulid,
       Value<String?> type,
       Value<String?> contentType,
       Value<String?> filePath,
@@ -2580,12 +2748,12 @@ typedef $$PlaylistDriftTableCreateCompanionBuilder =
       Value<bool> isActive,
       Value<DateTime?> lastUpdated,
       Value<DateTime> createdAt,
-      Value<int> rowid,
     });
 typedef $$PlaylistDriftTableUpdateCompanionBuilder =
     PlaylistDriftCompanion Function({
-      Value<String> id,
+      Value<int> id,
       Value<String> name,
+      Value<String> ulid,
       Value<String?> type,
       Value<String?> contentType,
       Value<String?> filePath,
@@ -2594,7 +2762,6 @@ typedef $$PlaylistDriftTableUpdateCompanionBuilder =
       Value<bool> isActive,
       Value<DateTime?> lastUpdated,
       Value<DateTime> createdAt,
-      Value<int> rowid,
     });
 
 final class $$PlaylistDriftTableReferences
@@ -2619,30 +2786,9 @@ final class $$PlaylistDriftTableReferences
     final manager = $$TrackDriftTableTableManager(
       $_db,
       $_db.trackDrift,
-    ).filter((f) => f.playlistId.id.sqlEquals($_itemColumn<String>('id')!));
+    ).filter((f) => f.playlistId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_trackDriftRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<$ChannelDriftTable, List<ChannelDriftData>>
-  _channelDriftRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.channelDrift,
-    aliasName: $_aliasNameGenerator(
-      db.playlistDrift.id,
-      db.channelDrift.playlistId,
-    ),
-  );
-
-  $$ChannelDriftTableProcessedTableManager get channelDriftRefs {
-    final manager = $$ChannelDriftTableTableManager(
-      $_db,
-      $_db.channelDrift,
-    ).filter((f) => f.playlistId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_channelDriftRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -2658,13 +2804,18 @@ class $$PlaylistDriftTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<String> get id => $composableBuilder(
+  ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ulid => $composableBuilder(
+    column: $table.ulid,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2732,31 +2883,6 @@ class $$PlaylistDriftTableFilterComposer
     );
     return f(composer);
   }
-
-  Expression<bool> channelDriftRefs(
-    Expression<bool> Function($$ChannelDriftTableFilterComposer f) f,
-  ) {
-    final $$ChannelDriftTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.channelDrift,
-      getReferencedColumn: (t) => t.playlistId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ChannelDriftTableFilterComposer(
-            $db: $db,
-            $table: $db.channelDrift,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$PlaylistDriftTableOrderingComposer
@@ -2768,13 +2894,18 @@ class $$PlaylistDriftTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<String> get id => $composableBuilder(
+  ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ulid => $composableBuilder(
+    column: $table.ulid,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -2828,11 +2959,14 @@ class $$PlaylistDriftTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get id =>
+  GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get ulid =>
+      $composableBuilder(column: $table.ulid, builder: (column) => column);
 
   GeneratedColumn<String> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
@@ -2886,31 +3020,6 @@ class $$PlaylistDriftTableAnnotationComposer
     );
     return f(composer);
   }
-
-  Expression<T> channelDriftRefs<T extends Object>(
-    Expression<T> Function($$ChannelDriftTableAnnotationComposer a) f,
-  ) {
-    final $$ChannelDriftTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.channelDrift,
-      getReferencedColumn: (t) => t.playlistId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ChannelDriftTableAnnotationComposer(
-            $db: $db,
-            $table: $db.channelDrift,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$PlaylistDriftTableTableManager
@@ -2926,7 +3035,7 @@ class $$PlaylistDriftTableTableManager
           $$PlaylistDriftTableUpdateCompanionBuilder,
           (PlaylistDriftData, $$PlaylistDriftTableReferences),
           PlaylistDriftData,
-          PrefetchHooks Function({bool trackDriftRefs, bool channelDriftRefs})
+          PrefetchHooks Function({bool trackDriftRefs})
         > {
   $$PlaylistDriftTableTableManager(_$AppDatabase db, $PlaylistDriftTable table)
     : super(
@@ -2941,8 +3050,9 @@ class $$PlaylistDriftTableTableManager
               $$PlaylistDriftTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<String> id = const Value.absent(),
+                Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
+                Value<String> ulid = const Value.absent(),
                 Value<String?> type = const Value.absent(),
                 Value<String?> contentType = const Value.absent(),
                 Value<String?> filePath = const Value.absent(),
@@ -2951,10 +3061,10 @@ class $$PlaylistDriftTableTableManager
                 Value<bool> isActive = const Value.absent(),
                 Value<DateTime?> lastUpdated = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
               }) => PlaylistDriftCompanion(
                 id: id,
                 name: name,
+                ulid: ulid,
                 type: type,
                 contentType: contentType,
                 filePath: filePath,
@@ -2963,12 +3073,12 @@ class $$PlaylistDriftTableTableManager
                 isActive: isActive,
                 lastUpdated: lastUpdated,
                 createdAt: createdAt,
-                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<String> id = const Value.absent(),
+                Value<int> id = const Value.absent(),
                 required String name,
+                required String ulid,
                 Value<String?> type = const Value.absent(),
                 Value<String?> contentType = const Value.absent(),
                 Value<String?> filePath = const Value.absent(),
@@ -2977,10 +3087,10 @@ class $$PlaylistDriftTableTableManager
                 Value<bool> isActive = const Value.absent(),
                 Value<DateTime?> lastUpdated = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
               }) => PlaylistDriftCompanion.insert(
                 id: id,
                 name: name,
+                ulid: ulid,
                 type: type,
                 contentType: contentType,
                 filePath: filePath,
@@ -2989,7 +3099,6 @@ class $$PlaylistDriftTableTableManager
                 isActive: isActive,
                 lastUpdated: lastUpdated,
                 createdAt: createdAt,
-                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -2999,63 +3108,36 @@ class $$PlaylistDriftTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback:
-              ({trackDriftRefs = false, channelDriftRefs = false}) {
-                return PrefetchHooks(
-                  db: db,
-                  explicitlyWatchedTables: [
-                    if (trackDriftRefs) db.trackDrift,
-                    if (channelDriftRefs) db.channelDrift,
-                  ],
-                  addJoins: null,
-                  getPrefetchedDataCallback: (items) async {
-                    return [
-                      if (trackDriftRefs)
-                        await $_getPrefetchedData<
-                          PlaylistDriftData,
-                          $PlaylistDriftTable,
-                          TrackDriftData
-                        >(
-                          currentTable: table,
-                          referencedTable: $$PlaylistDriftTableReferences
-                              ._trackDriftRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$PlaylistDriftTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).trackDriftRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.playlistId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
-                      if (channelDriftRefs)
-                        await $_getPrefetchedData<
-                          PlaylistDriftData,
-                          $PlaylistDriftTable,
-                          ChannelDriftData
-                        >(
-                          currentTable: table,
-                          referencedTable: $$PlaylistDriftTableReferences
-                              ._channelDriftRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$PlaylistDriftTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).channelDriftRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.playlistId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
-                    ];
-                  },
-                );
+          prefetchHooksCallback: ({trackDriftRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (trackDriftRefs) db.trackDrift],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (trackDriftRefs)
+                    await $_getPrefetchedData<
+                      PlaylistDriftData,
+                      $PlaylistDriftTable,
+                      TrackDriftData
+                    >(
+                      currentTable: table,
+                      referencedTable: $$PlaylistDriftTableReferences
+                          ._trackDriftRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$PlaylistDriftTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).trackDriftRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.playlistId == item.id),
+                      typedResults: items,
+                    ),
+                ];
               },
+            );
+          },
         ),
       );
 }
@@ -3072,12 +3154,12 @@ typedef $$PlaylistDriftTableProcessedTableManager =
       $$PlaylistDriftTableUpdateCompanionBuilder,
       (PlaylistDriftData, $$PlaylistDriftTableReferences),
       PlaylistDriftData,
-      PrefetchHooks Function({bool trackDriftRefs, bool channelDriftRefs})
+      PrefetchHooks Function({bool trackDriftRefs})
     >;
 typedef $$TrackDriftTableCreateCompanionBuilder =
     TrackDriftCompanion Function({
-      Value<String> id,
-      required String playlistId,
+      Value<int> id,
+      required int playlistId,
       required String title,
       Value<String?> contentType,
       Value<String?> links,
@@ -3088,17 +3170,19 @@ typedef $$TrackDriftTableCreateCompanionBuilder =
       Value<String?> tvgLogo,
       Value<int?> duration,
       Value<bool> isNsfw,
+      Value<bool> isVod,
+      Value<bool> isLiveTv,
+      Value<bool> isTvSerie,
       Value<String?> attributes,
       Value<String?> kodiProps,
       Value<String?> extVlcOpts,
       Value<String?> httpHeaders,
       Value<DateTime?> lastUpdated,
-      Value<int> rowid,
     });
 typedef $$TrackDriftTableUpdateCompanionBuilder =
     TrackDriftCompanion Function({
-      Value<String> id,
-      Value<String> playlistId,
+      Value<int> id,
+      Value<int> playlistId,
       Value<String> title,
       Value<String?> contentType,
       Value<String?> links,
@@ -3109,12 +3193,14 @@ typedef $$TrackDriftTableUpdateCompanionBuilder =
       Value<String?> tvgLogo,
       Value<int?> duration,
       Value<bool> isNsfw,
+      Value<bool> isVod,
+      Value<bool> isLiveTv,
+      Value<bool> isTvSerie,
       Value<String?> attributes,
       Value<String?> kodiProps,
       Value<String?> extVlcOpts,
       Value<String?> httpHeaders,
       Value<DateTime?> lastUpdated,
-      Value<int> rowid,
     });
 
 final class $$TrackDriftTableReferences
@@ -3127,7 +3213,7 @@ final class $$TrackDriftTableReferences
       );
 
   $$PlaylistDriftTableProcessedTableManager get playlistId {
-    final $_column = $_itemColumn<String>('playlist_id')!;
+    final $_column = $_itemColumn<int>('playlist_id')!;
 
     final manager = $$PlaylistDriftTableTableManager(
       $_db,
@@ -3150,7 +3236,7 @@ class $$TrackDriftTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<String> get id => $composableBuilder(
+  ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
@@ -3202,6 +3288,21 @@ class $$TrackDriftTableFilterComposer
 
   ColumnFilters<bool> get isNsfw => $composableBuilder(
     column: $table.isNsfw,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isVod => $composableBuilder(
+    column: $table.isVod,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isLiveTv => $composableBuilder(
+    column: $table.isLiveTv,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isTvSerie => $composableBuilder(
+    column: $table.isTvSerie,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3263,7 +3364,7 @@ class $$TrackDriftTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<String> get id => $composableBuilder(
+  ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
@@ -3315,6 +3416,21 @@ class $$TrackDriftTableOrderingComposer
 
   ColumnOrderings<bool> get isNsfw => $composableBuilder(
     column: $table.isNsfw,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isVod => $composableBuilder(
+    column: $table.isVod,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isLiveTv => $composableBuilder(
+    column: $table.isLiveTv,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isTvSerie => $composableBuilder(
+    column: $table.isTvSerie,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -3376,7 +3492,7 @@ class $$TrackDriftTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get id =>
+  GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get title =>
@@ -3412,6 +3528,15 @@ class $$TrackDriftTableAnnotationComposer
 
   GeneratedColumn<bool> get isNsfw =>
       $composableBuilder(column: $table.isNsfw, builder: (column) => column);
+
+  GeneratedColumn<bool> get isVod =>
+      $composableBuilder(column: $table.isVod, builder: (column) => column);
+
+  GeneratedColumn<bool> get isLiveTv =>
+      $composableBuilder(column: $table.isLiveTv, builder: (column) => column);
+
+  GeneratedColumn<bool> get isTvSerie =>
+      $composableBuilder(column: $table.isTvSerie, builder: (column) => column);
 
   GeneratedColumn<String> get attributes => $composableBuilder(
     column: $table.attributes,
@@ -3488,8 +3613,8 @@ class $$TrackDriftTableTableManager
               $$TrackDriftTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<String> id = const Value.absent(),
-                Value<String> playlistId = const Value.absent(),
+                Value<int> id = const Value.absent(),
+                Value<int> playlistId = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String?> contentType = const Value.absent(),
                 Value<String?> links = const Value.absent(),
@@ -3500,12 +3625,14 @@ class $$TrackDriftTableTableManager
                 Value<String?> tvgLogo = const Value.absent(),
                 Value<int?> duration = const Value.absent(),
                 Value<bool> isNsfw = const Value.absent(),
+                Value<bool> isVod = const Value.absent(),
+                Value<bool> isLiveTv = const Value.absent(),
+                Value<bool> isTvSerie = const Value.absent(),
                 Value<String?> attributes = const Value.absent(),
                 Value<String?> kodiProps = const Value.absent(),
                 Value<String?> extVlcOpts = const Value.absent(),
                 Value<String?> httpHeaders = const Value.absent(),
                 Value<DateTime?> lastUpdated = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
               }) => TrackDriftCompanion(
                 id: id,
                 playlistId: playlistId,
@@ -3519,17 +3646,19 @@ class $$TrackDriftTableTableManager
                 tvgLogo: tvgLogo,
                 duration: duration,
                 isNsfw: isNsfw,
+                isVod: isVod,
+                isLiveTv: isLiveTv,
+                isTvSerie: isTvSerie,
                 attributes: attributes,
                 kodiProps: kodiProps,
                 extVlcOpts: extVlcOpts,
                 httpHeaders: httpHeaders,
                 lastUpdated: lastUpdated,
-                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<String> id = const Value.absent(),
-                required String playlistId,
+                Value<int> id = const Value.absent(),
+                required int playlistId,
                 required String title,
                 Value<String?> contentType = const Value.absent(),
                 Value<String?> links = const Value.absent(),
@@ -3540,12 +3669,14 @@ class $$TrackDriftTableTableManager
                 Value<String?> tvgLogo = const Value.absent(),
                 Value<int?> duration = const Value.absent(),
                 Value<bool> isNsfw = const Value.absent(),
+                Value<bool> isVod = const Value.absent(),
+                Value<bool> isLiveTv = const Value.absent(),
+                Value<bool> isTvSerie = const Value.absent(),
                 Value<String?> attributes = const Value.absent(),
                 Value<String?> kodiProps = const Value.absent(),
                 Value<String?> extVlcOpts = const Value.absent(),
                 Value<String?> httpHeaders = const Value.absent(),
                 Value<DateTime?> lastUpdated = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
               }) => TrackDriftCompanion.insert(
                 id: id,
                 playlistId: playlistId,
@@ -3559,12 +3690,14 @@ class $$TrackDriftTableTableManager
                 tvgLogo: tvgLogo,
                 duration: duration,
                 isNsfw: isNsfw,
+                isVod: isVod,
+                isLiveTv: isLiveTv,
+                isTvSerie: isTvSerie,
                 attributes: attributes,
                 kodiProps: kodiProps,
                 extVlcOpts: extVlcOpts,
                 httpHeaders: httpHeaders,
                 lastUpdated: lastUpdated,
-                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -3635,7 +3768,7 @@ typedef $$TrackDriftTableProcessedTableManager =
     >;
 typedef $$ChannelDriftTableCreateCompanionBuilder =
     ChannelDriftCompanion Function({
-      Value<String> id,
+      Value<int> id,
       required String playlistId,
       required String name,
       Value<String?> tvgId,
@@ -3652,11 +3785,10 @@ typedef $$ChannelDriftTableCreateCompanionBuilder =
       Value<DateTime?> lastUpdated,
       Value<String?> kodiprop,
       Value<String?> extvlcopt,
-      Value<int> rowid,
     });
 typedef $$ChannelDriftTableUpdateCompanionBuilder =
     ChannelDriftCompanion Function({
-      Value<String> id,
+      Value<int> id,
       Value<String> playlistId,
       Value<String> name,
       Value<String?> tvgId,
@@ -3673,33 +3805,7 @@ typedef $$ChannelDriftTableUpdateCompanionBuilder =
       Value<DateTime?> lastUpdated,
       Value<String?> kodiprop,
       Value<String?> extvlcopt,
-      Value<int> rowid,
     });
-
-final class $$ChannelDriftTableReferences
-    extends
-        BaseReferences<_$AppDatabase, $ChannelDriftTable, ChannelDriftData> {
-  $$ChannelDriftTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static $PlaylistDriftTable _playlistIdTable(_$AppDatabase db) =>
-      db.playlistDrift.createAlias(
-        $_aliasNameGenerator(db.channelDrift.playlistId, db.playlistDrift.id),
-      );
-
-  $$PlaylistDriftTableProcessedTableManager get playlistId {
-    final $_column = $_itemColumn<String>('playlist_id')!;
-
-    final manager = $$PlaylistDriftTableTableManager(
-      $_db,
-      $_db.playlistDrift,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_playlistIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
 
 class $$ChannelDriftTableFilterComposer
     extends Composer<_$AppDatabase, $ChannelDriftTable> {
@@ -3710,7 +3816,7 @@ class $$ChannelDriftTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<String> get id => $composableBuilder(
+  ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
@@ -3789,29 +3895,6 @@ class $$ChannelDriftTableFilterComposer
     column: $table.extvlcopt,
     builder: (column) => ColumnFilters(column),
   );
-
-  $$PlaylistDriftTableFilterComposer get playlistId {
-    final $$PlaylistDriftTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.playlistId,
-      referencedTable: $db.playlistDrift,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PlaylistDriftTableFilterComposer(
-            $db: $db,
-            $table: $db.playlistDrift,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$ChannelDriftTableOrderingComposer
@@ -3823,7 +3906,7 @@ class $$ChannelDriftTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<String> get id => $composableBuilder(
+  ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
@@ -3902,29 +3985,6 @@ class $$ChannelDriftTableOrderingComposer
     column: $table.extvlcopt,
     builder: (column) => ColumnOrderings(column),
   );
-
-  $$PlaylistDriftTableOrderingComposer get playlistId {
-    final $$PlaylistDriftTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.playlistId,
-      referencedTable: $db.playlistDrift,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PlaylistDriftTableOrderingComposer(
-            $db: $db,
-            $table: $db.playlistDrift,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$ChannelDriftTableAnnotationComposer
@@ -3936,7 +3996,7 @@ class $$ChannelDriftTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get id =>
+  GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get name =>
@@ -3989,29 +4049,6 @@ class $$ChannelDriftTableAnnotationComposer
 
   GeneratedColumn<String> get extvlcopt =>
       $composableBuilder(column: $table.extvlcopt, builder: (column) => column);
-
-  $$PlaylistDriftTableAnnotationComposer get playlistId {
-    final $$PlaylistDriftTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.playlistId,
-      referencedTable: $db.playlistDrift,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PlaylistDriftTableAnnotationComposer(
-            $db: $db,
-            $table: $db.playlistDrift,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$ChannelDriftTableTableManager
@@ -4025,9 +4062,12 @@ class $$ChannelDriftTableTableManager
           $$ChannelDriftTableAnnotationComposer,
           $$ChannelDriftTableCreateCompanionBuilder,
           $$ChannelDriftTableUpdateCompanionBuilder,
-          (ChannelDriftData, $$ChannelDriftTableReferences),
+          (
+            ChannelDriftData,
+            BaseReferences<_$AppDatabase, $ChannelDriftTable, ChannelDriftData>,
+          ),
           ChannelDriftData,
-          PrefetchHooks Function({bool playlistId})
+          PrefetchHooks Function()
         > {
   $$ChannelDriftTableTableManager(_$AppDatabase db, $ChannelDriftTable table)
     : super(
@@ -4042,7 +4082,7 @@ class $$ChannelDriftTableTableManager
               $$ChannelDriftTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<String> id = const Value.absent(),
+                Value<int> id = const Value.absent(),
                 Value<String> playlistId = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> tvgId = const Value.absent(),
@@ -4059,7 +4099,6 @@ class $$ChannelDriftTableTableManager
                 Value<DateTime?> lastUpdated = const Value.absent(),
                 Value<String?> kodiprop = const Value.absent(),
                 Value<String?> extvlcopt = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
               }) => ChannelDriftCompanion(
                 id: id,
                 playlistId: playlistId,
@@ -4078,11 +4117,10 @@ class $$ChannelDriftTableTableManager
                 lastUpdated: lastUpdated,
                 kodiprop: kodiprop,
                 extvlcopt: extvlcopt,
-                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<String> id = const Value.absent(),
+                Value<int> id = const Value.absent(),
                 required String playlistId,
                 required String name,
                 Value<String?> tvgId = const Value.absent(),
@@ -4099,7 +4137,6 @@ class $$ChannelDriftTableTableManager
                 Value<DateTime?> lastUpdated = const Value.absent(),
                 Value<String?> kodiprop = const Value.absent(),
                 Value<String?> extvlcopt = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
               }) => ChannelDriftCompanion.insert(
                 id: id,
                 playlistId: playlistId,
@@ -4118,57 +4155,11 @@ class $$ChannelDriftTableTableManager
                 lastUpdated: lastUpdated,
                 kodiprop: kodiprop,
                 extvlcopt: extvlcopt,
-                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$ChannelDriftTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({playlistId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (playlistId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.playlistId,
-                                referencedTable: $$ChannelDriftTableReferences
-                                    ._playlistIdTable(db),
-                                referencedColumn: $$ChannelDriftTableReferences
-                                    ._playlistIdTable(db)
-                                    .id,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -4183,9 +4174,12 @@ typedef $$ChannelDriftTableProcessedTableManager =
       $$ChannelDriftTableAnnotationComposer,
       $$ChannelDriftTableCreateCompanionBuilder,
       $$ChannelDriftTableUpdateCompanionBuilder,
-      (ChannelDriftData, $$ChannelDriftTableReferences),
+      (
+        ChannelDriftData,
+        BaseReferences<_$AppDatabase, $ChannelDriftTable, ChannelDriftData>,
+      ),
       ChannelDriftData,
-      PrefetchHooks Function({bool playlistId})
+      PrefetchHooks Function()
     >;
 
 class $AppDatabaseManager {

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:forui/forui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pusoo/router.dart';
-import 'package:video_player_media_kit/video_player_media_kit.dart';
+// import 'package:video_player_media_kit/video_player_media_kit.dart';
 
 // import 'package:media_kit/media_kit.dart';
 
@@ -14,19 +14,19 @@ void main() {
 
   // MediaKit.ensureInitialized();
 
-  VideoPlayerMediaKit.ensureInitialized(
-    android: true,
-    // windows: true,
-    // linux: true,
-  );
+  // VideoPlayerMediaKit.ensureInitialized(
+  //   android: true,
+  //   // windows: true,
+  //   // linux: true,
+  // );
 
   // Wajib: inisialisasi MediaKit sebelum dipakai
   // MediaKit.ensureInitialized();
 
-  // SystemChrome.setPreferredOrientations([
-  //   DeviceOrientation.portraitUp,
-  //   DeviceOrientation.portraitDown,
-  // ]);
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   runApp(ProviderScope(child: Application()));
 }

@@ -263,7 +263,7 @@ class _ManageProviderScreenState extends State<ManageProviderScreen> {
                                                         )..where(
                                                           (tbl) => tbl
                                                               .playlistId
-                                                              .equals(e.id),
+                                                              .equals(""),
                                                         ))
                                                         .go();
 

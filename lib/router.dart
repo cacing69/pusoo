@@ -6,8 +6,6 @@ import 'package:pusoo/features/home/presentation/screens/home_screen.dart';
 import 'package:pusoo/features/manage_playlist/presentation/screens/manage_provider_screen.dart';
 import 'package:pusoo/features/movie/presentation/screens/movie_detail_screen.dart';
 import 'package:pusoo/features/tv/presentation/screens/tv_player_full_screen.dart';
-import 'package:pusoo/features/tv/presentation/screens/tv_player_v2_screen.dart';
-import 'package:pusoo/features/video_player/presentation/screens/video_player_full_screen.dart';
 import 'package:pusoo/features/tv/presentation/screens/tv_player_screen.dart';
 import 'package:pusoo/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
@@ -21,7 +19,6 @@ enum RouteName {
   videoPlayer,
   videoPlayerFull,
   tvPlayer,
-  tvPlayerV2,
   tvPlayerFull,
   addPlaylist,
   movieDetail,
@@ -53,25 +50,25 @@ final List<GoRoute> defaultRouter = [
       return DetailScreen(movieId: state.pathParameters['movieId']!);
     },
   ),
+  // GoRoute(
+  //   path: '/tv-player',
+  //   name: RouteName.tvPlayer.name,
+  //   builder: (context, state) {
+  //     return TvPlayerScreen(channel: state.extra as ChannelDriftData);
+  //   },
+  // ),
   GoRoute(
     path: '/tv-player',
     name: RouteName.tvPlayer.name,
     builder: (context, state) {
-      return TvPlayerScreen(channel: state.extra as ChannelDriftData);
-    },
-  ),
-  GoRoute(
-    path: '/tv-player-v2',
-    name: RouteName.tvPlayerV2.name,
-    builder: (context, state) {
-      return TvPlayerV2Screen(track: state.extra as Track);
+      return TVPlayerScreen(track: state.extra as Track);
     },
   ),
   GoRoute(
     path: '/tv-player-full',
     name: RouteName.tvPlayerFull.name,
     builder: (context, state) {
-      return TvPlayerFullScreen(channel: state.extra as ChannelDriftData);
+      return TvPlayerFullScreen(channel: state.extra as Track);
     },
   ),
   GoRoute(

@@ -7,7 +7,7 @@ part of 'track.dart';
 // **************************************************************************
 
 _Track _$TrackFromJson(Map<String, dynamic> json) => _Track(
-  id: json['id'] as String? ?? "",
+  id: (json['id'] as num?)?.toInt() ?? 0,
   title: json['title'] as String? ?? "",
   contentType:
       $enumDecodeNullable(_$ContentTypeEnumMap, json['contentType']) ??
@@ -22,6 +22,9 @@ _Track _$TrackFromJson(Map<String, dynamic> json) => _Track(
   tvgLogo: json['tvgLogo'] as String? ?? "",
   duration: (json['duration'] as num?)?.toInt() ?? 0,
   isNsfw: json['isNsfw'] as bool? ?? false,
+  isVod: json['isVod'] as bool? ?? false,
+  isLiveTv: json['isLiveTv'] as bool? ?? false,
+  isTvSerie: json['isTvSerie'] as bool? ?? false,
   attributes:
       (json['attributes'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
@@ -56,6 +59,9 @@ Map<String, dynamic> _$TrackToJson(_Track instance) => <String, dynamic>{
   'tvgLogo': instance.tvgLogo,
   'duration': instance.duration,
   'isNsfw': instance.isNsfw,
+  'isVod': instance.isVod,
+  'isLiveTv': instance.isLiveTv,
+  'isTvSerie': instance.isTvSerie,
   'attributes': instance.attributes,
   'extVlcOpts': instance.extVlcOpts,
   'kodiProps': instance.kodiProps,

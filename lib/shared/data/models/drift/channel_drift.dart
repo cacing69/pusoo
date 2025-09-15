@@ -1,10 +1,9 @@
 import 'package:drift/drift.dart';
 import 'package:pusoo/shared/data/models/drift/playlist_drift.dart';
 // import 'package:pusoo/shared/data/drift/playlist.dart';
-import 'package:ulid/ulid.dart';
 
 class ChannelDrift extends Table {
-  TextColumn get id => text().clientDefault(() => Ulid().toString())();
+  IntColumn get id => integer().autoIncrement()();
   // TextColumn get playlistId =>
   //     text().customConstraint('REFERENCES playlist_drift(id) NOT NULL')();
   TextColumn get playlistId => text().references(PlaylistDrift, #id)();

@@ -123,7 +123,7 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                         isLoading = true;
                       });
 
-                      final String playlistId = Ulid().toString();
+                      final String playlistUlid = Ulid().toString();
 
                       debugPrint('Playlist Saved!');
 
@@ -147,6 +147,32 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
 
                           final List<Track> channel = M3UParser.parse(content);
 
+                          // cek jika belum ada playlist maka set default
+                          final countExpression = driftDb.playlistDrift.id
+                              .count();
+
+                          // Menggunakan selectOnly dan membaca hasilnya secara langsung
+                          final count =
+                              await (driftDb.selectOnly(driftDb.playlistDrift)
+                                    ..addColumns([countExpression]))
+                                  .map((row) => row.read(countExpression))
+                                  .getSingle();
+
+                          final int playlistId = await driftDb
+                              .into(driftDb.playlistDrift)
+                              .insert(
+                                PlaylistDriftCompanion.insert(
+                                  ulid: playlistUlid,
+                                  name: nameController.text.trim(),
+                                  type: drift.Value("m3u"),
+                                  contentType: drift.Value("m3u"),
+                                  filePath: drift.Value(""),
+                                  epgLink: drift.Value(""),
+                                  url: urlController.text.trim(),
+                                  isActive: drift.Value(count == 0),
+                                ),
+                              );
+
                           await driftDb.batch((batch) {
                             batch.insertAll(
                               driftDb.trackDrift,
@@ -154,7 +180,6 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                                 // debugPrint(ch.toString());
 
                                 return TrackDriftCompanion(
-                                  id: drift.Value(Ulid().toString()),
                                   playlistId: drift.Value(playlistId),
                                   title: drift.Value(track.title),
                                   tvgId: drift.Value(track.tvgId),
@@ -171,32 +196,6 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                               }).toList(),
                             );
                           });
-
-                          // cek jika belum ada playlist maka set default
-                          final countExpression = driftDb.playlistDrift.id
-                              .count();
-
-                          // Menggunakan selectOnly dan membaca hasilnya secara langsung
-                          final count =
-                              await (driftDb.selectOnly(driftDb.playlistDrift)
-                                    ..addColumns([countExpression]))
-                                  .map((row) => row.read(countExpression))
-                                  .getSingle();
-
-                          await driftDb
-                              .into(driftDb.playlistDrift)
-                              .insert(
-                                PlaylistDriftCompanion.insert(
-                                  id: drift.Value(playlistId),
-                                  name: nameController.text.trim(),
-                                  type: drift.Value("m3u"),
-                                  contentType: drift.Value("m3u"),
-                                  filePath: drift.Value(""),
-                                  epgLink: drift.Value(""),
-                                  url: urlController.text.trim(),
-                                  isActive: drift.Value(count == 0),
-                                ),
-                              );
 
                           if (context.mounted) {
                             setState(() {

@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
+import 'package:pusoo/shared/data/models/drift/track_drift.dart';
 import 'package:pusoo/shared/data/models/playlist.dart';
 
 part 'track.g.dart';
@@ -7,7 +11,7 @@ part 'track.freezed.dart';
 @freezed
 abstract class Track with _$Track {
   const factory Track({
-    @Default("") String id,
+    @Default(0) int id,
     @Default("") String title,
     @Default(ContentType.unknown) ContentType contentType,
     @Default([]) List<String> links,
@@ -19,6 +23,10 @@ abstract class Track with _$Track {
     @Default(0) int duration,
     @Default(false) bool isNsfw,
 
+    @Default(false) bool isVod,
+    @Default(false) bool isLiveTv,
+    @Default(false) bool isTvSerie,
+
     @Default({}) Map<String, String> attributes,
     @Default([]) List<Map<String, String>> extVlcOpts,
     @Default([]) List<Map<String, String>> kodiProps,
@@ -26,4 +34,37 @@ abstract class Track with _$Track {
   }) = _Track;
 
   factory Track.fromJson(Map<String, dynamic> json) => _$TrackFromJson(json);
+
+  factory Track.fromTrackDrift(TrackDriftData trackDrift) {
+    final json = trackDrift.toJson();
+
+    void convertStringToList(String fieldName) {
+      final dynamic fieldValue = json[fieldName];
+      if (fieldValue is String) {
+        if (fieldValue.isEmpty) {
+          json[fieldName] = [];
+        } else {
+          try {
+            final decoded = jsonDecode(fieldValue);
+            if (decoded is List) {
+              json[fieldName] = decoded;
+            } else {
+              json[fieldName] = [decoded];
+            }
+          } catch (e) {
+            json[fieldName] = [fieldValue];
+          }
+        }
+      } else if (fieldValue is! List) {
+        json[fieldName] = [];
+      }
+    }
+
+    convertStringToList('links');
+    convertStringToList('extVlcOpts');
+    convertStringToList('kodiProps');
+    convertStringToList('httpHeaders');
+
+    return Track.fromJson(json);
+  }
 }

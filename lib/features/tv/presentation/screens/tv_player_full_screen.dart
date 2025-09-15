@@ -1,13 +1,17 @@
+// File: lib/shared/presentation/widgets/tv_player_full_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forui/forui.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:media_kit_video/media_kit_video.dart';
-import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
-import 'package:pusoo/shared/presentation/providers/video_playback_notifier.dart';
+import 'package:better_player_plus/better_player_plus.dart';
+import 'package:pusoo/core/utils/helpers.dart';
+import 'package:pusoo/shared/data/models/track.dart';
+import 'package:pusoo/shared/presentation/providers/better_player_notifier.dart';
 
 class TvPlayerFullScreen extends ConsumerStatefulWidget {
-  final ChannelDriftData channel;
+  final Track channel;
   const TvPlayerFullScreen({super.key, required this.channel});
 
   @override
@@ -15,45 +19,66 @@ class TvPlayerFullScreen extends ConsumerStatefulWidget {
 }
 
 class _TvPlayerFullScreenState extends ConsumerState<TvPlayerFullScreen> {
-  // State untuk mengontrol visibilitas overlay yang dikelola oleh Riverpod
-  // Tidak perlu lagi variabel lokal di sini.
-  // bool _isOverlayVisible = true;
+  // State untuk mengontrol visibilitas overlay secara internal
+  bool _isOverlayVisible = true;
+
+  // Instance BetterPlayerController
+  // BetterPlayerController? _betterPlayerController;
 
   @override
   void initState() {
     super.initState();
+
+    // Inisialisasi controller dari provider
+    // _betterPlayerController = ref.read(betterPlayerProvider);
+
     // Atur mode layar dan orientasi saat masuk ke layar ini.
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+
+    // Tambahkan listener untuk mendeteksi visibilitas kontrol bawaan
+    // ref.read(betterPlayerProvider)?.addEventsListener((event) {
+    //   if (event.betterPlayerEventType ==
+    //       BetterPlayerEventType.controlsVisible) {
+    //     setState(() => _isOverlayVisible = true);
+    //   } else if (event.betterPlayerEventType ==
+    //       BetterPlayerEventType.controlsHiddenEnd) {
+    //     setState(() => _isOverlayVisible = false);
+    //   }
+    // });
   }
 
-  @override
-  void dispose() {
-    // Kembalikan ke mode normal saat keluar dari layar.
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: SystemUiOverlay.values,
-    );
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // Kembalikan ke mode normal saat keluar dari layar.
+  //   SystemChrome.setEnabledSystemUIMode(
+  //     SystemUiMode.manual,
+  //     overlays: SystemUiOverlay.values,
+  //   );
+  //   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  // Metode untuk mengganti visibilitas overlay.
-  // Gunakan Riverpod untuk manajemen state.
+  //   super.dispose();
+  // }
+
+  // Metode untuk mengganti visibilitas overlay
   void _toggleOverlayVisibility() {
-    ref.read(isOverlayVisibleProvider.notifier).update((state) => !state);
+    setState(() {
+      _isOverlayVisible = !_isOverlayVisible;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Watch provider untuk mendapatkan state terbaru dan terpusat.
-    final player = ref.watch(videoPlayerProvider);
-    final controller = ref.watch(videoControllerProvider);
-    final isBuffering = ref.watch(isBufferingProvider);
-    final isOverlayVisible = ref.watch(isOverlayVisibleProvider);
+    // Baca controller dari provider, tapi tidak perlu 'watch'
+    // karena kita sudah menginisialisasi di initState
+    final betterPlayerController = ref.watch(betterPlayerProvider);
+
+    if (betterPlayerController == null) {
+      return const FScaffold(child: Center(child: FProgress.circularIcon()));
+    }
 
     return FScaffold(
       // GestureDetector untuk mendeteksi tap pada layar
@@ -61,50 +86,53 @@ class _TvPlayerFullScreenState extends ConsumerState<TvPlayerFullScreen> {
         onTap: _toggleOverlayVisibility,
         child: Stack(
           children: [
-            // Video Player dari media_kit.
-            // Tidak perlu SizedBox.expand karena Video sudah mengelola ukurannya.
-            Video(controller: controller),
+            // Video Player
+            Center(
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: BetterPlayer(controller: betterPlayerController),
+              ),
+            ),
 
-            // Loading indicator saat buffering
-            if (isBuffering) const Center(child: FProgress.circularIcon()),
-
-            // Custom Overlay Menu
+            // Overlay Kustom
             AnimatedOpacity(
-              opacity: isOverlayVisible ? 1.0 : 0.0,
+              opacity: _isOverlayVisible ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 300),
               child: Stack(
                 children: [
-                  // Latar belakang gelap semi-transparan
                   Container(color: Colors.black54),
+
                   // Tombol Kembali
                   Positioned(
                     top: 16.0,
                     left: 16.0,
                     child: FButton.icon(
                       onPress: () {
-                        Navigator.pop(context);
+                        SystemChrome.setEnabledSystemUIMode(
+                          SystemUiMode.manual,
+                          overlays: SystemUiOverlay.values,
+                        );
+                        SystemChrome.setPreferredOrientations([
+                          DeviceOrientation.portraitUp,
+                        ]);
+
+                        context.pop();
                       },
                       child: const Icon(Icons.arrow_back),
                     ),
                   ),
+
                   // Tombol Play/Pause di tengah
                   Center(
-                    // PENGGUNAAN PlayerBuilder: Ikon tombol akan otomatis
-                    // diperbarui saat status pemutaran berubah.
-                    child: StreamBuilder(
-                      // player: player,
-                      stream: player.stream.playing,
-                      builder: (context, playing) {
-                        return FButton.icon(
-                          onPress: () {
-                            player.playOrPause();
-                          },
-                          child: Icon(
-                            playing.data == true ? FIcons.pause : FIcons.play,
-                            size: 48,
-                          ),
+                    child: FButton.icon(
+                      onPress: () {
+                        // betterPlayerController.play();
+                        showFlutterToast(
+                          message: "Info Tapped!",
+                          context: context,
                         );
                       },
+                      child: const Icon(FIcons.info, size: 48),
                     ),
                   ),
                 ],
