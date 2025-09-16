@@ -22,7 +22,7 @@ _Track _$TrackFromJson(Map<String, dynamic> json) => _Track(
   tvgLogo: json['tvgLogo'] as String? ?? "",
   duration: (json['duration'] as num?)?.toInt() ?? 0,
   isNsfw: json['isNsfw'] as bool? ?? false,
-  isVod: json['isVod'] as bool? ?? false,
+  isMovie: json['isMovie'] as bool? ?? false,
   isLiveTv: json['isLiveTv'] as bool? ?? false,
   isTvSerie: json['isTvSerie'] as bool? ?? false,
   attributes:
@@ -59,7 +59,7 @@ Map<String, dynamic> _$TrackToJson(_Track instance) => <String, dynamic>{
   'tvgLogo': instance.tvgLogo,
   'duration': instance.duration,
   'isNsfw': instance.isNsfw,
-  'isVod': instance.isVod,
+  'isMovie': instance.isMovie,
   'isLiveTv': instance.isLiveTv,
   'isTvSerie': instance.isTvSerie,
   'attributes': instance.attributes,

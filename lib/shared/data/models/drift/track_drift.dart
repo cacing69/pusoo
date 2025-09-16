@@ -15,7 +15,7 @@ class TrackDrift extends Table {
   IntColumn get duration => integer().nullable()();
   BoolColumn get isNsfw => boolean().withDefault(const Constant(false))();
 
-  BoolColumn get isVod => boolean().withDefault(const Constant(false))();
+  BoolColumn get isMovie => boolean().withDefault(const Constant(false))();
   BoolColumn get isLiveTv => boolean().withDefault(const Constant(false))();
   BoolColumn get isTvSerie => boolean().withDefault(const Constant(false))();
 

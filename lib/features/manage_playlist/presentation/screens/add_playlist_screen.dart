@@ -13,6 +13,7 @@ import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:pusoo/shared/data/models/playlist.dart';
 import 'package:pusoo/shared/data/models/track.dart';
+import 'package:pusoo/shared/data/playlist_template_reff.dart';
 import 'package:ulid/ulid.dart';
 
 class AddPlaylistScreen extends StatefulHookConsumerWidget {
@@ -167,6 +168,27 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                                 ),
                               );
 
+                          // Menggunakan selectOnly dan membaca hasilnya secara langsung
+                          final isUrlExistOnPlaylisUrlHistory =
+                              await (driftDb.select(driftDb.playlistDrift)
+                                    ..where(
+                                      (tbl) => tbl.url.equals(
+                                        urlController.text.trim(),
+                                      ),
+                                    ))
+                                  .getSingleOrNull() !=
+                              null;
+
+                          if (!isUrlExistOnPlaylisUrlHistory) {
+                            await driftDb
+                                .into(driftDb.playlistUrlHistoryDrift)
+                                .insert(
+                                  PlaylistUrlHistoryDriftCompanion.insert(
+                                    url: drift.Value(urlController.text.trim()),
+                                  ),
+                                );
+                          }
+
                           await driftDb.batch((batch) {
                             batch.insertAll(
                               driftDb.trackDrift,
@@ -185,6 +207,18 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                                   ),
                                   extVlcOpts: drift.Value(
                                     jsonEncode(track.extVlcOpts),
+                                  ),
+                                  isLiveTv: drift.Value(
+                                    maksinTemplate.liveTvClassifier!
+                                        .isSatisfiedByAll(track),
+                                  ),
+                                  isMovie: drift.Value(
+                                    maksinTemplate.movieClassifier!
+                                        .isSatisfiedByAll(track),
+                                  ),
+                                  isTvSerie: drift.Value(
+                                    maksinTemplate.tvSerieClassifier!
+                                        .isSatisfiedByAll(track),
                                   ),
                                 );
                               }).toList(),

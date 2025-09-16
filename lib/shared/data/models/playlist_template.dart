@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pusoo/shared/data/models/clasification_rules/movie_classifier.dart';
+import 'package:pusoo/shared/data/models/clasification_rules/classificator.dart';
 import 'package:pusoo/shared/data/models/track.dart';
 
 part 'playlist_template.g.dart';
@@ -21,7 +21,13 @@ abstract class PlaylistTemplate with _$PlaylistTemplate {
     // @JsonKey(includeToJson: false, includeFromJson: false)
     // List<Function>? liveTvRules,
     @JsonKey(includeToJson: false, includeFromJson: false)
-    MovieClassifier? movieClassifier,
+    Classificator? movieClassifier,
+
+    @JsonKey(includeToJson: false, includeFromJson: false)
+    Classificator? liveTvClassifier,
+
+    @JsonKey(includeToJson: false, includeFromJson: false)
+    Classificator? tvSerieClassifier,
   }) = _PlaylistTemplate;
 
   factory PlaylistTemplate.fromJson(Map<String, dynamic> json) =>

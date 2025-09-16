@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           FBottomNavigationBarItem(
             icon: Icon(FIcons.monitorPlay),
-            label: Text('VOD'),
+            label: Text('Movies'),
           ),
           FBottomNavigationBarItem(
             icon: Icon(FIcons.monitorCheck),

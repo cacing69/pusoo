@@ -23,7 +23,7 @@ abstract class Track with _$Track {
     @Default(0) int duration,
     @Default(false) bool isNsfw,
 
-    @Default(false) bool isVod,
+    @Default(false) bool isMovie,
     @Default(false) bool isLiveTv,
     @Default(false) bool isTvSerie,
 

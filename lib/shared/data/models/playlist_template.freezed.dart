@@ -21,7 +21,7 @@ mixin _$PlaylistTemplate {
 // List<Function>? seriesRules,
 // @JsonKey(includeToJson: false, includeFromJson: false)
 // List<Function>? liveTvRules,
-@JsonKey(includeToJson: false, includeFromJson: false) MovieClassifier? get movieClassifier;
+@JsonKey(includeToJson: false, includeFromJson: false) Classificator? get movieClassifier;@JsonKey(includeToJson: false, includeFromJson: false) Classificator? get liveTvClassifier;@JsonKey(includeToJson: false, includeFromJson: false) Classificator? get tvSerieClassifier;
 /// Create a copy of PlaylistTemplate
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -34,16 +34,16 @@ $PlaylistTemplateCopyWith<PlaylistTemplate> get copyWith => _$PlaylistTemplateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlaylistTemplate&&(identical(other.name, name) || other.name == name)&&(identical(other.label, label) || other.label == label)&&const DeepCollectionEquality().equals(other.knownHosts, knownHosts)&&(identical(other.movieClassifier, movieClassifier) || other.movieClassifier == movieClassifier));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlaylistTemplate&&(identical(other.name, name) || other.name == name)&&(identical(other.label, label) || other.label == label)&&const DeepCollectionEquality().equals(other.knownHosts, knownHosts)&&(identical(other.movieClassifier, movieClassifier) || other.movieClassifier == movieClassifier)&&(identical(other.liveTvClassifier, liveTvClassifier) || other.liveTvClassifier == liveTvClassifier)&&(identical(other.tvSerieClassifier, tvSerieClassifier) || other.tvSerieClassifier == tvSerieClassifier));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,label,const DeepCollectionEquality().hash(knownHosts),movieClassifier);
+int get hashCode => Object.hash(runtimeType,name,label,const DeepCollectionEquality().hash(knownHosts),movieClassifier,liveTvClassifier,tvSerieClassifier);
 
 @override
 String toString() {
-  return 'PlaylistTemplate(name: $name, label: $label, knownHosts: $knownHosts, movieClassifier: $movieClassifier)';
+  return 'PlaylistTemplate(name: $name, label: $label, knownHosts: $knownHosts, movieClassifier: $movieClassifier, liveTvClassifier: $liveTvClassifier, tvSerieClassifier: $tvSerieClassifier)';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $PlaylistTemplateCopyWith<$Res>  {
   factory $PlaylistTemplateCopyWith(PlaylistTemplate value, $Res Function(PlaylistTemplate) _then) = _$PlaylistTemplateCopyWithImpl;
 @useResult
 $Res call({
- String? name, String? label, List<String>? knownHosts,@JsonKey(includeToJson: false, includeFromJson: false) MovieClassifier? movieClassifier
+ String? name, String? label, List<String>? knownHosts,@JsonKey(includeToJson: false, includeFromJson: false) Classificator? movieClassifier,@JsonKey(includeToJson: false, includeFromJson: false) Classificator? liveTvClassifier,@JsonKey(includeToJson: false, includeFromJson: false) Classificator? tvSerieClassifier
 });
 
 
@@ -71,13 +71,15 @@ class _$PlaylistTemplateCopyWithImpl<$Res>
 
 /// Create a copy of PlaylistTemplate
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = freezed,Object? label = freezed,Object? knownHosts = freezed,Object? movieClassifier = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = freezed,Object? label = freezed,Object? knownHosts = freezed,Object? movieClassifier = freezed,Object? liveTvClassifier = freezed,Object? tvSerieClassifier = freezed,}) {
   return _then(_self.copyWith(
 name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,label: freezed == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String?,knownHosts: freezed == knownHosts ? _self.knownHosts : knownHosts // ignore: cast_nullable_to_non_nullable
 as List<String>?,movieClassifier: freezed == movieClassifier ? _self.movieClassifier : movieClassifier // ignore: cast_nullable_to_non_nullable
-as MovieClassifier?,
+as Classificator?,liveTvClassifier: freezed == liveTvClassifier ? _self.liveTvClassifier : liveTvClassifier // ignore: cast_nullable_to_non_nullable
+as Classificator?,tvSerieClassifier: freezed == tvSerieClassifier ? _self.tvSerieClassifier : tvSerieClassifier // ignore: cast_nullable_to_non_nullable
+as Classificator?,
   ));
 }
 
@@ -162,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? name,  String? label,  List<String>? knownHosts, @JsonKey(includeToJson: false, includeFromJson: false)  MovieClassifier? movieClassifier)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? name,  String? label,  List<String>? knownHosts, @JsonKey(includeToJson: false, includeFromJson: false)  Classificator? movieClassifier, @JsonKey(includeToJson: false, includeFromJson: false)  Classificator? liveTvClassifier, @JsonKey(includeToJson: false, includeFromJson: false)  Classificator? tvSerieClassifier)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlaylistTemplate() when $default != null:
-return $default(_that.name,_that.label,_that.knownHosts,_that.movieClassifier);case _:
+return $default(_that.name,_that.label,_that.knownHosts,_that.movieClassifier,_that.liveTvClassifier,_that.tvSerieClassifier);case _:
   return orElse();
 
 }
@@ -183,10 +185,10 @@ return $default(_that.name,_that.label,_that.knownHosts,_that.movieClassifier);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? name,  String? label,  List<String>? knownHosts, @JsonKey(includeToJson: false, includeFromJson: false)  MovieClassifier? movieClassifier)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? name,  String? label,  List<String>? knownHosts, @JsonKey(includeToJson: false, includeFromJson: false)  Classificator? movieClassifier, @JsonKey(includeToJson: false, includeFromJson: false)  Classificator? liveTvClassifier, @JsonKey(includeToJson: false, includeFromJson: false)  Classificator? tvSerieClassifier)  $default,) {final _that = this;
 switch (_that) {
 case _PlaylistTemplate():
-return $default(_that.name,_that.label,_that.knownHosts,_that.movieClassifier);case _:
+return $default(_that.name,_that.label,_that.knownHosts,_that.movieClassifier,_that.liveTvClassifier,_that.tvSerieClassifier);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +205,10 @@ return $default(_that.name,_that.label,_that.knownHosts,_that.movieClassifier);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? name,  String? label,  List<String>? knownHosts, @JsonKey(includeToJson: false, includeFromJson: false)  MovieClassifier? movieClassifier)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? name,  String? label,  List<String>? knownHosts, @JsonKey(includeToJson: false, includeFromJson: false)  Classificator? movieClassifier, @JsonKey(includeToJson: false, includeFromJson: false)  Classificator? liveTvClassifier, @JsonKey(includeToJson: false, includeFromJson: false)  Classificator? tvSerieClassifier)?  $default,) {final _that = this;
 switch (_that) {
 case _PlaylistTemplate() when $default != null:
-return $default(_that.name,_that.label,_that.knownHosts,_that.movieClassifier);case _:
+return $default(_that.name,_that.label,_that.knownHosts,_that.movieClassifier,_that.liveTvClassifier,_that.tvSerieClassifier);case _:
   return null;
 
 }
@@ -218,7 +220,7 @@ return $default(_that.name,_that.label,_that.knownHosts,_that.movieClassifier);c
 @JsonSerializable()
 
 class _PlaylistTemplate implements PlaylistTemplate {
-  const _PlaylistTemplate({this.name, this.label, final  List<String>? knownHosts, @JsonKey(includeToJson: false, includeFromJson: false) this.movieClassifier}): _knownHosts = knownHosts;
+  const _PlaylistTemplate({this.name, this.label, final  List<String>? knownHosts, @JsonKey(includeToJson: false, includeFromJson: false) this.movieClassifier, @JsonKey(includeToJson: false, includeFromJson: false) this.liveTvClassifier, @JsonKey(includeToJson: false, includeFromJson: false) this.tvSerieClassifier}): _knownHosts = knownHosts;
   factory _PlaylistTemplate.fromJson(Map<String, dynamic> json) => _$PlaylistTemplateFromJson(json);
 
 @override final  String? name;
@@ -238,7 +240,9 @@ class _PlaylistTemplate implements PlaylistTemplate {
 // List<Function>? seriesRules,
 // @JsonKey(includeToJson: false, includeFromJson: false)
 // List<Function>? liveTvRules,
-@override@JsonKey(includeToJson: false, includeFromJson: false) final  MovieClassifier? movieClassifier;
+@override@JsonKey(includeToJson: false, includeFromJson: false) final  Classificator? movieClassifier;
+@override@JsonKey(includeToJson: false, includeFromJson: false) final  Classificator? liveTvClassifier;
+@override@JsonKey(includeToJson: false, includeFromJson: false) final  Classificator? tvSerieClassifier;
 
 /// Create a copy of PlaylistTemplate
 /// with the given fields replaced by the non-null parameter values.
@@ -253,16 +257,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlaylistTemplate&&(identical(other.name, name) || other.name == name)&&(identical(other.label, label) || other.label == label)&&const DeepCollectionEquality().equals(other._knownHosts, _knownHosts)&&(identical(other.movieClassifier, movieClassifier) || other.movieClassifier == movieClassifier));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlaylistTemplate&&(identical(other.name, name) || other.name == name)&&(identical(other.label, label) || other.label == label)&&const DeepCollectionEquality().equals(other._knownHosts, _knownHosts)&&(identical(other.movieClassifier, movieClassifier) || other.movieClassifier == movieClassifier)&&(identical(other.liveTvClassifier, liveTvClassifier) || other.liveTvClassifier == liveTvClassifier)&&(identical(other.tvSerieClassifier, tvSerieClassifier) || other.tvSerieClassifier == tvSerieClassifier));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,label,const DeepCollectionEquality().hash(_knownHosts),movieClassifier);
+int get hashCode => Object.hash(runtimeType,name,label,const DeepCollectionEquality().hash(_knownHosts),movieClassifier,liveTvClassifier,tvSerieClassifier);
 
 @override
 String toString() {
-  return 'PlaylistTemplate(name: $name, label: $label, knownHosts: $knownHosts, movieClassifier: $movieClassifier)';
+  return 'PlaylistTemplate(name: $name, label: $label, knownHosts: $knownHosts, movieClassifier: $movieClassifier, liveTvClassifier: $liveTvClassifier, tvSerieClassifier: $tvSerieClassifier)';
 }
 
 
@@ -273,7 +277,7 @@ abstract mixin class _$PlaylistTemplateCopyWith<$Res> implements $PlaylistTempla
   factory _$PlaylistTemplateCopyWith(_PlaylistTemplate value, $Res Function(_PlaylistTemplate) _then) = __$PlaylistTemplateCopyWithImpl;
 @override @useResult
 $Res call({
- String? name, String? label, List<String>? knownHosts,@JsonKey(includeToJson: false, includeFromJson: false) MovieClassifier? movieClassifier
+ String? name, String? label, List<String>? knownHosts,@JsonKey(includeToJson: false, includeFromJson: false) Classificator? movieClassifier,@JsonKey(includeToJson: false, includeFromJson: false) Classificator? liveTvClassifier,@JsonKey(includeToJson: false, includeFromJson: false) Classificator? tvSerieClassifier
 });
 
 
@@ -290,13 +294,15 @@ class __$PlaylistTemplateCopyWithImpl<$Res>
 
 /// Create a copy of PlaylistTemplate
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = freezed,Object? label = freezed,Object? knownHosts = freezed,Object? movieClassifier = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = freezed,Object? label = freezed,Object? knownHosts = freezed,Object? movieClassifier = freezed,Object? liveTvClassifier = freezed,Object? tvSerieClassifier = freezed,}) {
   return _then(_PlaylistTemplate(
 name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,label: freezed == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String?,knownHosts: freezed == knownHosts ? _self._knownHosts : knownHosts // ignore: cast_nullable_to_non_nullable
 as List<String>?,movieClassifier: freezed == movieClassifier ? _self.movieClassifier : movieClassifier // ignore: cast_nullable_to_non_nullable
-as MovieClassifier?,
+as Classificator?,liveTvClassifier: freezed == liveTvClassifier ? _self.liveTvClassifier : liveTvClassifier // ignore: cast_nullable_to_non_nullable
+as Classificator?,tvSerieClassifier: freezed == tvSerieClassifier ? _self.tvSerieClassifier : tvSerieClassifier // ignore: cast_nullable_to_non_nullable
+as Classificator?,
   ));
 }
 

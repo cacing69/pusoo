@@ -702,6 +702,263 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
   }
 }
 
+class $PlaylistUrlHistoryDriftTable extends PlaylistUrlHistoryDrift
+    with TableInfo<$PlaylistUrlHistoryDriftTable, PlaylistUrlHistoryDriftData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PlaylistUrlHistoryDriftTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  @override
+  late final GeneratedColumn<String> url = GeneratedColumn<String>(
+    'url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, url, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'playlist_url_history_drift';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PlaylistUrlHistoryDriftData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('url')) {
+      context.handle(
+        _urlMeta,
+        url.isAcceptableOrUnknown(data['url']!, _urlMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PlaylistUrlHistoryDriftData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlaylistUrlHistoryDriftData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      url: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $PlaylistUrlHistoryDriftTable createAlias(String alias) {
+    return $PlaylistUrlHistoryDriftTable(attachedDatabase, alias);
+  }
+}
+
+class PlaylistUrlHistoryDriftData extends DataClass
+    implements Insertable<PlaylistUrlHistoryDriftData> {
+  final int id;
+  final String? url;
+  final DateTime createdAt;
+  const PlaylistUrlHistoryDriftData({
+    required this.id,
+    this.url,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || url != null) {
+      map['url'] = Variable<String>(url);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  PlaylistUrlHistoryDriftCompanion toCompanion(bool nullToAbsent) {
+    return PlaylistUrlHistoryDriftCompanion(
+      id: Value(id),
+      url: url == null && nullToAbsent ? const Value.absent() : Value(url),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory PlaylistUrlHistoryDriftData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlaylistUrlHistoryDriftData(
+      id: serializer.fromJson<int>(json['id']),
+      url: serializer.fromJson<String?>(json['url']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'url': serializer.toJson<String?>(url),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  PlaylistUrlHistoryDriftData copyWith({
+    int? id,
+    Value<String?> url = const Value.absent(),
+    DateTime? createdAt,
+  }) => PlaylistUrlHistoryDriftData(
+    id: id ?? this.id,
+    url: url.present ? url.value : this.url,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  PlaylistUrlHistoryDriftData copyWithCompanion(
+    PlaylistUrlHistoryDriftCompanion data,
+  ) {
+    return PlaylistUrlHistoryDriftData(
+      id: data.id.present ? data.id.value : this.id,
+      url: data.url.present ? data.url.value : this.url,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlaylistUrlHistoryDriftData(')
+          ..write('id: $id, ')
+          ..write('url: $url, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, url, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlaylistUrlHistoryDriftData &&
+          other.id == this.id &&
+          other.url == this.url &&
+          other.createdAt == this.createdAt);
+}
+
+class PlaylistUrlHistoryDriftCompanion
+    extends UpdateCompanion<PlaylistUrlHistoryDriftData> {
+  final Value<int> id;
+  final Value<String?> url;
+  final Value<DateTime> createdAt;
+  const PlaylistUrlHistoryDriftCompanion({
+    this.id = const Value.absent(),
+    this.url = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  PlaylistUrlHistoryDriftCompanion.insert({
+    this.id = const Value.absent(),
+    this.url = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  static Insertable<PlaylistUrlHistoryDriftData> custom({
+    Expression<int>? id,
+    Expression<String>? url,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (url != null) 'url': url,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  PlaylistUrlHistoryDriftCompanion copyWith({
+    Value<int>? id,
+    Value<String?>? url,
+    Value<DateTime>? createdAt,
+  }) {
+    return PlaylistUrlHistoryDriftCompanion(
+      id: id ?? this.id,
+      url: url ?? this.url,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlaylistUrlHistoryDriftCompanion(')
+          ..write('id: $id, ')
+          ..write('url: $url, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $TrackDriftTable extends TrackDrift
     with TableInfo<$TrackDriftTable, TrackDriftData> {
   @override
@@ -839,16 +1096,18 @@ class $TrackDriftTable extends TrackDrift
     ),
     defaultValue: const Constant(false),
   );
-  static const VerificationMeta _isVodMeta = const VerificationMeta('isVod');
+  static const VerificationMeta _isMovieMeta = const VerificationMeta(
+    'isMovie',
+  );
   @override
-  late final GeneratedColumn<bool> isVod = GeneratedColumn<bool>(
-    'is_vod',
+  late final GeneratedColumn<bool> isMovie = GeneratedColumn<bool>(
+    'is_movie',
     aliasedName,
     false,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_vod" IN (0, 1))',
+      'CHECK ("is_movie" IN (0, 1))',
     ),
     defaultValue: const Constant(false),
   );
@@ -951,7 +1210,7 @@ class $TrackDriftTable extends TrackDrift
     tvgLogo,
     duration,
     isNsfw,
-    isVod,
+    isMovie,
     isLiveTv,
     isTvSerie,
     attributes,
@@ -1048,10 +1307,10 @@ class $TrackDriftTable extends TrackDrift
         isNsfw.isAcceptableOrUnknown(data['is_nsfw']!, _isNsfwMeta),
       );
     }
-    if (data.containsKey('is_vod')) {
+    if (data.containsKey('is_movie')) {
       context.handle(
-        _isVodMeta,
-        isVod.isAcceptableOrUnknown(data['is_vod']!, _isVodMeta),
+        _isMovieMeta,
+        isMovie.isAcceptableOrUnknown(data['is_movie']!, _isMovieMeta),
       );
     }
     if (data.containsKey('is_live_tv')) {
@@ -1162,9 +1421,9 @@ class $TrackDriftTable extends TrackDrift
         DriftSqlType.bool,
         data['${effectivePrefix}is_nsfw'],
       )!,
-      isVod: attachedDatabase.typeMapping.read(
+      isMovie: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
-        data['${effectivePrefix}is_vod'],
+        data['${effectivePrefix}is_movie'],
       )!,
       isLiveTv: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
@@ -1216,7 +1475,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
   final String? tvgLogo;
   final int? duration;
   final bool isNsfw;
-  final bool isVod;
+  final bool isMovie;
   final bool isLiveTv;
   final bool isTvSerie;
   final String? attributes;
@@ -1237,7 +1496,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
     this.tvgLogo,
     this.duration,
     required this.isNsfw,
-    required this.isVod,
+    required this.isMovie,
     required this.isLiveTv,
     required this.isTvSerie,
     this.attributes,
@@ -1277,7 +1536,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
       map['duration'] = Variable<int>(duration);
     }
     map['is_nsfw'] = Variable<bool>(isNsfw);
-    map['is_vod'] = Variable<bool>(isVod);
+    map['is_movie'] = Variable<bool>(isMovie);
     map['is_live_tv'] = Variable<bool>(isLiveTv);
     map['is_tv_serie'] = Variable<bool>(isTvSerie);
     if (!nullToAbsent || attributes != null) {
@@ -1328,7 +1587,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
           ? const Value.absent()
           : Value(duration),
       isNsfw: Value(isNsfw),
-      isVod: Value(isVod),
+      isMovie: Value(isMovie),
       isLiveTv: Value(isLiveTv),
       isTvSerie: Value(isTvSerie),
       attributes: attributes == null && nullToAbsent
@@ -1367,7 +1626,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
       tvgLogo: serializer.fromJson<String?>(json['tvgLogo']),
       duration: serializer.fromJson<int?>(json['duration']),
       isNsfw: serializer.fromJson<bool>(json['isNsfw']),
-      isVod: serializer.fromJson<bool>(json['isVod']),
+      isMovie: serializer.fromJson<bool>(json['isMovie']),
       isLiveTv: serializer.fromJson<bool>(json['isLiveTv']),
       isTvSerie: serializer.fromJson<bool>(json['isTvSerie']),
       attributes: serializer.fromJson<String?>(json['attributes']),
@@ -1393,7 +1652,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
       'tvgLogo': serializer.toJson<String?>(tvgLogo),
       'duration': serializer.toJson<int?>(duration),
       'isNsfw': serializer.toJson<bool>(isNsfw),
-      'isVod': serializer.toJson<bool>(isVod),
+      'isMovie': serializer.toJson<bool>(isMovie),
       'isLiveTv': serializer.toJson<bool>(isLiveTv),
       'isTvSerie': serializer.toJson<bool>(isTvSerie),
       'attributes': serializer.toJson<String?>(attributes),
@@ -1417,7 +1676,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
     Value<String?> tvgLogo = const Value.absent(),
     Value<int?> duration = const Value.absent(),
     bool? isNsfw,
-    bool? isVod,
+    bool? isMovie,
     bool? isLiveTv,
     bool? isTvSerie,
     Value<String?> attributes = const Value.absent(),
@@ -1438,7 +1697,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
     tvgLogo: tvgLogo.present ? tvgLogo.value : this.tvgLogo,
     duration: duration.present ? duration.value : this.duration,
     isNsfw: isNsfw ?? this.isNsfw,
-    isVod: isVod ?? this.isVod,
+    isMovie: isMovie ?? this.isMovie,
     isLiveTv: isLiveTv ?? this.isLiveTv,
     isTvSerie: isTvSerie ?? this.isTvSerie,
     attributes: attributes.present ? attributes.value : this.attributes,
@@ -1467,7 +1726,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
       tvgLogo: data.tvgLogo.present ? data.tvgLogo.value : this.tvgLogo,
       duration: data.duration.present ? data.duration.value : this.duration,
       isNsfw: data.isNsfw.present ? data.isNsfw.value : this.isNsfw,
-      isVod: data.isVod.present ? data.isVod.value : this.isVod,
+      isMovie: data.isMovie.present ? data.isMovie.value : this.isMovie,
       isLiveTv: data.isLiveTv.present ? data.isLiveTv.value : this.isLiveTv,
       isTvSerie: data.isTvSerie.present ? data.isTvSerie.value : this.isTvSerie,
       attributes: data.attributes.present
@@ -1501,7 +1760,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
           ..write('tvgLogo: $tvgLogo, ')
           ..write('duration: $duration, ')
           ..write('isNsfw: $isNsfw, ')
-          ..write('isVod: $isVod, ')
+          ..write('isMovie: $isMovie, ')
           ..write('isLiveTv: $isLiveTv, ')
           ..write('isTvSerie: $isTvSerie, ')
           ..write('attributes: $attributes, ')
@@ -1527,7 +1786,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
     tvgLogo,
     duration,
     isNsfw,
-    isVod,
+    isMovie,
     isLiveTv,
     isTvSerie,
     attributes,
@@ -1552,7 +1811,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
           other.tvgLogo == this.tvgLogo &&
           other.duration == this.duration &&
           other.isNsfw == this.isNsfw &&
-          other.isVod == this.isVod &&
+          other.isMovie == this.isMovie &&
           other.isLiveTv == this.isLiveTv &&
           other.isTvSerie == this.isTvSerie &&
           other.attributes == this.attributes &&
@@ -1575,7 +1834,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
   final Value<String?> tvgLogo;
   final Value<int?> duration;
   final Value<bool> isNsfw;
-  final Value<bool> isVod;
+  final Value<bool> isMovie;
   final Value<bool> isLiveTv;
   final Value<bool> isTvSerie;
   final Value<String?> attributes;
@@ -1596,7 +1855,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     this.tvgLogo = const Value.absent(),
     this.duration = const Value.absent(),
     this.isNsfw = const Value.absent(),
-    this.isVod = const Value.absent(),
+    this.isMovie = const Value.absent(),
     this.isLiveTv = const Value.absent(),
     this.isTvSerie = const Value.absent(),
     this.attributes = const Value.absent(),
@@ -1618,7 +1877,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     this.tvgLogo = const Value.absent(),
     this.duration = const Value.absent(),
     this.isNsfw = const Value.absent(),
-    this.isVod = const Value.absent(),
+    this.isMovie = const Value.absent(),
     this.isLiveTv = const Value.absent(),
     this.isTvSerie = const Value.absent(),
     this.attributes = const Value.absent(),
@@ -1641,7 +1900,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     Expression<String>? tvgLogo,
     Expression<int>? duration,
     Expression<bool>? isNsfw,
-    Expression<bool>? isVod,
+    Expression<bool>? isMovie,
     Expression<bool>? isLiveTv,
     Expression<bool>? isTvSerie,
     Expression<String>? attributes,
@@ -1663,7 +1922,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
       if (tvgLogo != null) 'tvg_logo': tvgLogo,
       if (duration != null) 'duration': duration,
       if (isNsfw != null) 'is_nsfw': isNsfw,
-      if (isVod != null) 'is_vod': isVod,
+      if (isMovie != null) 'is_movie': isMovie,
       if (isLiveTv != null) 'is_live_tv': isLiveTv,
       if (isTvSerie != null) 'is_tv_serie': isTvSerie,
       if (attributes != null) 'attributes': attributes,
@@ -1687,7 +1946,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     Value<String?>? tvgLogo,
     Value<int?>? duration,
     Value<bool>? isNsfw,
-    Value<bool>? isVod,
+    Value<bool>? isMovie,
     Value<bool>? isLiveTv,
     Value<bool>? isTvSerie,
     Value<String?>? attributes,
@@ -1709,7 +1968,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
       tvgLogo: tvgLogo ?? this.tvgLogo,
       duration: duration ?? this.duration,
       isNsfw: isNsfw ?? this.isNsfw,
-      isVod: isVod ?? this.isVod,
+      isMovie: isMovie ?? this.isMovie,
       isLiveTv: isLiveTv ?? this.isLiveTv,
       isTvSerie: isTvSerie ?? this.isTvSerie,
       attributes: attributes ?? this.attributes,
@@ -1759,8 +2018,8 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     if (isNsfw.present) {
       map['is_nsfw'] = Variable<bool>(isNsfw.value);
     }
-    if (isVod.present) {
-      map['is_vod'] = Variable<bool>(isVod.value);
+    if (isMovie.present) {
+      map['is_movie'] = Variable<bool>(isMovie.value);
     }
     if (isLiveTv.present) {
       map['is_live_tv'] = Variable<bool>(isLiveTv.value);
@@ -1801,7 +2060,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
           ..write('tvgLogo: $tvgLogo, ')
           ..write('duration: $duration, ')
           ..write('isNsfw: $isNsfw, ')
-          ..write('isVod: $isVod, ')
+          ..write('isMovie: $isMovie, ')
           ..write('isLiveTv: $isLiveTv, ')
           ..write('isTvSerie: $isTvSerie, ')
           ..write('attributes: $attributes, ')
@@ -2770,6 +3029,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $PlaylistDriftTable playlistDrift = $PlaylistDriftTable(this);
+  late final $PlaylistUrlHistoryDriftTable playlistUrlHistoryDrift =
+      $PlaylistUrlHistoryDriftTable(this);
   late final $TrackDriftTable trackDrift = $TrackDriftTable(this);
   late final $ChannelDriftTable channelDrift = $ChannelDriftTable(this);
   @override
@@ -2778,6 +3039,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     playlistDrift,
+    playlistUrlHistoryDrift,
     trackDrift,
     channelDrift,
   ];
@@ -3223,6 +3485,181 @@ typedef $$PlaylistDriftTableProcessedTableManager =
       PlaylistDriftData,
       PrefetchHooks Function({bool trackDriftRefs})
     >;
+typedef $$PlaylistUrlHistoryDriftTableCreateCompanionBuilder =
+    PlaylistUrlHistoryDriftCompanion Function({
+      Value<int> id,
+      Value<String?> url,
+      Value<DateTime> createdAt,
+    });
+typedef $$PlaylistUrlHistoryDriftTableUpdateCompanionBuilder =
+    PlaylistUrlHistoryDriftCompanion Function({
+      Value<int> id,
+      Value<String?> url,
+      Value<DateTime> createdAt,
+    });
+
+class $$PlaylistUrlHistoryDriftTableFilterComposer
+    extends Composer<_$AppDatabase, $PlaylistUrlHistoryDriftTable> {
+  $$PlaylistUrlHistoryDriftTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PlaylistUrlHistoryDriftTableOrderingComposer
+    extends Composer<_$AppDatabase, $PlaylistUrlHistoryDriftTable> {
+  $$PlaylistUrlHistoryDriftTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PlaylistUrlHistoryDriftTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PlaylistUrlHistoryDriftTable> {
+  $$PlaylistUrlHistoryDriftTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get url =>
+      $composableBuilder(column: $table.url, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$PlaylistUrlHistoryDriftTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PlaylistUrlHistoryDriftTable,
+          PlaylistUrlHistoryDriftData,
+          $$PlaylistUrlHistoryDriftTableFilterComposer,
+          $$PlaylistUrlHistoryDriftTableOrderingComposer,
+          $$PlaylistUrlHistoryDriftTableAnnotationComposer,
+          $$PlaylistUrlHistoryDriftTableCreateCompanionBuilder,
+          $$PlaylistUrlHistoryDriftTableUpdateCompanionBuilder,
+          (
+            PlaylistUrlHistoryDriftData,
+            BaseReferences<
+              _$AppDatabase,
+              $PlaylistUrlHistoryDriftTable,
+              PlaylistUrlHistoryDriftData
+            >,
+          ),
+          PlaylistUrlHistoryDriftData,
+          PrefetchHooks Function()
+        > {
+  $$PlaylistUrlHistoryDriftTableTableManager(
+    _$AppDatabase db,
+    $PlaylistUrlHistoryDriftTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PlaylistUrlHistoryDriftTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$PlaylistUrlHistoryDriftTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$PlaylistUrlHistoryDriftTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> url = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => PlaylistUrlHistoryDriftCompanion(
+                id: id,
+                url: url,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> url = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => PlaylistUrlHistoryDriftCompanion.insert(
+                id: id,
+                url: url,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PlaylistUrlHistoryDriftTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PlaylistUrlHistoryDriftTable,
+      PlaylistUrlHistoryDriftData,
+      $$PlaylistUrlHistoryDriftTableFilterComposer,
+      $$PlaylistUrlHistoryDriftTableOrderingComposer,
+      $$PlaylistUrlHistoryDriftTableAnnotationComposer,
+      $$PlaylistUrlHistoryDriftTableCreateCompanionBuilder,
+      $$PlaylistUrlHistoryDriftTableUpdateCompanionBuilder,
+      (
+        PlaylistUrlHistoryDriftData,
+        BaseReferences<
+          _$AppDatabase,
+          $PlaylistUrlHistoryDriftTable,
+          PlaylistUrlHistoryDriftData
+        >,
+      ),
+      PlaylistUrlHistoryDriftData,
+      PrefetchHooks Function()
+    >;
 typedef $$TrackDriftTableCreateCompanionBuilder =
     TrackDriftCompanion Function({
       Value<int> id,
@@ -3237,7 +3674,7 @@ typedef $$TrackDriftTableCreateCompanionBuilder =
       Value<String?> tvgLogo,
       Value<int?> duration,
       Value<bool> isNsfw,
-      Value<bool> isVod,
+      Value<bool> isMovie,
       Value<bool> isLiveTv,
       Value<bool> isTvSerie,
       Value<String?> attributes,
@@ -3260,7 +3697,7 @@ typedef $$TrackDriftTableUpdateCompanionBuilder =
       Value<String?> tvgLogo,
       Value<int?> duration,
       Value<bool> isNsfw,
-      Value<bool> isVod,
+      Value<bool> isMovie,
       Value<bool> isLiveTv,
       Value<bool> isTvSerie,
       Value<String?> attributes,
@@ -3358,8 +3795,8 @@ class $$TrackDriftTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<bool> get isVod => $composableBuilder(
-    column: $table.isVod,
+  ColumnFilters<bool> get isMovie => $composableBuilder(
+    column: $table.isMovie,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3486,8 +3923,8 @@ class $$TrackDriftTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get isVod => $composableBuilder(
-    column: $table.isVod,
+  ColumnOrderings<bool> get isMovie => $composableBuilder(
+    column: $table.isMovie,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -3596,8 +4033,8 @@ class $$TrackDriftTableAnnotationComposer
   GeneratedColumn<bool> get isNsfw =>
       $composableBuilder(column: $table.isNsfw, builder: (column) => column);
 
-  GeneratedColumn<bool> get isVod =>
-      $composableBuilder(column: $table.isVod, builder: (column) => column);
+  GeneratedColumn<bool> get isMovie =>
+      $composableBuilder(column: $table.isMovie, builder: (column) => column);
 
   GeneratedColumn<bool> get isLiveTv =>
       $composableBuilder(column: $table.isLiveTv, builder: (column) => column);
@@ -3692,7 +4129,7 @@ class $$TrackDriftTableTableManager
                 Value<String?> tvgLogo = const Value.absent(),
                 Value<int?> duration = const Value.absent(),
                 Value<bool> isNsfw = const Value.absent(),
-                Value<bool> isVod = const Value.absent(),
+                Value<bool> isMovie = const Value.absent(),
                 Value<bool> isLiveTv = const Value.absent(),
                 Value<bool> isTvSerie = const Value.absent(),
                 Value<String?> attributes = const Value.absent(),
@@ -3713,7 +4150,7 @@ class $$TrackDriftTableTableManager
                 tvgLogo: tvgLogo,
                 duration: duration,
                 isNsfw: isNsfw,
-                isVod: isVod,
+                isMovie: isMovie,
                 isLiveTv: isLiveTv,
                 isTvSerie: isTvSerie,
                 attributes: attributes,
@@ -3736,7 +4173,7 @@ class $$TrackDriftTableTableManager
                 Value<String?> tvgLogo = const Value.absent(),
                 Value<int?> duration = const Value.absent(),
                 Value<bool> isNsfw = const Value.absent(),
-                Value<bool> isVod = const Value.absent(),
+                Value<bool> isMovie = const Value.absent(),
                 Value<bool> isLiveTv = const Value.absent(),
                 Value<bool> isTvSerie = const Value.absent(),
                 Value<String?> attributes = const Value.absent(),
@@ -3757,7 +4194,7 @@ class $$TrackDriftTableTableManager
                 tvgLogo: tvgLogo,
                 duration: duration,
                 isNsfw: isNsfw,
-                isVod: isVod,
+                isMovie: isMovie,
                 isLiveTv: isLiveTv,
                 isTvSerie: isTvSerie,
                 attributes: attributes,
@@ -4254,6 +4691,11 @@ class $AppDatabaseManager {
   $AppDatabaseManager(this._db);
   $$PlaylistDriftTableTableManager get playlistDrift =>
       $$PlaylistDriftTableTableManager(_db, _db.playlistDrift);
+  $$PlaylistUrlHistoryDriftTableTableManager get playlistUrlHistoryDrift =>
+      $$PlaylistUrlHistoryDriftTableTableManager(
+        _db,
+        _db.playlistUrlHistoryDrift,
+      );
   $$TrackDriftTableTableManager get trackDrift =>
       $$TrackDriftTableTableManager(_db, _db.trackDrift);
   $$ChannelDriftTableTableManager get channelDrift =>
