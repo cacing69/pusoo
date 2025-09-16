@@ -87,9 +87,20 @@ class $PlaylistDriftTable extends PlaylistDrift
   late final GeneratedColumn<String> url = GeneratedColumn<String>(
     'url',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _templateMeta = const VerificationMeta(
+    'template',
+  );
+  @override
+  late final GeneratedColumn<String> template = GeneratedColumn<String>(
+    'template',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _isActiveMeta = const VerificationMeta(
     'isActive',
@@ -139,6 +150,7 @@ class $PlaylistDriftTable extends PlaylistDrift
     filePath,
     epgLink,
     url,
+    template,
     isActive,
     lastUpdated,
     createdAt,
@@ -206,8 +218,12 @@ class $PlaylistDriftTable extends PlaylistDrift
         _urlMeta,
         url.isAcceptableOrUnknown(data['url']!, _urlMeta),
       );
-    } else if (isInserting) {
-      context.missing(_urlMeta);
+    }
+    if (data.containsKey('template')) {
+      context.handle(
+        _templateMeta,
+        template.isAcceptableOrUnknown(data['template']!, _templateMeta),
+      );
     }
     if (data.containsKey('is_active')) {
       context.handle(
@@ -270,7 +286,11 @@ class $PlaylistDriftTable extends PlaylistDrift
       url: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}url'],
-      )!,
+      ),
+      template: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}template'],
+      ),
       isActive: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
@@ -301,7 +321,8 @@ class PlaylistDriftData extends DataClass
   final String? contentType;
   final String? filePath;
   final String? epgLink;
-  final String url;
+  final String? url;
+  final String? template;
   final bool isActive;
   final DateTime? lastUpdated;
   final DateTime createdAt;
@@ -313,7 +334,8 @@ class PlaylistDriftData extends DataClass
     this.contentType,
     this.filePath,
     this.epgLink,
-    required this.url,
+    this.url,
+    this.template,
     required this.isActive,
     this.lastUpdated,
     required this.createdAt,
@@ -336,7 +358,12 @@ class PlaylistDriftData extends DataClass
     if (!nullToAbsent || epgLink != null) {
       map['epg_link'] = Variable<String>(epgLink);
     }
-    map['url'] = Variable<String>(url);
+    if (!nullToAbsent || url != null) {
+      map['url'] = Variable<String>(url);
+    }
+    if (!nullToAbsent || template != null) {
+      map['template'] = Variable<String>(template);
+    }
     map['is_active'] = Variable<bool>(isActive);
     if (!nullToAbsent || lastUpdated != null) {
       map['last_updated'] = Variable<DateTime>(lastUpdated);
@@ -360,7 +387,10 @@ class PlaylistDriftData extends DataClass
       epgLink: epgLink == null && nullToAbsent
           ? const Value.absent()
           : Value(epgLink),
-      url: Value(url),
+      url: url == null && nullToAbsent ? const Value.absent() : Value(url),
+      template: template == null && nullToAbsent
+          ? const Value.absent()
+          : Value(template),
       isActive: Value(isActive),
       lastUpdated: lastUpdated == null && nullToAbsent
           ? const Value.absent()
@@ -382,7 +412,8 @@ class PlaylistDriftData extends DataClass
       contentType: serializer.fromJson<String?>(json['contentType']),
       filePath: serializer.fromJson<String?>(json['filePath']),
       epgLink: serializer.fromJson<String?>(json['epgLink']),
-      url: serializer.fromJson<String>(json['url']),
+      url: serializer.fromJson<String?>(json['url']),
+      template: serializer.fromJson<String?>(json['template']),
       isActive: serializer.fromJson<bool>(json['isActive']),
       lastUpdated: serializer.fromJson<DateTime?>(json['lastUpdated']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -399,7 +430,8 @@ class PlaylistDriftData extends DataClass
       'contentType': serializer.toJson<String?>(contentType),
       'filePath': serializer.toJson<String?>(filePath),
       'epgLink': serializer.toJson<String?>(epgLink),
-      'url': serializer.toJson<String>(url),
+      'url': serializer.toJson<String?>(url),
+      'template': serializer.toJson<String?>(template),
       'isActive': serializer.toJson<bool>(isActive),
       'lastUpdated': serializer.toJson<DateTime?>(lastUpdated),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -414,7 +446,8 @@ class PlaylistDriftData extends DataClass
     Value<String?> contentType = const Value.absent(),
     Value<String?> filePath = const Value.absent(),
     Value<String?> epgLink = const Value.absent(),
-    String? url,
+    Value<String?> url = const Value.absent(),
+    Value<String?> template = const Value.absent(),
     bool? isActive,
     Value<DateTime?> lastUpdated = const Value.absent(),
     DateTime? createdAt,
@@ -426,7 +459,8 @@ class PlaylistDriftData extends DataClass
     contentType: contentType.present ? contentType.value : this.contentType,
     filePath: filePath.present ? filePath.value : this.filePath,
     epgLink: epgLink.present ? epgLink.value : this.epgLink,
-    url: url ?? this.url,
+    url: url.present ? url.value : this.url,
+    template: template.present ? template.value : this.template,
     isActive: isActive ?? this.isActive,
     lastUpdated: lastUpdated.present ? lastUpdated.value : this.lastUpdated,
     createdAt: createdAt ?? this.createdAt,
@@ -443,6 +477,7 @@ class PlaylistDriftData extends DataClass
       filePath: data.filePath.present ? data.filePath.value : this.filePath,
       epgLink: data.epgLink.present ? data.epgLink.value : this.epgLink,
       url: data.url.present ? data.url.value : this.url,
+      template: data.template.present ? data.template.value : this.template,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
       lastUpdated: data.lastUpdated.present
           ? data.lastUpdated.value
@@ -462,6 +497,7 @@ class PlaylistDriftData extends DataClass
           ..write('filePath: $filePath, ')
           ..write('epgLink: $epgLink, ')
           ..write('url: $url, ')
+          ..write('template: $template, ')
           ..write('isActive: $isActive, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('createdAt: $createdAt')
@@ -479,6 +515,7 @@ class PlaylistDriftData extends DataClass
     filePath,
     epgLink,
     url,
+    template,
     isActive,
     lastUpdated,
     createdAt,
@@ -495,6 +532,7 @@ class PlaylistDriftData extends DataClass
           other.filePath == this.filePath &&
           other.epgLink == this.epgLink &&
           other.url == this.url &&
+          other.template == this.template &&
           other.isActive == this.isActive &&
           other.lastUpdated == this.lastUpdated &&
           other.createdAt == this.createdAt);
@@ -508,7 +546,8 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
   final Value<String?> contentType;
   final Value<String?> filePath;
   final Value<String?> epgLink;
-  final Value<String> url;
+  final Value<String?> url;
+  final Value<String?> template;
   final Value<bool> isActive;
   final Value<DateTime?> lastUpdated;
   final Value<DateTime> createdAt;
@@ -521,6 +560,7 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
     this.filePath = const Value.absent(),
     this.epgLink = const Value.absent(),
     this.url = const Value.absent(),
+    this.template = const Value.absent(),
     this.isActive = const Value.absent(),
     this.lastUpdated = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -533,13 +573,13 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
     this.contentType = const Value.absent(),
     this.filePath = const Value.absent(),
     this.epgLink = const Value.absent(),
-    required String url,
+    this.url = const Value.absent(),
+    this.template = const Value.absent(),
     this.isActive = const Value.absent(),
     this.lastUpdated = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : name = Value(name),
-       ulid = Value(ulid),
-       url = Value(url);
+       ulid = Value(ulid);
   static Insertable<PlaylistDriftData> custom({
     Expression<int>? id,
     Expression<String>? name,
@@ -549,6 +589,7 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
     Expression<String>? filePath,
     Expression<String>? epgLink,
     Expression<String>? url,
+    Expression<String>? template,
     Expression<bool>? isActive,
     Expression<DateTime>? lastUpdated,
     Expression<DateTime>? createdAt,
@@ -562,6 +603,7 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
       if (filePath != null) 'file_path': filePath,
       if (epgLink != null) 'epg_link': epgLink,
       if (url != null) 'url': url,
+      if (template != null) 'template': template,
       if (isActive != null) 'is_active': isActive,
       if (lastUpdated != null) 'last_updated': lastUpdated,
       if (createdAt != null) 'created_at': createdAt,
@@ -576,7 +618,8 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
     Value<String?>? contentType,
     Value<String?>? filePath,
     Value<String?>? epgLink,
-    Value<String>? url,
+    Value<String?>? url,
+    Value<String?>? template,
     Value<bool>? isActive,
     Value<DateTime?>? lastUpdated,
     Value<DateTime>? createdAt,
@@ -590,6 +633,7 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
       filePath: filePath ?? this.filePath,
       epgLink: epgLink ?? this.epgLink,
       url: url ?? this.url,
+      template: template ?? this.template,
       isActive: isActive ?? this.isActive,
       lastUpdated: lastUpdated ?? this.lastUpdated,
       createdAt: createdAt ?? this.createdAt,
@@ -623,6 +667,9 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
     if (url.present) {
       map['url'] = Variable<String>(url.value);
     }
+    if (template.present) {
+      map['template'] = Variable<String>(template.value);
+    }
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
@@ -646,6 +693,7 @@ class PlaylistDriftCompanion extends UpdateCompanion<PlaylistDriftData> {
           ..write('filePath: $filePath, ')
           ..write('epgLink: $epgLink, ')
           ..write('url: $url, ')
+          ..write('template: $template, ')
           ..write('isActive: $isActive, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('createdAt: $createdAt')
@@ -2744,7 +2792,8 @@ typedef $$PlaylistDriftTableCreateCompanionBuilder =
       Value<String?> contentType,
       Value<String?> filePath,
       Value<String?> epgLink,
-      required String url,
+      Value<String?> url,
+      Value<String?> template,
       Value<bool> isActive,
       Value<DateTime?> lastUpdated,
       Value<DateTime> createdAt,
@@ -2758,7 +2807,8 @@ typedef $$PlaylistDriftTableUpdateCompanionBuilder =
       Value<String?> contentType,
       Value<String?> filePath,
       Value<String?> epgLink,
-      Value<String> url,
+      Value<String?> url,
+      Value<String?> template,
       Value<bool> isActive,
       Value<DateTime?> lastUpdated,
       Value<DateTime> createdAt,
@@ -2841,6 +2891,11 @@ class $$PlaylistDriftTableFilterComposer
 
   ColumnFilters<String> get url => $composableBuilder(
     column: $table.url,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get template => $composableBuilder(
+    column: $table.template,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2934,6 +2989,11 @@ class $$PlaylistDriftTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get template => $composableBuilder(
+    column: $table.template,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isActive => $composableBuilder(
     column: $table.isActive,
     builder: (column) => ColumnOrderings(column),
@@ -2984,6 +3044,9 @@ class $$PlaylistDriftTableAnnotationComposer
 
   GeneratedColumn<String> get url =>
       $composableBuilder(column: $table.url, builder: (column) => column);
+
+  GeneratedColumn<String> get template =>
+      $composableBuilder(column: $table.template, builder: (column) => column);
 
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
@@ -3057,7 +3120,8 @@ class $$PlaylistDriftTableTableManager
                 Value<String?> contentType = const Value.absent(),
                 Value<String?> filePath = const Value.absent(),
                 Value<String?> epgLink = const Value.absent(),
-                Value<String> url = const Value.absent(),
+                Value<String?> url = const Value.absent(),
+                Value<String?> template = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
                 Value<DateTime?> lastUpdated = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -3070,6 +3134,7 @@ class $$PlaylistDriftTableTableManager
                 filePath: filePath,
                 epgLink: epgLink,
                 url: url,
+                template: template,
                 isActive: isActive,
                 lastUpdated: lastUpdated,
                 createdAt: createdAt,
@@ -3083,7 +3148,8 @@ class $$PlaylistDriftTableTableManager
                 Value<String?> contentType = const Value.absent(),
                 Value<String?> filePath = const Value.absent(),
                 Value<String?> epgLink = const Value.absent(),
-                required String url,
+                Value<String?> url = const Value.absent(),
+                Value<String?> template = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
                 Value<DateTime?> lastUpdated = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -3096,6 +3162,7 @@ class $$PlaylistDriftTableTableManager
                 filePath: filePath,
                 epgLink: epgLink,
                 url: url,
+                template: template,
                 isActive: isActive,
                 lastUpdated: lastUpdated,
                 createdAt: createdAt,

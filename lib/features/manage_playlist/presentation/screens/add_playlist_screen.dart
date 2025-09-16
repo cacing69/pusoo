@@ -25,9 +25,7 @@ class AddPlaylistScreen extends StatefulHookConsumerWidget {
 class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
   bool isLoading = false;
 
-  final channelTypeController = FSelectTileGroupController<ContentType>.radio(
-    ContentType.unknown,
-  );
+  final channelTypeController = FSelectTileGroupController<ContentType>.radio();
 
   @override
   void dispose() {
@@ -65,11 +63,6 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
             label: const Text('Playlist Type'),
             description: const Text('Select playlist type.'),
             children: [
-              FSelectTile(
-                title: const Text('Unknown'),
-                value: ContentType.unknown,
-                suffix: Icon(FIcons.annoyed),
-              ),
               FSelectTile(
                 title: const Text('Live TV'),
                 value: ContentType.live,
@@ -109,7 +102,8 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
             format: (s) => s,
             children: [
               // for (final fruit in fruits)
-              FSelectItem(title: Text("A"), value: "a"),
+              FSelectItem(title: Text("Unknown"), value: "unknown"),
+              FSelectItem(title: Text("Maksin"), value: "maksin"),
             ],
           ),
           Gap(10),
@@ -168,7 +162,7 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                                   contentType: drift.Value("m3u"),
                                   filePath: drift.Value(""),
                                   epgLink: drift.Value(""),
-                                  url: urlController.text.trim(),
+                                  url: drift.Value(urlController.text.trim()),
                                   isActive: drift.Value(count == 0),
                                 ),
                               );

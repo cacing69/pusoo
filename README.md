@@ -17,7 +17,7 @@ It is designed to make IPTV streaming simple, lightweight, and modern - running 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/username/Pusoo.git
+git clone https://github.com/cacing69/pusoo.git
 cd pusoo
 ```
 

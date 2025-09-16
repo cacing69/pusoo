@@ -145,7 +145,7 @@ class _ManageProviderScreenState extends State<ManageProviderScreen> {
                               ),
                             ),
                             title: Text(e.name),
-                            subtitle: Text(e.url),
+                            subtitle: Text(e.url ?? ""),
                             suffix: Icon(FIcons.chevronRight),
                             onPress: e.isActive
                                 ? () {

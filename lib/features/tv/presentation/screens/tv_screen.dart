@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,6 +9,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pusoo/features/tv/domain/models/get_tv_tracks_params.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_notifier.dart';
+import 'package:pusoo/features/tv/presentation/providers/tv_tracks_paging_notifier.dart';
+import 'package:pusoo/features/tv/presentation/providers/tv_tracks_search_notifier.dart';
+import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/models/track.dart';
 // import 'package:pusoo/shared/presentation/providers/better_player_notifier.dart';
 
@@ -18,34 +22,51 @@ class TvScreen extends StatefulHookConsumerWidget {
   ConsumerState<TvScreen> createState() => _TvScreenState();
 }
 
-final pagingTvTracksControllerProvider =
-    Provider.autoDispose<PagingController<int, Track>>((ref) {
-      ref.keepAlive(); // ini akan mencegah dispose otomatis
+// final pagingTvTracksControllerProvider =
+//     Provider.autoDispose<PagingController<int, Track>>((ref) {
+//       ref.keepAlive(); // ini akan mencegah dispose otomatis
 
-      final controller = PagingController<int, Track>(
-        getNextPageKey: (state) {
-          if (state.lastPageIsEmpty) {
-            return null;
-          }
+//       final controller = PagingController<int, Track>(
+//         getNextPageKey: (state) {
+//           if (state.lastPageIsEmpty) {
+//             return 0;
+//           }
 
-          final lastItem = state.items!.last;
+//           final lastItem = state.items?.last;
 
-          return lastItem.id;
-        },
-        fetchPage: (pageKey) async {
-          await ref
-              .read(tvTracksProvider.notifier)
-              .perform(GetTvTracksParams(limit: 20, cursor: pageKey));
+//           return lastItem?.id ?? 0;
+//         },
+//         fetchPage: (cursor) async {
+//           final searchState = ref.read(tvTracksSearchProvider);
 
-          return ref.read(tvTracksProvider).value!;
-          // return [];
-        },
-      );
+//           final stopFetch =
+//               cursor != 0 &&
+//               (ref.read(tvTracksProvider).value ?? []).length < 20;
 
-      ref.onDispose(controller.dispose);
+//           // harus berhenti fetch page
+//           if (stopFetch) {
+//             return [];
+//           } else {
+//             await ref
+//                 .read(tvTracksProvider.notifier)
+//                 .perform(
+//                   GetTvTracksParams(
+//                     limit: 20,
+//                     cursor: cursor,
+//                     title: searchState,
+//                   ),
+//                 );
 
-      return controller;
-    });
+//             return ref.read(tvTracksProvider).value!;
+//           }
+//           // return [];
+//         },
+//       );
+
+//       ref.onDispose(controller.dispose);
+
+//       return controller;
+//     });
 
 class _TvScreenState extends ConsumerState<TvScreen>
     with TickerProviderStateMixin {
@@ -63,14 +84,7 @@ class _TvScreenState extends ConsumerState<TvScreen>
   Widget build(BuildContext context) {
     final searchController = useTextEditingController();
 
-    // final asyncTvTracks = ref.watch(tvTracksProvider);
-
-    // final screenWidth = MediaQuery.of(context).size.width;
-    // final isPotrait =
     MediaQuery.of(context).orientation == Orientation.portrait;
-
-    // final double itemWidth = 120;
-    // final int crossAxisCount = (screenWidth / itemWidth).floor();
 
     return FScaffold(
       resizeToAvoidBottomInset: false,
@@ -230,12 +244,8 @@ class _TvScreenState extends ConsumerState<TvScreen>
               _debouncer.debounce(
                 duration: _debounceDuration,
                 onDebounce: () async {
-                  // await ref
-                  //     .read(blockNominatimSearchNotifierProvider.notifier)
-                  //     .perform(query.text);
-                  // completer.complete();
-                  // debugPrint(value);
-                  // loadM3U(search: value);
+                  ref.read(tvTracksSearchProvider.notifier).changeSearch(value);
+                  ref.read(tvTracksPagingProvider).refresh();
                 },
               );
             },
@@ -244,106 +254,114 @@ class _TvScreenState extends ConsumerState<TvScreen>
           Expanded(
             child: RefreshIndicator(
               child: PagingListener(
-                controller: ref.watch(pagingTvTracksControllerProvider),
+                controller: ref.watch(tvTracksPagingProvider),
                 builder: (context, state, fetchNextPage) => PagedGridView(
+                  padding: EdgeInsets.zero,
                   state: state,
                   fetchNextPage: fetchNextPage,
                   builderDelegate: PagedChildBuilderDelegate(
-                    itemBuilder: (context, item, index) => Placeholder(),
-                    // firstPageProgressIndicatorBuilder: (context) =>
-                    //     AppCctvResidentTileSkeletonizer(),
-                    // newPageProgressIndicatorBuilder: (context) =>
-                    //     AppCctvResidentTileSkeletonizer(),
-                    // firstPageErrorIndicatorBuilder: (context) {
-                    //   final error = state.error;
+                    itemBuilder: (context, Track item, index) => GestureDetector(
+                      onTap: () {
+                        // debugPrint(series[index].toString());
+                        // ref
+                        //     .read(betterPlayerProvider.notifier)
+                        //     .openMediaStream(
+                        //       tracks[index],
+                        //       isLiveStream: true,
+                        //     );
 
-                    //   if (error is Failure) {
-                    //     return Center(
-                    //       child: Column(
-                    //         mainAxisAlignment: MainAxisAlignment.center,
-                    //         children: [
-                    //           Text(
-                    //             "Something went wrong",
-                    //             style: context.theme.typography.xl,
-                    //           ),
-                    //           Gap(10),
-                    //           Text(
-                    //             error.message,
-                    //             style: context.theme.typography.base,
-                    //           ),
-                    //           Gap(10),
-                    //           Text(
-                    //             "Please try again later",
-                    //             style: context.theme.typography.xs,
-                    //           ),
-                    //           Gap(20),
-                    //           SizedBox(
-                    //             width: MediaQuery.of(context).size.width * 0.75,
-                    //             child: FButton(
-                    //               style: FButtonStyle.outline(),
-                    //               onPress: () {
-                    //                 fetchNextPage();
-                    //               },
-                    //               child: Text("Try Again"),
-                    //             ),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ); // tampilkan pesan dari Failure
-                    //   }
-
-                    //   return Center(
-                    //     child: Column(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: [
-                    //         Text(
-                    //           "Something went wrong",
-                    //           style: context.theme.typography.xl,
-                    //         ),
-                    //         Gap(10),
-                    //         Text(
-                    //           "Unexpected error",
-                    //           style: context.theme.typography.base,
-                    //         ),
-                    //         Gap(10),
-                    //         Text(
-                    //           "Please try again later",
-                    //           style: context.theme.typography.xs,
-                    //         ),
-                    //         Gap(20),
-                    //         SizedBox(
-                    //           width: MediaQuery.of(context).size.width * 0.75,
-                    //           child: FButton(
-                    //             style: FButtonStyle.outline(),
-                    //             onPress: () {
-                    //               fetchNextPage();
-                    //             },
-                    //             child: Text("Try Again"),
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   );
-                    // },
-                    // newPageErrorIndicatorBuilder: (context) {
-                    //   final error = ref
-                    //       .watch(pagingResidentControllerProvider)
-                    //       .error;
-                    //   if (error is Failure) {
-                    //     return Center(
-                    //       child: Text(
-                    //         "Load more failed: ${error.message}",
-                    //         style: context.theme.typography.base,
-                    //       ),
-                    //     );
-                    //   }
-                    //   return Center(
-                    //     child: Text(
-                    //       "Unexpected error",
-                    //       style: context.theme.typography.base,
-                    //     ),
-                    //   );
-                    // },
+                        context.pushNamed(RouteName.tvPlayer.name, extra: item);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: context.theme.colors.border,
+                            width: 1,
+                          ),
+                          color: context.theme.colors.disable(
+                            context.theme.colors.foreground,
+                          ),
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: Stack(
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                height: 120, // tinggi tetap
+                                child: item.tvgLogo.isNotEmpty
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(1.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                          ),
+                                          clipBehavior: Clip.antiAlias,
+                                          child: CachedNetworkImage(
+                                            imageUrl: item.tvgLogo,
+                                            placeholder: (_, __) =>
+                                                const Center(
+                                                  child:
+                                                      FProgress.circularIcon(),
+                                                ),
+                                            errorWidget: (_, __, ___) => Center(
+                                              child: Icon(
+                                                FIcons.imageOff,
+                                                color: context
+                                                    .theme
+                                                    .colors
+                                                    .background
+                                                    .withAlpha(200),
+                                                size: 40,
+                                              ),
+                                            ),
+                                            fit: BoxFit.fitWidth,
+                                          ),
+                                        ),
+                                      )
+                                    : Center(
+                                        child: Icon(
+                                          FIcons.imageOff,
+                                          size: 40,
+                                          color: context.theme.colors.background
+                                              .withAlpha(200),
+                                        ),
+                                      ),
+                              ),
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  color: context.theme.colors.background
+                                      .withAlpha(125),
+                                  child: Text(
+                                    item.title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: context.theme.colors.foreground,
+                                      fontSize:
+                                          context.theme.typography.xs.fontSize,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    firstPageProgressIndicatorBuilder: (context) =>
+                        FProgress.circularIcon(),
+                    newPageProgressIndicatorBuilder: (context) =>
+                        FProgress.circularIcon(),
                   ),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
@@ -353,130 +371,10 @@ class _TvScreenState extends ConsumerState<TvScreen>
                   ),
                 ),
               ),
-              onRefresh: () async {},
+              onRefresh: () async {
+                ref.read(tvTracksPagingProvider).refresh();
+              },
             ),
-
-            // asyncTvTracks.when(
-            //   data: (data) {
-            //     return GridView.builder(
-            //       padding: EdgeInsets.zero,
-            //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //         crossAxisCount: isPotrait ? 4 : 8,
-            //         crossAxisSpacing: 5,
-            //         mainAxisSpacing: 5,
-            //         childAspectRatio: 1,
-            //       ),
-            //       itemCount: data?.length,
-            //       itemBuilder: (context, index) {
-            //         return GestureDetector(
-            //           onTap: () {
-            //             // debugPrint(series[index].toString());
-            //             // ref
-            //             //     .read(betterPlayerProvider.notifier)
-            //             //     .openMediaStream(
-            //             //       tracks[index],
-            //             //       isLiveStream: true,
-            //             //     );
-
-            //             context.pushNamed(
-            //               RouteName.tvPlayer.name,
-            //               extra: data[index],
-            //             );
-            //           },
-            //           child: Container(
-            //             decoration: BoxDecoration(
-            //               borderRadius: BorderRadius.circular(6),
-            //               border: Border.all(
-            //                 color: context.theme.colors.border,
-            //                 width: 1,
-            //               ),
-            //               color: context.theme.colors.disable(
-            //                 context.theme.colors.foreground,
-            //               ),
-            //             ),
-            //             clipBehavior: Clip.antiAlias,
-            //             child: ClipRRect(
-            //               borderRadius: BorderRadius.circular(4),
-            //               child: Stack(
-            //                 children: [
-            //                   SizedBox(
-            //                     width: double.infinity,
-            //                     height: 120, // tinggi tetap
-            //                     child: data![index].tvgLogo.isNotEmpty
-            //                         ? Padding(
-            //                             padding: const EdgeInsets.all(1.0),
-            //                             child: Container(
-            //                               decoration: BoxDecoration(
-            //                                 borderRadius: BorderRadius.circular(
-            //                                   4,
-            //                                 ),
-            //                               ),
-            //                               clipBehavior: Clip.antiAlias,
-            //                               child: CachedNetworkImage(
-            //                                 imageUrl: data[index].tvgLogo,
-            //                                 placeholder: (_, __) =>
-            //                                     const Center(
-            //                                       child:
-            //                                           FProgress.circularIcon(),
-            //                                     ),
-            //                                 errorWidget: (_, __, ___) => Center(
-            //                                   child: Icon(
-            //                                     FIcons.imageOff,
-            //                                     color: context
-            //                                         .theme
-            //                                         .colors
-            //                                         .background
-            //                                         .withAlpha(200),
-            //                                     size: 40,
-            //                                   ),
-            //                                 ),
-            //                                 fit: BoxFit.fitWidth,
-            //                               ),
-            //                             ),
-            //                           )
-            //                         : Center(
-            //                             child: Icon(
-            //                               FIcons.imageOff,
-            //                               size: 40,
-            //                               color: context.theme.colors.background
-            //                                   .withAlpha(200),
-            //                             ),
-            //                           ),
-            //                   ),
-            //                   Positioned(
-            //                     left: 0,
-            //                     right: 0,
-            //                     bottom: 0,
-            //                     child: Container(
-            //                       padding: const EdgeInsets.all(6),
-            //                       color: context.theme.colors.background
-            //                           .withAlpha(125),
-            //                       child: Text(
-            //                         data[index].title,
-            //                         maxLines: 1,
-            //                         overflow: TextOverflow.ellipsis,
-            //                         style: TextStyle(
-            //                           color: context.theme.colors.foreground,
-            //                           fontSize:
-            //                               context.theme.typography.xs.fontSize,
-            //                           fontWeight: FontWeight.w600,
-            //                         ),
-            //                       ),
-            //                     ),
-            //                   ),
-            //                 ],
-            //               ),
-            //             ),
-            //           ),
-            //         );
-            //       },
-            //     );
-            //   },
-            //   error: (Object error, StackTrace stackTrace) {
-            //     return Placeholder();
-            //   },
-            //   loading: () => Center(child: FProgress.circularIcon()),
-            // ),
           ),
         ],
       ),

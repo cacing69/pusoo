@@ -10,7 +10,7 @@ part 'tv_providers.g.dart';
 
 @riverpod
 TvLocalDatasource tvLocalDatasource(Ref ref) {
-  return TvLocalDatasourceImpl();
+  return TvLocalDatasourceImpl(ref.read(loggerProvider));
 }
 
 @riverpod

@@ -11,7 +11,8 @@ class PlaylistDrift extends Table {
   TextColumn get contentType => text().nullable()();
   TextColumn get filePath => text().nullable()();
   TextColumn get epgLink => text().nullable()();
-  TextColumn get url => text()();
+  TextColumn get url => text().nullable()();
+  TextColumn get template => text().nullable()();
   BoolColumn get isActive => boolean().clientDefault(() => false)();
 
   DateTimeColumn get lastUpdated => dateTime().nullable()();

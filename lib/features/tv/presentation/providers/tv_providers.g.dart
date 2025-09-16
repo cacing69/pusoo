@@ -54,7 +54,7 @@ final class TvLocalDatasourceProvider
   }
 }
 
-String _$tvLocalDatasourceHash() => r'ade060202c1c875ae14652fcbeccea64ddba9e4c';
+String _$tvLocalDatasourceHash() => r'70019bc56fe36c24745c3612e9ac568c34acfaea';
 
 @ProviderFor(tvLocalRepository)
 const tvLocalRepositoryProvider = TvLocalRepositoryProvider._();

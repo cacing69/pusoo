@@ -1,3 +1,4 @@
+import 'package:logger/logger.dart';
 import 'package:pusoo/features/tv/data/datasources/tv_local_datasource.dart';
 import 'package:pusoo/features/tv/domain/models/get_tv_tracks_params.dart';
 import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
@@ -5,6 +6,10 @@ import 'package:pusoo/shared/data/models/track.dart';
 import 'package:drift/drift.dart' as drift;
 
 class TvLocalDatasourceImpl implements TvLocalDatasource {
+  late final Logger _log;
+
+  TvLocalDatasourceImpl(this._log);
+
   @override
   Future<int> countAll({List<int>? playlistIds}) async {
     // cek jika belum ada playlist maka set default
@@ -42,43 +47,50 @@ class TvLocalDatasourceImpl implements TvLocalDatasource {
   @override
   Future<List<Track>> getTvTracks(GetTvTracksParams? params) async {
     // 1. Gunakan List untuk menampung semua kondisi WHERE secara dinamis
-    // final List<drift.Expression<bool>> whereClauses = [
-    //   // Kondisi statis dari kode Anda sebelumnya untuk memastikan ini adalah Live TV
-    //   // driftDb.trackDrift.links.like('%movie%').not(),
-    //   // driftDb.trackDrift.links.like('%series%').not(),
-    //   driftDb.trackDrift.isLiveTv.equals(true),
-    //   driftDb.trackDrift.links.equals('[]').not(),
-    // ];
+    final List<drift.Expression<bool>> whereClauses = [
+      // Kondisi statis dari kode Anda sebelumnya untuk memastikan ini adalah Live TV
+      // driftDb.trackDrift.links.like('%movie%').not(),
+      // driftDb.trackDrift.links.like('%series%').not(),
+      // driftDb.trackDrift.isLiveTv.equals(true),
+      driftDb.trackDrift.links.equals('[]').not(),
+    ];
 
-    // // 2. Tambahkan filter dinamis berdasarkan parameter yang diberikan
-    // if (params?.playlistIds != null && params!.playlistIds!.isNotEmpty) {
-    //   whereClauses.add(driftDb.trackDrift.playlistId.isIn(params.playlistIds!));
-    // }
+    // 2. Tambahkan filter dinamis berdasarkan parameter yang diberikan
+    if (params?.playlistIds != null && params!.playlistIds!.isNotEmpty) {
+      whereClauses.add(driftDb.trackDrift.playlistId.isIn(params.playlistIds!));
+    }
 
-    // if (params?.category != null) {
-    //   // Asumsi nama kolom di tabel adalah 'category'
-    //   whereClauses.add(driftDb.trackDrift.groupTitle.equals(params!.category!));
-    // }
+    if (params?.category != null) {
+      // Asumsi nama kolom di tabel adalah 'category'
+      whereClauses.add(driftDb.trackDrift.groupTitle.equals(params!.category!));
+    }
 
-    // if (params?.title != null) {
-    //   whereClauses.add(driftDb.trackDrift.title.like('%${params?.title}%'));
-    // }
+    if (params?.title != null) {
+      if (params!.title!.isNotEmpty) {
+        whereClauses.add(driftDb.trackDrift.title.like('%${params.title}%'));
+      }
+    }
 
-    // if (params?.cursor != null && params!.cursor! > 0) {
-    //   // Kita tidak memanggil query.where() di sini.
-    //   // Cukup tambahkan expression-nya ke dalam list.
-    //   whereClauses.add(driftDb.trackDrift.id.isBiggerThanValue(params.cursor!));
-    // }
+    if (params?.cursor != null && params!.cursor! > 0) {
+      // Kita tidak memanggil query.where() di sini.
+      // Cukup tambahkan expression-nya ke dalam list.
+      whereClauses.add(driftDb.trackDrift.id.isBiggerThanValue(params.cursor!));
+    }
 
-    // 3. Bangun query select utama
+    // // 3. Bangun query select utama
     final query = driftDb.select(driftDb.trackDrift);
 
     // 4. Gabungkan semua klausa WHERE jika list tidak kosong
-    // if (whereClauses.isNotEmpty) {
-    //   // Gunakan `reduce` untuk menggabungkan semua Expression dengan operator & (AND)
-    //   final finalClause = whereClauses.reduce((a, b) => a & b);
-    //   query.where((_) => finalClause);
-    // }
+    if (whereClauses.isNotEmpty) {
+      // Gunakan `reduce` untuk menggabungkan semua Expression dengan operator & (AND)
+      final finalClause = whereClauses.reduce((a, b) => a & b);
+      query.where((_) => finalClause);
+    }
+
+    _log.i('--- DEBUG ---');
+    _log.i('Params: $params');
+    _log.i('Where Clauses count: ${whereClauses.length}');
+    _log.i('Where Clauses: $whereClauses');
 
     // 5. (BARU) Terapkan Paginasi menggunakan Limit dan Offset (Cursor)
     if (params?.limit != null) {

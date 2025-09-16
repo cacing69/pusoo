@@ -13,7 +13,8 @@ _Playlist _$PlaylistFromJson(Map<String, dynamic> json) => _Playlist(
   contentType:
       $enumDecodeNullable(_$ContentTypeEnumMap, json['contentType']) ??
       ContentType.unknown,
-  filePath: json['filePath'] as String? ?? "",
+  filePath: json['filePath'] as String?,
+  template: json['template'] as String?,
   epgLink: json['epgLink'] as String?,
   url: json['url'] as String?,
   isActive: json['isActive'] as bool? ?? false,
@@ -28,6 +29,7 @@ Map<String, dynamic> _$PlaylistToJson(_Playlist instance) => <String, dynamic>{
   'type': instance.type,
   'contentType': _$ContentTypeEnumMap[instance.contentType]!,
   'filePath': instance.filePath,
+  'template': instance.template,
   'epgLink': instance.epgLink,
   'url': instance.url,
   'isActive': instance.isActive,
