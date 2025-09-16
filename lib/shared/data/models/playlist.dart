@@ -8,8 +8,8 @@ enum ContentType {
   unknown,
   @JsonValue("live")
   live,
-  @JsonValue("vod")
-  vod,
+  @JsonValue("movie")
+  movie,
   @JsonValue("series")
   series,
   @JsonValue("audio")
@@ -25,7 +25,7 @@ ContentType contentTypefromString(String type) {
     case "live":
       return ContentType.live;
     case "vod":
-      return ContentType.vod;
+      return ContentType.movie;
     case "series":
       return ContentType.series;
     case "audio":

@@ -71,7 +71,7 @@ Map<String, dynamic> _$TrackToJson(_Track instance) => <String, dynamic>{
 const _$ContentTypeEnumMap = {
   ContentType.unknown: 'unknown',
   ContentType.live: 'live',
-  ContentType.vod: 'vod',
+  ContentType.movie: 'movie',
   ContentType.series: 'series',
   ContentType.audio: 'audio',
 };

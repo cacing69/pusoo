@@ -4,6 +4,7 @@ import 'package:drift/drift.dart' as drift;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:forui/forui.dart';
+import 'package:forui_hooks/forui_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,6 +13,7 @@ import 'package:pusoo/core/utils/m3u_parser.dart';
 import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:pusoo/shared/data/models/playlist.dart';
+import 'package:pusoo/shared/data/models/playlist_template.dart';
 import 'package:pusoo/shared/data/models/track.dart';
 import 'package:pusoo/shared/data/playlist_template_reff.dart';
 import 'package:ulid/ulid.dart';
@@ -26,17 +28,19 @@ class AddPlaylistScreen extends StatefulHookConsumerWidget {
 class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
   bool isLoading = false;
 
-  final channelTypeController = FSelectTileGroupController<ContentType>.radio();
+  final playlistTypeController =
+      FSelectTileGroupController<ContentType>.radio();
 
   @override
   void dispose() {
-    channelTypeController.dispose();
+    playlistTypeController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final nameController = useTextEditingController();
+    final templateContoller = useFSelectController<PlaylistTemplate>();
     final urlController = useTextEditingController(
       // text:
       //     "https://raw.githubusercontent.com/kshshuGyUWGG799vfaga/new-m3u/refs/heads/main/2025",
@@ -60,7 +64,7 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
         padding: EdgeInsets.zero,
         children: [
           FSelectTileGroup(
-            selectController: channelTypeController,
+            selectController: playlistTypeController,
             label: const Text('Playlist Type'),
             description: const Text('Select playlist type.'),
             children: [
@@ -70,9 +74,14 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                 suffix: Icon(FIcons.monitor),
               ),
               FSelectTile(
-                title: const Text('VOD'),
-                value: ContentType.vod,
+                title: const Text('Movies'),
+                value: ContentType.movie,
                 suffix: Icon(FIcons.monitorPlay),
+              ),
+              FSelectTile(
+                title: const Text('TV Series'),
+                value: ContentType.series,
+                suffix: Icon(FIcons.monitorCheck),
               ),
             ],
           ),
@@ -97,14 +106,18 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
             clearable: (TextEditingValue e) => e.text.isNotEmpty,
           ),
           Gap(10),
-          FSelect<String>.rich(
+          FSelect<PlaylistTemplate>.rich(
+            controller: templateContoller,
             label: Text("Template"),
-            hint: 'Select a fruit',
-            format: (s) => s,
+            hint: 'Select template',
+            format: (s) => s.label ?? "",
             children: [
-              // for (final fruit in fruits)
-              FSelectItem(title: Text("Unknown"), value: "unknown"),
-              FSelectItem(title: Text("Maksin"), value: "maksin"),
+              ...listPlaylistTemplate.map(
+                (template) => FSelectItem(
+                  title: Text(template.label ?? ""),
+                  value: template,
+                ),
+              ),
             ],
           ),
           Gap(10),
@@ -189,6 +202,18 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                                 );
                           }
 
+                          final selectedTemplate = templateContoller.value;
+
+                          final isLiveTv = playlistTypeController.value
+                              .contains(ContentType.live);
+
+                          final isMovie = playlistTypeController.value.contains(
+                            ContentType.live,
+                          );
+
+                          final isTvSerie = playlistTypeController.value
+                              .contains(ContentType.live);
+
                           await driftDb.batch((batch) {
                             batch.insertAll(
                               driftDb.trackDrift,
@@ -209,16 +234,19 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                                     jsonEncode(track.extVlcOpts),
                                   ),
                                   isLiveTv: drift.Value(
-                                    maksinTemplate.liveTvClassifier!
-                                        .isSatisfiedByAll(track),
+                                    selectedTemplate?.liveTvClassifier
+                                            ?.isSatisfiedByAll(track) ??
+                                        isLiveTv,
                                   ),
                                   isMovie: drift.Value(
-                                    maksinTemplate.movieClassifier!
-                                        .isSatisfiedByAll(track),
+                                    selectedTemplate?.movieClassifier
+                                            ?.isSatisfiedByAll(track) ??
+                                        isMovie,
                                   ),
                                   isTvSerie: drift.Value(
-                                    maksinTemplate.tvSerieClassifier!
-                                        .isSatisfiedByAll(track),
+                                    selectedTemplate?.tvSerieClassifier
+                                            ?.isSatisfiedByAll(track) ??
+                                        isTvSerie,
                                   ),
                                 );
                               }).toList(),
