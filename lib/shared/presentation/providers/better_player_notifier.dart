@@ -16,6 +16,12 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
     // Return null sebagai state awal.
     // Provider ini akan di-dispose secara otomatis berkat @riverpod.
     // Kita tidak perlu lagi menulis logika onDispose.
+
+    ref.onDispose(() {
+      final Logger log = ref.read(loggerProvider);
+      log.i("BetterPlayerNotifier disposed");
+    });
+
     return null;
   }
 
@@ -43,7 +49,7 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
       );
     }
 
-    state?.dispose();
+    // state?.dispose();
 
     // --- ✅ LANGKAH 1: BUAT DAFTAR ITEM MENU KUSTOM ---
     final List<BetterPlayerOverflowMenuItem> customMenuItems = [
@@ -225,6 +231,10 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
     final BetterPlayerController initController = BetterPlayerController(
       betterPlayerConfiguration,
     );
+
+    initController.addEventsListener((event) {
+      log.i("BetterPlayer event: ${event.betterPlayerEventType}");
+    });
 
     initController.setupDataSource(betterPlayerDataSource);
 
