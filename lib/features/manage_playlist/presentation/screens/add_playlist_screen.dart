@@ -10,7 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pusoo/core/utils/helpers.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
-import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
+import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:pusoo/shared/data/models/playlist.dart';
 import 'package:pusoo/shared/data/models/playlist_template.dart';
@@ -75,14 +75,9 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                 suffix: Icon(FIcons.monitor),
               ),
               FSelectTile(
-                title: const Text('Movies'),
-                value: ContentType.movie,
+                title: const Text('VOD'),
+                value: ContentType.vod,
                 suffix: Icon(FIcons.monitorPlay),
-              ),
-              FSelectTile(
-                title: const Text('TV Series'),
-                value: ContentType.series,
-                suffix: Icon(FIcons.monitorCheck),
               ),
             ],
           ),

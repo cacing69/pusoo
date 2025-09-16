@@ -23,10 +23,10 @@ void main() {
   // Wajib: inisialisasi MediaKit sebelum dipakai
   // MediaKit.ensureInitialized();
 
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]);
 
   runApp(ProviderScope(child: Application()));
 }

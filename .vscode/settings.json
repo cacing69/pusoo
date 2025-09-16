@@ -1,3 +1,19 @@
 {
-    "postman.settings.dotenv-detection-notification-visibility": false
+    "postman.settings.dotenv-detection-notification-visibility": false,
+    "files.exclude": {
+        "**/.dart_tool/": true,
+        "**/.gradle/": true,
+        "**/.idea/": true,
+        "**/build/": true,
+        "**/ios/Pods/": true
+    },
+    "search.exclude": {
+        "**/.dart_tool/": true,
+        "**/.gradle/": true,
+        "**/.idea/": true,
+        "**/build/": true,
+        "**/ios/Pods/": true,
+        "**/*.g.dart": true,
+        "**/*.freezed.dart": true
+    }
 }

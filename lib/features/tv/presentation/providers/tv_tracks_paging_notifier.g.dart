@@ -46,7 +46,7 @@ final class TvTracksPagingNotifierProvider
 }
 
 String _$tvTracksPagingNotifierHash() =>
-    r'c30d22858113e94aebe225ce7d4a6319ba6dd098';
+    r'e09c950c387a0595082db65e170e82f2c5c4a661';
 
 abstract class _$TvTracksPagingNotifier
     extends $Notifier<PagingController<int, Track>> {

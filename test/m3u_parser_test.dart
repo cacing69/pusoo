@@ -6,26 +6,31 @@ import 'package:pusoo/shared/data/models/track.dart';
 
 void main() async {
   final fileMaytoko = File('fixtures/sample_playlist_maytoko.txt');
-  final mayTokoContent = await fileMaytoko.readAsString();
+  final contentMayToko = await fileMaytoko.readAsString();
 
   final fileMaksin = File('fixtures/sample_playlist_maksin.m3u');
-  final maksinContent = await fileMaksin.readAsString();
+  final contentMaksin = await fileMaksin.readAsString();
 
   final fileIptvOrg = File('fixtures/sample_playlist_iptv_org.m3u');
-  final iptvOrgContent = await fileIptvOrg.readAsString();
+  final contentIptvOrg = await fileIptvOrg.readAsString();
 
   final fileNewpilem = File('fixtures/sample_playlist_newpilem.m3u');
-  final newpilemContent = await fileNewpilem.readAsString();
+  final contentNewpilem = await fileNewpilem.readAsString();
 
   final fileRyantv = File('fixtures/sample_playlist_ryantv.m3u');
-  final ryanTvContent = await fileRyantv.readAsString();
+  final contentRyanTv = await fileRyantv.readAsString();
 
   final fileUdp = File('fixtures/sample_playlist_udp.txt');
-  final udpContent = await fileUdp.readAsString();
+  final contentUdp = await fileUdp.readAsString();
+
+  final fileMixedWithHtml = File(
+    'fixtures/sample_playlist_mixed_with_html.txt',
+  );
+  final contentMixedWithHtml = await fileMixedWithHtml.readAsString();
 
   group('M3UParser Test', () {
     test('testLastTrack', () async {
-      List<Track> check = M3UParser.parse(mayTokoContent);
+      List<Track> check = M3UParser.parse(contentMayToko);
 
       Track item = check[check.length - 1];
 
@@ -372,7 +377,7 @@ https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/
     });
 
     test('testAndFindShouldGiveResult2Row:Query=ONE HD', () async {
-      List<Track> result = M3UParser.parse(mayTokoContent);
+      List<Track> result = M3UParser.parse(contentMayToko);
 
       List<Track> items = result
           .where((track) => track.title.contains("ONE HD"))
@@ -404,7 +409,7 @@ https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/
     });
 
     test('testTvgCountry:ID=115 rows', () async {
-      List<Track> result = M3UParser.parse(mayTokoContent);
+      List<Track> result = M3UParser.parse(contentMayToko);
 
       List<Track> items = result.where((track) {
         if (track.attributes.containsKey("tvg-country")) {
@@ -418,30 +423,36 @@ https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/
     });
 
     test('testMaksinExtInf=10602', () async {
-      List<Track> result = M3UParser.parse(maksinContent);
+      List<Track> result = M3UParser.parse(contentMaksin);
       expect(10602, equals(result.length));
     });
 
     test('testIptvOrgExtInf=11421', () async {
-      List<Track> result = M3UParser.parse(iptvOrgContent);
+      List<Track> result = M3UParser.parse(contentIptvOrg);
 
       expect(11421, equals(result.length));
     });
 
     test('testRyantvExtInf=268', () async {
-      List<Track> result = M3UParser.parse(ryanTvContent);
+      List<Track> result = M3UParser.parse(contentRyanTv);
 
       expect(268, equals(result.length));
     });
 
     test('testUdpExtInf=23', () async {
-      List<Track> result = M3UParser.parse(udpContent);
+      List<Track> result = M3UParser.parse(contentUdp);
 
       expect(23, equals(result.length));
     });
 
+    test('test:contentMixedWithHtml:extInf=11938', () async {
+      List<Track> result = M3UParser.parse(contentMixedWithHtml);
+
+      expect(11938, equals(result.length));
+    });
+
     test('checkLastRowNewpilemShouldHave2Links', () async {
-      List<Track> result = M3UParser.parse(newpilemContent);
+      List<Track> result = M3UParser.parse(contentNewpilem);
 
       Track item = result.last;
 
@@ -469,7 +480,7 @@ https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/
 
     test('checkLastTitle:BLOOD AND SAND-S1:ShouldHave13Rows', () async {
       List<Track> result = M3UParser.parse(
-        newpilemContent,
+        contentNewpilem,
       ).where((track) => track.title.contains("BLOOD AND SAND-S1")).toList();
       expect(13, equals(result.length));
 
@@ -490,7 +501,7 @@ https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/
 
     test('checkLastTitle:maytoko:NBA TV:ShouldHave:4 rows', () async {
       List<Track> result = M3UParser.parse(
-        mayTokoContent,
+        contentMayToko,
       ).where((track) => track.title.contains("NBA TV")).toList();
 
       expect(2, equals(result.length));

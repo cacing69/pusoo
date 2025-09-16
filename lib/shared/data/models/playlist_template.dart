@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pusoo/shared/data/models/clasification_rules/classificator.dart';
-import 'package:pusoo/shared/data/models/track.dart';
 
 part 'playlist_template.g.dart';
 part 'playlist_template.freezed.dart';

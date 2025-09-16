@@ -1,17 +1,18 @@
 import 'package:logger/logger.dart';
-import 'package:pusoo/features/tv/data/datasources/tv_local_datasource.dart';
-import 'package:pusoo/features/tv/domain/models/get_tv_tracks_params.dart';
-import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
+import 'package:pusoo/features/track/domain/models/get_track_group_titles_params.dart';
+import 'package:pusoo/features/track/domain/models/get_tracks_params.dart';
+import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
+import 'package:pusoo/features/track/data/datasources/local/track_drift_datasource.dart';
 import 'package:pusoo/shared/data/models/track.dart';
 import 'package:drift/drift.dart' as drift;
 
-class TvLocalDatasourceImpl implements TvLocalDatasource {
+class TrackDriftDatasourceImpl implements TrackDriftDatasource {
   late final Logger _log;
 
-  TvLocalDatasourceImpl(this._log);
+  TrackDriftDatasourceImpl(this._log);
 
   @override
-  Future<int> countAll({List<int>? playlistIds}) async {
+  Future<int> count({List<int>? playlistIds}) async {
     // cek jika belum ada playlist maka set default
     final countExpression = driftDb.trackDrift.id.count();
 
@@ -36,33 +37,37 @@ class TvLocalDatasourceImpl implements TvLocalDatasource {
   }
 
   @override
-  Future<List<String>> getTvCategories({
-    List<int>? playlistIds,
-    String? category,
-  }) {
-    // TODO: implement getTvCategories
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Track>> getTvTracks(GetTvTracksParams? params) async {
+  Future<List<Track>> get(GetTracksParams? params) async {
     // 1. Gunakan List untuk menampung semua kondisi WHERE secara dinamis
     final List<drift.Expression<bool>> whereClauses = [
       // Kondisi statis dari kode Anda sebelumnya untuk memastikan ini adalah Live TV
       // driftDb.trackDrift.links.like('%movie%').not(),
       // driftDb.trackDrift.links.like('%series%').not(),
-      driftDb.trackDrift.isLiveTv.equals(true),
       driftDb.trackDrift.links.equals('[]').not(),
     ];
+
+    if (params?.isLiveTv != null) {
+      whereClauses.add(driftDb.trackDrift.isLiveTv.equals(true));
+    }
+
+    if (params?.isMovie != null) {
+      whereClauses.add(driftDb.trackDrift.isMovie.equals(true));
+    }
+
+    if (params?.isTvSerie != null) {
+      whereClauses.add(driftDb.trackDrift.isTvSerie.equals(true));
+    }
 
     // 2. Tambahkan filter dinamis berdasarkan parameter yang diberikan
     if (params?.playlistIds != null && params!.playlistIds!.isNotEmpty) {
       whereClauses.add(driftDb.trackDrift.playlistId.isIn(params.playlistIds!));
     }
 
-    if (params?.category != null) {
-      // Asumsi nama kolom di tabel adalah 'category'
-      whereClauses.add(driftDb.trackDrift.groupTitle.equals(params!.category!));
+    if (params?.groupTitle != null) {
+      // Asumsi nama kolom di tabel adalah 'groupTitle'
+      whereClauses.add(
+        driftDb.trackDrift.groupTitle.equals(params!.groupTitle!),
+      );
     }
 
     if (params?.title != null) {
@@ -113,5 +118,37 @@ class TvLocalDatasourceImpl implements TvLocalDatasource {
     }).toList();
 
     return convertToTrack;
+  }
+
+  @override
+  Future<List<String>> getGroupTitle(GetTrackGroupTitlesParams? params) {
+    final query = driftDb.selectOnly(driftDb.trackDrift)
+      ..addColumns([driftDb.trackDrift.groupTitle])
+      ..groupBy([driftDb.trackDrift.groupTitle]);
+
+    // Selalu filter groupTitle yang null untuk memenuhi tipe return Future<List<String>>
+    query.where(driftDb.trackDrift.groupTitle.isNotNull());
+
+    // 1. Filter berdasarkan keyword jika ada
+    // final keyword = params?.isMovie;
+    if (params?.isMovie != null) {
+      query.where(driftDb.trackDrift.isMovie.equals(params!.isMovie!));
+    }
+
+    if (params?.isLiveTv != null) {
+      query.where(driftDb.trackDrift.isLiveTv.equals(params!.isLiveTv!));
+    }
+
+    if (params?.isTvSerie != null) {
+      query.where(driftDb.trackDrift.isTvSerie.equals(params!.isTvSerie!));
+    }
+
+    final playlistIds = params?.playlistIds;
+    if (playlistIds != null && playlistIds.isNotEmpty) {
+      // Menambahkan kondisi: WHERE group_title LIKE '%keyword%'
+      query.where(driftDb.trackDrift.playlistId.isIn(playlistIds));
+    }
+
+    return query.map((row) => row.read(driftDb.trackDrift.groupTitle)!).get();
   }
 }

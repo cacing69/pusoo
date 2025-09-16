@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'better_player_notifier.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class BetterPlayerNotifier extends _$BetterPlayerNotifier {
   // Metode build ini akan dipanggil pertama kali oleh Riverpod
   @override
@@ -189,8 +189,8 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         "[BetterPlayerNotifier] Disposing previous BetterPlayerController!",
       );
 
-      state?.dispose();
-      state = null;
+      // state?.dispose();
+      // state = null;
     }
 
     // state?.dispose();
@@ -338,8 +338,6 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         tmpHttpHeaders["Referrer"] =
             "${track.extVlcOpts.first["http-referrer"]}";
       }
-
-      tmpHttpHeaders["cookie"] = "";
     }
 
     if (drmType != null) {
@@ -373,6 +371,4 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
 
     return betterPlayerDataSource;
   }
-
-  _handlePlaybackError() {}
 }

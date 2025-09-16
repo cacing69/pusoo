@@ -74,4 +74,5 @@ const _$ContentTypeEnumMap = {
   ContentType.movie: 'movie',
   ContentType.series: 'series',
   ContentType.audio: 'audio',
+  ContentType.vod: 'vod',
 };

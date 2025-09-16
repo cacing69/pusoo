@@ -4,9 +4,10 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pusoo/core/utils/helpers.dart';
+import 'package:pusoo/features/tv/presentation/providers/tv_tracks_filter_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_paging_notifier.dart';
 import 'package:pusoo/router.dart';
-import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
+import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:drift/drift.dart' as drift;
 
 class ManageProviderScreen extends ConsumerStatefulWidget {
@@ -74,6 +75,7 @@ class _ManageProviderScreenState extends ConsumerState<ManageProviderScreen> {
                   showFlutterToast(context: context, message: "Playlist saved");
 
                   // REFRESH HOME
+                  ref.read(tvTracksFilterProvider.notifier).reset();
                   ref.read(tvTracksPagingProvider).refresh();
                   // showFToast(
                   //   context: context,

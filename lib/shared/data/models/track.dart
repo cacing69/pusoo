@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
+import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:pusoo/shared/data/models/drift/track_drift.dart';
 import 'package:pusoo/shared/data/models/playlist.dart';
 

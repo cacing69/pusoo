@@ -2,9 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:pusoo/features/tv/domain/models/get_tv_tracks_params.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_notifier.dart';
-import 'package:pusoo/features/tv/presentation/providers/tv_tracks_search_notifier.dart';
+import 'package:pusoo/features/tv/presentation/providers/tv_tracks_filter_notifier.dart';
 import 'package:pusoo/shared/data/models/track.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -57,18 +56,20 @@ class TvTracksPagingNotifier extends _$TvTracksPagingNotifier {
         return nextPageKey;
       },
       fetchPage: (pageKey) async {
-        final searchState = ref.read(tvTracksSearchProvider);
+        final filterState = ref.read(tvTracksFilterProvider);
 
         try {
           await ref
               .read(tvTracksProvider.notifier)
               .perform(
-                GetTvTracksParams(
-                  limit:
-                      20, // Pastikan limit ini konsisten dengan logika di atas
-                  cursor: pageKey,
-                  title: searchState,
-                ),
+                // GetTracksParams(
+                //   limit:
+                //       20, // Pastikan limit ini konsisten dengan logika di atas
+                //   cursor: pageKey,
+                //   title: searchState,
+                //   isLiveTv: true,
+                // ),
+                filterState.copyWith(cursor: pageKey),
               );
 
           return ref.read(tvTracksProvider).value ?? [];

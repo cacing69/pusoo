@@ -14,6 +14,8 @@ enum ContentType {
   series,
   @JsonValue("audio")
   audio,
+  @JsonValue("vod")
+  vod,
 }
 
 /// Creates a [ContentType] from a string value.
@@ -24,12 +26,14 @@ ContentType contentTypefromString(String type) {
   switch (type.toLowerCase()) {
     case "live":
       return ContentType.live;
-    case "vod":
+    case "movie":
       return ContentType.movie;
     case "series":
       return ContentType.series;
     case "audio":
       return ContentType.audio;
+    case "vod":
+      return ContentType.vod;
     default:
       return ContentType.unknown;
   }

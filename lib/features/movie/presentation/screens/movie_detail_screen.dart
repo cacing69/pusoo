@@ -9,7 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:pusoo/router.dart';
-import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
+import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MovieDetailScreen extends StatefulWidget {
@@ -310,10 +310,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             style: FButtonStyle.outline(),
             prefix: Icon(FIcons.play),
             onPress: () {
-              context.pushNamed(
-                RouteName.videoPlayerFull.name,
-                extra: widget.channel,
-              );
+              // context.pushNamed(
+              //   RouteName.videoPlayerFull.name,
+              //   extra: widget.channel,
+              // );
             },
             child: Text("Watch Now"),
           ),
