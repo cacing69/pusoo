@@ -5,12 +5,9 @@ class MaksinIsUrlNotContainsMovieAndSeriesWithSlashsRule
     implements ClassificationRule {
   @override
   bool isSatisfiedBy(Track track) {
-    for (var link in track.links) {
-      if (link.contains("/series/") || link.contains("/movie/")) {
-        return true;
-      }
-    }
-
-    return false;
+    // Memeriksa apakah ada SATU SAJA link yang tidak mengandung "/series/" DAN "/movie/".
+    return track.links.any(
+      (link) => !link.contains("/series/") && !link.contains("/movie/"),
+    );
   }
 }

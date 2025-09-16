@@ -51,7 +51,7 @@ class TvLocalDatasourceImpl implements TvLocalDatasource {
       // Kondisi statis dari kode Anda sebelumnya untuk memastikan ini adalah Live TV
       // driftDb.trackDrift.links.like('%movie%').not(),
       // driftDb.trackDrift.links.like('%series%').not(),
-      // driftDb.trackDrift.isLiveTv.equals(true),
+      driftDb.trackDrift.isLiveTv.equals(true),
       driftDb.trackDrift.links.equals('[]').not(),
     ];
 
