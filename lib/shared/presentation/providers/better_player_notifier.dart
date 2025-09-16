@@ -8,74 +8,69 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'better_player_notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class BetterPlayerNotifier extends _$BetterPlayerNotifier {
+  Track? _currentTrack;
+  bool _isLiveStream = false;
+  int _currentUrlIndex = 0;
+
   // Metode build ini akan dipanggil pertama kali oleh Riverpod
   @override
   BetterPlayerController? build() {
-    // Return null sebagai state awal.
-    // Provider ini akan di-dispose secara otomatis berkat @riverpod.
-    // Kita tidak perlu lagi menulis logika onDispose.
-
     ref.onDispose(() {
       final Logger log = ref.read(loggerProvider);
-      log.i("BetterPlayerNotifier disposed");
+      log.i("BetterPlayerNotifier and controller disposed");
+      state?.dispose();
     });
 
     return null;
   }
 
-  // Fungsi untuk menginisialisasi dan membuka video
-  void openMediaStream(
-    Track track, {
-    bool isLiveStream = false,
-    int useUrlOnIndex = 0,
-  }) {
-    final Logger log = ref.read(loggerProvider);
+  void _onPlayerEvent(BetterPlayerEvent event) {
+    final log = ref.read(loggerProvider);
+    log.i("BetterPlayer event: ${event.betterPlayerEventType}");
 
+    if (event.betterPlayerEventType == BetterPlayerEventType.exception) {
+      log.e("Player exception. Trying next source.");
+      _currentUrlIndex++;
+      if (_currentTrack != null &&
+          _currentUrlIndex < _currentTrack!.links.length) {
+        log.i("Playing next source at index $_currentUrlIndex");
+        final dataSource = _prepareDataSource(
+          _currentTrack!,
+          isLiveStream: _isLiveStream,
+          useUrlOnIndex: _currentUrlIndex,
+        );
+        state?.setupDataSource(dataSource);
+      } else {
+        log.e("All sources failed for track ${_currentTrack?.title}");
+      }
+    }
+  }
+
+  BetterPlayerConfiguration _buildConfiguration({
+    required bool isLiveStream,
+    required Logger log,
+  }) {
     final List<BetterPlayerOverflowMenuItem> customMenuItems = [
       BetterPlayerOverflowMenuItem(
-        Icons.share_outlined, // Ikon untuk item menu
-        "Bagikan", // Teks untuk item menu
+        Icons.share_outlined,
+        "Bagikan",
         () {
-          // Aksi yang dijalankan saat diklik
           log.i("Aksi 'Bagikan' dipicu!");
-          // TODO: Tambahkan logika untuk membagikan video di sini
         },
       ),
       BetterPlayerOverflowMenuItem(Icons.report_outlined, "Laporkan", () {
         log.i("Aksi 'Laporkan' dipicu!");
-        // TODO: Tambahkan logika untuk melaporkan masalah di sini
       }),
     ];
 
-    // 1. Inisialisasi konfigurasi dasar pemutar
-    BetterPlayerConfiguration
-    betterPlayerConfiguration = BetterPlayerConfiguration(
+    return BetterPlayerConfiguration(
       autoPlay: true,
       aspectRatio: 16 / 9,
       fit: BoxFit.contain,
-      // overlay: Align(
-      //   alignment: Alignment.topLeft,
-      //   child: Container(
-      //     margin: const EdgeInsets.all(16),
-      //     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      //     decoration: BoxDecoration(
-      //       color: Colors.black.withAlpha(180),
-      //       borderRadius: BorderRadius.circular(8),
-      //     ),
-      //     child: const Text(
-      //       "LIVE",
-      //       style: TextStyle(
-      //         color: Colors.red,
-      //         fontWeight: FontWeight.bold,
-      //       ),
-      //     ),
-      //   ),
-      // ),
       controlsConfiguration: BetterPlayerControlsConfiguration(
         overflowMenuCustomItems: customMenuItems,
-
         showControls: true,
         enablePlayPause: !isLiveStream,
         enableProgressBar: true,
@@ -84,81 +79,38 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         enableFullscreen: true,
         showControlsOnInitialize: false,
         loadingWidget: FProgress.circularIcon(),
-        // customControlsBuilder: (controller, onPlayerVisibilityChanged) {
-        //   return Placeholder();
-        // },
       ),
     );
+  }
 
-    // 6. Buat DataSource pemutar
-    // final BetterPlayerDataSource betterPlayerDataSource =
-    //     BetterPlayerDataSource(
-    //       BetterPlayerDataSourceType.network,
-    //       videoUrl,
-    //       videoFormat: videoFormat,
-    //       headers: httpHeaders,
-    //       liveStream: isLiveStream,
-    //       drmConfiguration: drmConfiguration,
-    //     );
+  // Fungsi untuk menginisialisasi dan membuka video
+  void openMediaStream(
+    Track track, {
+    bool isLiveStream = false,
+    int useUrlOnIndex = 0,
+  }) {
+    final log = ref.read(loggerProvider);
+    _currentTrack = track;
+    _isLiveStream = isLiveStream;
+    _currentUrlIndex = useUrlOnIndex;
 
-    // 7. Inisialisasi controller baru dan atur datasource
-    final BetterPlayerController initController = BetterPlayerController(
-      betterPlayerConfiguration,
-    );
+    if (state == null) {
+      log.i("[BetterPlayerNotifier] Creating new BetterPlayerController.");
+      final configuration =
+          _buildConfiguration(isLiveStream: isLiveStream, log: log);
+      final controller = BetterPlayerController(configuration);
+      controller.addEventsListener(_onPlayerEvent);
+      state = controller;
+    }
 
-    BetterPlayerDataSource betterPlayerDataSource = _prepareDataSource(
+    final dataSource = _prepareDataSource(
       track,
       isLiveStream: isLiveStream,
       useUrlOnIndex: useUrlOnIndex,
     );
 
-    initController.setupDataSource(betterPlayerDataSource);
-
-    // Function handlePlaybackError = () {
-    //   // if (_currentUrlIndex < _videoUrls.length - 1) {
-    //   //   setState(() {
-    //   //     _currentUrlIndex++;
-    //   //     print(
-    //   //       "Playback error, trying next URL: ${_videoUrls[_currentUrlIndex]}",
-    //   //     );
-    //   //     _betterPlayerController.setupDataSource(
-    //   //       _createDataSource(_videoUrls[_currentUrlIndex]),
-    //   //     );
-    //   //     _betterPlayerController.play(); // Mulai putar ulang dengan URL baru
-    //   //   });
-    //   // } else {
-    //   // print("All URLs failed. Cannot play video.");
-    //   // Tampilkan pesan error ke pengguna
-    //   // }
-    // };
-
-    initController.addEventsListener((event) {
-      log.i("BetterPlayer event: ${event.betterPlayerEventType}");
-
-      if (event.betterPlayerEventType == BetterPlayerEventType.exception) {
-        useUrlOnIndex++;
-
-        log.e("error, try access another source");
-
-        if (useUrlOnIndex <= track.links.length) {
-          initController.setupDataSource(
-            _prepareDataSource(
-              track,
-              isLiveStream: isLiveStream,
-              useUrlOnIndex: useUrlOnIndex,
-            ),
-          );
-        }
-      }
-    });
-
-    // _betterPlayerController.addEventsListener((BetterPlayerEvent event) {
-
-    // });
-
-    // 8. Update state dengan controller yang baru
-    log.i("[BetterPlayerNotifier] New BetterPlayerController created.");
-    state = initController;
+    log.i("[BetterPlayerNotifier] Setting up data source for ${track.title}");
+    state!.setupDataSource(dataSource);
   }
 
   BetterPlayerDataSource _prepareDataSource(
@@ -361,13 +313,13 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
 
     final BetterPlayerDataSource betterPlayerDataSource =
         BetterPlayerDataSource(
-          BetterPlayerDataSourceType.network,
-          videoUrl,
-          videoFormat: videoFormat,
-          headers: httpHeaders,
-          liveStream: isLiveStream,
-          drmConfiguration: drmConfiguration,
-        );
+      BetterPlayerDataSourceType.network,
+      videoUrl,
+      videoFormat: videoFormat,
+      headers: httpHeaders,
+      liveStream: isLiveStream,
+      drmConfiguration: drmConfiguration,
+    );
 
     return betterPlayerDataSource;
   }

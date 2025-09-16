@@ -58,6 +58,67 @@ class _TvScreenState extends ConsumerState<TvScreen>
     );
   }
 
+  void openDialogChangePlaylist(BuildContext context) {
+    showFDialog(
+      context: context,
+      builder: (context, style, animation) => FDialog(
+        animation: animation,
+        direction: Axis.horizontal,
+        title: const Text('Change playlist'),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            FDivider(
+              style: (style) =>
+                  style.copyWith(padding: EdgeInsets.symmetric(vertical: 5)),
+            ),
+            FItemGroup(
+              children: [
+                FItem(
+                  prefix: Icon(FIcons.circleDashed),
+                  title: Text("IPTV-ORG ID"),
+                  suffix: Icon(FIcons.check),
+                  onPress: () async {
+                    if (context.mounted) {
+                      context.pop();
+                    }
+                  },
+                ),
+                FItem(
+                  prefix: Icon(FIcons.circleDashed),
+                  title: Text("IPTV-ORG MY"),
+                  onPress: () async {
+                    // loadPlaylist();
+
+                    if (context.mounted) {
+                      context.pop();
+                    }
+                  },
+                ),
+                FItem(
+                  prefix: Icon(FIcons.circleDashed),
+                  title: Text("IPTV-ORG PE"),
+                  onPress: () async {
+                    if (context.mounted) {
+                      context.pop();
+                    }
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          FButton(
+            style: FButtonStyle.outline(),
+            onPress: () => context.pop(),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final searchController = useTextEditingController();
@@ -79,62 +140,69 @@ class _TvScreenState extends ConsumerState<TvScreen>
             isPotrait
                 ? Expanded(
                     flex: 1,
-                    child: SizedBox(
-                      height: 30,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: BoxBorder.all(
-                            color: context.theme.colors.border,
-                            width: 1,
+                    child: GestureDetector(
+                      onTap: () {
+                        openDialogChangePlaylist(context);
+                      },
+                      child: SizedBox(
+                        height: 30,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: BoxBorder.all(
+                              color: context.theme.colors.border,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(4),
                           ),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(3),
-                          child: Row(
-                            children: [
-                              Gap(2),
-                              SizedBox(
-                                width: 18,
-                                height: 18,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: context.theme.colors.destructive,
+                          child: Padding(
+                            padding: EdgeInsets.all(3),
+                            child: Row(
+                              children: [
+                                Gap(2),
+                                SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: context.theme.colors.destructive,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Gap(5),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Lorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit Amet",
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: TextStyle(
-                                        fontSize: context
-                                            .theme
-                                            .typography
-                                            .xs
-                                            .fontSize,
-                                        fontWeight: FontWeight.w600,
+                                Gap(5),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Lorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit Amet",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontSize: context
+                                              .theme
+                                              .typography
+                                              .xs
+                                              .fontSize,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      "Lorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit Amet",
-                                      style: TextStyle(
-                                        fontSize: CustomThemeData.fontSize.xs1,
-                                        fontWeight: FontWeight.w400,
+                                      Text(
+                                        "Lorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit Amet",
+                                        style: TextStyle(
+                                          fontSize:
+                                              CustomThemeData.fontSize.xs1,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Icon(FIcons.antenna),
-                              Gap(3),
-                            ],
+                                Icon(FIcons.antenna),
+                                Gap(3),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -157,70 +225,20 @@ class _TvScreenState extends ConsumerState<TvScreen>
             //   subtitle: Text("$countTracks channel"),
             //   suffix: Icon(FIcons.chevronRight),
             //   onPress: () async {
-            //     showFDialog(
-            //       context: context,
-            //       builder: (context, style, animation) => FDialog(
-            //         animation: animation,
-            //         direction: Axis.horizontal,
-            //         title: const Text('Change playlist'),
-            //         body: Column(
-            //           crossAxisAlignment: CrossAxisAlignment.start,
-            //           children: [
-            //             FDivider(
-            //               style: (style) => style.copyWith(
-            //                 padding: EdgeInsets.symmetric(vertical: 5),
-            //               ),
-            //             ),
-            //             FItemGroup(
-            //               children: [
-            //                 FItem(
-            //                   prefix: Icon(FIcons.circleDashed),
-            //                   title: Text("IPTV-ORG ID"),
-            //                   suffix: Icon(FIcons.check),
-            //                   onPress: () async {
-            //                     if (context.mounted) {
-            //                       context.pop();
-            //                     }
-            //                   },
-            //                 ),
-            //                 FItem(
-            //                   prefix: Icon(FIcons.circleDashed),
-            //                   title: Text("IPTV-ORG MY"),
-            //                   onPress: () async {
-            //                     // loadPlaylist();
 
-            //                     if (context.mounted) {
-            //                       context.pop();
-            //                     }
-            //                   },
-            //                 ),
-            //                 FItem(
-            //                   prefix: Icon(FIcons.circleDashed),
-            //                   title: Text("IPTV-ORG PE"),
-            //                   onPress: () async {
-            //                     if (context.mounted) {
-            //                       context.pop();
-            //                     }
-            //                   },
-            //                 ),
-            //               ],
-            //             ),
-            //           ],
-            //         ),
-            //         actions: [
-            //           FButton(
-            //             style: FButtonStyle.outline(),
-            //             onPress: () => context.pop(),
-            //             child: const Text('Close'),
-            //           ),
-            //         ],
-            //       ),
-            //     );
             //   },
             // )
           ],
         ),
         suffixes: [
+          !isPotrait
+              ? FHeaderAction(
+                  icon: Icon(FIcons.antenna, size: 25),
+                  onPress: () {
+                    openDialogChangePlaylist(context);
+                  },
+                )
+              : SizedBox.shrink(),
           FHeaderAction(
             icon: Icon(FIcons.menu, size: 25),
             onPress: () async {
@@ -448,6 +466,9 @@ class _TvScreenState extends ConsumerState<TvScreen>
                 ),
               ),
               onRefresh: () async {
+                searchController.text = "";
+
+                ref.read(tvTracksFilterProvider.notifier).reset();
                 ref.read(tvTracksPagingProvider).refresh();
               },
             ),

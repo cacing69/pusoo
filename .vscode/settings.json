@@ -4,7 +4,7 @@
         "**/.dart_tool/": true,
         "**/.gradle/": true,
         "**/.idea/": true,
-        "**/build/": true,
+        "**/build/": false,
         "**/ios/Pods/": true
     },
     "search.exclude": {

@@ -96,11 +96,39 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Icon(FIcons.aArrowDown),
-            Icon(FIcons.aArrowDown),
-            Icon(FIcons.aArrowDown),
-            Icon(FIcons.aArrowDown),
-            Icon(FIcons.aArrowDown),
+            Icon(
+              FIcons.earth,
+              size: 25,
+              color: context.theme.colors.disable(
+                context.theme.colors.foreground,
+              ),
+            ),
+            Icon(
+              FIcons.monitor,
+              size: 25,
+              color: context.theme.colors.foreground,
+            ),
+            Icon(
+              FIcons.monitorPlay,
+              size: 25,
+              color: context.theme.colors.disable(
+                context.theme.colors.foreground,
+              ),
+            ),
+            Icon(
+              FIcons.monitorCheck,
+              size: 25,
+              color: context.theme.colors.disable(
+                context.theme.colors.foreground,
+              ),
+            ),
+            Icon(
+              FIcons.settings,
+              size: 25,
+              color: context.theme.colors.disable(
+                context.theme.colors.foreground,
+              ),
+            ),
           ],
         ),
       ),

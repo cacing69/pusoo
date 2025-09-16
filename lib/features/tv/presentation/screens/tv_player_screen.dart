@@ -294,7 +294,8 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Available URL Sources"),
+        Gap(5),
+        Text("Available URL Sources", style: context.theme.typography.xs),
         Gap(5),
         Wrap(
           children: [

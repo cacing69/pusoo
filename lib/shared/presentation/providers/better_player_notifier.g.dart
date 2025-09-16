@@ -20,7 +20,7 @@ final class BetterPlayerNotifierProvider
         argument: null,
         retry: null,
         name: r'betterPlayerProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -42,7 +42,7 @@ final class BetterPlayerNotifierProvider
 }
 
 String _$betterPlayerNotifierHash() =>
-    r'8db5579c86b7ad1341e27b5dedb1dfc7689aabef';
+    r'da29a8b864b8d1694caa3d0bdc0f2170f1ec3ead';
 
 abstract class _$BetterPlayerNotifier
     extends $Notifier<BetterPlayerController?> {
