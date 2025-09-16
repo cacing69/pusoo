@@ -6,7 +6,7 @@ void showFlutterToast({BuildContext? context, required String message}) {
   Fluttertoast.showToast(
     msg: message,
     toastLength: Toast.LENGTH_SHORT,
-    gravity: ToastGravity.SNACKBAR,
+    gravity: ToastGravity.CENTER,
     timeInSecForIosWeb: 1,
     backgroundColor: context?.theme.colors.background,
     textColor: context?.theme.colors.foreground,

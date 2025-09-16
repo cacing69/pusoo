@@ -2,6 +2,8 @@ import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
+import 'package:gap/gap.dart';
+import 'package:pusoo/core/utils/helpers.dart';
 import 'package:pusoo/shared/data/models/track.dart';
 import 'package:pusoo/shared/presentation/providers/better_player_notifier.dart';
 
@@ -84,7 +86,47 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
             ),
           ),
           // Gap(10),
+          Text("Source"),
+          Gap(5),
+          Center(
+            child: Wrap(
+              children: [
+                ...widget.track.links.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  String link = entry.value;
+
+                  return Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: FButton(
+                        style: FButtonStyle.outline(),
+                        child: Text("${index + 1}"),
+                        onPress: () {
+                          showFlutterToast(
+                            message: "Changed to URL #${index + 1}",
+                            context: context,
+                          );
+
+                          ref
+                              .read(betterPlayerProvider.notifier)
+                              .openMediaStream(
+                                widget.track,
+                                isLiveStream: true,
+                                useUrlOnIndex: index,
+                              );
+                        },
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+          Gap(10),
           SafeArea(
+            top: false,
             child: FButton(
               style: FButtonStyle.outline(),
               onPress: () {

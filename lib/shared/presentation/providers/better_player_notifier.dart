@@ -26,35 +26,13 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
   }
 
   // Fungsi untuk menginisialisasi dan membuka video
-  void openMediaStream(Track track, {bool isLiveStream = false}) {
+  void openMediaStream(
+    Track track, {
+    bool isLiveStream = false,
+    int useUrlOnIndex = 0,
+  }) {
     final Logger log = ref.read(loggerProvider);
 
-    // 2. Siapkan data dari Track
-    final String videoUrl = track.links.first;
-
-    // if (state != null && state?.betterPlayerDataSource?.url == videoUrl) {
-    //   return;
-    // }
-
-    log.i("[BetterPlayerNotifier] --- openMediaStream called ---");
-    log.i("[BetterPlayerNotifier] Track URL: ${track.links.first}");
-    log.i("[BetterPlayerNotifier] Current state is null: ${state == null}");
-
-    // Pastikan controller sebelumnya sudah di-dispose sebelum membuka yang baru
-    // Riverpod akan menangani disposenya, tetapi kita tetap perlu
-    // memastikan controller di-dispose sebelum diassign ulang.
-    if (state != null) {
-      log.i(
-        "[BetterPlayerNotifier] Disposing previous BetterPlayerController!",
-      );
-
-      state?.dispose(); // <-- ✅ AKTIFKAN KEMBALI BARIS INI
-      state = null; // <-- ✅ TAMBAHKAN INI UNTUK MENGHAPUS REFERENSI LAMA
-    }
-
-    // state?.dispose();
-
-    // --- ✅ LANGKAH 1: BUAT DAFTAR ITEM MENU KUSTOM ---
     final List<BetterPlayerOverflowMenuItem> customMenuItems = [
       BetterPlayerOverflowMenuItem(
         Icons.share_outlined, // Ikon untuk item menu
@@ -70,8 +48,6 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         // TODO: Tambahkan logika untuk melaporkan masalah di sini
       }),
     ];
-
-    log.i(track.links.first);
 
     // 1. Inisialisasi konfigurasi dasar pemutar
     BetterPlayerConfiguration
@@ -114,6 +90,129 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
       ),
     );
 
+    // 6. Buat DataSource pemutar
+    // final BetterPlayerDataSource betterPlayerDataSource =
+    //     BetterPlayerDataSource(
+    //       BetterPlayerDataSourceType.network,
+    //       videoUrl,
+    //       videoFormat: videoFormat,
+    //       headers: httpHeaders,
+    //       liveStream: isLiveStream,
+    //       drmConfiguration: drmConfiguration,
+    //     );
+
+    // 7. Inisialisasi controller baru dan atur datasource
+    final BetterPlayerController initController = BetterPlayerController(
+      betterPlayerConfiguration,
+    );
+
+    BetterPlayerDataSource betterPlayerDataSource = _prepareDataSource(
+      track,
+      isLiveStream: isLiveStream,
+      useUrlOnIndex: useUrlOnIndex,
+    );
+
+    initController.setupDataSource(betterPlayerDataSource);
+
+    // Function handlePlaybackError = () {
+    //   // if (_currentUrlIndex < _videoUrls.length - 1) {
+    //   //   setState(() {
+    //   //     _currentUrlIndex++;
+    //   //     print(
+    //   //       "Playback error, trying next URL: ${_videoUrls[_currentUrlIndex]}",
+    //   //     );
+    //   //     _betterPlayerController.setupDataSource(
+    //   //       _createDataSource(_videoUrls[_currentUrlIndex]),
+    //   //     );
+    //   //     _betterPlayerController.play(); // Mulai putar ulang dengan URL baru
+    //   //   });
+    //   // } else {
+    //   // print("All URLs failed. Cannot play video.");
+    //   // Tampilkan pesan error ke pengguna
+    //   // }
+    // };
+
+    initController.addEventsListener((event) {
+      log.i("BetterPlayer event: ${event.betterPlayerEventType}");
+
+      if (event.betterPlayerEventType == BetterPlayerEventType.exception) {
+        useUrlOnIndex++;
+
+        log.e("error, try access another source");
+
+        if (useUrlOnIndex <= track.links.length) {
+          initController.setupDataSource(
+            _prepareDataSource(
+              track,
+              isLiveStream: isLiveStream,
+              useUrlOnIndex: useUrlOnIndex,
+            ),
+          );
+        }
+      }
+    });
+
+    // _betterPlayerController.addEventsListener((BetterPlayerEvent event) {
+
+    // });
+
+    // 8. Update state dengan controller yang baru
+    log.i("[BetterPlayerNotifier] New BetterPlayerController created.");
+    state = initController;
+  }
+
+  BetterPlayerDataSource _prepareDataSource(
+    Track track, {
+    bool isLiveStream = false,
+    int useUrlOnIndex = 0,
+  }) {
+    final Logger log = ref.read(loggerProvider);
+
+    // final onIndex = 0;
+
+    // 2. Siapkan data dari Track
+    final String videoUrl = track.links[useUrlOnIndex];
+
+    // if (state != null && state?.betterPlayerDataSource?.url == videoUrl) {
+    //   return;
+    // }
+
+    log.i("[BetterPlayerNotifier] --- openMediaStream called ---");
+    log.i("[BetterPlayerNotifier] Track URL: ${track.links[useUrlOnIndex]}");
+    log.i("[BetterPlayerNotifier] Current state is null: ${state == null}");
+
+    // Pastikan controller sebelumnya sudah di-dispose sebelum membuka yang baru
+    // Riverpod akan menangani disposenya, tetapi kita tetap perlu
+    // memastikan controller di-dispose sebelum diassign ulang.
+    if (state != null) {
+      log.i(
+        "[BetterPlayerNotifier] Disposing previous BetterPlayerController!",
+      );
+
+      state?.dispose();
+      state = null;
+    }
+
+    // state?.dispose();
+
+    // final List<BetterPlayerOverflowMenuItem> customMenuItems = [
+    //   BetterPlayerOverflowMenuItem(
+    //     Icons.share_outlined, // Ikon untuk item menu
+    //     "Bagikan", // Teks untuk item menu
+    //     () {
+    //       // Aksi yang dijalankan saat diklik
+    //       log.i("Aksi 'Bagikan' dipicu!");
+    //       // TODO: Tambahkan logika untuk membagikan video di sini
+    //     },
+    //   ),
+    //   BetterPlayerOverflowMenuItem(Icons.report_outlined, "Laporkan", () {
+    //     log.i("Aksi 'Laporkan' dipicu!");
+    //     // TODO: Tambahkan logika untuk melaporkan masalah di sini
+    //   }),
+    // ];
+
+    log.i(track.links[useUrlOnIndex]);
+
     // DRM Prepare
     Map<String, String>? clearKeyHex;
     String? licenseUrl;
@@ -144,6 +243,7 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
 
     // Logika parsing headers dari track.extVlcOpts
 
+    // TODO : WILL BE MOVED AS TRACK METADATA EXTRACTOR
     if (track.kodiProps.isNotEmpty) {
       final kodiProps = track.kodiProps.first;
 
@@ -211,6 +311,7 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
       }
     }
 
+    // HANDLING EXTVLCOPT
     if (track.extVlcOpts.isNotEmpty) {
       final bool hasUserAgent = track.extVlcOpts.first.containsKey(
         "http-user-agent",
@@ -219,6 +320,15 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
       if (hasUserAgent) {
         tmpHttpHeaders["User-Agent"] =
             "${track.extVlcOpts.first["http-user-agent"]}";
+      }
+
+      final bool hasReferrer = track.extVlcOpts.first.containsKey(
+        "http-referrer",
+      );
+
+      if (hasReferrer) {
+        tmpHttpHeaders["Referrer"] =
+            "${track.extVlcOpts.first["http-referrer"]}";
       }
     }
 
@@ -241,7 +351,6 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
 
     log.i("tmpHttpHeaders: $tmpHttpHeaders");
 
-    // 6. Buat DataSource pemutar
     final BetterPlayerDataSource betterPlayerDataSource =
         BetterPlayerDataSource(
           BetterPlayerDataSourceType.network,
@@ -252,19 +361,8 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
           drmConfiguration: drmConfiguration,
         );
 
-    // 7. Inisialisasi controller baru dan atur datasource
-    final BetterPlayerController initController = BetterPlayerController(
-      betterPlayerConfiguration,
-    );
-
-    initController.addEventsListener((event) {
-      log.i("BetterPlayer event: ${event.betterPlayerEventType}");
-    });
-
-    initController.setupDataSource(betterPlayerDataSource);
-
-    // 8. Update state dengan controller yang baru
-    log.i("[BetterPlayerNotifier] New BetterPlayerController created.");
-    state = initController;
+    return betterPlayerDataSource;
   }
+
+  _handlePlaybackError() {}
 }
