@@ -1,0 +1,271 @@
+#EXTM3U
+
+#EXTINF:-1 tvg-chno-"1",COSMOS AR (PELICULAS,ESTRENOS,INFORMATIVO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO....
+https://tv.mediacp.eu:19360/cosmos/cosmos.m3u8
+
+#EXTINF:-1 tvg-chno-"2",GAM TV CR (PELICULAS,INFORMATIVO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO....
+https://v2.azulstream.com:8081/gamtv/gamtv/tracks-v1a1/index.m3u8
+
+#EXTINF:-1 tvg-chno-"3",NEXT HD CL (PELICULAS, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://live.enhdtv.com:19360/nexthd/nexthd.m3u8
+
+#EXTINF:-1 tvg-chno-"4",GTV  GT. (PELICULAS, VARIADO, NOTICIAS) SI NO TIENES SEÑAL VOLVEMOS PRONTO.EN OCASIONES CARGAMOS CONTENIDO.....
+https://vdo.voxhdnet.com:3035/live/gtvlive.m3u8
+
+#EXTINF:-1 tvg-chno-"5",SAN ISIDRO RD. (ESTRENOS, PELICULAS, NOTICIAS) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.....
+https://rdn.essastream.com:3160/live/sanisidrotvlive.m3u8
+
+#EXTINF:-1 tvg-chno-"6",NITIDA RD (ESTRENOS,CLASICO, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://vs20.live.opencaster.com/bznudxxdtppv/index.m3u8
+
+#EXTINF:-1 tvg-chno-"7",TOROCOCO VE ( PELICULAS,VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://us.streaminghd.cl/torococotelevision/tracks-v1a1/index.m3u8
+
+#EXTINF:-1 tvg-chno-"8",VILLA ALTAGRACIA (PELICULAS, SERIES) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.
+https://inliveserver.com:1936/10016/10016/chunklist.m3u8
+
+#EXTINF:-1 tvg-chno-"9",CANAL 10 CR (DEPORTES, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO NUESTROS CANALES EN OCASIONES CARGAN CONTENIDO.
+https://acceso.radiosportstv.online:3285/hybrid/play.m3u8
+
+#EXTINF:-1 tvg-chno-"10",FMTV EC (PELICULA, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://s2.tvdatta.com:3307/hybrid/play.m3u8
+
+#EXTINF:-1 tvg-chno-"11",CASCARA RD (PELICULAS,DOCUMENTAL, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO....
+https://ss2.tvrdomi.com:1936/cascaratv/cascaratv/chunklist.m3u8
+
+#EXTINF:-1 tvg-chno-"12",IMAGEN UNIVERSAL RD(PELICULAS, INFORMATIVO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.....
+https://imagenuniversaltv.net:3771/hybrid/play.m3u8
+
+#EXTINF:-1 tvg-chno-"13",CANAL 5 AR (PELICULAS,VARIADO,INFORMATIVO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO....
+https://stmv4.voxtvhd.com.br/canal5pueblo/canal5pueblo/playlist.m3u8
+
+#EXTINF:-1 tvg-chno-"14",PANTALLA CLASICA. (PELICULAS, DEPORTES, INFORMATIVO ) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.....
+https://live20.bozztv.com/akamaissh101/ssh101/pantallaclasics/playlist.m3u8
+
+#EXTINF:-1 tvg-chno-"15",VM LATINO CR (MUSICA TODOS GENEROS ACTUAL Y CLASICA) SI NO TIENES SEÑAL VOLVEMOS PRONTO.  CARGANDO CONTENIDO....
+https://59ef525c24caa.streamlock.net/vmtv/vmlatino/chunklist.m3u8
+
+#EXTINF:-1 tvg-chno-"16",MULTIVISION CABLE AR (PELICULAS,INFORMATIVO) SI NO TIENES SEÑAL VOLVEMOS PRONTO.  EN OCASIONES CARGAMOS CONTENIDO.....
+https://videostream.shockmedia.com.ar:19360/multivisioncable/multivisioncable.m3u8
+
+#EXTINF:-1 tvg-chno-"17",DELTA. (VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO.EN OCASIONES CARGAMOS CONTENIDO.....
+https://cloud5.streaminglivehd.com:3511/live/dilverlive.m3u8
+
+#EXTINF:-1 tvg-chno-"18",TV NOSARA CR  .(PELICULAS,CLASICOS,VARIADO, SERIES) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGAN CONTENIDO.....
+https://latamvdo.com:3870/hybrid/play.m3u8
+
+#EXTINF:-1 tvg-chno-"19",ATACAMA CL (PELICULAS, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://v2.tustreaming.cl/atacamatv/index.m3u8
+
+ #EXTINF:-1 tvg-chno-"20",360RFC CR (SERIES, PELICULAS, NOTICIAS) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO....
+https://acceso.radiosportstv.online:3417/live/360rftvcrlive.m3u8
+
+#EXTINF:-1 tvg-chno-"21",VIBRA TV CL (PELICULAS, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.....
+https://sc1.wasidata.com/VibraPlus/tracks-v1a1/index.ts.m3u8?token=vibra060425
+
+#EXTINF:-1 tvg-chno-"22",MULTIVISION RD (PELICULAS,VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://5790d294af2dc.streamlock.net/MULTIVISIONRD/MULTIVISIONRD/chunklist.m3u8
+
+#EXTINF:-1 tvg-chno-"23",SAPIRIQUIS STREAMING CR ( PELICULAS, INFORMATIVO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.....
+https://acceso.radiosportstv.online:3458/live/sstv2372live.m3u8
+
+#EXTINF:-1 tvg-chno-"24",TIME TV (PELICULAS) SI NO TIENES SEÑAL VOLVEMOS PRONTO. NUESTROS CANALES EN OCASIONES CARGANDO CONTENIDO.....
+https://stream.ads.ottera.tv/playlist.m3u8?network_id=2154
+
+#EXTINF:-1 tvg-chno-"25",BEST  (PELICULAS, SERIES, CLASICOS). SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://acceso.radiosportstv.online:3102/hybrid/play.m3u8
+
+#EXTINF:-1 tvg-chno-"26",PLANETA TV MOYOBAMBA (PELICULAS,INFORMATIVO) SI NO TIENES SEÑAL VOLVEMOS PRONTO.CARGANDO CONTENIDO....
+https://live.obslivestream.com/planetatv/index.m3u8
+
+#EXTINF:-1 tvg-chno-"27",ONDA RD (PELICULAS, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://cnn.hostlagarto.com/ondatv/tracks-v1a1/index.m3u8
+
+#EXTINF:-1 tvg-chno-"28",SONY CINE (PELICULAS,VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.....
+https://a-cdn.klowdtv.com/live1/cine_720p/playlist.m3u8
+
+#EXTINF:-1 tvg-chno-"29",MANANCLAR TV (PELICULAS,SERIES, INFORMATIVO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO....
+https://5790d294af2dc.streamlock.net:443/manaclar/manaclar/playlist.m3u8
+
+#EXTINF:-1 tvg-chno-"30",CINCO TV TIGRE AR (PELICULAS, MUSICA,VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO....
+https://videostream.shockmedia.com.ar:19360/cincotv/cincotv.m3u8
+
+#EXTINF:-1 tvg-chno-"31",BARBE GT (VARIADO, PELICULAS) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO....
+https://cdn.streamhispanatv.net:3549/live/barbetvlive.m3u8
+
+#EXTINF:-1 tvg-chno-"32",ÑUBLE CL  (PELICULAS, SERIES, NOTICIAS) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.....
+https://tv.arkeo.cl:1936/canalrtv/canalrtv/chunklist.m3u8
+
+#EXTINF:-1 tvg-chno-"33",COTO BRUS. (PELICULAS, INFORMATIVO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://s1.tvdatta.com:3072/live/cotobrustvlive.m3u8
+
+#EXTINF:-1 tvg-chno-"34",DMJ  (PELICULAS, INFORMATIVO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO....
+https://stmv1.voxhdnet.com/dmjsurtv/dmjsurtv/playlist.m3u8
+
+#EXTINF:-1 tvg-chno-"35",GFTV VE ( PELICULAS,VARIADO, INFORMATIVO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://live.obslivestream.com/regionaltv/tracks-v1a1/index.m3u8
+
+#EXTINF:-1 tvg-chno-"36",CANAL100 CHINIQUE GT (PELICULAS, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://cdn.streamhispanatv.net:3295/live/canal100chilive.m3u8
+
+#EXTINF:-1 tvg-chno-"37",MTV (PELICULAS, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO....
+https://live.obslivestream.com/mtv/tracks-v1a1/index.m3u8
+
+#EXTINF:-1 tvg-chno-"38",RUM TIME ES (PELICULAS)) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAN CONTENIDO......
+https://stream.ads.ottera.tv/playlist.m3u8?network_id=6126
+
+#EXTINF:-1 tvg-chno-"39",LATINA INTERNACIONAL (PELICULAS, INFORMATIVO)  SI NO TIENES SEÑAL VOLVEMOS PRONTO.  EN OCASIONES CARGAMOS CONTENIDO.....
+https://5790d294af2dc.streamlock.net/latinatv/latinatv/chunklist.m3u8
+
+#EXTINF:-1 tvg-chno-"40",APANINES CL (PELICULAS, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://live20.bozztv.com/akamaissh101/ssh101/apaninestv2025/chunks.m3u8
+
+#EXTINF:-1 tvg-chno-"41",COSITEL (PELICULAS, VARIADO, MUSICA) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://vod3.qbi.lat:15123/cositel/tracks-v1a1/index.m3u8
+
+#EXTINF:-1 tvg-chno-"42",CRTV (PELICULAS, SERIES, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO......
+https://live.obslivestream.com/crtvmux/tracks-v1a1/index.m3u8
+
+#EXTINF:-1 tvg-chno-"43",TVS MACARAY VE (PELICULAS ) SI NO TIENES SEÑAL VOLVEMOS PRONTO.EN OCASIONES CARGAMOS CONTENIDO......
+https://vcp10.myplaytv.com/tvs/tvs/chunklist.m3u8
+
+#EXTINF:-1 tvg-chno-"44",CANAL 21 POSADAS AR (PELICULAS,SERIES) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.....
+https://iptv.ixfo.com.ar:30443/c21tv/hd/c21tv/chunks.m3u8
+
+#EXTINF:-1 tvg-chno-"45",TELESOL VE  (PELICULAS, VARIADO, NOTICIAS) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://vcp15.myplaytv.com/telesoltv/telesoltv/chunklist.m3u8
+
+#EXTINF:-1 tvg-chno-"46",TIGUERITOS RD(PELICULAS, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.....
+https://ss2.tvrdomi.com:1936/tigueritostv/tigueritostv/chunklist.m3u8
+
+#EXTINF:-1 tvg-chno-"47",VISION 3000 (PELICULAS, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.....
+https://ss2.tvrdomi.com:1936/vision3000/vision3000/chunklist.m3u8
+
+#EXTINF:-1 tvg-chno-"48",BUM TV (PELICULAS, VARIADO)SI NO TIENES SEÑAL VOLVEMOS PRONTO.CARGANDO CONTENIDO....
+https://movil.ejeserver.com/live/visiondorada.m3u8
+
+#EXTINF:-1 tvg-chno-"49",MEGA CINE RD (PELICULAS, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.....
+https://cloudflare.streamgato.us:3125/live/megacinetvlive.m3u8
+
+#EXTINF:-1 tvg-chno-"50",RUMBA TV (PELICULAS, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO....
+https://tv.sistemasandinos.org/rumbatv/tracks-v1a1/index.m3u8
+
+#EXTINF:-1 tvg-chno-"51",NEOX AR (PELICULAS, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO......
+https://tv.streamcasthd.com:3076/live/sonicaargentinalive.m3u8
+
+#EXTINF:-1 tvg-chno-"52",CARIÑOSA TV GT (MUSICA, SERIES, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://cloud2.streaminglivehd.com:1936/carinosatv/carinosatv/chunklist.m3u8
+
+#EXTINF:-1 tvg-chno-"53",TRANCE LATINA (MUSICA) SI NO TIENES SEÑAL VOLVEMOS PRONTO EN OCASIONES CARGAN CONTENIDO.....
+https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/trace-latina/95a74b28-fdf8-4154-b898-87f26f067c14/3.m3u8
+
+#EXTINF:-1 tvg-chno-"54",TV FLORENCIA GT.(PELICULAS, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO.
+https://cdn.streamhispanatv.net:3819/live/tvflorecialive.m3u8
+
+#EXTINF:-1 tvg-chno-"55",MULTIPLAY TV SERIES. TULSA KING. CAP 04. VIERNES NUEV0 EPISODIO
+https://video.wixstatic.com/video/08276b_2d881198a53c48559d537e86a74ae99c/720p/mp4/file.mp4
+
+#EXTINF:-1 tvg-chno-"56",MULTIPLAY TV ESTRENOS. CAERAS. VIERNES NUEVO ESTRENO
+https://video.wixstatic.com/video/08276b_75f36d51a3f74e73b4aa3675098fea63/720p/mp4/file.mp4
+
+#EXTINF:-1 tvg-chno-"57",MULTIPLAY TV ESTRENOS 2. SE LO QUE HICIERON EL VERANO PASADO 3. VIERNES NUEVO ESTRENO.
+https://video.wixstatic.com/video/08276b_7624cec2b53044f7a4d41c27e3f0e535/720p/mp4/file.mp4
+
+#EXTINF:-1 tvg-chno-"58",MULTIPLAY TV ANIMES. DUCKTALES+DB SUPER+LOONEY TUNES+STAR WARS+FUTURAMA
+https://video.wixstatic.com/video/08276b_d6d4337aeafa4714905e4f07a89510a9/480p/mp4/file.mp4
+
+#EXTINF:-1 tvg-chno-"59",CARTOONCITO (ANIMADO,SERIES ) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://live20.bozztv.com/giatv/giatv-CARTOONRETRO/CARTOONRETRO/chunks.m3u8
+
+#EXTINF:-1 tvg-chno-"60",ANIMESTATION AR (ANIMADOS) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://live20.bozztv.com/akamaissh101/ssh101/livestreamingtv/chunks.m3u8
+
+#EXTINF:-1 tvg-chno-"61",MONI (VARIADO, ANIMADO, PELICULAS)  SI NO TIENES SEÑAL VOLVEMOS. EN OCASIONES CARGAMOS CONTENIDO....
+https://live20.bozztv.com/akamaissh101/ssh101/monitvhd/chunks.m3u8
+
+#EXTINF:-1 tvg-chno-"62",RETRO MAGICO. (ANIMADO,SERIES) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO....
+https://live20.bozztv.com/giatv/giatv-retromagico/retromagico/chunks.m3u8
+
+#EXTINF:-1 tvg-chno-"63",ANIME ONEGAI PLUS JAPON LATINO AC (ANIMACION) SI NO TIENES SEÑAL VOLVEMOS PRONTO.EN OCASIONES CARGAMOS CONTENIDO.....
+https://stream-us-east-1.getpublica.com/playlist.m3u8?network_id=11057
+
+#EXTINF:-1 tvg-chno-"64",GOgo PLAY (ANIMADOS, PELICULAS )SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO....
+https://live20.bozztv.com/akamaissh101/ssh101/gogoplay/chunks.m3u8
+
+#EXTINF:-1 tvg-chno-"65",CLAN (ANIMADOS) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO....
+https://rtvelivestream-rtveplayplus.rtve.es/rtvesec/int/clan_int_main_360.m3u8
+
+#EXTINF:-1 tvg-chno-"66",TG JUNIOR (ANIMADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.
+https://stream.ads.ottera.tv/playlist.m3u8?network_id=771
+
+#EXTINF:-1 tvg-chno-"67",MAXANIME (ANIMADOS) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO
+https://streamlov.alsolnet.com/maxanime/live/chunklist.m3u8
+
+#EXTINF:-1 tvg-chno-"68",CN2 (SERIES, ANIMADOS) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO....
+https://cdn1.intercom.cdn.moderntv.eu/intercom/stream/CARTOONNETWORK/20-hls/live-media.m3u8
+
+#EXTINF:-1 tvg-chno-"69",ZPLAY (ANIMADOS,PELICULAS, SERIES) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.....
+https://mitv.zplay.cl/Ztv/tracks-v1a1/mono.m3u8
+
+#EXTINF:-1 tvg-chno-"70", EXTREMA KIDS. (FAMILIA, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAN CONTENIDO.....
+https://627bb251f23c7.streamlock.net:444/ExtremaKids/ExtremaKids/playlist.m3u8
+
+#EXTINF:-1 tvg-chno-"71",EXTREMA TV CR.(FAMILIAR, VARIADO, PELICULAS ) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO....
+https://627bb251f23c7.streamlock.net:444/ExtremaTV/ExtremaTV/playlist.m3u8
+
+#EXTINF:-1 tvg-chno-"72",CORRIENTES AR (MUSICA, FAMILIAR, PELICULAS ) SI NO TIENES SEÑAL VOLVEMOS PRONTO. CARGANDO CONTENIDO.....
+https://vivo.solumedia.com:19360/telemedia/telemedia.m3u8
+
+#EXTINF:-1 tvg-chno-"73",SPIRIT (MUSICA, FAMILIAR) SI NO TIENES SEÑAL VOLVEMOS PRONTO. NUESTROS CANALES EN OCASIONES CARGAN CONTENIDO.
+https://cdnlive.myspirit.tv/LS-ATL-43240-2/index.m3u8
+
+#EXTINF:-1 tvg-chno-"74",TELEVISA (NOVELAS) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.....
+https://televisa-televisa-1-it.samsung.wurl.tv/playlist.m3u8
+
+#EXTINF:-1 tvg-chno-"75",CANAL UNO DIGITAL COL
+https://mdstrm.com/live-stream-playlist/5a5e1c2568b1910913db5fe2.m3u8
+
+#EXTINF:-1 tvg-chno-"76",DW (DOCUMENTAL, NOTICIAS) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO.....
+https://dwamdstream104.akamaized.net/hls/live/2015530/dwstream104/index.m3u8
+
+#EXTINF:-1 tvg-chno-"77",RT (NOTICIAS, VARIADO) SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO
+https://rt-esp.rttv.com/live/rtesp/playlist_800Kb.m3u8
+
+#EXTINF:-1 tvg-chno-"78",CARACOL DITU .SI NO TIENES SEÑAL VOLVEMOS PRONTO.
+https://cdn1.intercom.cdn.moderntv.eu/intercom/stream/CARACOL/20-hls/live-media.m3u8
+
+#EXTINF:-1 tvg-chno-"79",RCN MAS . SI NO TIENES SEÑAL VOLVEMOS PRONTO. EN OCASIONES CARGAMOS CONTENIDO
+https://rcntv-rcnmas-1-us.plex.wurl.tv/playlist.m3u8
+
+#EXTINF:-1 tvg-chno-"80",GOL CARACOL .ACTUALIZAR CUANDO JUEGUE COLOMBIA EN VIVO......
+https://www.youtube.com/watch?v=9xTZ-KgU4OA
+
+#EXTINF:-1 tvg-chno-"81",BEIN XTRA Ñ ES . SI NO TIENES SEÑAL VOLVEMOS PRONTO
+https://amg01334-beinsportsllc-beinxtraesp-localnow-aekzc.amagi.tv/playlist.m3u8
+
+#EXTINF:0,ESPN 6 (Chile) 82 (????) 93 UFC
+http://181.78.82.6:46090/play/a00w/index.m3u8
+
+#EXTINF:-1 tvg-chno-"83",RTTV DEPORTES.(DEPORTES, PELICULAS, MUSICA) SI NO TIENES SEÑAL VOLVEMOS PRONTO.
+https://acceso.radiosportstv.online:3723/live/radioturrialbatvlive.m3u8
+
+#EXTINF:-1 tvg-chno-"84",CLARO SPORTS MEX.  SI NO TIENES SEÑAL VOLVEMOS PRONTO.
+https://dai.google.com/linear/hls/event/_OKWx76jT7mivD6d-25QAw/master.m3u8
+
+#EXTINF:0,ESPN 3 (Mexico) 85 (????) (81) TENIS
+http://181.78.82.6:46090/play/a00v/index.m3u8
+
+#EXTINF:-1 tvg-chno-"86",BEIN SPORTS XTRA X .SI NO TIENES SEÑAL VOLVEMOS PRONTO.
+https://amg01334-beinsportsllc-beinxtra-localnow-kcy6r.amagi.tv/playlist.m3u8
+
+#EXTINF:0,ESPN 5 (España) (🇪🇸) 87  (89) FUTBOL
+http://190.83.2.172:8081/play/a07g/index.m3u8
+
+#EXTINF:0,ESPN 2 (España) (🇪🇸)  (88) 73 TENIS
+http://181.78.82.6:46090/play/a00i/index.m3u8
+
+#EXTINF:-1 tvg-chno-"45",fox españa 89
+http://181.78.106.127:9000/play/ca031/index.m3u8
+
+#EXTINF:0,FSI FOX SPORTS 2 USA
+http://23.237.104.106:8080/USA_FS2/index.m3u8

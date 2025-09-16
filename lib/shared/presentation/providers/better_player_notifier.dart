@@ -220,14 +220,21 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
     // 3. Tentukan format video dari ekstensi URL
     BetterPlayerVideoFormat? videoFormat;
 
-    final String extOnUrl = videoUrl.split(".").last;
+    final uri = Uri.parse(videoUrl);
+    final path = uri.path; // /video.mp4
+
+    final extOnUrl = path.split('.').last; // mp4
 
     log.i("extOnUrl: $extOnUrl");
+
+    // bool tmpIsLiveStream = isLiveStream;
 
     if (extOnUrl.contains("mpd")) {
       videoFormat = BetterPlayerVideoFormat.dash;
     } else if (extOnUrl.contains("m3u8")) {
       videoFormat = BetterPlayerVideoFormat.hls;
+    } else if (["mkv", "mp4", "webm"].contains(extOnUrl)) {
+      videoFormat = BetterPlayerVideoFormat.other;
     }
 
     BetterPlayerDrmType? drmType;
@@ -258,6 +265,7 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
 
         final Map<String, BetterPlayerDrmType> mapLicenseType = {
           "clearkey": BetterPlayerDrmType.clearKey,
+          "org.w3.clearkey": BetterPlayerDrmType.clearKey,
           "com.widevine.alpha": BetterPlayerDrmType.widevine,
         };
 
@@ -330,6 +338,8 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         tmpHttpHeaders["Referrer"] =
             "${track.extVlcOpts.first["http-referrer"]}";
       }
+
+      tmpHttpHeaders["cookie"] = "";
     }
 
     if (drmType != null) {

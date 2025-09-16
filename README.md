@@ -30,3 +30,13 @@ cd pusoo
  Home (Live TV) | <img src="screens/home_live_tv.png" height= "800"/>&nbsp;<img src="screens/home_live_tv_filter.png" height= "800"/>&nbsp;<img src="screens/home_live_tv_dialog_change_active_playlist.png" height= "800"/>&nbsp;<img src="screens/home_live_tv_player.png" height= "800"/>&nbsp;<img src="screens/home_live_tv_category.png" height= "800"/>
  Home (Movie) | <img src="screens/home_movies.jpeg" height= "800"/>&nbsp;<img src="screens/home_movie_detail_about.png" height= "800"/>&nbsp;<img src="screens/home_movie_detail_trailer.png" height= "800"/>
  Home (Series) | <img src="screens/home_series.png" height= "800"/>
+
+## Usage Policy
+
+- Personal Use Only: These app are intended for personal, non-commercial use.
+- No Redistribution for Profit: Do not redistribute or sell these app for commercial purposes.
+- Respect Source Terms: Adhere to the terms of service of the original stream providers
+
+## Requirements
+
+- A Working Brain 🧠

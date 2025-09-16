@@ -43,8 +43,8 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
     final nameController = useTextEditingController();
     final templateContoller = useFSelectController<PlaylistTemplate>();
     final urlController = useTextEditingController(
-      text:
-          "https://raw.githubusercontent.com/kshshuGyUWGG799vfaga/new-m3u/refs/heads/main/2025",
+      // text:
+      //     "https://raw.githubusercontent.com/kshshuGyUWGG799vfaga/new-m3u/refs/heads/main/2025",
       // text:
       //     "http://ogietv.biz.id:80/get.php?username=maksin&password=123456&type=m3u_plus&output=mpegts",
     );
