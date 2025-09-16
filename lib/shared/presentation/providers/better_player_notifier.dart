@@ -99,9 +99,9 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         enableFullscreen: true,
         showControlsOnInitialize: false,
         loadingWidget: FProgress.circularIcon(),
-        customControlsBuilder: (controller, onPlayerVisibilityChanged) {
-          return Placeholder();
-        },
+        // customControlsBuilder: (controller, onPlayerVisibilityChanged) {
+        //   return Placeholder();
+        // },
       ),
     );
 
@@ -128,6 +128,77 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
     // 5. Siapkan HTTP headers (jika ada)
     Map<String, String>? httpHeaders;
 
+    // Logika parsing DRM dari track.kodiProps
+
+    // Logika parsing headers dari track.extVlcOpts
+
+    if (track.kodiProps.isNotEmpty) {
+      final kodiProps = track.kodiProps.first;
+
+      // HANDLING LICENSE TYPE
+      final bool hasLicenseType = track.kodiProps.first.containsKey(
+        "inputstream.adaptive.license_type",
+      );
+
+      log.i("hasLicenseType: $hasLicenseType");
+      if (hasLicenseType) {
+        final licenseType = kodiProps["inputstream.adaptive.license_type"];
+
+        final Map<String, BetterPlayerDrmType> mapLicenseType = {
+          "clearkey": BetterPlayerDrmType.clearKey,
+          "com.widevine.alpha": BetterPlayerDrmType.widevine,
+        };
+
+        // if (licenseType == "clearkey") {
+        if (mapLicenseType.containsKey(licenseType)) {
+          drmType = mapLicenseType[licenseType];
+        } else {
+          log.e("licenseType not supported: $licenseType");
+        }
+      }
+
+      // HANDLING LICENSE KEY
+      final bool hasLicenseKey = track.kodiProps.first.containsKey(
+        "inputstream.adaptive.license_key",
+      );
+
+      log.i("hasLicenseKey: $hasLicenseKey");
+      if (hasLicenseKey) {
+        final licenseKey = kodiProps["inputstream.adaptive.license_key"];
+
+        if (drmType == BetterPlayerDrmType.clearKey) {
+          final rawClearKey = licenseKey?.split(":");
+          if (rawClearKey != null && rawClearKey.length == 2) {
+            clearKeyHex = {rawClearKey[0]: rawClearKey[1]};
+          } else {
+            log.e("invalid clearKey format: $licenseKey");
+          }
+        } else if (drmType == BetterPlayerDrmType.widevine) {
+          licenseUrl = licenseKey;
+        }
+      }
+
+      // HANDLING MANIFEST TYPE
+      final bool hasManifestType = track.kodiProps.first.containsKey(
+        "inputstream.adaptive.manifest_type",
+      );
+
+      if (hasManifestType) {
+        final manifestType = kodiProps["inputstream.adaptive.manifest_type"];
+
+        final Map<String, BetterPlayerVideoFormat> mapManifestType = {
+          "dash": BetterPlayerVideoFormat.dash,
+          "hls": BetterPlayerVideoFormat.hls,
+        };
+
+        if (mapManifestType.containsKey(manifestType)) {
+          videoFormat = mapManifestType[manifestType];
+        } else {
+          log.e("manifestType not registered: $manifestType");
+        }
+      }
+    }
+
     if (drmType != null) {
       drmConfiguration = BetterPlayerDrmConfiguration(
         drmType: drmType,
@@ -138,9 +209,6 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         headers: drmType == BetterPlayerDrmType.widevine ? httpHeaders : null,
       );
     }
-    // Logika parsing DRM dari track.kodiProps
-
-    // Logika parsing headers dari track.extVlcOpts
 
     // 6. Buat DataSource pemutar
     final BetterPlayerDataSource betterPlayerDataSource =

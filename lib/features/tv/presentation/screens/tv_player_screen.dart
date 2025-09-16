@@ -1,14 +1,9 @@
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_json_view/flutter_json_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
-import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
-import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/models/track.dart';
 import 'package:pusoo/shared/presentation/providers/better_player_notifier.dart';
-import 'package:pusoo/shared/presentation/providers/logger_provider.dart';
 
 class TVPlayerScreen extends ConsumerStatefulWidget {
   final Track track;
