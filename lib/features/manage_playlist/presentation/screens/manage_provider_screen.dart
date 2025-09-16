@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pusoo/core/utils/helpers.dart';
+import 'package:pusoo/features/tv/presentation/providers/tv_tracks_paging_notifier.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
 import 'package:drift/drift.dart' as drift;
 
-class ManageProviderScreen extends StatefulWidget {
+class ManageProviderScreen extends ConsumerStatefulWidget {
   const ManageProviderScreen({super.key});
 
   @override
-  State<ManageProviderScreen> createState() => _ManageProviderScreenState();
+  ConsumerState<ManageProviderScreen> createState() =>
+      _ManageProviderScreenState();
 }
 
-class _ManageProviderScreenState extends State<ManageProviderScreen> {
+class _ManageProviderScreenState extends ConsumerState<ManageProviderScreen> {
   List<PlaylistDriftData> playlist = [];
 
   void loadPlaylist() async {
@@ -69,6 +72,9 @@ class _ManageProviderScreenState extends State<ManageProviderScreen> {
 
                 if (context.mounted) {
                   showFlutterToast(context: context, message: "Playlist saved");
+
+                  // REFRESH HOME
+                  ref.read(tvTracksPagingProvider).refresh();
                   // showFToast(
                   //   context: context,
                   //   alignment: FToastAlignment.topCenter,

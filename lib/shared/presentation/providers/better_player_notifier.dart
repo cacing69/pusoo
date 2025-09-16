@@ -32,9 +32,9 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
     // 2. Siapkan data dari Track
     final String videoUrl = track.links.first;
 
-    if (state != null && state?.betterPlayerDataSource?.url == videoUrl) {
-      return;
-    }
+    // if (state != null && state?.betterPlayerDataSource?.url == videoUrl) {
+    //   return;
+    // }
 
     log.i("[BetterPlayerNotifier] --- openMediaStream called ---");
     log.i("[BetterPlayerNotifier] Track URL: ${track.links.first}");
@@ -47,6 +47,9 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
       log.i(
         "[BetterPlayerNotifier] Disposing previous BetterPlayerController!",
       );
+
+      state?.dispose(); // <-- ✅ AKTIFKAN KEMBALI BARIS INI
+      state = null; // <-- ✅ TAMBAHKAN INI UNTUK MENGHAPUS REFERENSI LAMA
     }
 
     // state?.dispose();
@@ -120,9 +123,11 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
 
     final String extOnUrl = videoUrl.split(".").last;
 
-    if (extOnUrl == "mpd") {
+    log.i("extOnUrl: $extOnUrl");
+
+    if (extOnUrl.contains("mpd")) {
       videoFormat = BetterPlayerVideoFormat.dash;
-    } else if (extOnUrl == "m3u8") {
+    } else if (extOnUrl.contains("m3u8")) {
       videoFormat = BetterPlayerVideoFormat.hls;
     }
 
@@ -133,6 +138,7 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
 
     // 5. Siapkan HTTP headers (jika ada)
     Map<String, String>? httpHeaders;
+    Map<String, String> tmpHttpHeaders = {};
 
     // Logika parsing DRM dari track.kodiProps
 
@@ -205,6 +211,17 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
       }
     }
 
+    if (track.extVlcOpts.isNotEmpty) {
+      final bool hasUserAgent = track.extVlcOpts.first.containsKey(
+        "http-user-agent",
+      );
+
+      if (hasUserAgent) {
+        tmpHttpHeaders["User-Agent"] =
+            "${track.extVlcOpts.first["http-user-agent"]}";
+      }
+    }
+
     if (drmType != null) {
       drmConfiguration = BetterPlayerDrmConfiguration(
         drmType: drmType,
@@ -215,6 +232,14 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         headers: drmType == BetterPlayerDrmType.widevine ? httpHeaders : null,
       );
     }
+
+    log.i("httpHeaders: $httpHeaders");
+
+    if (tmpHttpHeaders.isNotEmpty) {
+      httpHeaders = tmpHttpHeaders;
+    }
+
+    log.i("tmpHttpHeaders: $tmpHttpHeaders");
 
     // 6. Buat DataSource pemutar
     final BetterPlayerDataSource betterPlayerDataSource =

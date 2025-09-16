@@ -7,8 +7,6 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:pusoo/features/tv/domain/models/get_tv_tracks_params.dart';
-import 'package:pusoo/features/tv/presentation/providers/tv_tracks_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_paging_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_search_notifier.dart';
 import 'package:pusoo/router.dart';
@@ -21,52 +19,6 @@ class TvScreen extends StatefulHookConsumerWidget {
   @override
   ConsumerState<TvScreen> createState() => _TvScreenState();
 }
-
-// final pagingTvTracksControllerProvider =
-//     Provider.autoDispose<PagingController<int, Track>>((ref) {
-//       ref.keepAlive(); // ini akan mencegah dispose otomatis
-
-//       final controller = PagingController<int, Track>(
-//         getNextPageKey: (state) {
-//           if (state.lastPageIsEmpty) {
-//             return 0;
-//           }
-
-//           final lastItem = state.items?.last;
-
-//           return lastItem?.id ?? 0;
-//         },
-//         fetchPage: (cursor) async {
-//           final searchState = ref.read(tvTracksSearchProvider);
-
-//           final stopFetch =
-//               cursor != 0 &&
-//               (ref.read(tvTracksProvider).value ?? []).length < 20;
-
-//           // harus berhenti fetch page
-//           if (stopFetch) {
-//             return [];
-//           } else {
-//             await ref
-//                 .read(tvTracksProvider.notifier)
-//                 .perform(
-//                   GetTvTracksParams(
-//                     limit: 20,
-//                     cursor: cursor,
-//                     title: searchState,
-//                   ),
-//                 );
-
-//             return ref.read(tvTracksProvider).value!;
-//           }
-//           // return [];
-//         },
-//       );
-
-//       ref.onDispose(controller.dispose);
-
-//       return controller;
-//     });
 
 class _TvScreenState extends ConsumerState<TvScreen>
     with TickerProviderStateMixin {
@@ -303,6 +255,10 @@ class _TvScreenState extends ConsumerState<TvScreen>
                                           clipBehavior: Clip.antiAlias,
                                           child: CachedNetworkImage(
                                             imageUrl: item.tvgLogo,
+                                            httpHeaders: {
+                                              "User-Agent": "Mozilla/5.0",
+                                              "accept": "image/*",
+                                            },
                                             placeholder: (_, __) =>
                                                 const Center(
                                                   child:
@@ -310,7 +266,7 @@ class _TvScreenState extends ConsumerState<TvScreen>
                                                 ),
                                             errorWidget: (_, __, ___) => Center(
                                               child: Icon(
-                                                FIcons.imageOff,
+                                                FIcons.tv,
                                                 color: context
                                                     .theme
                                                     .colors
@@ -325,7 +281,7 @@ class _TvScreenState extends ConsumerState<TvScreen>
                                       )
                                     : Center(
                                         child: Icon(
-                                          FIcons.imageOff,
+                                          FIcons.tv,
                                           size: 40,
                                           color: context.theme.colors.background
                                               .withAlpha(200),

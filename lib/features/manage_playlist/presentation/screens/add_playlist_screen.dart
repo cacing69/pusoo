@@ -28,8 +28,9 @@ class AddPlaylistScreen extends StatefulHookConsumerWidget {
 class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
   bool isLoading = false;
 
-  final playlistTypeController =
-      FSelectTileGroupController<ContentType>.radio();
+  final playlistTypeController = FSelectTileGroupController<ContentType>.radio(
+    ContentType.live,
+  );
 
   @override
   void dispose() {
@@ -127,6 +128,22 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
               onPress: isLoading
                   ? null
                   : () async {
+                      if (nameController.text.isEmpty) {
+                        showFlutterToast(
+                          message: "Name cannot empty",
+                          context: context,
+                        );
+                        return;
+                      }
+
+                      if (urlController.text.isEmpty) {
+                        showFlutterToast(
+                          message: "URL cannot empty",
+                          context: context,
+                        );
+                        return;
+                      }
+
                       setState(() {
                         isLoading = true;
                       });
