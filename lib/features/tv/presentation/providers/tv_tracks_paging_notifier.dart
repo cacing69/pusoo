@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_filter_notifier.dart';
-import 'package:pusoo/shared/data/models/track.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'tv_tracks_paging_notifier.g.dart';

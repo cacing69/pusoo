@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import 'package:pusoo/shared/data/models/drift/playlist_drift.dart';
+import 'package:pusoo/features/playlist/domain/models/playlist_drift.dart';
 // import 'package:pusoo/shared/data/drift/playlist.dart';
 
 class ChannelDrift extends Table {

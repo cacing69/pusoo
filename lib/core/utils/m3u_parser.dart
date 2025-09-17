@@ -1,6 +1,6 @@
 import 'dart:core';
 
-import 'package:pusoo/shared/data/models/track.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 
 abstract class M3UParser {
   static final _attributeRegex = RegExp(r'([a-zA-Z0-9_-]+)=\"([^\"]*)\"');

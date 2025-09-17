@@ -1,15 +1,14 @@
 import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
 import 'package:pusoo/features/track/presentation/providers/track_providers.dart';
-import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'tv_tracks_notifier.g.dart';
+part 'tv_track_count_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
-class TvTracksNotifier extends _$TvTracksNotifier {
+class TvTrackCountNotifier extends _$TvTrackCountNotifier {
   // Metode build ini akan dipanggil pertama kali oleh Riverpod
   @override
-  AsyncValue<List<Track>?> build() {
+  AsyncValue<int?> build() {
     // perform(GetTvTracksParams(limit: 20));
     return const AsyncValue.loading();
   }
@@ -20,7 +19,7 @@ class TvTracksNotifier extends _$TvTracksNotifier {
     // Kita tidak perlu lagi menulis logika onDispose.
     state = AsyncValue.loading();
 
-    final result = await ref.read(getTracksUsecaseProvider).call(params);
+    final result = await ref.read(countTrackUsecaseProvider).call(params);
 
     result.fold(
       (failure) {

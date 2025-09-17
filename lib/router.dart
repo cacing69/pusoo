@@ -1,15 +1,18 @@
 import 'package:go_router/go_router.dart';
-import 'package:pusoo/features/manage_playlist/presentation/screens/add_new_provider_screen.dart';
-import 'package:pusoo/features/manage_playlist/presentation/screens/add_playlist_screen.dart';
+import 'package:pusoo/features/source/presentation/screens/add_new_source_screen.dart';
+import 'package:pusoo/features/playlist/presentation/screens/add_new_playlist_screen.dart';
 import 'package:pusoo/features/detail/presentation/screens/detail_screen.dart';
 import 'package:pusoo/features/home/presentation/screens/home_screen.dart';
-import 'package:pusoo/features/manage_playlist/presentation/screens/manage_provider_screen.dart';
+import 'package:pusoo/features/source/presentation/screens/manage_source_screen.dart';
 import 'package:pusoo/features/movie/presentation/screens/movie_detail_screen.dart';
+import 'package:pusoo/features/source/presentation/screens/public_source_list_playlist_screen.dart';
+import 'package:pusoo/features/source/presentation/screens/public_source_list_playlist_tracks_screen.dart';
+import 'package:pusoo/features/source/presentation/screens/public_source_list_screen.dart';
 // import 'package:pusoo/features/tv/presentation/screens/tv_player_full_screen.dart';
 import 'package:pusoo/features/tv/presentation/screens/tv_player_screen.dart';
 import 'package:pusoo/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
-import 'package:pusoo/shared/data/models/track.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/shared/presentation/screens/youtube_iframe_player_screen.dart';
 
 enum RouteName {
@@ -22,8 +25,13 @@ enum RouteName {
   // tvPlayerFull,
   addPlaylist,
   movieDetail,
-  manageProvider,
-  addNewProvider,
+  manageSource,
+  addNewSource,
+  publicSources,
+  publicSourcesPlaylist,
+  publicSourcesPlaylistTrack,
+
+  // etc..
   youtubeIframePlayer,
 }
 
@@ -39,9 +47,9 @@ final List<GoRoute> defaultRouter = [
     builder: (context, state) => HomeScreen(),
   ),
   GoRoute(
-    path: '/add-playlist',
+    path: '/playlist/add',
     name: RouteName.addPlaylist.name,
-    builder: (context, state) => AddPlaylistScreen(),
+    builder: (context, state) => AddNewPlaylistScreen(),
   ),
   GoRoute(
     path: '/detail/:movieId',
@@ -97,17 +105,38 @@ final List<GoRoute> defaultRouter = [
   ),
 
   GoRoute(
-    path: '/manage-provider',
-    name: RouteName.manageProvider.name,
+    path: '/source/manage',
+    name: RouteName.manageSource.name,
     builder: (context, state) {
-      return ManageProviderScreen();
+      return ManageSourceScreen();
     },
   ),
   GoRoute(
-    path: '/add-new-provider',
-    name: RouteName.addNewProvider.name,
+    path: '/source/add-new',
+    name: RouteName.addNewSource.name,
     builder: (context, state) {
-      return AddNewProviderScreen();
+      return AddNewSourceScreen();
+    },
+  ),
+  GoRoute(
+    path: '/source/public-sources',
+    name: RouteName.publicSources.name,
+    builder: (context, state) {
+      return PublicSourceListScreen();
+    },
+  ),
+  GoRoute(
+    path: '/source/public-sources/playlist',
+    name: RouteName.publicSourcesPlaylist.name,
+    builder: (context, state) {
+      return PublicSourceListPlaylistScreen();
+    },
+  ),
+  GoRoute(
+    path: '/source/public-sources/playlist/tracks',
+    name: RouteName.publicSourcesPlaylistTrack.name,
+    builder: (context, state) {
+      return PublicSourceListPlaylistTracksScreen();
     },
   ),
   // GoRoute(

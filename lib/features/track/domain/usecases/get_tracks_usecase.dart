@@ -4,7 +4,7 @@ import 'package:pusoo/core/errors/failure.dart';
 import 'package:pusoo/core/utils/usecase.dart';
 import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
 import 'package:pusoo/features/track/domain/repostiory/track_repository.dart';
-import 'package:pusoo/shared/data/models/track.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 
 class GetTracksUsecase implements UseCase<List<Track>, TrackDriftFilterQuery> {
   final TrackRepository _repository;

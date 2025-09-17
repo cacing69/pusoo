@@ -20,25 +20,23 @@ class _SettingScreenState extends State<SettingScreen> {
         child: Column(
           children: [
             FTileGroup(
-              label: Text("Provider"),
+              label: Text("Source"),
               children: [
                 FTile(
                   prefix: Icon(FIcons.listVideo),
-                  title: Text("Manage Provider"),
+                  title: Text("Manage Sources"),
                   suffix: Icon(FIcons.chevronRight),
                   onPress: () {
-                    context.pushNamed(RouteName.manageProvider.name);
+                    context.pushNamed(RouteName.manageSource.name);
                   },
                 ),
                 FTile(
-                  prefix: Icon(FIcons.gitCompareArrows),
-                  title: Text("Playlist IPTV-ORG"),
-                  subtitle: Text(
-                    "Collection of publicly available IPTV (Internet Protocol television) channels from all over the world.",
-                  ),
+                  prefix: Icon(FIcons.compass),
+                  title: Text("Public Sources"),
+                  subtitle: Text("Browse freely available information sources"),
                   suffix: Icon(FIcons.chevronRight),
                   onPress: () {
-                    context.pushNamed(RouteName.manageProvider.name);
+                    context.pushNamed(RouteName.publicSources.name);
                   },
                 ),
               ],

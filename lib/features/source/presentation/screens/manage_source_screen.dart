@@ -10,15 +10,14 @@ import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:drift/drift.dart' as drift;
 
-class ManageProviderScreen extends ConsumerStatefulWidget {
-  const ManageProviderScreen({super.key});
+class ManageSourceScreen extends ConsumerStatefulWidget {
+  const ManageSourceScreen({super.key});
 
   @override
-  ConsumerState<ManageProviderScreen> createState() =>
-      _ManageProviderScreenState();
+  ConsumerState<ManageSourceScreen> createState() => _ManageSourceScreenState();
 }
 
-class _ManageProviderScreenState extends ConsumerState<ManageProviderScreen> {
+class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
   List<PlaylistDriftData> playlist = [];
 
   void loadPlaylist() async {
@@ -49,7 +48,7 @@ class _ManageProviderScreenState extends ConsumerState<ManageProviderScreen> {
   Widget build(BuildContext context) {
     return FScaffold(
       header: FHeader.nested(
-        title: Text("Manage provider"),
+        title: Text("Manage Sources"),
         prefixes: [
           FHeaderAction.back(
             onPress: () {
@@ -64,7 +63,7 @@ class _ManageProviderScreenState extends ConsumerState<ManageProviderScreen> {
             style: FButtonStyle.outline(),
             onPress: () async {
               final result = await context.pushNamed(
-                RouteName.addNewProvider.name,
+                RouteName.addNewSource.name,
               );
 
               if (result is bool && result) {
@@ -86,7 +85,7 @@ class _ManageProviderScreenState extends ConsumerState<ManageProviderScreen> {
               }
             },
             prefix: Icon(FIcons.plus),
-            child: Text("Add new provider"),
+            child: Text("Add new source"),
           ),
           Gap(10),
           FButton(
@@ -124,7 +123,7 @@ class _ManageProviderScreenState extends ConsumerState<ManageProviderScreen> {
               );
             },
             prefix: Icon(FIcons.shredder),
-            child: Text("Remove all playlist"),
+            child: Text("Remove all source"),
           ),
           Gap(10),
           Expanded(

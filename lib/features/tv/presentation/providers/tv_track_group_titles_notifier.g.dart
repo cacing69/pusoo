@@ -46,7 +46,7 @@ final class TvTrackGroupTitlesNotifierProvider
 }
 
 String _$tvTrackGroupTitlesNotifierHash() =>
-    r'cc1c531a5fed4a95174d2fe1eac685d00c61bc72';
+    r'03bde6edf8746c1556f7d6f2035ebb6ed15e8ec1';
 
 abstract class _$TvTrackGroupTitlesNotifier
     extends $Notifier<AsyncValue<List<String>?>> {

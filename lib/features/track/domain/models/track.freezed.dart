@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Track {
 
- int get id; String get title; ContentType get contentType; List<String> get links; String get groupTitle; String get imdbId; String get tvgId; String get tvgName; String get tvgLogo; int get duration; bool get isNsfw; bool get isMovie; bool get isLiveTv; bool get isTvSerie; Map<String, String> get attributes; List<Map<String, String>> get extVlcOpts; List<Map<String, String>> get kodiProps; List<Map<String, String>> get httpHeaders;
+ int get id; String get title; String get contentType; List<String> get links; String get groupTitle; String get imdbId; String get tvgId; String get tvgName; String get tvgLogo; int get duration; bool get isNsfw; bool get isMovie; bool get isLiveTv; bool get isTvSerie; Map<String, String> get attributes; List<Map<String, String>> get extVlcOpts; List<Map<String, String>> get kodiProps; List<Map<String, String>> get httpHeaders;
 /// Create a copy of Track
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TrackCopyWith<$Res>  {
   factory $TrackCopyWith(Track value, $Res Function(Track) _then) = _$TrackCopyWithImpl;
 @useResult
 $Res call({
- int id, String title, ContentType contentType, List<String> links, String groupTitle, String imdbId, String tvgId, String tvgName, String tvgLogo, int duration, bool isNsfw, bool isMovie, bool isLiveTv, bool isTvSerie, Map<String, String> attributes, List<Map<String, String>> extVlcOpts, List<Map<String, String>> kodiProps, List<Map<String, String>> httpHeaders
+ int id, String title, String contentType, List<String> links, String groupTitle, String imdbId, String tvgId, String tvgName, String tvgLogo, int duration, bool isNsfw, bool isMovie, bool isLiveTv, bool isTvSerie, Map<String, String> attributes, List<Map<String, String>> extVlcOpts, List<Map<String, String>> kodiProps, List<Map<String, String>> httpHeaders
 });
 
 
@@ -70,7 +70,7 @@ class _$TrackCopyWithImpl<$Res>
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,contentType: null == contentType ? _self.contentType : contentType // ignore: cast_nullable_to_non_nullable
-as ContentType,links: null == links ? _self.links : links // ignore: cast_nullable_to_non_nullable
+as String,links: null == links ? _self.links : links // ignore: cast_nullable_to_non_nullable
 as List<String>,groupTitle: null == groupTitle ? _self.groupTitle : groupTitle // ignore: cast_nullable_to_non_nullable
 as String,imdbId: null == imdbId ? _self.imdbId : imdbId // ignore: cast_nullable_to_non_nullable
 as String,tvgId: null == tvgId ? _self.tvgId : tvgId // ignore: cast_nullable_to_non_nullable
@@ -170,7 +170,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  ContentType contentType,  List<String> links,  String groupTitle,  String imdbId,  String tvgId,  String tvgName,  String tvgLogo,  int duration,  bool isNsfw,  bool isMovie,  bool isLiveTv,  bool isTvSerie,  Map<String, String> attributes,  List<Map<String, String>> extVlcOpts,  List<Map<String, String>> kodiProps,  List<Map<String, String>> httpHeaders)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String contentType,  List<String> links,  String groupTitle,  String imdbId,  String tvgId,  String tvgName,  String tvgLogo,  int duration,  bool isNsfw,  bool isMovie,  bool isLiveTv,  bool isTvSerie,  Map<String, String> attributes,  List<Map<String, String>> extVlcOpts,  List<Map<String, String>> kodiProps,  List<Map<String, String>> httpHeaders)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Track() when $default != null:
 return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTitle,_that.imdbId,_that.tvgId,_that.tvgName,_that.tvgLogo,_that.duration,_that.isNsfw,_that.isMovie,_that.isLiveTv,_that.isTvSerie,_that.attributes,_that.extVlcOpts,_that.kodiProps,_that.httpHeaders);case _:
@@ -191,7 +191,7 @@ return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  ContentType contentType,  List<String> links,  String groupTitle,  String imdbId,  String tvgId,  String tvgName,  String tvgLogo,  int duration,  bool isNsfw,  bool isMovie,  bool isLiveTv,  bool isTvSerie,  Map<String, String> attributes,  List<Map<String, String>> extVlcOpts,  List<Map<String, String>> kodiProps,  List<Map<String, String>> httpHeaders)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String contentType,  List<String> links,  String groupTitle,  String imdbId,  String tvgId,  String tvgName,  String tvgLogo,  int duration,  bool isNsfw,  bool isMovie,  bool isLiveTv,  bool isTvSerie,  Map<String, String> attributes,  List<Map<String, String>> extVlcOpts,  List<Map<String, String>> kodiProps,  List<Map<String, String>> httpHeaders)  $default,) {final _that = this;
 switch (_that) {
 case _Track():
 return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTitle,_that.imdbId,_that.tvgId,_that.tvgName,_that.tvgLogo,_that.duration,_that.isNsfw,_that.isMovie,_that.isLiveTv,_that.isTvSerie,_that.attributes,_that.extVlcOpts,_that.kodiProps,_that.httpHeaders);case _:
@@ -211,7 +211,7 @@ return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  ContentType contentType,  List<String> links,  String groupTitle,  String imdbId,  String tvgId,  String tvgName,  String tvgLogo,  int duration,  bool isNsfw,  bool isMovie,  bool isLiveTv,  bool isTvSerie,  Map<String, String> attributes,  List<Map<String, String>> extVlcOpts,  List<Map<String, String>> kodiProps,  List<Map<String, String>> httpHeaders)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String contentType,  List<String> links,  String groupTitle,  String imdbId,  String tvgId,  String tvgName,  String tvgLogo,  int duration,  bool isNsfw,  bool isMovie,  bool isLiveTv,  bool isTvSerie,  Map<String, String> attributes,  List<Map<String, String>> extVlcOpts,  List<Map<String, String>> kodiProps,  List<Map<String, String>> httpHeaders)?  $default,) {final _that = this;
 switch (_that) {
 case _Track() when $default != null:
 return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTitle,_that.imdbId,_that.tvgId,_that.tvgName,_that.tvgLogo,_that.duration,_that.isNsfw,_that.isMovie,_that.isLiveTv,_that.isTvSerie,_that.attributes,_that.extVlcOpts,_that.kodiProps,_that.httpHeaders);case _:
@@ -226,12 +226,12 @@ return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTi
 @JsonSerializable()
 
 class _Track implements Track {
-  const _Track({this.id = 0, this.title = "", this.contentType = ContentType.unknown, final  List<String> links = const [], this.groupTitle = "", this.imdbId = "", this.tvgId = "", this.tvgName = "", this.tvgLogo = "", this.duration = 0, this.isNsfw = false, this.isMovie = false, this.isLiveTv = false, this.isTvSerie = false, final  Map<String, String> attributes = const {}, final  List<Map<String, String>> extVlcOpts = const [], final  List<Map<String, String>> kodiProps = const [], final  List<Map<String, String>> httpHeaders = const []}): _links = links,_attributes = attributes,_extVlcOpts = extVlcOpts,_kodiProps = kodiProps,_httpHeaders = httpHeaders;
+  const _Track({this.id = 0, this.title = "", this.contentType = "unknown", final  List<String> links = const [], this.groupTitle = "", this.imdbId = "", this.tvgId = "", this.tvgName = "", this.tvgLogo = "", this.duration = 0, this.isNsfw = false, this.isMovie = false, this.isLiveTv = false, this.isTvSerie = false, final  Map<String, String> attributes = const {}, final  List<Map<String, String>> extVlcOpts = const [], final  List<Map<String, String>> kodiProps = const [], final  List<Map<String, String>> httpHeaders = const []}): _links = links,_attributes = attributes,_extVlcOpts = extVlcOpts,_kodiProps = kodiProps,_httpHeaders = httpHeaders;
   factory _Track.fromJson(Map<String, dynamic> json) => _$TrackFromJson(json);
 
 @override@JsonKey() final  int id;
 @override@JsonKey() final  String title;
-@override@JsonKey() final  ContentType contentType;
+@override@JsonKey() final  String contentType;
  final  List<String> _links;
 @override@JsonKey() List<String> get links {
   if (_links is EqualUnmodifiableListView) return _links;
@@ -311,7 +311,7 @@ abstract mixin class _$TrackCopyWith<$Res> implements $TrackCopyWith<$Res> {
   factory _$TrackCopyWith(_Track value, $Res Function(_Track) _then) = __$TrackCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String title, ContentType contentType, List<String> links, String groupTitle, String imdbId, String tvgId, String tvgName, String tvgLogo, int duration, bool isNsfw, bool isMovie, bool isLiveTv, bool isTvSerie, Map<String, String> attributes, List<Map<String, String>> extVlcOpts, List<Map<String, String>> kodiProps, List<Map<String, String>> httpHeaders
+ int id, String title, String contentType, List<String> links, String groupTitle, String imdbId, String tvgId, String tvgName, String tvgLogo, int duration, bool isNsfw, bool isMovie, bool isLiveTv, bool isTvSerie, Map<String, String> attributes, List<Map<String, String>> extVlcOpts, List<Map<String, String>> kodiProps, List<Map<String, String>> httpHeaders
 });
 
 
@@ -333,7 +333,7 @@ class __$TrackCopyWithImpl<$Res>
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,contentType: null == contentType ? _self.contentType : contentType // ignore: cast_nullable_to_non_nullable
-as ContentType,links: null == links ? _self._links : links // ignore: cast_nullable_to_non_nullable
+as String,links: null == links ? _self._links : links // ignore: cast_nullable_to_non_nullable
 as List<String>,groupTitle: null == groupTitle ? _self.groupTitle : groupTitle // ignore: cast_nullable_to_non_nullable
 as String,imdbId: null == imdbId ? _self.imdbId : imdbId // ignore: cast_nullable_to_non_nullable
 as String,tvgId: null == tvgId ? _self.tvgId : tvgId // ignore: cast_nullable_to_non_nullable

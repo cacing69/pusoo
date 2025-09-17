@@ -2,7 +2,7 @@ import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:forui/widgets/progress.dart';
 import 'package:logger/logger.dart';
-import 'package:pusoo/shared/data/models/track.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/shared/presentation/providers/logger_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

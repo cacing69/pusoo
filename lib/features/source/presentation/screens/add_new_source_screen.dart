@@ -3,19 +3,19 @@ import 'package:forui/forui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pusoo/router.dart';
 
-class AddNewProviderScreen extends StatefulWidget {
-  const AddNewProviderScreen({super.key});
+class AddNewSourceScreen extends StatefulWidget {
+  const AddNewSourceScreen({super.key});
 
   @override
-  State<AddNewProviderScreen> createState() => _CreateNewPlaylistOptionState();
+  State<AddNewSourceScreen> createState() => _CreateNewPlaylistOptionState();
 }
 
-class _CreateNewPlaylistOptionState extends State<AddNewProviderScreen> {
+class _CreateNewPlaylistOptionState extends State<AddNewSourceScreen> {
   @override
   Widget build(BuildContext context) {
     return FScaffold(
       header: FHeader.nested(
-        title: Text("Add Provider"),
+        title: Text("Add Source"),
         prefixes: [
           FHeaderAction.back(
             onPress: () {

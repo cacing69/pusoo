@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:pusoo/core/errors/failure.dart';
-import 'package:pusoo/features/track/data/datasources/local/track_drift_datasource.dart';
+import 'package:pusoo/features/track/data/datasources/local/track_datasource.dart';
 import 'package:pusoo/features/track/domain/repostiory/track_repository.dart';
 import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
-import 'package:pusoo/shared/data/models/track.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 
 class TrackDriftRepositoryImpl implements TrackRepository {
-  final TrackDriftDatasource _datasource;
+  final TrackDatasource _datasource;
 
   TrackDriftRepositoryImpl(this._datasource);
 

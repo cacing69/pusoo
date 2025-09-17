@@ -1,5 +1,5 @@
 import 'package:pusoo/shared/data/models/clasification_rules/classification_rule.dart';
-import 'package:pusoo/shared/data/models/track.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 
 class Classificator {
   final List<ClassificationRule> rules;

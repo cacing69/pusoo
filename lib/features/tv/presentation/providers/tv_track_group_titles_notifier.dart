@@ -20,7 +20,7 @@ class TvTrackGroupTitlesNotifier extends _$TvTrackGroupTitlesNotifier {
     state = AsyncValue.loading();
 
     final result = await ref
-        .read(getTrackGroupTitlesUsecaseProvider)
+        .read(getGroupTitlesTrackUsecaseProvider)
         .call(params);
 
     result.fold(

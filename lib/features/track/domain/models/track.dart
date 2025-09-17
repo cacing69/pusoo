@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
-import 'package:pusoo/shared/data/models/playlist.dart';
+import 'package:pusoo/features/playlist/domain/models/playlist.dart';
 
 part 'track.g.dart';
 part 'track.freezed.dart';
@@ -12,7 +12,7 @@ abstract class Track with _$Track {
   const factory Track({
     @Default(0) int id,
     @Default("") String title,
-    @Default(ContentType.unknown) ContentType contentType,
+    @Default("unknown") String contentType,
     @Default([]) List<String> links,
     @Default("") String groupTitle,
     @Default("") String imdbId,
@@ -34,7 +34,7 @@ abstract class Track with _$Track {
 
   factory Track.fromJson(Map<String, dynamic> json) => _$TrackFromJson(json);
 
-  factory Track.fromTrackDrift(TrackDriftData trackDrift) {
+  factory Track.fromDrift(TrackDriftData trackDrift) {
     final json = trackDrift.toJson();
 
     void convertStringToList(String fieldName) {

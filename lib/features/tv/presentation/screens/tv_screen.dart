@@ -7,13 +7,17 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:intl/intl.dart';
 import 'package:pusoo/core/utils/theme_app.dart';
+import 'package:pusoo/features/playlist/presentation/providers/active_playlist_notifier.dart';
 import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
+import 'package:pusoo/features/tv/presentation/providers/tv_track_count_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_track_group_titles_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_paging_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_filter_notifier.dart';
+import 'package:pusoo/features/tv/presentation/widgets/tvg_logo_viewer.dart';
 import 'package:pusoo/router.dart';
-import 'package:pusoo/shared/data/models/track.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 // import 'package:pusoo/shared/presentation/providers/better_player_notifier.dart';
 
 class TvScreen extends StatefulHookConsumerWidget {
@@ -33,8 +37,14 @@ class _TvScreenState extends ConsumerState<TvScreen>
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(activePlaylistProvider.notifier).perform();
+
       ref
           .read(tvTrackGroupTitlesProvider.notifier)
+          .perform(TrackDriftFilterQuery(isLiveTv: true));
+
+      ref
+          .read(tvTrackCountProvider.notifier)
           .perform(TrackDriftFilterQuery(isLiveTv: true));
     });
   }
@@ -128,6 +138,10 @@ class _TvScreenState extends ConsumerState<TvScreen>
 
     final asyncGroupTitles = ref.watch(tvTrackGroupTitlesProvider);
 
+    final asyncCountTrack = ref.watch(tvTrackCountProvider);
+
+    final asyncActivePlaylist = ref.watch(activePlaylistProvider);
+
     MediaQuery.of(context).orientation == Orientation.portrait;
 
     return FScaffold(
@@ -176,27 +190,85 @@ class _TvScreenState extends ConsumerState<TvScreen>
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        "Lorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit Amet",
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontSize: context
-                                              .theme
-                                              .typography
-                                              .xs
-                                              .fontSize,
-                                          fontWeight: FontWeight.w600,
+                                      // Text(
+                                      //   "Lorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit Amet",
+                                      //   overflow: TextOverflow.ellipsis,
+                                      //   maxLines: 1,
+                                      //   style: TextStyle(
+                                      //     fontSize: context
+                                      //         .theme
+                                      //         .typography
+                                      //         .xs
+                                      //         .fontSize,
+                                      //     fontWeight: FontWeight.w600,
+                                      //   ),
+                                      // ),
+                                      asyncActivePlaylist.when(
+                                        data: (data) => Text(
+                                          data!.name ?? "No Name",
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                            fontSize: context
+                                                .theme
+                                                .typography
+                                                .xs
+                                                .fontSize,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        error: (e, s) => Text(
+                                          "Playlist not available",
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                            fontSize: context
+                                                .theme
+                                                .typography
+                                                .xs
+                                                .fontSize,
+                                            fontWeight: FontWeight.w600,
+                                            color: context.theme.colors.disable(
+                                              context.theme.colors.foreground,
+                                            ),
+                                          ),
+                                        ),
+                                        loading: () => Text(
+                                          "Fetching playlist...",
+                                          style: TextStyle(
+                                            fontSize:
+                                                CustomThemeData.fontSize.xs1,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ),
                                       ),
-                                      Text(
-                                        "Lorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit Amet",
-                                        style: TextStyle(
-                                          fontSize:
-                                              CustomThemeData.fontSize.xs1,
-                                          fontWeight: FontWeight.w400,
+                                      asyncCountTrack.when(
+                                        data: (data) => Text(
+                                          "${NumberFormat.decimalPattern().format(data)} Channel found",
+                                          style: TextStyle(
+                                            fontSize:
+                                                CustomThemeData.fontSize.xs1,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        error: (e, s) => SizedBox.shrink(),
+                                        loading: () => Text(
+                                          "Counting chanels...",
+                                          style: TextStyle(
+                                            fontSize:
+                                                CustomThemeData.fontSize.xs1,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ),
                                       ),
+                                      // Text(
+                                      //   "Lorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit Amet",
+                                      //   style: TextStyle(
+                                      //     fontSize:
+                                      //         CustomThemeData.fontSize.xs1,
+                                      //     fontWeight: FontWeight.w400,
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -286,7 +358,7 @@ class _TvScreenState extends ConsumerState<TvScreen>
                                   children: [
                                     FItem(
                                       prefix: Icon(FIcons.tags),
-                                      title: Text("All Chanels"),
+                                      title: Text("All Channels"),
                                       suffix: Icon(FIcons.chevronRight),
                                       onPress: () {
                                         ref
@@ -304,7 +376,11 @@ class _TvScreenState extends ConsumerState<TvScreen>
                                     ...data!.map(
                                       (e) => FItem(
                                         prefix: Icon(FIcons.tag),
-                                        title: Text(e),
+                                        title: Text(
+                                          e.trim().isEmpty
+                                              ? "Miscellaneous"
+                                              : e,
+                                        ),
                                         suffix: Icon(FIcons.chevronRight),
                                         onPress: () {
                                           ref
@@ -356,103 +432,66 @@ class _TvScreenState extends ConsumerState<TvScreen>
                   state: state,
                   fetchNextPage: fetchNextPage,
                   builderDelegate: PagedChildBuilderDelegate(
-                    itemBuilder: (context, Track item, index) => GestureDetector(
-                      onTap: () {
-                        // debugPrint(series[index].toString());
-                        // ref
-                        //     .read(betterPlayerProvider.notifier)
-                        //     .openMediaStream(
-                        //       tracks[index],
-                        //       isLiveStream: true,
-                        //     );
+                    itemBuilder: (context, Track item, index) =>
+                        GestureDetector(
+                          onTap: () {
+                            // debugPrint(series[index].toString());
+                            // ref
+                            //     .read(betterPlayerProvider.notifier)
+                            //     .openMediaStream(
+                            //       tracks[index],
+                            //       isLiveStream: true,
+                            //     );
 
-                        context.pushNamed(RouteName.tvPlayer.name, extra: item);
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: context.theme.colors.border,
-                            width: 1,
-                          ),
-                          color: context.theme.colors.disable(
-                            context.theme.colors.foreground,
-                          ),
-                        ),
-                        clipBehavior: Clip.antiAlias,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: Stack(
-                            children: [
-                              SizedBox(
-                                width: double.infinity,
-                                height: 120, // tinggi tetap
-                                child: item.tvgLogo.isNotEmpty
-                                    ? Padding(
-                                        padding: const EdgeInsets.all(1.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              4,
-                                            ),
-                                          ),
-                                          clipBehavior: Clip.antiAlias,
-                                          child: CachedNetworkImage(
-                                            imageUrl: item.tvgLogo,
-                                            placeholder: (_, __) =>
-                                                const Center(
-                                                  child:
-                                                      FProgress.circularIcon(),
-                                                ),
-                                            errorWidget: (_, __, ___) => Center(
-                                              child: Icon(
-                                                FIcons.tvMinimal,
-                                                color: context
-                                                    .theme
-                                                    .colors
-                                                    .background
-                                                    .withAlpha(200),
-                                                size: 40,
-                                              ),
-                                            ),
-                                            fit: BoxFit.contain,
-                                          ),
-                                        ),
-                                      )
-                                    : Center(
-                                        child: Icon(
-                                          FIcons.tvMinimal,
-                                          size: 40,
-                                          color: context.theme.colors.background
-                                              .withAlpha(200),
+                            context.pushNamed(
+                              RouteName.tvPlayer.name,
+                              extra: item,
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(
+                                color: context.theme.colors.border,
+                                width: 1,
+                              ),
+                              color: context.theme.colors.disable(
+                                context.theme.colors.foreground,
+                              ),
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Stack(
+                                children: [
+                                  TvgLogoViewer(track: item),
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(6),
+                                      color: context.theme.colors.background
+                                          .withAlpha(125),
+                                      child: Text(
+                                        item.title,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color:
+                                              context.theme.colors.foreground,
+                                          fontSize:
+                                              CustomThemeData.fontSize.xs1,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                              ),
-                              Positioned(
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                child: Container(
-                                  padding: const EdgeInsets.all(6),
-                                  color: context.theme.colors.background
-                                      .withAlpha(125),
-                                  child: Text(
-                                    item.title,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: context.theme.colors.foreground,
-                                      fontSize: CustomThemeData.fontSize.xs1,
-                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
                     firstPageProgressIndicatorBuilder: (context) =>
                         FProgress.circularIcon(),
                     newPageProgressIndicatorBuilder: (context) =>

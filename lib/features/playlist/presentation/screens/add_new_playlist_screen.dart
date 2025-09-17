@@ -4,44 +4,50 @@ import 'package:drift/drift.dart' as drift;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:forui/forui.dart';
-import 'package:forui_hooks/forui_hooks.dart';
+// import 'package:forui_hooks/forui_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pusoo/core/utils/helpers.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
+import 'package:pusoo/features/playlist/presentation/providers/active_playlist_notifier.dart';
+import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
+import 'package:pusoo/features/tv/presentation/providers/tv_track_count_notifier.dart';
+import 'package:pusoo/features/tv/presentation/providers/tv_track_group_titles_notifier.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:http/http.dart' as http;
-import 'package:pusoo/shared/data/models/playlist.dart';
-import 'package:pusoo/shared/data/models/playlist_template.dart';
-import 'package:pusoo/shared/data/models/track.dart';
+// import 'package:pusoo/features/playlist/domain/models/playlist.dart';
+// import 'package:pusoo/shared/data/models/playlist_template.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/shared/data/playlist_template_reff.dart';
+// import 'package:pusoo/shared/data/playlist_template_reff.dart';
 import 'package:ulid/ulid.dart';
 
-class AddPlaylistScreen extends StatefulHookConsumerWidget {
-  const AddPlaylistScreen({super.key});
+class AddNewPlaylistScreen extends StatefulHookConsumerWidget {
+  const AddNewPlaylistScreen({super.key});
 
   @override
-  ConsumerState<AddPlaylistScreen> createState() => _AddPlaylistScreenState();
+  ConsumerState<AddNewPlaylistScreen> createState() =>
+      _AddNewPlaylistScreenState();
 }
 
-class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
+class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
   bool isLoading = false;
 
-  final playlistTypeController = FSelectTileGroupController<ContentType>.radio(
-    ContentType.live,
-  );
+  // final playlistTypeController = FSelectTileGroupController<ContentType>.radio(
+  //   ContentType.live,
+  // );
 
   @override
   void dispose() {
-    playlistTypeController.dispose();
+    // playlistTypeController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final nameController = useTextEditingController();
-    final templateContoller = useFSelectController<PlaylistTemplate>();
+    // final templateContoller = useFSelectController<PlaylistTemplate>();
     final urlController = useTextEditingController(
       // text:
       //     "https://raw.githubusercontent.com/kshshuGyUWGG799vfaga/new-m3u/refs/heads/main/2025",
@@ -91,14 +97,14 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
           FTextField.multiline(
             controller: urlController,
             label: Text("URL"),
-            minLines: 4,
+            minLines: 6,
             clearable: (TextEditingValue e) => e.text.isNotEmpty,
           ),
           Gap(10),
           FTextField.multiline(
             controller: epgLinkController,
             label: Text("EPG Link (Optional)"),
-            minLines: 2,
+            minLines: 3,
             clearable: (TextEditingValue e) => e.text.isNotEmpty,
           ),
           Gap(10),
@@ -189,7 +195,11 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                                   filePath: drift.Value(""),
                                   epgLink: drift.Value(""),
                                   url: drift.Value(urlController.text.trim()),
-                                  isActive: drift.Value(count == 0),
+                                  isActive:
+                                      // drift.Value(
+                                      //   true,
+                                      // ),
+                                      drift.Value(count == 0),
                                 ),
                               );
 
@@ -214,17 +224,17 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                                 );
                           }
 
-                          final selectedTemplate = templateContoller.value;
+                          // final selectedTemplate = templateContoller.value;
 
-                          final isLiveTv = playlistTypeController.value
-                              .contains(ContentType.live);
+                          // final isLiveTv = playlistTypeController.value
+                          //     .contains(ContentType.live);
 
-                          final isMovie = playlistTypeController.value.contains(
-                            ContentType.live,
-                          );
+                          // final isMovie = playlistTypeController.value.contains(
+                          //   ContentType.live,
+                          // );
 
-                          final isTvSerie = playlistTypeController.value
-                              .contains(ContentType.live);
+                          // final isTvSerie = playlistTypeController.value
+                          //     .contains(ContentType.live);
 
                           await driftDb.batch((batch) {
                             batch.insertAll(
@@ -246,24 +256,35 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
                                     jsonEncode(track.extVlcOpts),
                                   ),
                                   isLiveTv: drift.Value(
-                                    selectedTemplate?.liveTvClassifier
+                                    playlistTemplate.liveTvClassifier
                                             ?.isSatisfiedByAll(track) ??
-                                        isLiveTv,
+                                        false,
                                   ),
                                   isMovie: drift.Value(
-                                    selectedTemplate?.movieClassifier
+                                    playlistTemplate.movieClassifier
                                             ?.isSatisfiedByAll(track) ??
-                                        isMovie,
+                                        false,
                                   ),
                                   isTvSerie: drift.Value(
-                                    selectedTemplate?.tvSerieClassifier
+                                    playlistTemplate.tvSerieClassifier
                                             ?.isSatisfiedByAll(track) ??
-                                        isTvSerie,
+                                        false,
                                   ),
                                 );
                               }).toList(),
                             );
                           });
+
+                          if (count == 0) {
+                            // https://raw.githubusercontent.com/RYANTVv3/Ryantv/refs/heads/main/RYANTV.m3u
+                            ref.read(activePlaylistProvider.notifier).perform();
+                            ref
+                                .read(tvTrackCountProvider.notifier)
+                                .perform(TrackDriftFilterQuery(isLiveTv: true));
+                            ref
+                                .read(tvTrackGroupTitlesProvider.notifier)
+                                .perform(TrackDriftFilterQuery(isLiveTv: true));
+                          }
 
                           if (context.mounted) {
                             setState(() {

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Playlist {
 
- String? get id; String? get name; String get type; ContentType get contentType; String? get filePath; String? get template; String? get epgLink; String? get url; bool? get isActive;// Atribut untuk Xtream Codes
+ int? get id; String? get name; String get type; String? get contentType; String? get filePath; String? get template; String? get epgLink; String? get url; bool? get isActive;// Atribut untuk Xtream Codes
  String? get username; String? get password; String? get serverUrl;
 /// Create a copy of Playlist
 /// with the given fields replaced by the non-null parameter values.
@@ -49,7 +49,7 @@ abstract mixin class $PlaylistCopyWith<$Res>  {
   factory $PlaylistCopyWith(Playlist value, $Res Function(Playlist) _then) = _$PlaylistCopyWithImpl;
 @useResult
 $Res call({
- String? id, String? name, String type, ContentType contentType, String? filePath, String? template, String? epgLink, String? url, bool? isActive, String? username, String? password, String? serverUrl
+ int? id, String? name, String type, String? contentType, String? filePath, String? template, String? epgLink, String? url, bool? isActive, String? username, String? password, String? serverUrl
 });
 
 
@@ -66,13 +66,13 @@ class _$PlaylistCopyWithImpl<$Res>
 
 /// Create a copy of Playlist
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? type = null,Object? contentType = null,Object? filePath = freezed,Object? template = freezed,Object? epgLink = freezed,Object? url = freezed,Object? isActive = freezed,Object? username = freezed,Object? password = freezed,Object? serverUrl = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? type = null,Object? contentType = freezed,Object? filePath = freezed,Object? template = freezed,Object? epgLink = freezed,Object? url = freezed,Object? isActive = freezed,Object? username = freezed,Object? password = freezed,Object? serverUrl = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String,contentType: null == contentType ? _self.contentType : contentType // ignore: cast_nullable_to_non_nullable
-as ContentType,filePath: freezed == filePath ? _self.filePath : filePath // ignore: cast_nullable_to_non_nullable
+as String,contentType: freezed == contentType ? _self.contentType : contentType // ignore: cast_nullable_to_non_nullable
+as String?,filePath: freezed == filePath ? _self.filePath : filePath // ignore: cast_nullable_to_non_nullable
 as String?,template: freezed == template ? _self.template : template // ignore: cast_nullable_to_non_nullable
 as String?,epgLink: freezed == epgLink ? _self.epgLink : epgLink // ignore: cast_nullable_to_non_nullable
 as String?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
@@ -165,7 +165,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String? name,  String type,  ContentType contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  String? username,  String? password,  String? serverUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? name,  String type,  String? contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  String? username,  String? password,  String? serverUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Playlist() when $default != null:
 return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,_that.template,_that.epgLink,_that.url,_that.isActive,_that.username,_that.password,_that.serverUrl);case _:
@@ -186,7 +186,7 @@ return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String? name,  String type,  ContentType contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  String? username,  String? password,  String? serverUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? name,  String type,  String? contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  String? username,  String? password,  String? serverUrl)  $default,) {final _that = this;
 switch (_that) {
 case _Playlist():
 return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,_that.template,_that.epgLink,_that.url,_that.isActive,_that.username,_that.password,_that.serverUrl);case _:
@@ -206,7 +206,7 @@ return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String? name,  String type,  ContentType contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  String? username,  String? password,  String? serverUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? name,  String type,  String? contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  String? username,  String? password,  String? serverUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _Playlist() when $default != null:
 return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,_that.template,_that.epgLink,_that.url,_that.isActive,_that.username,_that.password,_that.serverUrl);case _:
@@ -221,13 +221,13 @@ return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,
 @JsonSerializable()
 
 class _Playlist implements Playlist {
-  const _Playlist({this.id, this.name, this.type = "m3u", this.contentType = ContentType.unknown, this.filePath, this.template, this.epgLink, this.url, this.isActive = false, this.username, this.password, this.serverUrl});
+  const _Playlist({this.id, this.name, this.type = "m3u", this.contentType, this.filePath, this.template, this.epgLink, this.url, this.isActive = false, this.username, this.password, this.serverUrl});
   factory _Playlist.fromJson(Map<String, dynamic> json) => _$PlaylistFromJson(json);
 
-@override final  String? id;
+@override final  int? id;
 @override final  String? name;
 @override@JsonKey() final  String type;
-@override@JsonKey() final  ContentType contentType;
+@override final  String? contentType;
 @override final  String? filePath;
 @override final  String? template;
 @override final  String? epgLink;
@@ -271,7 +271,7 @@ abstract mixin class _$PlaylistCopyWith<$Res> implements $PlaylistCopyWith<$Res>
   factory _$PlaylistCopyWith(_Playlist value, $Res Function(_Playlist) _then) = __$PlaylistCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, String? name, String type, ContentType contentType, String? filePath, String? template, String? epgLink, String? url, bool? isActive, String? username, String? password, String? serverUrl
+ int? id, String? name, String type, String? contentType, String? filePath, String? template, String? epgLink, String? url, bool? isActive, String? username, String? password, String? serverUrl
 });
 
 
@@ -288,13 +288,13 @@ class __$PlaylistCopyWithImpl<$Res>
 
 /// Create a copy of Playlist
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? type = null,Object? contentType = null,Object? filePath = freezed,Object? template = freezed,Object? epgLink = freezed,Object? url = freezed,Object? isActive = freezed,Object? username = freezed,Object? password = freezed,Object? serverUrl = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? type = null,Object? contentType = freezed,Object? filePath = freezed,Object? template = freezed,Object? epgLink = freezed,Object? url = freezed,Object? isActive = freezed,Object? username = freezed,Object? password = freezed,Object? serverUrl = freezed,}) {
   return _then(_Playlist(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String,contentType: null == contentType ? _self.contentType : contentType // ignore: cast_nullable_to_non_nullable
-as ContentType,filePath: freezed == filePath ? _self.filePath : filePath // ignore: cast_nullable_to_non_nullable
+as String,contentType: freezed == contentType ? _self.contentType : contentType // ignore: cast_nullable_to_non_nullable
+as String?,filePath: freezed == filePath ? _self.filePath : filePath // ignore: cast_nullable_to_non_nullable
 as String?,template: freezed == template ? _self.template : template // ignore: cast_nullable_to_non_nullable
 as String?,epgLink: freezed == epgLink ? _self.epgLink : epgLink // ignore: cast_nullable_to_non_nullable
 as String?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable

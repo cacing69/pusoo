@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
-import 'package:pusoo/shared/data/models/track.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 
 void main() async {
   final fileMaytoko = File('fixtures/sample_playlist_maytoko.txt');

@@ -7,7 +7,7 @@ import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pusoo/core/utils/helpers.dart';
-import 'package:pusoo/shared/data/models/track.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/shared/presentation/providers/better_player_notifier.dart';
 
 class TVPlayerScreen extends ConsumerStatefulWidget {
@@ -17,12 +17,19 @@ class TVPlayerScreen extends ConsumerStatefulWidget {
   ConsumerState<TVPlayerScreen> createState() => _TVPlayerScreenState();
 }
 
-class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
+class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
+    with SingleTickerProviderStateMixin {
   final GlobalKey _playerKey = GlobalKey();
   String? urlActive;
+  late AnimationController _animationController;
 
+  @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..repeat(reverse: true);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(betterPlayerProvider.notifier)
@@ -30,6 +37,13 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
     final isPotrait = orientation == Orientation.portrait;
@@ -45,13 +59,16 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: context.theme.colors.destructive,
+                  FadeTransition(
+                    opacity: _animationController,
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: context.theme.colors.destructive,
+                        ),
                       ),
                     ),
                   ),

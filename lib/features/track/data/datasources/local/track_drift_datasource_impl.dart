@@ -1,11 +1,11 @@
 import 'package:logger/logger.dart';
 import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
-import 'package:pusoo/features/track/data/datasources/local/track_drift_datasource.dart';
-import 'package:pusoo/shared/data/models/track.dart';
+import 'package:pusoo/features/track/data/datasources/local/track_datasource.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:drift/drift.dart' as drift;
 
-class TrackDriftDatasourceImpl implements TrackDriftDatasource {
+class TrackDriftDatasourceImpl implements TrackDatasource {
   late final Logger _log;
 
   TrackDriftDatasourceImpl(this._log);
@@ -115,7 +115,7 @@ class TrackDriftDatasourceImpl implements TrackDriftDatasource {
     final trackDriftDataRows = await query.get();
 
     final List<Track> convertToTrack = trackDriftDataRows.map((trackDrift) {
-      return Track.fromTrackDrift(trackDrift);
+      return Track.fromDrift(trackDrift);
     }).toList();
 
     return convertToTrack;

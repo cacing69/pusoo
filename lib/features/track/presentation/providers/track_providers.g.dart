@@ -151,51 +151,98 @@ final class GetTracksUsecaseProvider
 
 String _$getTracksUsecaseHash() => r'1b06e1d6803650a6f823683a148f09a5b0b2705c';
 
-@ProviderFor(getTrackGroupTitlesUsecase)
-const getTrackGroupTitlesUsecaseProvider =
-    GetTrackGroupTitlesUsecaseProvider._();
+@ProviderFor(getGroupTitlesTrackUsecase)
+const getGroupTitlesTrackUsecaseProvider =
+    GetGroupTitlesTrackUsecaseProvider._();
 
-final class GetTrackGroupTitlesUsecaseProvider
+final class GetGroupTitlesTrackUsecaseProvider
     extends
         $FunctionalProvider<
-          GetTrackGroupTitlesUsecase,
-          GetTrackGroupTitlesUsecase,
-          GetTrackGroupTitlesUsecase
+          GetGroupTitlesTrackUsecase,
+          GetGroupTitlesTrackUsecase,
+          GetGroupTitlesTrackUsecase
         >
-    with $Provider<GetTrackGroupTitlesUsecase> {
-  const GetTrackGroupTitlesUsecaseProvider._()
+    with $Provider<GetGroupTitlesTrackUsecase> {
+  const GetGroupTitlesTrackUsecaseProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'getTrackGroupTitlesUsecaseProvider',
+        name: r'getGroupTitlesTrackUsecaseProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$getTrackGroupTitlesUsecaseHash();
+  String debugGetCreateSourceHash() => _$getGroupTitlesTrackUsecaseHash();
 
   @$internal
   @override
-  $ProviderElement<GetTrackGroupTitlesUsecase> $createElement(
+  $ProviderElement<GetGroupTitlesTrackUsecase> $createElement(
     $ProviderPointer pointer,
   ) => $ProviderElement(pointer);
 
   @override
-  GetTrackGroupTitlesUsecase create(Ref ref) {
-    return getTrackGroupTitlesUsecase(ref);
+  GetGroupTitlesTrackUsecase create(Ref ref) {
+    return getGroupTitlesTrackUsecase(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(GetTrackGroupTitlesUsecase value) {
+  Override overrideWithValue(GetGroupTitlesTrackUsecase value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<GetTrackGroupTitlesUsecase>(value),
+      providerOverride: $SyncValueProvider<GetGroupTitlesTrackUsecase>(value),
     );
   }
 }
 
-String _$getTrackGroupTitlesUsecaseHash() =>
-    r'd98d23569d410113c32f292ddb67b5abc08608b9';
+String _$getGroupTitlesTrackUsecaseHash() =>
+    r'5d3b9088039e42c8b1dc0948cd7a5dd61e62fc12';
+
+@ProviderFor(countTrackUsecase)
+const countTrackUsecaseProvider = CountTrackUsecaseProvider._();
+
+final class CountTrackUsecaseProvider
+    extends
+        $FunctionalProvider<
+          CountTrackUsecase,
+          CountTrackUsecase,
+          CountTrackUsecase
+        >
+    with $Provider<CountTrackUsecase> {
+  const CountTrackUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'countTrackUsecaseProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$countTrackUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<CountTrackUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  CountTrackUsecase create(Ref ref) {
+    return countTrackUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CountTrackUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CountTrackUsecase>(value),
+    );
+  }
+}
+
+String _$countTrackUsecaseHash() => r'70e90d2d3fce13160f19313eda8efdd68252d76f';
