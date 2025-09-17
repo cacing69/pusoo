@@ -2,11 +2,11 @@ import 'package:dartz/dartz.dart';
 import 'package:logger/logger.dart';
 import 'package:pusoo/core/errors/failure.dart';
 import 'package:pusoo/core/utils/usecase.dart';
-import 'package:pusoo/features/track/domain/models/get_track_group_titles_params.dart';
+import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
 import 'package:pusoo/features/track/domain/repostiory/track_repository.dart';
 
 class GetTrackGroupTitlesUsecase
-    implements UseCase<List<String>, GetTrackGroupTitlesParams> {
+    implements UseCase<List<String>, TrackDriftFilterQuery> {
   final TrackRepository _repository;
   final Logger _log;
 
@@ -14,7 +14,7 @@ class GetTrackGroupTitlesUsecase
 
   @override
   Future<Either<Failure, List<String>>> call(
-    GetTrackGroupTitlesParams? params,
+    TrackDriftFilterQuery? params,
   ) async {
     _log.i(params);
 

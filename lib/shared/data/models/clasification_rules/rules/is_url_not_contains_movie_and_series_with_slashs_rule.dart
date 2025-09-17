@@ -1,7 +1,7 @@
 import 'package:pusoo/shared/data/models/clasification_rules/classification_rule.dart';
 import 'package:pusoo/shared/data/models/track.dart';
 
-class MaksinIsUrlNotContainsMovieAndSeriesWithSlashsRule
+class IsUrlNotContainsMovieAndSeriesWithSlashsRule
     implements ClassificationRule {
   @override
   bool isSatisfiedBy(Track track) {

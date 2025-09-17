@@ -64,23 +64,23 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          FSelectTileGroup(
-            selectController: playlistTypeController,
-            label: const Text('Playlist Type'),
-            description: const Text('Select playlist type.'),
-            children: [
-              FSelectTile(
-                title: const Text('Live TV'),
-                value: ContentType.live,
-                suffix: Icon(FIcons.monitor),
-              ),
-              FSelectTile(
-                title: const Text('VOD'),
-                value: ContentType.vod,
-                suffix: Icon(FIcons.monitorPlay),
-              ),
-            ],
-          ),
+          // FSelectTileGroup(
+          //   selectController: playlistTypeController,
+          //   label: const Text('Playlist Type'),
+          //   description: const Text('Select playlist type.'),
+          //   children: [
+          //     FSelectTile(
+          //       title: const Text('Live TV'),
+          //       value: ContentType.live,
+          //       suffix: Icon(FIcons.monitor),
+          //     ),
+          //     FSelectTile(
+          //       title: const Text('VOD'),
+          //       value: ContentType.vod,
+          //       suffix: Icon(FIcons.monitorPlay),
+          //     ),
+          //   ],
+          // ),
           Gap(10),
           FTextField(
             controller: nameController,
@@ -102,21 +102,21 @@ class _AddPlaylistScreenState extends ConsumerState<AddPlaylistScreen> {
             clearable: (TextEditingValue e) => e.text.isNotEmpty,
           ),
           Gap(10),
-          FSelect<PlaylistTemplate>.rich(
-            controller: templateContoller,
-            label: Text("Template"),
-            hint: 'Select template',
-            format: (s) => s.label ?? "",
-            children: [
-              ...listPlaylistTemplate.map(
-                (template) => FSelectItem(
-                  title: Text(template.label ?? ""),
-                  value: template,
-                ),
-              ),
-            ],
-          ),
-          Gap(10),
+          // FSelect<PlaylistTemplate>.rich(
+          //   controller: templateContoller,
+          //   label: Text("Template"),
+          //   hint: 'Select template',
+          //   format: (s) => s.label ?? "",
+          //   children: [
+          //     ...listPlaylistTemplate.map(
+          //       (template) => FSelectItem(
+          //         title: Text(template.label ?? ""),
+          //         value: template,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // Gap(10),
           SafeArea(
             child: FButton(
               prefix: isLoading ? FProgress.circularIcon() : null,

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'get_tracks_params.dart';
+part of 'track_drift_filter_query.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,22 +13,22 @@ part of 'get_tracks_params.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$GetTracksParams {
+mixin _$TrackDriftFilterQuery {
 
  List<int>? get playlistIds; String? get groupTitle; String? get title; int? get limit; int? get offset; int? get cursor; bool? get isMovie; bool? get isLiveTv; bool? get isTvSerie;
-/// Create a copy of GetTracksParams
+/// Create a copy of TrackDriftFilterQuery
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$GetTracksParamsCopyWith<GetTracksParams> get copyWith => _$GetTracksParamsCopyWithImpl<GetTracksParams>(this as GetTracksParams, _$identity);
+$TrackDriftFilterQueryCopyWith<TrackDriftFilterQuery> get copyWith => _$TrackDriftFilterQueryCopyWithImpl<TrackDriftFilterQuery>(this as TrackDriftFilterQuery, _$identity);
 
-  /// Serializes this GetTracksParams to a JSON map.
+  /// Serializes this TrackDriftFilterQuery to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetTracksParams&&const DeepCollectionEquality().equals(other.playlistIds, playlistIds)&&(identical(other.groupTitle, groupTitle) || other.groupTitle == groupTitle)&&(identical(other.title, title) || other.title == title)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.cursor, cursor) || other.cursor == cursor)&&(identical(other.isMovie, isMovie) || other.isMovie == isMovie)&&(identical(other.isLiveTv, isLiveTv) || other.isLiveTv == isLiveTv)&&(identical(other.isTvSerie, isTvSerie) || other.isTvSerie == isTvSerie));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TrackDriftFilterQuery&&const DeepCollectionEquality().equals(other.playlistIds, playlistIds)&&(identical(other.groupTitle, groupTitle) || other.groupTitle == groupTitle)&&(identical(other.title, title) || other.title == title)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.cursor, cursor) || other.cursor == cursor)&&(identical(other.isMovie, isMovie) || other.isMovie == isMovie)&&(identical(other.isLiveTv, isLiveTv) || other.isLiveTv == isLiveTv)&&(identical(other.isTvSerie, isTvSerie) || other.isTvSerie == isTvSerie));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -37,15 +37,15 @@ int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(
 
 @override
 String toString() {
-  return 'GetTracksParams(playlistIds: $playlistIds, groupTitle: $groupTitle, title: $title, limit: $limit, offset: $offset, cursor: $cursor, isMovie: $isMovie, isLiveTv: $isLiveTv, isTvSerie: $isTvSerie)';
+  return 'TrackDriftFilterQuery(playlistIds: $playlistIds, groupTitle: $groupTitle, title: $title, limit: $limit, offset: $offset, cursor: $cursor, isMovie: $isMovie, isLiveTv: $isLiveTv, isTvSerie: $isTvSerie)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $GetTracksParamsCopyWith<$Res>  {
-  factory $GetTracksParamsCopyWith(GetTracksParams value, $Res Function(GetTracksParams) _then) = _$GetTracksParamsCopyWithImpl;
+abstract mixin class $TrackDriftFilterQueryCopyWith<$Res>  {
+  factory $TrackDriftFilterQueryCopyWith(TrackDriftFilterQuery value, $Res Function(TrackDriftFilterQuery) _then) = _$TrackDriftFilterQueryCopyWithImpl;
 @useResult
 $Res call({
  List<int>? playlistIds, String? groupTitle, String? title, int? limit, int? offset, int? cursor, bool? isMovie, bool? isLiveTv, bool? isTvSerie
@@ -56,14 +56,14 @@ $Res call({
 
 }
 /// @nodoc
-class _$GetTracksParamsCopyWithImpl<$Res>
-    implements $GetTracksParamsCopyWith<$Res> {
-  _$GetTracksParamsCopyWithImpl(this._self, this._then);
+class _$TrackDriftFilterQueryCopyWithImpl<$Res>
+    implements $TrackDriftFilterQueryCopyWith<$Res> {
+  _$TrackDriftFilterQueryCopyWithImpl(this._self, this._then);
 
-  final GetTracksParams _self;
-  final $Res Function(GetTracksParams) _then;
+  final TrackDriftFilterQuery _self;
+  final $Res Function(TrackDriftFilterQuery) _then;
 
-/// Create a copy of GetTracksParams
+/// Create a copy of TrackDriftFilterQuery
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? playlistIds = freezed,Object? groupTitle = freezed,Object? title = freezed,Object? limit = freezed,Object? offset = freezed,Object? cursor = freezed,Object? isMovie = freezed,Object? isLiveTv = freezed,Object? isTvSerie = freezed,}) {
   return _then(_self.copyWith(
@@ -83,8 +83,8 @@ as bool?,
 }
 
 
-/// Adds pattern-matching-related methods to [GetTracksParams].
-extension GetTracksParamsPatterns on GetTracksParams {
+/// Adds pattern-matching-related methods to [TrackDriftFilterQuery].
+extension TrackDriftFilterQueryPatterns on TrackDriftFilterQuery {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -97,10 +97,10 @@ extension GetTracksParamsPatterns on GetTracksParams {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GetTracksParams value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TrackDriftFilterQuery value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _GetTracksParams() when $default != null:
+case _TrackDriftFilterQuery() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -119,10 +119,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GetTracksParams value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TrackDriftFilterQuery value)  $default,){
 final _that = this;
 switch (_that) {
-case _GetTracksParams():
+case _TrackDriftFilterQuery():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -140,10 +140,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GetTracksParams value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TrackDriftFilterQuery value)?  $default,){
 final _that = this;
 switch (_that) {
-case _GetTracksParams() when $default != null:
+case _TrackDriftFilterQuery() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -163,7 +163,7 @@ return $default(_that);case _:
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<int>? playlistIds,  String? groupTitle,  String? title,  int? limit,  int? offset,  int? cursor,  bool? isMovie,  bool? isLiveTv,  bool? isTvSerie)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _GetTracksParams() when $default != null:
+case _TrackDriftFilterQuery() when $default != null:
 return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.limit,_that.offset,_that.cursor,_that.isMovie,_that.isLiveTv,_that.isTvSerie);case _:
   return orElse();
 
@@ -184,7 +184,7 @@ return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.limit,_that
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<int>? playlistIds,  String? groupTitle,  String? title,  int? limit,  int? offset,  int? cursor,  bool? isMovie,  bool? isLiveTv,  bool? isTvSerie)  $default,) {final _that = this;
 switch (_that) {
-case _GetTracksParams():
+case _TrackDriftFilterQuery():
 return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.limit,_that.offset,_that.cursor,_that.isMovie,_that.isLiveTv,_that.isTvSerie);case _:
   throw StateError('Unexpected subclass');
 
@@ -204,7 +204,7 @@ return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.limit,_that
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<int>? playlistIds,  String? groupTitle,  String? title,  int? limit,  int? offset,  int? cursor,  bool? isMovie,  bool? isLiveTv,  bool? isTvSerie)?  $default,) {final _that = this;
 switch (_that) {
-case _GetTracksParams() when $default != null:
+case _TrackDriftFilterQuery() when $default != null:
 return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.limit,_that.offset,_that.cursor,_that.isMovie,_that.isLiveTv,_that.isTvSerie);case _:
   return null;
 
@@ -216,9 +216,9 @@ return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.limit,_that
 /// @nodoc
 @JsonSerializable()
 
-class _GetTracksParams implements GetTracksParams {
-  const _GetTracksParams({final  List<int>? playlistIds, this.groupTitle, this.title, this.limit, this.offset, this.cursor, this.isMovie, this.isLiveTv, this.isTvSerie}): _playlistIds = playlistIds;
-  factory _GetTracksParams.fromJson(Map<String, dynamic> json) => _$GetTracksParamsFromJson(json);
+class _TrackDriftFilterQuery implements TrackDriftFilterQuery {
+  const _TrackDriftFilterQuery({final  List<int>? playlistIds, this.groupTitle, this.title, this.limit, this.offset, this.cursor, this.isMovie, this.isLiveTv, this.isTvSerie}): _playlistIds = playlistIds;
+  factory _TrackDriftFilterQuery.fromJson(Map<String, dynamic> json) => _$TrackDriftFilterQueryFromJson(json);
 
  final  List<int>? _playlistIds;
 @override List<int>? get playlistIds {
@@ -238,20 +238,20 @@ class _GetTracksParams implements GetTracksParams {
 @override final  bool? isLiveTv;
 @override final  bool? isTvSerie;
 
-/// Create a copy of GetTracksParams
+/// Create a copy of TrackDriftFilterQuery
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$GetTracksParamsCopyWith<_GetTracksParams> get copyWith => __$GetTracksParamsCopyWithImpl<_GetTracksParams>(this, _$identity);
+_$TrackDriftFilterQueryCopyWith<_TrackDriftFilterQuery> get copyWith => __$TrackDriftFilterQueryCopyWithImpl<_TrackDriftFilterQuery>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$GetTracksParamsToJson(this, );
+  return _$TrackDriftFilterQueryToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GetTracksParams&&const DeepCollectionEquality().equals(other._playlistIds, _playlistIds)&&(identical(other.groupTitle, groupTitle) || other.groupTitle == groupTitle)&&(identical(other.title, title) || other.title == title)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.cursor, cursor) || other.cursor == cursor)&&(identical(other.isMovie, isMovie) || other.isMovie == isMovie)&&(identical(other.isLiveTv, isLiveTv) || other.isLiveTv == isLiveTv)&&(identical(other.isTvSerie, isTvSerie) || other.isTvSerie == isTvSerie));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TrackDriftFilterQuery&&const DeepCollectionEquality().equals(other._playlistIds, _playlistIds)&&(identical(other.groupTitle, groupTitle) || other.groupTitle == groupTitle)&&(identical(other.title, title) || other.title == title)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.cursor, cursor) || other.cursor == cursor)&&(identical(other.isMovie, isMovie) || other.isMovie == isMovie)&&(identical(other.isLiveTv, isLiveTv) || other.isLiveTv == isLiveTv)&&(identical(other.isTvSerie, isTvSerie) || other.isTvSerie == isTvSerie));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -260,15 +260,15 @@ int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(
 
 @override
 String toString() {
-  return 'GetTracksParams(playlistIds: $playlistIds, groupTitle: $groupTitle, title: $title, limit: $limit, offset: $offset, cursor: $cursor, isMovie: $isMovie, isLiveTv: $isLiveTv, isTvSerie: $isTvSerie)';
+  return 'TrackDriftFilterQuery(playlistIds: $playlistIds, groupTitle: $groupTitle, title: $title, limit: $limit, offset: $offset, cursor: $cursor, isMovie: $isMovie, isLiveTv: $isLiveTv, isTvSerie: $isTvSerie)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$GetTracksParamsCopyWith<$Res> implements $GetTracksParamsCopyWith<$Res> {
-  factory _$GetTracksParamsCopyWith(_GetTracksParams value, $Res Function(_GetTracksParams) _then) = __$GetTracksParamsCopyWithImpl;
+abstract mixin class _$TrackDriftFilterQueryCopyWith<$Res> implements $TrackDriftFilterQueryCopyWith<$Res> {
+  factory _$TrackDriftFilterQueryCopyWith(_TrackDriftFilterQuery value, $Res Function(_TrackDriftFilterQuery) _then) = __$TrackDriftFilterQueryCopyWithImpl;
 @override @useResult
 $Res call({
  List<int>? playlistIds, String? groupTitle, String? title, int? limit, int? offset, int? cursor, bool? isMovie, bool? isLiveTv, bool? isTvSerie
@@ -279,17 +279,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$GetTracksParamsCopyWithImpl<$Res>
-    implements _$GetTracksParamsCopyWith<$Res> {
-  __$GetTracksParamsCopyWithImpl(this._self, this._then);
+class __$TrackDriftFilterQueryCopyWithImpl<$Res>
+    implements _$TrackDriftFilterQueryCopyWith<$Res> {
+  __$TrackDriftFilterQueryCopyWithImpl(this._self, this._then);
 
-  final _GetTracksParams _self;
-  final $Res Function(_GetTracksParams) _then;
+  final _TrackDriftFilterQuery _self;
+  final $Res Function(_TrackDriftFilterQuery) _then;
 
-/// Create a copy of GetTracksParams
+/// Create a copy of TrackDriftFilterQuery
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? playlistIds = freezed,Object? groupTitle = freezed,Object? title = freezed,Object? limit = freezed,Object? offset = freezed,Object? cursor = freezed,Object? isMovie = freezed,Object? isLiveTv = freezed,Object? isTvSerie = freezed,}) {
-  return _then(_GetTracksParams(
+  return _then(_TrackDriftFilterQuery(
 playlistIds: freezed == playlistIds ? _self._playlistIds : playlistIds // ignore: cast_nullable_to_non_nullable
 as List<int>?,groupTitle: freezed == groupTitle ? _self.groupTitle : groupTitle // ignore: cast_nullable_to_non_nullable
 as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable

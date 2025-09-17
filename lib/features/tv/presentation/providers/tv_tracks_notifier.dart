@@ -1,4 +1,4 @@
-import 'package:pusoo/features/track/domain/models/get_tracks_params.dart';
+import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
 import 'package:pusoo/features/track/presentation/providers/track_providers.dart';
 import 'package:pusoo/shared/data/models/track.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,7 +14,7 @@ class TvTracksNotifier extends _$TvTracksNotifier {
     return const AsyncValue.loading();
   }
 
-  Future<void> perform(GetTracksParams? params) async {
+  Future<void> perform(TrackDriftFilterQuery? params) async {
     // Return null sebagai state awal.
     // Provider ini akan di-dispose secara otomatis berkat @riverpod.
     // Kita tidak perlu lagi menulis logika onDispose.

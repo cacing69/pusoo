@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pusoo/core/utils/theme_app.dart';
-import 'package:pusoo/features/track/domain/models/get_track_group_titles_params.dart';
+import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_track_group_titles_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_paging_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_filter_notifier.dart';
@@ -35,7 +35,7 @@ class _TvScreenState extends ConsumerState<TvScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(tvTrackGroupTitlesProvider.notifier)
-          .perform(GetTrackGroupTitlesParams(isLiveTv: true));
+          .perform(TrackDriftFilterQuery(isLiveTv: true));
     });
   }
 
@@ -121,9 +121,10 @@ class _TvScreenState extends ConsumerState<TvScreen>
 
   @override
   Widget build(BuildContext context) {
-    final searchController = useTextEditingController();
     final orientation = MediaQuery.of(context).orientation;
     final isPotrait = orientation == Orientation.portrait;
+
+    final searchController = useTextEditingController();
 
     final asyncGroupTitles = ref.watch(tvTrackGroupTitlesProvider);
 
@@ -165,7 +166,7 @@ class _TvScreenState extends ConsumerState<TvScreen>
                                   child: Container(
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: context.theme.colors.destructive,
+                                      color: context.theme.colors.primary,
                                     ),
                                   ),
                                 ),
@@ -405,7 +406,7 @@ class _TvScreenState extends ConsumerState<TvScreen>
                                                 ),
                                             errorWidget: (_, __, ___) => Center(
                                               child: Icon(
-                                                FIcons.tv,
+                                                FIcons.tvMinimal,
                                                 color: context
                                                     .theme
                                                     .colors
@@ -420,7 +421,7 @@ class _TvScreenState extends ConsumerState<TvScreen>
                                       )
                                     : Center(
                                         child: Icon(
-                                          FIcons.tv,
+                                          FIcons.tvMinimal,
                                           size: 40,
                                           color: context.theme.colors.background
                                               .withAlpha(200),

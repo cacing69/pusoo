@@ -2,18 +2,20 @@ import 'package:dartz/dartz.dart';
 import 'package:logger/logger.dart';
 import 'package:pusoo/core/errors/failure.dart';
 import 'package:pusoo/core/utils/usecase.dart';
-import 'package:pusoo/features/track/domain/models/get_tracks_params.dart';
+import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
 import 'package:pusoo/features/track/domain/repostiory/track_repository.dart';
 import 'package:pusoo/shared/data/models/track.dart';
 
-class GetTracksUsecase implements UseCase<List<Track>, GetTracksParams> {
+class GetTracksUsecase implements UseCase<List<Track>, TrackDriftFilterQuery> {
   final TrackRepository _repository;
   final Logger _log;
 
   GetTracksUsecase(this._repository, this._log);
 
   @override
-  Future<Either<Failure, List<Track>>> call(GetTracksParams? params) async {
+  Future<Either<Failure, List<Track>>> call(
+    TrackDriftFilterQuery? params,
+  ) async {
     _log.i("GetTracksUsecase:_repository.getTvTracks");
     _log.i(params);
 

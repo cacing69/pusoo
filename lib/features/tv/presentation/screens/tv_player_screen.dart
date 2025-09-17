@@ -1,12 +1,12 @@
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pusoo/core/utils/helpers.dart';
-import 'package:pusoo/features/tv/presentation/providers/tv_track_group_titles_notifier.dart';
 import 'package:pusoo/shared/data/models/track.dart';
 import 'package:pusoo/shared/presentation/providers/better_player_notifier.dart';
 
@@ -14,66 +14,30 @@ class TVPlayerScreen extends ConsumerStatefulWidget {
   final Track track;
   const TVPlayerScreen({super.key, required this.track});
 
-  @override
   ConsumerState<TVPlayerScreen> createState() => _TVPlayerScreenState();
 }
 
 class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
-  // late BetterPlayerController _betterPlayerController;
-
-  // @override
-  // void dispose() {
-  //   // _betterPlayerController.dispose();
-  //   super.dispose();
-  // }
-
-  // Helper function to convert hex string to Base64 URL-safe string
+  final GlobalKey _playerKey = GlobalKey();
   String? urlActive;
-  // dynamic debugHttpHeaders;
 
-  @override
   void initState() {
     super.initState();
-    // ignore: avoid_print
-    // print("[TVPlayerScreen] --- initState called ---");
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   //   // ignore: avoid_print
-    //   //   print("[TVPlayerScreen] addPostFrameCallback running...");
-    //   //   final controller = ref.read(betterPlayerProvider);
-    //   //   final currentUrl = controller?.betterPlayerDataSource?.url;
-    //   //   final newUrl = widget.track.links.first;
-
-    //   //   // ignore: avoid_print
-    //   //   print("[TVPlayerScreen] Controller is null: ${controller == null}");
-    //   //   // ignore: avoid_print
-    //   //   print("[TVPlayerScreen] Current URL: $currentUrl");
-    //   //   // ignore: avoid_print
-    //   //   print("[TVPlayerScreen] New URL: $newUrl");
-    //   //   // ignore: avoid_print
-    //   //   print("[TVPlayerScreen] URLs are different: ${currentUrl != newUrl}");
-
-    //   //   if (controller == null || currentUrl != newUrl) {
-    //   //     // ignore: avoid_print
-    //   //     print("[TVPlayerScreen] Condition MET. Calling openMediaStream.");
-    //   ref
-    //       .read(betterPlayerProvider.notifier)
-    //       .openMediaStream(widget.track, isLiveStream: true);
-    //   //   } else {
-    //   //     // ignore: avoid_print
-    //   //     print("[TVPlayerScreen] Condition NOT MET. Skipping openMediaStream.");
-    //   //   }
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(betterPlayerProvider.notifier)
+          .openMediaStream(widget.track, isLiveStream: true);
+    });
   }
 
-  // bool isFullScreen = false;
-
-  @override
   Widget build(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
     final isPotrait = orientation == Orientation.portrait;
 
     final betterPlayerController = ref.watch(betterPlayerProvider);
 
+    // Hapus logika pengecekan orientasi. Selalu gunakan layout potret
+    // dan biarkan player yang meng-handle mode lanskap melalui fullscreen.
     return FScaffold(
       header: isPotrait
           ? FHeader.nested(
@@ -91,8 +55,8 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
                       ),
                     ),
                   ),
-                  Gap(10),
-                  Text("Live TV "),
+                  const Gap(10),
+                  const Text("Live TV "),
                 ],
               ),
               prefixes: [
@@ -103,7 +67,8 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
                 ),
               ],
             )
-          : const SizedBox.shrink(),
+          : SizedBox.shrink(),
+      // SELALU gunakan _buildPotraitLayout untuk menghindari konflik
       child: isPotrait
           ? _buildPotraitLayout(context, betterPlayerController, widget.track)
           : _buildLandscapeLayout(
@@ -111,76 +76,6 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
               betterPlayerController,
               widget.track,
             ),
-
-      // Column(
-      //   crossAxisAlignment: CrossAxisAlignment.start,
-      //   children: [
-      //     Expanded(
-      //       child: AspectRatio(
-      //         aspectRatio: 16 / 9,
-      //         child: betterPlayerController != null
-      //             ? BetterPlayer(controller: betterPlayerController)
-      //             : Center(
-      //                 child: FProgress.circularIcon(
-      //                   style: (e) =>
-      //                       e.copyWith(color: context.theme.colors.destructive),
-      //                 ),
-      //               ),
-      //       ),
-      //     ),
-      //     // Gap(10),
-      //     Text("Source"),
-      //     Gap(5),
-      //     Center(
-      //       child: Wrap(
-      //         children: [
-      //           ...widget.track.links.asMap().entries.map((entry) {
-      //             int index = entry.key;
-      //             String link = entry.value;
-
-      //             return Padding(
-      //               padding: const EdgeInsets.all(3.0),
-      //               child: SizedBox(
-      //                 width: 50,
-      //                 height: 50,
-      //                 child: FButton(
-      //                   style: FButtonStyle.outline(),
-      //                   child: Text("${index + 1}"),
-      //                   onPress: () {
-      //                     showFlutterToast(
-      //                       message: "Changed to URL #${index + 1}",
-      //                       context: context,
-      //                     );
-
-      //                     ref
-      //                         .read(betterPlayerProvider.notifier)
-      //                         .openMediaStream(
-      //                           widget.track,
-      //                           isLiveStream: true,
-      //                           useUrlOnIndex: index,
-      //                         );
-      //                   },
-      //                 ),
-      //               ),
-      //             );
-      //           }),
-      //         ],
-      //       ),
-      //     ),
-      //     Gap(10),
-      //     SafeArea(
-      //       top: false,
-      //       child: FButton(
-      //         style: FButtonStyle.outline(),
-      //         onPress: () {
-      //           betterPlayerController?.toggleFullScreen();
-      //         },
-      //         prefix: const Icon(FIcons.fullscreen),
-      //         child: Text("Fullscreen"),
-      //       ),
-      //     ),
-      //   ],
-      // ),
     );
   }
 
@@ -196,18 +91,17 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
                 // controller?.toggleFullScreen();
               },
               prefix: const Icon(FIcons.heart),
-              child: Text("Add to favorite"),
+              child: const Text("Add to favorite"),
             ),
           ),
-          Gap(10),
+          const Gap(10),
           FButton.icon(
             style: FButtonStyle.outline(),
             onPress: () {
               controller?.toggleFullScreen();
             },
-            // prefix: const Icon(FIcons.fullscreen),
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
+            child: const Padding(
+              padding: EdgeInsets.all(5.0),
               child: Icon(FIcons.fullscreen),
             ),
           ),
@@ -249,7 +143,7 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
                           const Center(child: FProgress.circularIcon()),
                       errorWidget: (_, __, ___) => Center(
                         child: Icon(
-                          FIcons.tv,
+                          FIcons.tvMinimal,
                           color: context.theme.colors.background.withAlpha(200),
                           size: 20,
                         ),
@@ -260,7 +154,7 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
                 ),
               ),
             ),
-            Gap(10),
+            const Gap(10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,15 +188,13 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Gap(5),
+        const Gap(5),
         Text("Available URL Sources", style: context.theme.typography.xs),
-        Gap(5),
+        const Gap(5),
         Wrap(
           children: [
             ...widget.track.links.asMap().entries.map((entry) {
               int index = entry.key;
-
-              // String link = entry.value;
 
               return Padding(
                 padding: const EdgeInsets.all(3.0),
@@ -337,11 +229,9 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
   }
 
   Widget _buildContentScrollable() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [Text("No information available")],
-      ),
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [Text("No information available")],
     );
   }
 
@@ -352,10 +242,9 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
       child: AspectRatio(
         aspectRatio: 16 / 9,
         child: controller == null
-            ? Center(child: FProgress.circularIcon())
-            : BetterPlayer(controller: controller),
+            ? const Center(child: FProgress.circularIcon())
+            : BetterPlayer(key: _playerKey, controller: controller),
       ),
-      // _buildVideoPlayer(isBuffering, controller),
     );
   }
 
@@ -367,19 +256,30 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildVideoPlayer(controller),
+        Expanded(flex: 1, child: _buildVideoPlayer(controller)),
         FDivider(
           style: (style) =>
-              style.copyWith(padding: EdgeInsets.symmetric(vertical: 10)),
+              style.copyWith(padding: const EdgeInsets.symmetric(vertical: 10)),
         ),
-        _buildChannelInformation(track),
-        Gap(5),
-        _buildAvailableUrls(track),
-        Gap(5),
-        Expanded(child: _buildContentScrollable()),
-        Gap(10),
-        _buildButtonFavoriteAndFullScreen(controller),
-        const Gap(15),
+        Expanded(
+          flex: 3,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildChannelInformation(track),
+                const Gap(5),
+                _buildAvailableUrls(track),
+                const Gap(5),
+                Expanded(child: _buildContentScrollable()),
+                const Gap(10),
+                _buildButtonFavoriteAndFullScreen(controller),
+                const Gap(15),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -392,20 +292,19 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen> {
     return Row(
       children: [
         Expanded(flex: 2, child: _buildVideoPlayer(controller)),
-        Gap(10),
+        const Gap(10),
         Expanded(
           flex: 1,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Gap(10),
+              const Gap(10),
               _buildChannelInformation(track),
-              Gap(5),
+              const Gap(5),
               _buildAvailableUrls(track),
-              Gap(5),
+              const Gap(5),
               Expanded(child: _buildContentScrollable()),
-              Gap(5),
-
+              const Gap(5),
               _buildButtonFavoriteAndFullScreen(controller),
             ],
           ),

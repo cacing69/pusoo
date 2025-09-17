@@ -261,10 +261,10 @@ packages:
     dependency: "direct main"
     description:
       name: country_flags
-      sha256: "4d9ad5a7eee55c56338a045587a6382fea3f508f8dd16fa827835842d0887bc7"
+      sha256: "9226e95993a6225f746f8ad84e07ff492ce8bfa130bb141426473bcc2a6927ed"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "4.0.1"
   coverage:
     dependency: transitive
     description:
@@ -397,18 +397,18 @@ packages:
     dependency: "direct main"
     description:
       name: envied
-      sha256: "8c22863e9e8e58e3e987d1a6e2797d604d296999125340410ddc44e03e5941d9"
+      sha256: "3c7fdf77ffd99bb429d8373b5f1eec3153c2871347f140d107895fd52b6e2c66"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.1"
+    version: "1.3.0"
   envied_generator:
     dependency: "direct dev"
     description:
       name: envied_generator
-      sha256: "1db6625536349e51ca26027c251e84febbb77c336e83ae60d57eafc637f89c22"
+      sha256: "830b7dfa04ae1ebc4871e1d5d44cfff0fe4d8cb8013725db7b1ab0d06b9445f7"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.1"
+    version: "1.3.0"
   equatable:
     dependency: transitive
     description:
@@ -641,10 +641,10 @@ packages:
     dependency: "direct main"
     description:
       name: hive_ce
-      sha256: "74461ee89e97fe347dd894fd6ea1dbdc8c745ea6fe0d6e0b1746530abd02eb95"
+      sha256: da9fa16ed25c881c096154f727c2421bcdc9bfff12c5c3af86ae0c9859f8d41e
       url: "https://pub.dev"
     source: hosted
-    version: "2.12.0"
+    version: "2.13.0"
   hive_ce_flutter:
     dependency: "direct main"
     description:
@@ -777,10 +777,10 @@ packages:
     dependency: transitive
     description:
       name: jovial_svg
-      sha256: "6791b1435547bdc0793081a166d41a8a313ebc61e4e5136fb7a3218781fb9e50"
+      sha256: "08dd24b800d48796c9c0227acb96eb00c6cacccb1d7de58d79fc924090049868"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.27"
+    version: "1.1.28"
   js:
     dependency: transitive
     description:
@@ -1502,10 +1502,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_android
-      sha256: "07cffecb7d68cbc6437cd803d5f11a86fe06736735c3dfe46ff73bcb0f958eed"
+      sha256: "199bc33e746088546a39cc5f36bac5a278c5e53b40cb3196f99e7345fdcfae6b"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.21"
+    version: "6.3.22"
   url_launcher_ios:
     dependency: transitive
     description:

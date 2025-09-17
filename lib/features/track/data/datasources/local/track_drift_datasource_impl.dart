@@ -1,6 +1,5 @@
 import 'package:logger/logger.dart';
-import 'package:pusoo/features/track/domain/models/get_track_group_titles_params.dart';
-import 'package:pusoo/features/track/domain/models/get_tracks_params.dart';
+import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:pusoo/features/track/data/datasources/local/track_drift_datasource.dart';
 import 'package:pusoo/shared/data/models/track.dart';
@@ -12,7 +11,7 @@ class TrackDriftDatasourceImpl implements TrackDriftDatasource {
   TrackDriftDatasourceImpl(this._log);
 
   @override
-  Future<int> count({List<int>? playlistIds}) async {
+  Future<int> count(TrackDriftFilterQuery? params) async {
     // cek jika belum ada playlist maka set default
     final countExpression = driftDb.trackDrift.id.count();
 
@@ -22,10 +21,12 @@ class TrackDriftDatasourceImpl implements TrackDriftDatasource {
 
     // 2. Tambahkan kondisi WHERE secara dinamis
     // Cek jika playlistIds tidak null dan tidak kosong
-    if (playlistIds != null && playlistIds.isNotEmpty) {
+    if (params?.playlistIds != null) {
       // Terapkan filter WHERE ... IN (...) pada kolom playlistId
       // Asumsi nama kolom di tabel Anda adalah 'playlistId'
-      query.where(driftDb.trackDrift.playlistId.isIn(playlistIds));
+      if (params!.playlistIds!.isNotEmpty) {
+        query.where(driftDb.trackDrift.playlistId.isIn(params.playlistIds!));
+      }
     }
 
     // 3. Eksekusi query yang sudah dibangun
@@ -37,7 +38,7 @@ class TrackDriftDatasourceImpl implements TrackDriftDatasource {
   }
 
   @override
-  Future<List<Track>> get(GetTracksParams? params) async {
+  Future<List<Track>> get(TrackDriftFilterQuery? params) async {
     // 1. Gunakan List untuk menampung semua kondisi WHERE secara dinamis
     final List<drift.Expression<bool>> whereClauses = [
       // Kondisi statis dari kode Anda sebelumnya untuk memastikan ini adalah Live TV
@@ -121,7 +122,7 @@ class TrackDriftDatasourceImpl implements TrackDriftDatasource {
   }
 
   @override
-  Future<List<String>> getGroupTitle(GetTrackGroupTitlesParams? params) {
+  Future<List<String>> getGroupTitle(TrackDriftFilterQuery? params) {
     final query = driftDb.selectOnly(driftDb.trackDrift)
       ..addColumns([driftDb.trackDrift.groupTitle])
       ..groupBy([driftDb.trackDrift.groupTitle]);

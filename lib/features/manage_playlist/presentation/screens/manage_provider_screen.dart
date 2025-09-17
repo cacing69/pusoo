@@ -147,7 +147,7 @@ class _ManageProviderScreenState extends ConsumerState<ManageProviderScreen> {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: e.isActive
-                                      ? Colors.green[800]
+                                      ? context.theme.colors.primary
                                       : context.theme.colors.destructive,
                                 ),
                               ),
