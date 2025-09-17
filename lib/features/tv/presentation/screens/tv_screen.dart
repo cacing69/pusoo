@@ -444,25 +444,35 @@ class _TvScreenState extends ConsumerState<TvScreen>
 
                         context.pushNamed(RouteName.tvPlayer.name, extra: item);
                       },
-                      child: FItem(
-                        prefix: TvgLogoViewer(
-                          size: 50,
-                          track: item,
-                          showLabel: false,
-                        ),
-                        title: Text(item.title.trim()),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            item.groupTitle.trim().isNotEmpty
-                                ? Text(item.groupTitle.trim())
-                                : Text("Miscellaneous"),
-                            item.tvgId.trim().isNotEmpty
-                                ? Text(item.tvgId.trim(), maxLines: 2)
-                                : Text("@tvg-id: n/a"),
-                          ],
-                        ),
-                        suffix: Icon(FIcons.play),
+                      child: Column(
+                        children: [
+                          FItem(
+                            prefix: TvgLogoViewer(
+                              size: 50,
+                              track: item,
+                              showLabel: false,
+                            ),
+                            title: Text(item.title.trim(), maxLines: 4),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                item.groupTitle.trim().isNotEmpty
+                                    ? Text(item.groupTitle.trim())
+                                    : Text("Miscellaneous"),
+                                item.tvgId.trim().isNotEmpty
+                                    ? Text(item.tvgId.trim(), maxLines: 2)
+                                    : Text("@tvg-id: n/a"),
+                              ],
+                            ),
+                            suffix: Icon(FIcons.play),
+                          ),
+                          FDivider(
+                            style: (style) => style.copyWith(
+                              padding: EdgeInsets.symmetric(vertical: 2),
+                              width: 1,
+                            ),
+                          ),
+                        ],
                       ),
                       // Column(
                       //   children: [

@@ -232,8 +232,7 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
               return Padding(
                 padding: const EdgeInsets.all(3.0),
                 child: SizedBox(
-                  width: 40,
-                  height: 40,
+                  width: 65,
                   child: FButton(
                     style: FButtonStyle.outline(),
                     child: Text("${index + 1}"),

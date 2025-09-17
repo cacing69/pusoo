@@ -294,6 +294,8 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
       }
     }
 
+    log.d("httpHeaders:extvlcopt: ${track.extVlcOpts}");
+
     if (track.extVlcOpts.isNotEmpty) {
       final bool hasUserAgent = track.extVlcOpts.first.containsKey(
         "http-user-agent",
@@ -322,11 +324,14 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
       );
     }
 
-    log.i("httpHeaders: $httpHeaders");
+    log.i("httpHeaders:begin $httpHeaders");
+
     if (tmpHttpHeaders.isNotEmpty) {
       httpHeaders = tmpHttpHeaders;
     }
-    log.i("tmpHttpHeaders: $tmpHttpHeaders");
+
+    log.i("httpHeaders:tmp $tmpHttpHeaders");
+    log.i("httpHeaders:end $httpHeaders");
 
     final BetterPlayerDataSource betterPlayerDataSource =
         BetterPlayerDataSource(

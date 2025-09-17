@@ -1072,6 +1072,15 @@ class $TrackDriftTable extends TrackDrift
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _descMeta = const VerificationMeta('desc');
+  @override
+  late final GeneratedColumn<String> desc = GeneratedColumn<String>(
+    'desc',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _durationMeta = const VerificationMeta(
     'duration',
   );
@@ -1208,6 +1217,7 @@ class $TrackDriftTable extends TrackDrift
     tvgId,
     tvgName,
     tvgLogo,
+    desc,
     duration,
     isNsfw,
     isMovie,
@@ -1293,6 +1303,12 @@ class $TrackDriftTable extends TrackDrift
       context.handle(
         _tvgLogoMeta,
         tvgLogo.isAcceptableOrUnknown(data['tvg_logo']!, _tvgLogoMeta),
+      );
+    }
+    if (data.containsKey('desc')) {
+      context.handle(
+        _descMeta,
+        desc.isAcceptableOrUnknown(data['desc']!, _descMeta),
       );
     }
     if (data.containsKey('duration')) {
@@ -1413,6 +1429,10 @@ class $TrackDriftTable extends TrackDrift
         DriftSqlType.string,
         data['${effectivePrefix}tvg_logo'],
       ),
+      desc: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}desc'],
+      ),
       duration: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}duration'],
@@ -1473,6 +1493,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
   final String? tvgId;
   final String? tvgName;
   final String? tvgLogo;
+  final String? desc;
   final int? duration;
   final bool isNsfw;
   final bool isMovie;
@@ -1494,6 +1515,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
     this.tvgId,
     this.tvgName,
     this.tvgLogo,
+    this.desc,
     this.duration,
     required this.isNsfw,
     required this.isMovie,
@@ -1531,6 +1553,9 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
     }
     if (!nullToAbsent || tvgLogo != null) {
       map['tvg_logo'] = Variable<String>(tvgLogo);
+    }
+    if (!nullToAbsent || desc != null) {
+      map['desc'] = Variable<String>(desc);
     }
     if (!nullToAbsent || duration != null) {
       map['duration'] = Variable<int>(duration);
@@ -1583,6 +1608,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
       tvgLogo: tvgLogo == null && nullToAbsent
           ? const Value.absent()
           : Value(tvgLogo),
+      desc: desc == null && nullToAbsent ? const Value.absent() : Value(desc),
       duration: duration == null && nullToAbsent
           ? const Value.absent()
           : Value(duration),
@@ -1624,6 +1650,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
       tvgId: serializer.fromJson<String?>(json['tvgId']),
       tvgName: serializer.fromJson<String?>(json['tvgName']),
       tvgLogo: serializer.fromJson<String?>(json['tvgLogo']),
+      desc: serializer.fromJson<String?>(json['desc']),
       duration: serializer.fromJson<int?>(json['duration']),
       isNsfw: serializer.fromJson<bool>(json['isNsfw']),
       isMovie: serializer.fromJson<bool>(json['isMovie']),
@@ -1650,6 +1677,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
       'tvgId': serializer.toJson<String?>(tvgId),
       'tvgName': serializer.toJson<String?>(tvgName),
       'tvgLogo': serializer.toJson<String?>(tvgLogo),
+      'desc': serializer.toJson<String?>(desc),
       'duration': serializer.toJson<int?>(duration),
       'isNsfw': serializer.toJson<bool>(isNsfw),
       'isMovie': serializer.toJson<bool>(isMovie),
@@ -1674,6 +1702,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
     Value<String?> tvgId = const Value.absent(),
     Value<String?> tvgName = const Value.absent(),
     Value<String?> tvgLogo = const Value.absent(),
+    Value<String?> desc = const Value.absent(),
     Value<int?> duration = const Value.absent(),
     bool? isNsfw,
     bool? isMovie,
@@ -1695,6 +1724,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
     tvgId: tvgId.present ? tvgId.value : this.tvgId,
     tvgName: tvgName.present ? tvgName.value : this.tvgName,
     tvgLogo: tvgLogo.present ? tvgLogo.value : this.tvgLogo,
+    desc: desc.present ? desc.value : this.desc,
     duration: duration.present ? duration.value : this.duration,
     isNsfw: isNsfw ?? this.isNsfw,
     isMovie: isMovie ?? this.isMovie,
@@ -1724,6 +1754,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
       tvgId: data.tvgId.present ? data.tvgId.value : this.tvgId,
       tvgName: data.tvgName.present ? data.tvgName.value : this.tvgName,
       tvgLogo: data.tvgLogo.present ? data.tvgLogo.value : this.tvgLogo,
+      desc: data.desc.present ? data.desc.value : this.desc,
       duration: data.duration.present ? data.duration.value : this.duration,
       isNsfw: data.isNsfw.present ? data.isNsfw.value : this.isNsfw,
       isMovie: data.isMovie.present ? data.isMovie.value : this.isMovie,
@@ -1758,6 +1789,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
           ..write('tvgId: $tvgId, ')
           ..write('tvgName: $tvgName, ')
           ..write('tvgLogo: $tvgLogo, ')
+          ..write('desc: $desc, ')
           ..write('duration: $duration, ')
           ..write('isNsfw: $isNsfw, ')
           ..write('isMovie: $isMovie, ')
@@ -1773,7 +1805,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     playlistId,
     title,
@@ -1784,6 +1816,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
     tvgId,
     tvgName,
     tvgLogo,
+    desc,
     duration,
     isNsfw,
     isMovie,
@@ -1794,7 +1827,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
     extVlcOpts,
     httpHeaders,
     lastUpdated,
-  );
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1809,6 +1842,7 @@ class TrackDriftData extends DataClass implements Insertable<TrackDriftData> {
           other.tvgId == this.tvgId &&
           other.tvgName == this.tvgName &&
           other.tvgLogo == this.tvgLogo &&
+          other.desc == this.desc &&
           other.duration == this.duration &&
           other.isNsfw == this.isNsfw &&
           other.isMovie == this.isMovie &&
@@ -1832,6 +1866,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
   final Value<String?> tvgId;
   final Value<String?> tvgName;
   final Value<String?> tvgLogo;
+  final Value<String?> desc;
   final Value<int?> duration;
   final Value<bool> isNsfw;
   final Value<bool> isMovie;
@@ -1853,6 +1888,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     this.tvgId = const Value.absent(),
     this.tvgName = const Value.absent(),
     this.tvgLogo = const Value.absent(),
+    this.desc = const Value.absent(),
     this.duration = const Value.absent(),
     this.isNsfw = const Value.absent(),
     this.isMovie = const Value.absent(),
@@ -1875,6 +1911,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     this.tvgId = const Value.absent(),
     this.tvgName = const Value.absent(),
     this.tvgLogo = const Value.absent(),
+    this.desc = const Value.absent(),
     this.duration = const Value.absent(),
     this.isNsfw = const Value.absent(),
     this.isMovie = const Value.absent(),
@@ -1898,6 +1935,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     Expression<String>? tvgId,
     Expression<String>? tvgName,
     Expression<String>? tvgLogo,
+    Expression<String>? desc,
     Expression<int>? duration,
     Expression<bool>? isNsfw,
     Expression<bool>? isMovie,
@@ -1920,6 +1958,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
       if (tvgId != null) 'tvg_id': tvgId,
       if (tvgName != null) 'tvg_name': tvgName,
       if (tvgLogo != null) 'tvg_logo': tvgLogo,
+      if (desc != null) 'desc': desc,
       if (duration != null) 'duration': duration,
       if (isNsfw != null) 'is_nsfw': isNsfw,
       if (isMovie != null) 'is_movie': isMovie,
@@ -1944,6 +1983,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     Value<String?>? tvgId,
     Value<String?>? tvgName,
     Value<String?>? tvgLogo,
+    Value<String?>? desc,
     Value<int?>? duration,
     Value<bool>? isNsfw,
     Value<bool>? isMovie,
@@ -1966,6 +2006,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
       tvgId: tvgId ?? this.tvgId,
       tvgName: tvgName ?? this.tvgName,
       tvgLogo: tvgLogo ?? this.tvgLogo,
+      desc: desc ?? this.desc,
       duration: duration ?? this.duration,
       isNsfw: isNsfw ?? this.isNsfw,
       isMovie: isMovie ?? this.isMovie,
@@ -2011,6 +2052,9 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
     }
     if (tvgLogo.present) {
       map['tvg_logo'] = Variable<String>(tvgLogo.value);
+    }
+    if (desc.present) {
+      map['desc'] = Variable<String>(desc.value);
     }
     if (duration.present) {
       map['duration'] = Variable<int>(duration.value);
@@ -2058,6 +2102,7 @@ class TrackDriftCompanion extends UpdateCompanion<TrackDriftData> {
           ..write('tvgId: $tvgId, ')
           ..write('tvgName: $tvgName, ')
           ..write('tvgLogo: $tvgLogo, ')
+          ..write('desc: $desc, ')
           ..write('duration: $duration, ')
           ..write('isNsfw: $isNsfw, ')
           ..write('isMovie: $isMovie, ')
@@ -3672,6 +3717,7 @@ typedef $$TrackDriftTableCreateCompanionBuilder =
       Value<String?> tvgId,
       Value<String?> tvgName,
       Value<String?> tvgLogo,
+      Value<String?> desc,
       Value<int?> duration,
       Value<bool> isNsfw,
       Value<bool> isMovie,
@@ -3695,6 +3741,7 @@ typedef $$TrackDriftTableUpdateCompanionBuilder =
       Value<String?> tvgId,
       Value<String?> tvgName,
       Value<String?> tvgLogo,
+      Value<String?> desc,
       Value<int?> duration,
       Value<bool> isNsfw,
       Value<bool> isMovie,
@@ -3782,6 +3829,11 @@ class $$TrackDriftTableFilterComposer
 
   ColumnFilters<String> get tvgLogo => $composableBuilder(
     column: $table.tvgLogo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get desc => $composableBuilder(
+    column: $table.desc,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3913,6 +3965,11 @@ class $$TrackDriftTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get desc => $composableBuilder(
+    column: $table.desc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get duration => $composableBuilder(
     column: $table.duration,
     builder: (column) => ColumnOrderings(column),
@@ -4027,6 +4084,9 @@ class $$TrackDriftTableAnnotationComposer
   GeneratedColumn<String> get tvgLogo =>
       $composableBuilder(column: $table.tvgLogo, builder: (column) => column);
 
+  GeneratedColumn<String> get desc =>
+      $composableBuilder(column: $table.desc, builder: (column) => column);
+
   GeneratedColumn<int> get duration =>
       $composableBuilder(column: $table.duration, builder: (column) => column);
 
@@ -4127,6 +4187,7 @@ class $$TrackDriftTableTableManager
                 Value<String?> tvgId = const Value.absent(),
                 Value<String?> tvgName = const Value.absent(),
                 Value<String?> tvgLogo = const Value.absent(),
+                Value<String?> desc = const Value.absent(),
                 Value<int?> duration = const Value.absent(),
                 Value<bool> isNsfw = const Value.absent(),
                 Value<bool> isMovie = const Value.absent(),
@@ -4148,6 +4209,7 @@ class $$TrackDriftTableTableManager
                 tvgId: tvgId,
                 tvgName: tvgName,
                 tvgLogo: tvgLogo,
+                desc: desc,
                 duration: duration,
                 isNsfw: isNsfw,
                 isMovie: isMovie,
@@ -4171,6 +4233,7 @@ class $$TrackDriftTableTableManager
                 Value<String?> tvgId = const Value.absent(),
                 Value<String?> tvgName = const Value.absent(),
                 Value<String?> tvgLogo = const Value.absent(),
+                Value<String?> desc = const Value.absent(),
                 Value<int?> duration = const Value.absent(),
                 Value<bool> isNsfw = const Value.absent(),
                 Value<bool> isMovie = const Value.absent(),
@@ -4192,6 +4255,7 @@ class $$TrackDriftTableTableManager
                 tvgId: tvgId,
                 tvgName: tvgName,
                 tvgLogo: tvgLogo,
+                desc: desc,
                 duration: duration,
                 isNsfw: isNsfw,
                 isMovie: isMovie,

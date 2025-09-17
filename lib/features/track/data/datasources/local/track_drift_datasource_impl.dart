@@ -127,13 +127,16 @@ class TrackDriftDatasourceImpl implements TrackDatasource {
       drift.OrderingTerm(
         expression: driftDb.trackDrift.id,
         mode: drift.OrderingMode.asc,
-      )
+      ),
     ]);
 
     // 5. Eksekusi query dan lakukan mapping hasil
     final trackDriftDataRows = await query.get();
 
     final List<Track> mapToTrack = trackDriftDataRows.map((result) {
+      _log.i(
+        "row.toString:[1]: ${result.readTable(driftDb.trackDrift).toString()}",
+      );
       return Track.fromDriftTypedResult(result);
     }).toList();
 

@@ -12,6 +12,7 @@ class TrackDrift extends Table {
   TextColumn get tvgId => text().nullable()();
   TextColumn get tvgName => text().nullable()();
   TextColumn get tvgLogo => text().nullable()();
+  TextColumn get desc => text().nullable()();
   IntColumn get duration => integer().nullable()();
   BoolColumn get isNsfw => boolean().withDefault(const Constant(false))();
 

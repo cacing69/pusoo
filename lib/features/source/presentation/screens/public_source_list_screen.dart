@@ -59,30 +59,46 @@ class _PublicSourceListScreenState extends State<PublicSourceListScreen> {
               ),
               FItem(
                 prefix: Icon(FIcons.folderRoot),
-                title: Text("bugsfreeweb/LiveTVCollector"),
-                subtitle: Text(
-                  "https://github.com/bugsfreeweb/LiveTVCollector",
-                ),
-                suffix: Icon(FIcons.chevronRight),
-              ),
-            ],
-          ),
-          FDivider(),
-          Text("Other Sources"),
-          FItemGroup(
-            children: [
-              FItem(
-                prefix: Icon(FIcons.folderRoot),
-                title: Text("iptv-org/iptv"),
-                subtitle: Text("https://github.com/iptv-org/iptv"),
+                title: Text("Mikhel/EPG-para-m3u"),
+                subtitle: Text("https://github.com/Mikhel/EPG-para-m3u"),
                 suffix: Icon(FIcons.chevronRight),
               ),
               FItem(
                 prefix: Icon(FIcons.folderRoot),
-                title: Text("Free-TV/IPTV"),
-                subtitle: Text("https://github.com/Free-TV/IPTV"),
+                title: Text("LITUATUI/M3UPT"),
+                subtitle: Text("https://github.com/LITUATUI/M3UPT"),
                 suffix: Icon(FIcons.chevronRight),
               ),
+
+              FItem(
+                prefix: Icon(FIcons.folderRoot),
+                title: Text("gambiarras/legal-iptv"),
+                subtitle: Text("https://github.com/gambiarras/legal-iptv"),
+                suffix: Icon(FIcons.chevronRight),
+              ),
+              FItem(
+                prefix: Icon(FIcons.folderRoot),
+                title: Text("tecotv2025/tecotv"),
+                subtitle: Text("https://github.com/tecotv2025/tecotv"),
+                suffix: Icon(FIcons.chevronRight),
+              ),
+
+              // FItem(
+              //   prefix: Icon(FIcons.folderRoot),
+              //   title: Text("bugsfreeweb/LiveTVCollector"),
+              //   subtitle: Text(
+              //     "https://github.com/bugsfreeweb/LiveTVCollector",
+              //   ),
+              //   suffix: Icon(FIcons.chevronRight),
+              // ),
+              // FItem(
+              //   prefix: Icon(FIcons.folderRoot),
+              //   title: Text("konanda-sg/DrewLive"),
+              //   subtitle: Text(
+              //     "https://github.com/konanda-sg/DrewLive",
+              //   ),
+              //   suffix: Icon(FIcons.chevronRight),
+              // ),
             ],
           ),
         ],

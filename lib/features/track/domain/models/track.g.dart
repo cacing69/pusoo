@@ -17,12 +17,18 @@ _Track _$TrackFromJson(Map<String, dynamic> json) => _Track(
   imdbId: json['imdbId'] as String? ?? "",
   tvgId: json['tvgId'] as String? ?? "",
   tvgName: json['tvgName'] as String? ?? "",
+  desc: json['desc'] as String? ?? "",
   tvgLogo: json['tvgLogo'] as String? ?? "",
   playlist: json['playlist'] == null
       ? null
       : Playlist.fromJson(json['playlist'] as Map<String, dynamic>),
   duration: (json['duration'] as num?)?.toInt() ?? 0,
   isNsfw: json['isNsfw'] as bool? ?? false,
+  extXMedias:
+      (json['extXMedias'] as List<dynamic>?)
+          ?.map((e) => ExtXMedia.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
   isMovie: json['isMovie'] as bool? ?? false,
   isLiveTv: json['isLiveTv'] as bool? ?? false,
   isTvSerie: json['isTvSerie'] as bool? ?? false,
@@ -57,10 +63,12 @@ Map<String, dynamic> _$TrackToJson(_Track instance) => <String, dynamic>{
   'imdbId': instance.imdbId,
   'tvgId': instance.tvgId,
   'tvgName': instance.tvgName,
+  'desc': instance.desc,
   'tvgLogo': instance.tvgLogo,
   'playlist': instance.playlist,
   'duration': instance.duration,
   'isNsfw': instance.isNsfw,
+  'extXMedias': instance.extXMedias,
   'isMovie': instance.isMovie,
   'isLiveTv': instance.isLiveTv,
   'isTvSerie': instance.isTvSerie,

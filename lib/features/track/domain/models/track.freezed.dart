@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Track {
 
- int get id; String get title; String get contentType; List<String> get links; String get groupTitle; String get imdbId; String get tvgId; String get tvgName; String get tvgLogo; Playlist? get playlist; int get duration; bool get isNsfw; bool get isMovie; bool get isLiveTv; bool get isTvSerie; Map<String, String> get attributes; List<Map<String, String>> get extVlcOpts; List<Map<String, String>> get kodiProps; List<Map<String, String>> get httpHeaders;
+ int get id; String get title; String get contentType; List<String> get links; String get groupTitle; String get imdbId; String get tvgId; String get tvgName; String get desc; String get tvgLogo; Playlist? get playlist; int get duration; bool get isNsfw; List<ExtXMedia> get extXMedias; bool get isMovie; bool get isLiveTv; bool get isTvSerie; Map<String, String> get attributes; List<Map<String, String>> get extVlcOpts; List<Map<String, String>> get kodiProps; List<Map<String, String>> get httpHeaders;
 /// Create a copy of Track
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $TrackCopyWith<Track> get copyWith => _$TrackCopyWithImpl<Track>(this as Track, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Track&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&const DeepCollectionEquality().equals(other.links, links)&&(identical(other.groupTitle, groupTitle) || other.groupTitle == groupTitle)&&(identical(other.imdbId, imdbId) || other.imdbId == imdbId)&&(identical(other.tvgId, tvgId) || other.tvgId == tvgId)&&(identical(other.tvgName, tvgName) || other.tvgName == tvgName)&&(identical(other.tvgLogo, tvgLogo) || other.tvgLogo == tvgLogo)&&(identical(other.playlist, playlist) || other.playlist == playlist)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.isNsfw, isNsfw) || other.isNsfw == isNsfw)&&(identical(other.isMovie, isMovie) || other.isMovie == isMovie)&&(identical(other.isLiveTv, isLiveTv) || other.isLiveTv == isLiveTv)&&(identical(other.isTvSerie, isTvSerie) || other.isTvSerie == isTvSerie)&&const DeepCollectionEquality().equals(other.attributes, attributes)&&const DeepCollectionEquality().equals(other.extVlcOpts, extVlcOpts)&&const DeepCollectionEquality().equals(other.kodiProps, kodiProps)&&const DeepCollectionEquality().equals(other.httpHeaders, httpHeaders));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Track&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&const DeepCollectionEquality().equals(other.links, links)&&(identical(other.groupTitle, groupTitle) || other.groupTitle == groupTitle)&&(identical(other.imdbId, imdbId) || other.imdbId == imdbId)&&(identical(other.tvgId, tvgId) || other.tvgId == tvgId)&&(identical(other.tvgName, tvgName) || other.tvgName == tvgName)&&(identical(other.desc, desc) || other.desc == desc)&&(identical(other.tvgLogo, tvgLogo) || other.tvgLogo == tvgLogo)&&(identical(other.playlist, playlist) || other.playlist == playlist)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.isNsfw, isNsfw) || other.isNsfw == isNsfw)&&const DeepCollectionEquality().equals(other.extXMedias, extXMedias)&&(identical(other.isMovie, isMovie) || other.isMovie == isMovie)&&(identical(other.isLiveTv, isLiveTv) || other.isLiveTv == isLiveTv)&&(identical(other.isTvSerie, isTvSerie) || other.isTvSerie == isTvSerie)&&const DeepCollectionEquality().equals(other.attributes, attributes)&&const DeepCollectionEquality().equals(other.extVlcOpts, extVlcOpts)&&const DeepCollectionEquality().equals(other.kodiProps, kodiProps)&&const DeepCollectionEquality().equals(other.httpHeaders, httpHeaders));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,contentType,const DeepCollectionEquality().hash(links),groupTitle,imdbId,tvgId,tvgName,tvgLogo,playlist,duration,isNsfw,isMovie,isLiveTv,isTvSerie,const DeepCollectionEquality().hash(attributes),const DeepCollectionEquality().hash(extVlcOpts),const DeepCollectionEquality().hash(kodiProps),const DeepCollectionEquality().hash(httpHeaders)]);
+int get hashCode => Object.hashAll([runtimeType,id,title,contentType,const DeepCollectionEquality().hash(links),groupTitle,imdbId,tvgId,tvgName,desc,tvgLogo,playlist,duration,isNsfw,const DeepCollectionEquality().hash(extXMedias),isMovie,isLiveTv,isTvSerie,const DeepCollectionEquality().hash(attributes),const DeepCollectionEquality().hash(extVlcOpts),const DeepCollectionEquality().hash(kodiProps),const DeepCollectionEquality().hash(httpHeaders)]);
 
 @override
 String toString() {
-  return 'Track(id: $id, title: $title, contentType: $contentType, links: $links, groupTitle: $groupTitle, imdbId: $imdbId, tvgId: $tvgId, tvgName: $tvgName, tvgLogo: $tvgLogo, playlist: $playlist, duration: $duration, isNsfw: $isNsfw, isMovie: $isMovie, isLiveTv: $isLiveTv, isTvSerie: $isTvSerie, attributes: $attributes, extVlcOpts: $extVlcOpts, kodiProps: $kodiProps, httpHeaders: $httpHeaders)';
+  return 'Track(id: $id, title: $title, contentType: $contentType, links: $links, groupTitle: $groupTitle, imdbId: $imdbId, tvgId: $tvgId, tvgName: $tvgName, desc: $desc, tvgLogo: $tvgLogo, playlist: $playlist, duration: $duration, isNsfw: $isNsfw, extXMedias: $extXMedias, isMovie: $isMovie, isLiveTv: $isLiveTv, isTvSerie: $isTvSerie, attributes: $attributes, extVlcOpts: $extVlcOpts, kodiProps: $kodiProps, httpHeaders: $httpHeaders)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $TrackCopyWith<$Res>  {
   factory $TrackCopyWith(Track value, $Res Function(Track) _then) = _$TrackCopyWithImpl;
 @useResult
 $Res call({
- int id, String title, String contentType, List<String> links, String groupTitle, String imdbId, String tvgId, String tvgName, String tvgLogo, Playlist? playlist, int duration, bool isNsfw, bool isMovie, bool isLiveTv, bool isTvSerie, Map<String, String> attributes, List<Map<String, String>> extVlcOpts, List<Map<String, String>> kodiProps, List<Map<String, String>> httpHeaders
+ int id, String title, String contentType, List<String> links, String groupTitle, String imdbId, String tvgId, String tvgName, String desc, String tvgLogo, Playlist? playlist, int duration, bool isNsfw, List<ExtXMedia> extXMedias, bool isMovie, bool isLiveTv, bool isTvSerie, Map<String, String> attributes, List<Map<String, String>> extVlcOpts, List<Map<String, String>> kodiProps, List<Map<String, String>> httpHeaders
 });
 
 
@@ -65,7 +65,7 @@ class _$TrackCopyWithImpl<$Res>
 
 /// Create a copy of Track
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? contentType = null,Object? links = null,Object? groupTitle = null,Object? imdbId = null,Object? tvgId = null,Object? tvgName = null,Object? tvgLogo = null,Object? playlist = freezed,Object? duration = null,Object? isNsfw = null,Object? isMovie = null,Object? isLiveTv = null,Object? isTvSerie = null,Object? attributes = null,Object? extVlcOpts = null,Object? kodiProps = null,Object? httpHeaders = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? contentType = null,Object? links = null,Object? groupTitle = null,Object? imdbId = null,Object? tvgId = null,Object? tvgName = null,Object? desc = null,Object? tvgLogo = null,Object? playlist = freezed,Object? duration = null,Object? isNsfw = null,Object? extXMedias = null,Object? isMovie = null,Object? isLiveTv = null,Object? isTvSerie = null,Object? attributes = null,Object? extVlcOpts = null,Object? kodiProps = null,Object? httpHeaders = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -75,11 +75,13 @@ as List<String>,groupTitle: null == groupTitle ? _self.groupTitle : groupTitle /
 as String,imdbId: null == imdbId ? _self.imdbId : imdbId // ignore: cast_nullable_to_non_nullable
 as String,tvgId: null == tvgId ? _self.tvgId : tvgId // ignore: cast_nullable_to_non_nullable
 as String,tvgName: null == tvgName ? _self.tvgName : tvgName // ignore: cast_nullable_to_non_nullable
+as String,desc: null == desc ? _self.desc : desc // ignore: cast_nullable_to_non_nullable
 as String,tvgLogo: null == tvgLogo ? _self.tvgLogo : tvgLogo // ignore: cast_nullable_to_non_nullable
 as String,playlist: freezed == playlist ? _self.playlist : playlist // ignore: cast_nullable_to_non_nullable
 as Playlist?,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
 as int,isNsfw: null == isNsfw ? _self.isNsfw : isNsfw // ignore: cast_nullable_to_non_nullable
-as bool,isMovie: null == isMovie ? _self.isMovie : isMovie // ignore: cast_nullable_to_non_nullable
+as bool,extXMedias: null == extXMedias ? _self.extXMedias : extXMedias // ignore: cast_nullable_to_non_nullable
+as List<ExtXMedia>,isMovie: null == isMovie ? _self.isMovie : isMovie // ignore: cast_nullable_to_non_nullable
 as bool,isLiveTv: null == isLiveTv ? _self.isLiveTv : isLiveTv // ignore: cast_nullable_to_non_nullable
 as bool,isTvSerie: null == isTvSerie ? _self.isTvSerie : isTvSerie // ignore: cast_nullable_to_non_nullable
 as bool,attributes: null == attributes ? _self.attributes : attributes // ignore: cast_nullable_to_non_nullable
@@ -183,10 +185,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String contentType,  List<String> links,  String groupTitle,  String imdbId,  String tvgId,  String tvgName,  String tvgLogo,  Playlist? playlist,  int duration,  bool isNsfw,  bool isMovie,  bool isLiveTv,  bool isTvSerie,  Map<String, String> attributes,  List<Map<String, String>> extVlcOpts,  List<Map<String, String>> kodiProps,  List<Map<String, String>> httpHeaders)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String contentType,  List<String> links,  String groupTitle,  String imdbId,  String tvgId,  String tvgName,  String desc,  String tvgLogo,  Playlist? playlist,  int duration,  bool isNsfw,  List<ExtXMedia> extXMedias,  bool isMovie,  bool isLiveTv,  bool isTvSerie,  Map<String, String> attributes,  List<Map<String, String>> extVlcOpts,  List<Map<String, String>> kodiProps,  List<Map<String, String>> httpHeaders)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Track() when $default != null:
-return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTitle,_that.imdbId,_that.tvgId,_that.tvgName,_that.tvgLogo,_that.playlist,_that.duration,_that.isNsfw,_that.isMovie,_that.isLiveTv,_that.isTvSerie,_that.attributes,_that.extVlcOpts,_that.kodiProps,_that.httpHeaders);case _:
+return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTitle,_that.imdbId,_that.tvgId,_that.tvgName,_that.desc,_that.tvgLogo,_that.playlist,_that.duration,_that.isNsfw,_that.extXMedias,_that.isMovie,_that.isLiveTv,_that.isTvSerie,_that.attributes,_that.extVlcOpts,_that.kodiProps,_that.httpHeaders);case _:
   return orElse();
 
 }
@@ -204,10 +206,10 @@ return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String contentType,  List<String> links,  String groupTitle,  String imdbId,  String tvgId,  String tvgName,  String tvgLogo,  Playlist? playlist,  int duration,  bool isNsfw,  bool isMovie,  bool isLiveTv,  bool isTvSerie,  Map<String, String> attributes,  List<Map<String, String>> extVlcOpts,  List<Map<String, String>> kodiProps,  List<Map<String, String>> httpHeaders)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String contentType,  List<String> links,  String groupTitle,  String imdbId,  String tvgId,  String tvgName,  String desc,  String tvgLogo,  Playlist? playlist,  int duration,  bool isNsfw,  List<ExtXMedia> extXMedias,  bool isMovie,  bool isLiveTv,  bool isTvSerie,  Map<String, String> attributes,  List<Map<String, String>> extVlcOpts,  List<Map<String, String>> kodiProps,  List<Map<String, String>> httpHeaders)  $default,) {final _that = this;
 switch (_that) {
 case _Track():
-return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTitle,_that.imdbId,_that.tvgId,_that.tvgName,_that.tvgLogo,_that.playlist,_that.duration,_that.isNsfw,_that.isMovie,_that.isLiveTv,_that.isTvSerie,_that.attributes,_that.extVlcOpts,_that.kodiProps,_that.httpHeaders);case _:
+return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTitle,_that.imdbId,_that.tvgId,_that.tvgName,_that.desc,_that.tvgLogo,_that.playlist,_that.duration,_that.isNsfw,_that.extXMedias,_that.isMovie,_that.isLiveTv,_that.isTvSerie,_that.attributes,_that.extVlcOpts,_that.kodiProps,_that.httpHeaders);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -224,10 +226,10 @@ return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String contentType,  List<String> links,  String groupTitle,  String imdbId,  String tvgId,  String tvgName,  String tvgLogo,  Playlist? playlist,  int duration,  bool isNsfw,  bool isMovie,  bool isLiveTv,  bool isTvSerie,  Map<String, String> attributes,  List<Map<String, String>> extVlcOpts,  List<Map<String, String>> kodiProps,  List<Map<String, String>> httpHeaders)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String contentType,  List<String> links,  String groupTitle,  String imdbId,  String tvgId,  String tvgName,  String desc,  String tvgLogo,  Playlist? playlist,  int duration,  bool isNsfw,  List<ExtXMedia> extXMedias,  bool isMovie,  bool isLiveTv,  bool isTvSerie,  Map<String, String> attributes,  List<Map<String, String>> extVlcOpts,  List<Map<String, String>> kodiProps,  List<Map<String, String>> httpHeaders)?  $default,) {final _that = this;
 switch (_that) {
 case _Track() when $default != null:
-return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTitle,_that.imdbId,_that.tvgId,_that.tvgName,_that.tvgLogo,_that.playlist,_that.duration,_that.isNsfw,_that.isMovie,_that.isLiveTv,_that.isTvSerie,_that.attributes,_that.extVlcOpts,_that.kodiProps,_that.httpHeaders);case _:
+return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTitle,_that.imdbId,_that.tvgId,_that.tvgName,_that.desc,_that.tvgLogo,_that.playlist,_that.duration,_that.isNsfw,_that.extXMedias,_that.isMovie,_that.isLiveTv,_that.isTvSerie,_that.attributes,_that.extVlcOpts,_that.kodiProps,_that.httpHeaders);case _:
   return null;
 
 }
@@ -239,7 +241,7 @@ return $default(_that.id,_that.title,_that.contentType,_that.links,_that.groupTi
 @JsonSerializable()
 
 class _Track implements Track {
-  const _Track({this.id = 0, this.title = "", this.contentType = "unknown", final  List<String> links = const [], this.groupTitle = "", this.imdbId = "", this.tvgId = "", this.tvgName = "", this.tvgLogo = "", this.playlist = null, this.duration = 0, this.isNsfw = false, this.isMovie = false, this.isLiveTv = false, this.isTvSerie = false, final  Map<String, String> attributes = const {}, final  List<Map<String, String>> extVlcOpts = const [], final  List<Map<String, String>> kodiProps = const [], final  List<Map<String, String>> httpHeaders = const []}): _links = links,_attributes = attributes,_extVlcOpts = extVlcOpts,_kodiProps = kodiProps,_httpHeaders = httpHeaders;
+  const _Track({this.id = 0, this.title = "", this.contentType = "unknown", final  List<String> links = const [], this.groupTitle = "", this.imdbId = "", this.tvgId = "", this.tvgName = "", this.desc = "", this.tvgLogo = "", this.playlist = null, this.duration = 0, this.isNsfw = false, final  List<ExtXMedia> extXMedias = const [], this.isMovie = false, this.isLiveTv = false, this.isTvSerie = false, final  Map<String, String> attributes = const {}, final  List<Map<String, String>> extVlcOpts = const [], final  List<Map<String, String>> kodiProps = const [], final  List<Map<String, String>> httpHeaders = const []}): _links = links,_extXMedias = extXMedias,_attributes = attributes,_extVlcOpts = extVlcOpts,_kodiProps = kodiProps,_httpHeaders = httpHeaders;
   factory _Track.fromJson(Map<String, dynamic> json) => _$TrackFromJson(json);
 
 @override@JsonKey() final  int id;
@@ -256,10 +258,18 @@ class _Track implements Track {
 @override@JsonKey() final  String imdbId;
 @override@JsonKey() final  String tvgId;
 @override@JsonKey() final  String tvgName;
+@override@JsonKey() final  String desc;
 @override@JsonKey() final  String tvgLogo;
 @override@JsonKey() final  Playlist? playlist;
 @override@JsonKey() final  int duration;
 @override@JsonKey() final  bool isNsfw;
+ final  List<ExtXMedia> _extXMedias;
+@override@JsonKey() List<ExtXMedia> get extXMedias {
+  if (_extXMedias is EqualUnmodifiableListView) return _extXMedias;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_extXMedias);
+}
+
 @override@JsonKey() final  bool isMovie;
 @override@JsonKey() final  bool isLiveTv;
 @override@JsonKey() final  bool isTvSerie;
@@ -305,16 +315,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Track&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&const DeepCollectionEquality().equals(other._links, _links)&&(identical(other.groupTitle, groupTitle) || other.groupTitle == groupTitle)&&(identical(other.imdbId, imdbId) || other.imdbId == imdbId)&&(identical(other.tvgId, tvgId) || other.tvgId == tvgId)&&(identical(other.tvgName, tvgName) || other.tvgName == tvgName)&&(identical(other.tvgLogo, tvgLogo) || other.tvgLogo == tvgLogo)&&(identical(other.playlist, playlist) || other.playlist == playlist)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.isNsfw, isNsfw) || other.isNsfw == isNsfw)&&(identical(other.isMovie, isMovie) || other.isMovie == isMovie)&&(identical(other.isLiveTv, isLiveTv) || other.isLiveTv == isLiveTv)&&(identical(other.isTvSerie, isTvSerie) || other.isTvSerie == isTvSerie)&&const DeepCollectionEquality().equals(other._attributes, _attributes)&&const DeepCollectionEquality().equals(other._extVlcOpts, _extVlcOpts)&&const DeepCollectionEquality().equals(other._kodiProps, _kodiProps)&&const DeepCollectionEquality().equals(other._httpHeaders, _httpHeaders));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Track&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&const DeepCollectionEquality().equals(other._links, _links)&&(identical(other.groupTitle, groupTitle) || other.groupTitle == groupTitle)&&(identical(other.imdbId, imdbId) || other.imdbId == imdbId)&&(identical(other.tvgId, tvgId) || other.tvgId == tvgId)&&(identical(other.tvgName, tvgName) || other.tvgName == tvgName)&&(identical(other.desc, desc) || other.desc == desc)&&(identical(other.tvgLogo, tvgLogo) || other.tvgLogo == tvgLogo)&&(identical(other.playlist, playlist) || other.playlist == playlist)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.isNsfw, isNsfw) || other.isNsfw == isNsfw)&&const DeepCollectionEquality().equals(other._extXMedias, _extXMedias)&&(identical(other.isMovie, isMovie) || other.isMovie == isMovie)&&(identical(other.isLiveTv, isLiveTv) || other.isLiveTv == isLiveTv)&&(identical(other.isTvSerie, isTvSerie) || other.isTvSerie == isTvSerie)&&const DeepCollectionEquality().equals(other._attributes, _attributes)&&const DeepCollectionEquality().equals(other._extVlcOpts, _extVlcOpts)&&const DeepCollectionEquality().equals(other._kodiProps, _kodiProps)&&const DeepCollectionEquality().equals(other._httpHeaders, _httpHeaders));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,contentType,const DeepCollectionEquality().hash(_links),groupTitle,imdbId,tvgId,tvgName,tvgLogo,playlist,duration,isNsfw,isMovie,isLiveTv,isTvSerie,const DeepCollectionEquality().hash(_attributes),const DeepCollectionEquality().hash(_extVlcOpts),const DeepCollectionEquality().hash(_kodiProps),const DeepCollectionEquality().hash(_httpHeaders)]);
+int get hashCode => Object.hashAll([runtimeType,id,title,contentType,const DeepCollectionEquality().hash(_links),groupTitle,imdbId,tvgId,tvgName,desc,tvgLogo,playlist,duration,isNsfw,const DeepCollectionEquality().hash(_extXMedias),isMovie,isLiveTv,isTvSerie,const DeepCollectionEquality().hash(_attributes),const DeepCollectionEquality().hash(_extVlcOpts),const DeepCollectionEquality().hash(_kodiProps),const DeepCollectionEquality().hash(_httpHeaders)]);
 
 @override
 String toString() {
-  return 'Track(id: $id, title: $title, contentType: $contentType, links: $links, groupTitle: $groupTitle, imdbId: $imdbId, tvgId: $tvgId, tvgName: $tvgName, tvgLogo: $tvgLogo, playlist: $playlist, duration: $duration, isNsfw: $isNsfw, isMovie: $isMovie, isLiveTv: $isLiveTv, isTvSerie: $isTvSerie, attributes: $attributes, extVlcOpts: $extVlcOpts, kodiProps: $kodiProps, httpHeaders: $httpHeaders)';
+  return 'Track(id: $id, title: $title, contentType: $contentType, links: $links, groupTitle: $groupTitle, imdbId: $imdbId, tvgId: $tvgId, tvgName: $tvgName, desc: $desc, tvgLogo: $tvgLogo, playlist: $playlist, duration: $duration, isNsfw: $isNsfw, extXMedias: $extXMedias, isMovie: $isMovie, isLiveTv: $isLiveTv, isTvSerie: $isTvSerie, attributes: $attributes, extVlcOpts: $extVlcOpts, kodiProps: $kodiProps, httpHeaders: $httpHeaders)';
 }
 
 
@@ -325,7 +335,7 @@ abstract mixin class _$TrackCopyWith<$Res> implements $TrackCopyWith<$Res> {
   factory _$TrackCopyWith(_Track value, $Res Function(_Track) _then) = __$TrackCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String title, String contentType, List<String> links, String groupTitle, String imdbId, String tvgId, String tvgName, String tvgLogo, Playlist? playlist, int duration, bool isNsfw, bool isMovie, bool isLiveTv, bool isTvSerie, Map<String, String> attributes, List<Map<String, String>> extVlcOpts, List<Map<String, String>> kodiProps, List<Map<String, String>> httpHeaders
+ int id, String title, String contentType, List<String> links, String groupTitle, String imdbId, String tvgId, String tvgName, String desc, String tvgLogo, Playlist? playlist, int duration, bool isNsfw, List<ExtXMedia> extXMedias, bool isMovie, bool isLiveTv, bool isTvSerie, Map<String, String> attributes, List<Map<String, String>> extVlcOpts, List<Map<String, String>> kodiProps, List<Map<String, String>> httpHeaders
 });
 
 
@@ -342,7 +352,7 @@ class __$TrackCopyWithImpl<$Res>
 
 /// Create a copy of Track
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? contentType = null,Object? links = null,Object? groupTitle = null,Object? imdbId = null,Object? tvgId = null,Object? tvgName = null,Object? tvgLogo = null,Object? playlist = freezed,Object? duration = null,Object? isNsfw = null,Object? isMovie = null,Object? isLiveTv = null,Object? isTvSerie = null,Object? attributes = null,Object? extVlcOpts = null,Object? kodiProps = null,Object? httpHeaders = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? contentType = null,Object? links = null,Object? groupTitle = null,Object? imdbId = null,Object? tvgId = null,Object? tvgName = null,Object? desc = null,Object? tvgLogo = null,Object? playlist = freezed,Object? duration = null,Object? isNsfw = null,Object? extXMedias = null,Object? isMovie = null,Object? isLiveTv = null,Object? isTvSerie = null,Object? attributes = null,Object? extVlcOpts = null,Object? kodiProps = null,Object? httpHeaders = null,}) {
   return _then(_Track(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -352,11 +362,13 @@ as List<String>,groupTitle: null == groupTitle ? _self.groupTitle : groupTitle /
 as String,imdbId: null == imdbId ? _self.imdbId : imdbId // ignore: cast_nullable_to_non_nullable
 as String,tvgId: null == tvgId ? _self.tvgId : tvgId // ignore: cast_nullable_to_non_nullable
 as String,tvgName: null == tvgName ? _self.tvgName : tvgName // ignore: cast_nullable_to_non_nullable
+as String,desc: null == desc ? _self.desc : desc // ignore: cast_nullable_to_non_nullable
 as String,tvgLogo: null == tvgLogo ? _self.tvgLogo : tvgLogo // ignore: cast_nullable_to_non_nullable
 as String,playlist: freezed == playlist ? _self.playlist : playlist // ignore: cast_nullable_to_non_nullable
 as Playlist?,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
 as int,isNsfw: null == isNsfw ? _self.isNsfw : isNsfw // ignore: cast_nullable_to_non_nullable
-as bool,isMovie: null == isMovie ? _self.isMovie : isMovie // ignore: cast_nullable_to_non_nullable
+as bool,extXMedias: null == extXMedias ? _self._extXMedias : extXMedias // ignore: cast_nullable_to_non_nullable
+as List<ExtXMedia>,isMovie: null == isMovie ? _self.isMovie : isMovie // ignore: cast_nullable_to_non_nullable
 as bool,isLiveTv: null == isLiveTv ? _self.isLiveTv : isLiveTv // ignore: cast_nullable_to_non_nullable
 as bool,isTvSerie: null == isTvSerie ? _self.isTvSerie : isTvSerie // ignore: cast_nullable_to_non_nullable
 as bool,attributes: null == attributes ? _self._attributes : attributes // ignore: cast_nullable_to_non_nullable

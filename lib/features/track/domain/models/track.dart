@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:drift/drift.dart' as drift;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pusoo/features/playlist/domain/models/playlist.dart';
+import 'package:pusoo/features/track/domain/models/ext_x_media.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 
 part 'track.g.dart';
@@ -19,11 +20,13 @@ abstract class Track with _$Track {
     @Default("") String imdbId,
     @Default("") String tvgId,
     @Default("") String tvgName,
+    @Default("") String desc,
     @Default("") String tvgLogo,
     @Default(null) Playlist? playlist,
     @Default(0) int duration,
     @Default(false) bool isNsfw,
 
+    @Default([]) List<ExtXMedia> extXMedias,
     @Default(false) bool isMovie,
     @Default(false) bool isLiveTv,
     @Default(false) bool isTvSerie,
@@ -100,6 +103,10 @@ abstract class Track with _$Track {
     convertStringToList('kodiProps');
 
     json['playlist'] = playlistJson;
+
+    print(
+      "track.fromDriftTypedResult.toString:[convert]: ${result.readTable(driftDb.trackDrift).toString()}",
+    );
 
     return Track.fromJson(json);
   }

@@ -59,33 +59,40 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
       ),
       child: Column(
         children: [
-          FButton(
-            style: FButtonStyle.outline(),
-            onPress: () async {
-              final result = await context.pushNamed(
-                RouteName.addNewSource.name,
+          Builder(
+            builder: (context) {
+              return FButton(
+                style: FButtonStyle.outline(),
+                onPress: () async {
+                  final result = await context.pushNamed(
+                    RouteName.addNewSource.name,
+                  );
+
+                  if (result is bool && result) {
+                    // reload available
+                    loadPlaylist();
+
+                    if (context.mounted) {
+                      showFlutterToast(
+                        context: context,
+                        message: "Playlist saved",
+                      );
+
+                      // REFRESH HOME
+                      ref.read(tvTracksFilterProvider.notifier).reset();
+                      ref.read(tvTracksPagingProvider).refresh();
+                      // showFToast(
+                      //   context: context,
+                      //   alignment: FToastAlignment.topCenter,
+                      //   title: const Text('Playlist Saved'),
+                      // );
+                    }
+                  }
+                },
+                prefix: Icon(FIcons.plus),
+                child: Text("Add new source"),
               );
-
-              if (result is bool && result) {
-                // reload available
-                loadPlaylist();
-
-                if (context.mounted) {
-                  showFlutterToast(context: context, message: "Playlist saved");
-
-                  // REFRESH HOME
-                  ref.read(tvTracksFilterProvider.notifier).reset();
-                  ref.read(tvTracksPagingProvider).refresh();
-                  // showFToast(
-                  //   context: context,
-                  //   alignment: FToastAlignment.topCenter,
-                  //   title: const Text('Playlist Saved'),
-                  // );
-                }
-              }
             },
-            prefix: Icon(FIcons.plus),
-            child: Text("Add new source"),
           ),
           Gap(10),
           FButton(
