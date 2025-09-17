@@ -1,0 +1,64 @@
+URL : http://195.66.215.134:8080
+USERNAME : Cristian_Beles
+PASSWORD : jAmX2Et2MK4F8G8QoMOTEHtKHkud8Z
+EXP_DATE : 25/03/2026
+DAYS_LEFT : 207MAX_CALLERS : 2
+
+
+URL : http://server.shamelforu.com:8080
+USERNAME : 10:2b:41:03:ce:01
+PASSWORD : zQKt5TIP7v
+EXP_DATE : 08/01/2026
+DAYS_LEFT : 131
+MAX_CALLERS : 1
+
+URL : http://195.66.215.134:8080
+USERNAME : Cristian_Beles
+PASSWORD : jAmX2Et2MK4F8G8QoMOTEHtKHkud8Z
+EXP_DATE : 25/03/2026
+DAYS_LEFT : 207
+MAX_CALLERS : 2
+
+------------
+http://aromatv.me:80
+
+User : potgts
+Pass : e576969779
+
+---
+
+
+
+𝐄𝐱𝐭𝐫𝐞𝐚𝐦𝐞    📂
+
+
+𝐔𝐫𝐥: http://tera4k.com:8880
+𝐔𝐬𝐞𝐫𝐧𝐚𝐦𝐞 : arab1one3aa22225
+𝐏𝐚𝐬𝐬𝐰𝐨𝐫𝐝 : 35057285038995
+
+
+𝐔𝐫𝐥 : http://tera4k.com:8880
+𝐔𝐬𝐞𝐫𝐧𝐚𝐦𝐞 : arab1one2aa22225
+𝐏𝐚𝐬𝐬𝐰𝐨𝐫𝐝 : 37032122927373
+
+
+𝐔𝐫𝐥: http://tera4k.com:8880
+𝐔𝐬𝐞𝐫𝐧𝐚𝐦𝐞 : 28108847754731
+𝐏𝐚𝐬𝐬𝐰𝐨𝐫𝐝 : 83506616962223
+
+📂 𝐌3𝐔 📂
+
+
+http://tera4k.com:8880/get.php?
+username=28108847754731&password=83506616962223&type=m3u_plus&output=ts
+
+http://tera4k.com:8880/get.php?
+username=arab1one2aa22225&password=37032122927373&type=m3u_plus&output=ts
+
+
+http://tera4k.com:8880/get.php?
+username=arab1one3aa22225&password=35057285038995&type=m3u_plus&output=ts
+
+http://line.ottcst.com:80
+Username=JOLBNDQ4MT
+Password=Nx5BpkwGMaL3pKn

@@ -74,7 +74,7 @@ class TvgLogoViewer extends StatelessWidget {
                       padding: const EdgeInsets.all(6),
                       color: context.theme.colors.background.withAlpha(125),
                       child: Text(
-                        track.title,
+                        track.tvgName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

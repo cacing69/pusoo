@@ -8,7 +8,7 @@ class TvTracksFilterNotifier extends _$TvTracksFilterNotifier {
   // Metode build ini akan dipanggil pertama kali oleh Riverpod
   @override
   TrackDriftFilterQuery build() {
-    return TrackDriftFilterQuery(limit: 20, isLiveTv: true);
+    return TrackDriftFilterQuery(limit: 20);
   }
 
   void changeTitle(String? query) {
@@ -20,6 +20,6 @@ class TvTracksFilterNotifier extends _$TvTracksFilterNotifier {
   }
 
   void reset() {
-    state = TrackDriftFilterQuery(limit: 20, isLiveTv: true);
+    state = TrackDriftFilterQuery(limit: 20);
   }
 }
