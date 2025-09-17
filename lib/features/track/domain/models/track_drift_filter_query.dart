@@ -9,6 +9,7 @@ abstract class TrackDriftFilterQuery with _$TrackDriftFilterQuery {
     List<int>? playlistIds,
     String? groupTitle,
     String? title,
+    String? titleOrGroupTitle,
     int? limit,
     int? offset,
     int? cursor,

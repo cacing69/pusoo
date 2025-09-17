@@ -42,7 +42,7 @@ final class TvTracksFilterNotifierProvider
 }
 
 String _$tvTracksFilterNotifierHash() =>
-    r'1423d46c9c7ca6f639d6ecc5a5493dbdd32b1da6';
+    r'16f318ab1dc1d3948934d23d02c7c94d1e641584';
 
 abstract class _$TvTracksFilterNotifier
     extends $Notifier<TrackDriftFilterQuery> {

@@ -152,7 +152,7 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
                               ),
                             ),
                             title: Text(e.name),
-                            subtitle: Text(e.url ?? ""),
+                            subtitle: Text(e.url ?? "", maxLines: 5),
                             suffix: Icon(FIcons.chevronRight),
                             onPress: e.isActive
                                 ? () {

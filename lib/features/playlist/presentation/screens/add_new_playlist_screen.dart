@@ -91,7 +91,9 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
           FTextField(
             controller: nameController,
             label: Text("Name"),
-            description: Text("Lorem ipsum dolor sit amet"),
+            description: Text(
+              "If the name is blank, the URL will be used as the name.",
+            ),
           ),
           Gap(10),
           FTextField.multiline(
@@ -129,14 +131,6 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
               onPress: isLoading
                   ? null
                   : () async {
-                      if (nameController.text.isEmpty) {
-                        showFlutterToast(
-                          message: "Name cannot empty",
-                          context: context,
-                        );
-                        return;
-                      }
-
                       if (urlController.text.isEmpty) {
                         showFlutterToast(
                           message: "URL cannot empty",
@@ -189,7 +183,9 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                               .insert(
                                 PlaylistDriftCompanion.insert(
                                   ulid: playlistUlid,
-                                  name: nameController.text.trim(),
+                                  name: nameController.text.trim().isNotEmpty
+                                      ? nameController.text.trim()
+                                      : urlController.text.trim(),
                                   type: drift.Value("m3u"),
                                   contentType: drift.Value("m3u"),
                                   filePath: drift.Value(""),

@@ -21,25 +21,20 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
     with SingleTickerProviderStateMixin {
   final GlobalKey _playerKey = GlobalKey();
   String? urlActive;
-  late AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    )..repeat(reverse: true);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(betterPlayerProvider.notifier)
-          .openMediaStream(widget.track, isLiveStream: true);
+          .openMediaStream(widget.track, isLiveStream: false);
     });
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
     super.dispose();
   }
 
@@ -59,16 +54,13 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  FadeTransition(
-                    opacity: _animationController,
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: context.theme.colors.destructive,
-                        ),
+                  SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: context.theme.colors.destructive,
                       ),
                     ),
                   ),
@@ -185,7 +177,7 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
                   ),
                   const Gap(5),
                   Text(
-                    track.tvgId.isEmpty ? "@tvg-id:not found" : track.tvgId,
+                    track.tvgId.isEmpty ? "@tvg-id: n/a" : track.tvgId,
                     style: context.theme.typography.xs.copyWith(
                       color: context.theme.colors.disable(
                         context.theme.colors.foreground,
@@ -197,6 +189,30 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
             ),
           ],
         ),
+        Gap(10),
+        FButton(
+          style: FButtonStyle.outline(),
+          onPress: () {
+            String subtitle =
+                "https://gist.githubusercontent.com/cacing69/bee104dbd333b3fa98dab94c7673f1de/raw/f3eb6671a7c8f6d44080a877b8c6efd04f0332bf/gistfile1.txt";
+
+            final BetterPlayerSubtitlesSource subtitlesSource =
+                BetterPlayerSubtitlesSource(
+                  type: BetterPlayerSubtitlesSourceType.network,
+                  urls: [subtitle],
+                );
+
+            // betterPlayerController.setupSubtitleSource(subtitlesSource);
+
+            ref
+                .read(betterPlayerProvider.notifier)
+                .loadSubtitle(subtitlesSource);
+
+            showFlutterToast(message: "Subtitle loaded", context: context);
+          },
+          prefix: Icon(FIcons.captions),
+          child: Text("Search Subtitle"),
+        ),
       ],
     );
   }
@@ -206,7 +222,7 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Gap(5),
-        Text("Available URL Sources", style: context.theme.typography.xs),
+        Text("Available URL Sources"),
         const Gap(5),
         Wrap(
           children: [
@@ -280,21 +296,18 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
         ),
         Expanded(
           flex: 3,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildChannelInformation(track),
-                const Gap(5),
-                _buildAvailableUrls(track),
-                const Gap(5),
-                Expanded(child: _buildContentScrollable()),
-                const Gap(10),
-                _buildButtonFavoriteAndFullScreen(controller),
-                const Gap(15),
-              ],
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildChannelInformation(track),
+              const Gap(5),
+              _buildAvailableUrls(track),
+              const Gap(5),
+              Expanded(child: _buildContentScrollable()),
+              const Gap(10),
+              _buildButtonFavoriteAndFullScreen(controller),
+              const Gap(15),
+            ],
           ),
         ),
       ],

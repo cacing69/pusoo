@@ -530,5 +530,37 @@ http://royalibox.com:80/plcedarkaouishbissm/px6pzjgmf8/1163984
       expect("CHANNEL | SPORTS", equals(item.groupTitle));
       expect("MY | Astro Premier League 1", equals(item.title));
     });
+
+    test('TestShouldGetName:The Life of Chuck (2025)', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="5002:0:19:112F8:0:0:0:0:0:0" tvg-logo="https://gamatotv.info/wp-content/uploads/2025/09/oumprkO9bThExP8NwxBIBnvBu2v1-200x300.jpg"
+group-title="RYANTV MOVIES 2025", The Life of Chuck (2025)
+http://s1.gmtcloud.site/video/moviess/TheLifeofChuck2024.mp4?id=0
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect("The Life of Chuck (2025)", equals(item.title));
+      expect("RYANTV MOVIES 2025", equals(item.groupTitle));
+    });
+
+    test('TestShouldGetName:1 Kakak 7 Ponakan (2025)', () async {
+      // INI ADALAH ERROR DARI PLAYLIST, HARUS NYA ADA group-title="Movies" tetapi dia melakukan kesalahan, jika ada kasus sepert ini maka ambil
+      // group-title="Movies, = groupTitle=Movies
+
+      final String content = r'''
+#EXTINF:-1 tvg-id="" tvg-logo="https://images4.imagebam.com/2f/f5/ce/ME151T4S_o.jpeg" group-title="Movies,1 Kakak 7 Ponakan (2025)
+https://movearnpre.com/stream/o8mt0SmrkOc-Slx_nqid3w/hjkrhuihghfvu/1755466136/27857875/master.m3u8
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect("Movies,1 Kakak 7 Ponakan (2025)", equals(item.title));
+      expect("Movies", equals(item.groupTitle));
+    });
   });
 }

@@ -57,7 +57,8 @@ abstract class M3UParser {
     final bool isStrict = m3u.contains('#EXTM3U');
     bool canParse = !isStrict;
 
-    for (final line in lines) {
+    for (var i = 0; i < lines.length; i++) {
+      final line = lines[i];
       final trimmedLine = line.trim();
       if (trimmedLine.isEmpty || trimmedLine.startsWith('##')) {
         continue;
@@ -73,7 +74,16 @@ abstract class M3UParser {
       if (trimmedLine.startsWith('#EXTINF')) {
         finalizeAndAddTrack();
 
-        final match = _extInfRegex.firstMatch(trimmedLine);
+        var extInfLine = trimmedLine;
+        if (i + 1 < lines.length) {
+          final nextLine = lines[i + 1].trim();
+          if (!nextLine.startsWith('#') && !nextLine.contains('://')) {
+            extInfLine += ' ' + nextLine;
+            i++;
+          }
+        }
+
+        final match = _extInfRegex.firstMatch(extInfLine);
         if (match != null) {
           final titlePart = match.group(2) ?? '';
 
@@ -96,16 +106,32 @@ abstract class M3UParser {
             title = titlePart.trim();
           }
 
+          if (title.startsWith('group-title=')) {
+            var groupTitleValue = title.substring('group-title='.length);
+            if (groupTitleValue.startsWith('"')) {
+              groupTitleValue = groupTitleValue.substring(1);
+            }
+            attributes['group-title'] = groupTitleValue;
+            title = ''; // Title is empty for now
+          }
+
+          var groupTitle = attributes['group-title'] ?? '';
+          if (groupTitle.contains(',')) {
+            title = groupTitle;
+            groupTitle = groupTitle.split(',')[0];
+            attributes['group-title'] = groupTitle;
+          }
+
           currentTrack = Track(
             title: title,
             attributes: attributes,
-            groupTitle: attributes['group-title'] ?? '',
+            groupTitle: groupTitle,
             tvgId: attributes['tvg-id'] ?? '',
             tvgName: attributes['tvg-name'] ?? '',
             tvgLogo: attributes['tvg-logo'] ?? '',
           );
         } else {
-          print('Skipped (regex mismatch): $trimmedLine\n');
+          print('Skipped (regex mismatch): $extInfLine\n');
         }
       } else if (trimmedLine.startsWith('#EXTVLCOPT')) {
         final optionString = trimmedLine.substring(11);

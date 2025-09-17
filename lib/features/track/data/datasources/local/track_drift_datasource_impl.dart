@@ -84,13 +84,27 @@ class TrackDriftDatasourceImpl implements TrackDatasource {
     }
 
     // // 3. Bangun query select utama
-    final query = driftDb.select(driftDb.trackDrift);
+    final query = driftDb.select(driftDb.trackDrift).join([
+      drift.innerJoin(
+        driftDb.playlistDrift,
+        driftDb.playlistDrift.id.equalsExp(driftDb.trackDrift.playlistId),
+      ),
+    ]);
 
     // 4. Gabungkan semua klausa WHERE jika list tidak kosong
+    // if (whereClauses.isNotEmpty) {
+    //   // tanpa JOIN
+    //   // final finalClause = whereClauses.reduce((a, b) => a & b);
+    //   // query.where((_) => finalClause);
+
+    // }
+
     if (whereClauses.isNotEmpty) {
       // Gunakan `reduce` untuk menggabungkan semua Expression dengan operator & (AND)
       final finalClause = whereClauses.reduce((a, b) => a & b);
-      query.where((_) => finalClause);
+
+      // Langsung berikan Expression<bool> yang sudah jadi ke metode `where`
+      query.where(finalClause);
     }
 
     _log.i('--- DEBUG ---');
@@ -109,16 +123,21 @@ class TrackDriftDatasourceImpl implements TrackDatasource {
     // }
 
     // Opsional: Tambahkan sorting agar hasilnya konsisten
-    query.orderBy([(t) => drift.OrderingTerm(expression: t.id)]);
+    query.orderBy([
+      drift.OrderingTerm(
+        expression: driftDb.trackDrift.id,
+        mode: drift.OrderingMode.asc,
+      )
+    ]);
 
     // 5. Eksekusi query dan lakukan mapping hasil
     final trackDriftDataRows = await query.get();
 
-    final List<Track> convertToTrack = trackDriftDataRows.map((trackDrift) {
-      return Track.fromDrift(trackDrift);
+    final List<Track> mapToTrack = trackDriftDataRows.map((result) {
+      return Track.fromDriftTypedResult(result);
     }).toList();
 
-    return convertToTrack;
+    return mapToTrack;
   }
 
   @override

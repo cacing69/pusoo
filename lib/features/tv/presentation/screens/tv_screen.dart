@@ -379,7 +379,7 @@ class _TvScreenState extends ConsumerState<TvScreen>
                                         title: Text(
                                           e.trim().isEmpty
                                               ? "Miscellaneous"
-                                              : e,
+                                              : e.trim(),
                                         ),
                                         suffix: Icon(FIcons.chevronRight),
                                         onPress: () {
@@ -450,10 +450,19 @@ class _TvScreenState extends ConsumerState<TvScreen>
                           track: item,
                           showLabel: false,
                         ),
-                        title: Text(item.title),
-                        subtitle: Text(item.groupTitle),
+                        title: Text(item.title.trim()),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            item.groupTitle.trim().isNotEmpty
+                                ? Text(item.groupTitle.trim())
+                                : Text("Miscellaneous"),
+                            item.tvgId.trim().isNotEmpty
+                                ? Text(item.tvgId.trim(), maxLines: 2)
+                                : Text("@tvg-id: n/a"),
+                          ],
+                        ),
                         suffix: Icon(FIcons.play),
-                        details: Text(item.tvgId),
                       ),
                       // Column(
                       //   children: [

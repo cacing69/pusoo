@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TrackDriftFilterQuery {
 
- List<int>? get playlistIds; String? get groupTitle; String? get title; int? get limit; int? get offset; int? get cursor; bool? get isMovie; bool? get isLiveTv; bool? get isTvSerie;
+ List<int>? get playlistIds; String? get groupTitle; String? get title; String? get titleOrGroupTitle; int? get limit; int? get offset; int? get cursor; bool? get isMovie; bool? get isLiveTv; bool? get isTvSerie;
 /// Create a copy of TrackDriftFilterQuery
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $TrackDriftFilterQueryCopyWith<TrackDriftFilterQuery> get copyWith => _$TrackDri
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TrackDriftFilterQuery&&const DeepCollectionEquality().equals(other.playlistIds, playlistIds)&&(identical(other.groupTitle, groupTitle) || other.groupTitle == groupTitle)&&(identical(other.title, title) || other.title == title)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.cursor, cursor) || other.cursor == cursor)&&(identical(other.isMovie, isMovie) || other.isMovie == isMovie)&&(identical(other.isLiveTv, isLiveTv) || other.isLiveTv == isLiveTv)&&(identical(other.isTvSerie, isTvSerie) || other.isTvSerie == isTvSerie));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TrackDriftFilterQuery&&const DeepCollectionEquality().equals(other.playlistIds, playlistIds)&&(identical(other.groupTitle, groupTitle) || other.groupTitle == groupTitle)&&(identical(other.title, title) || other.title == title)&&(identical(other.titleOrGroupTitle, titleOrGroupTitle) || other.titleOrGroupTitle == titleOrGroupTitle)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.cursor, cursor) || other.cursor == cursor)&&(identical(other.isMovie, isMovie) || other.isMovie == isMovie)&&(identical(other.isLiveTv, isLiveTv) || other.isLiveTv == isLiveTv)&&(identical(other.isTvSerie, isTvSerie) || other.isTvSerie == isTvSerie));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(playlistIds),groupTitle,title,limit,offset,cursor,isMovie,isLiveTv,isTvSerie);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(playlistIds),groupTitle,title,titleOrGroupTitle,limit,offset,cursor,isMovie,isLiveTv,isTvSerie);
 
 @override
 String toString() {
-  return 'TrackDriftFilterQuery(playlistIds: $playlistIds, groupTitle: $groupTitle, title: $title, limit: $limit, offset: $offset, cursor: $cursor, isMovie: $isMovie, isLiveTv: $isLiveTv, isTvSerie: $isTvSerie)';
+  return 'TrackDriftFilterQuery(playlistIds: $playlistIds, groupTitle: $groupTitle, title: $title, titleOrGroupTitle: $titleOrGroupTitle, limit: $limit, offset: $offset, cursor: $cursor, isMovie: $isMovie, isLiveTv: $isLiveTv, isTvSerie: $isTvSerie)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $TrackDriftFilterQueryCopyWith<$Res>  {
   factory $TrackDriftFilterQueryCopyWith(TrackDriftFilterQuery value, $Res Function(TrackDriftFilterQuery) _then) = _$TrackDriftFilterQueryCopyWithImpl;
 @useResult
 $Res call({
- List<int>? playlistIds, String? groupTitle, String? title, int? limit, int? offset, int? cursor, bool? isMovie, bool? isLiveTv, bool? isTvSerie
+ List<int>? playlistIds, String? groupTitle, String? title, String? titleOrGroupTitle, int? limit, int? offset, int? cursor, bool? isMovie, bool? isLiveTv, bool? isTvSerie
 });
 
 
@@ -65,11 +65,12 @@ class _$TrackDriftFilterQueryCopyWithImpl<$Res>
 
 /// Create a copy of TrackDriftFilterQuery
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? playlistIds = freezed,Object? groupTitle = freezed,Object? title = freezed,Object? limit = freezed,Object? offset = freezed,Object? cursor = freezed,Object? isMovie = freezed,Object? isLiveTv = freezed,Object? isTvSerie = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? playlistIds = freezed,Object? groupTitle = freezed,Object? title = freezed,Object? titleOrGroupTitle = freezed,Object? limit = freezed,Object? offset = freezed,Object? cursor = freezed,Object? isMovie = freezed,Object? isLiveTv = freezed,Object? isTvSerie = freezed,}) {
   return _then(_self.copyWith(
 playlistIds: freezed == playlistIds ? _self.playlistIds : playlistIds // ignore: cast_nullable_to_non_nullable
 as List<int>?,groupTitle: freezed == groupTitle ? _self.groupTitle : groupTitle // ignore: cast_nullable_to_non_nullable
 as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String?,titleOrGroupTitle: freezed == titleOrGroupTitle ? _self.titleOrGroupTitle : titleOrGroupTitle // ignore: cast_nullable_to_non_nullable
 as String?,limit: freezed == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
 as int?,offset: freezed == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
 as int?,cursor: freezed == cursor ? _self.cursor : cursor // ignore: cast_nullable_to_non_nullable
@@ -161,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<int>? playlistIds,  String? groupTitle,  String? title,  int? limit,  int? offset,  int? cursor,  bool? isMovie,  bool? isLiveTv,  bool? isTvSerie)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<int>? playlistIds,  String? groupTitle,  String? title,  String? titleOrGroupTitle,  int? limit,  int? offset,  int? cursor,  bool? isMovie,  bool? isLiveTv,  bool? isTvSerie)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TrackDriftFilterQuery() when $default != null:
-return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.limit,_that.offset,_that.cursor,_that.isMovie,_that.isLiveTv,_that.isTvSerie);case _:
+return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.titleOrGroupTitle,_that.limit,_that.offset,_that.cursor,_that.isMovie,_that.isLiveTv,_that.isTvSerie);case _:
   return orElse();
 
 }
@@ -182,10 +183,10 @@ return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.limit,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<int>? playlistIds,  String? groupTitle,  String? title,  int? limit,  int? offset,  int? cursor,  bool? isMovie,  bool? isLiveTv,  bool? isTvSerie)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<int>? playlistIds,  String? groupTitle,  String? title,  String? titleOrGroupTitle,  int? limit,  int? offset,  int? cursor,  bool? isMovie,  bool? isLiveTv,  bool? isTvSerie)  $default,) {final _that = this;
 switch (_that) {
 case _TrackDriftFilterQuery():
-return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.limit,_that.offset,_that.cursor,_that.isMovie,_that.isLiveTv,_that.isTvSerie);case _:
+return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.titleOrGroupTitle,_that.limit,_that.offset,_that.cursor,_that.isMovie,_that.isLiveTv,_that.isTvSerie);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +203,10 @@ return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.limit,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<int>? playlistIds,  String? groupTitle,  String? title,  int? limit,  int? offset,  int? cursor,  bool? isMovie,  bool? isLiveTv,  bool? isTvSerie)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<int>? playlistIds,  String? groupTitle,  String? title,  String? titleOrGroupTitle,  int? limit,  int? offset,  int? cursor,  bool? isMovie,  bool? isLiveTv,  bool? isTvSerie)?  $default,) {final _that = this;
 switch (_that) {
 case _TrackDriftFilterQuery() when $default != null:
-return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.limit,_that.offset,_that.cursor,_that.isMovie,_that.isLiveTv,_that.isTvSerie);case _:
+return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.titleOrGroupTitle,_that.limit,_that.offset,_that.cursor,_that.isMovie,_that.isLiveTv,_that.isTvSerie);case _:
   return null;
 
 }
@@ -217,7 +218,7 @@ return $default(_that.playlistIds,_that.groupTitle,_that.title,_that.limit,_that
 @JsonSerializable()
 
 class _TrackDriftFilterQuery implements TrackDriftFilterQuery {
-  const _TrackDriftFilterQuery({final  List<int>? playlistIds, this.groupTitle, this.title, this.limit, this.offset, this.cursor, this.isMovie, this.isLiveTv, this.isTvSerie}): _playlistIds = playlistIds;
+  const _TrackDriftFilterQuery({final  List<int>? playlistIds, this.groupTitle, this.title, this.titleOrGroupTitle, this.limit, this.offset, this.cursor, this.isMovie, this.isLiveTv, this.isTvSerie}): _playlistIds = playlistIds;
   factory _TrackDriftFilterQuery.fromJson(Map<String, dynamic> json) => _$TrackDriftFilterQueryFromJson(json);
 
  final  List<int>? _playlistIds;
@@ -231,6 +232,7 @@ class _TrackDriftFilterQuery implements TrackDriftFilterQuery {
 
 @override final  String? groupTitle;
 @override final  String? title;
+@override final  String? titleOrGroupTitle;
 @override final  int? limit;
 @override final  int? offset;
 @override final  int? cursor;
@@ -251,16 +253,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TrackDriftFilterQuery&&const DeepCollectionEquality().equals(other._playlistIds, _playlistIds)&&(identical(other.groupTitle, groupTitle) || other.groupTitle == groupTitle)&&(identical(other.title, title) || other.title == title)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.cursor, cursor) || other.cursor == cursor)&&(identical(other.isMovie, isMovie) || other.isMovie == isMovie)&&(identical(other.isLiveTv, isLiveTv) || other.isLiveTv == isLiveTv)&&(identical(other.isTvSerie, isTvSerie) || other.isTvSerie == isTvSerie));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TrackDriftFilterQuery&&const DeepCollectionEquality().equals(other._playlistIds, _playlistIds)&&(identical(other.groupTitle, groupTitle) || other.groupTitle == groupTitle)&&(identical(other.title, title) || other.title == title)&&(identical(other.titleOrGroupTitle, titleOrGroupTitle) || other.titleOrGroupTitle == titleOrGroupTitle)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.cursor, cursor) || other.cursor == cursor)&&(identical(other.isMovie, isMovie) || other.isMovie == isMovie)&&(identical(other.isLiveTv, isLiveTv) || other.isLiveTv == isLiveTv)&&(identical(other.isTvSerie, isTvSerie) || other.isTvSerie == isTvSerie));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_playlistIds),groupTitle,title,limit,offset,cursor,isMovie,isLiveTv,isTvSerie);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_playlistIds),groupTitle,title,titleOrGroupTitle,limit,offset,cursor,isMovie,isLiveTv,isTvSerie);
 
 @override
 String toString() {
-  return 'TrackDriftFilterQuery(playlistIds: $playlistIds, groupTitle: $groupTitle, title: $title, limit: $limit, offset: $offset, cursor: $cursor, isMovie: $isMovie, isLiveTv: $isLiveTv, isTvSerie: $isTvSerie)';
+  return 'TrackDriftFilterQuery(playlistIds: $playlistIds, groupTitle: $groupTitle, title: $title, titleOrGroupTitle: $titleOrGroupTitle, limit: $limit, offset: $offset, cursor: $cursor, isMovie: $isMovie, isLiveTv: $isLiveTv, isTvSerie: $isTvSerie)';
 }
 
 
@@ -271,7 +273,7 @@ abstract mixin class _$TrackDriftFilterQueryCopyWith<$Res> implements $TrackDrif
   factory _$TrackDriftFilterQueryCopyWith(_TrackDriftFilterQuery value, $Res Function(_TrackDriftFilterQuery) _then) = __$TrackDriftFilterQueryCopyWithImpl;
 @override @useResult
 $Res call({
- List<int>? playlistIds, String? groupTitle, String? title, int? limit, int? offset, int? cursor, bool? isMovie, bool? isLiveTv, bool? isTvSerie
+ List<int>? playlistIds, String? groupTitle, String? title, String? titleOrGroupTitle, int? limit, int? offset, int? cursor, bool? isMovie, bool? isLiveTv, bool? isTvSerie
 });
 
 
@@ -288,11 +290,12 @@ class __$TrackDriftFilterQueryCopyWithImpl<$Res>
 
 /// Create a copy of TrackDriftFilterQuery
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? playlistIds = freezed,Object? groupTitle = freezed,Object? title = freezed,Object? limit = freezed,Object? offset = freezed,Object? cursor = freezed,Object? isMovie = freezed,Object? isLiveTv = freezed,Object? isTvSerie = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? playlistIds = freezed,Object? groupTitle = freezed,Object? title = freezed,Object? titleOrGroupTitle = freezed,Object? limit = freezed,Object? offset = freezed,Object? cursor = freezed,Object? isMovie = freezed,Object? isLiveTv = freezed,Object? isTvSerie = freezed,}) {
   return _then(_TrackDriftFilterQuery(
 playlistIds: freezed == playlistIds ? _self._playlistIds : playlistIds // ignore: cast_nullable_to_non_nullable
 as List<int>?,groupTitle: freezed == groupTitle ? _self.groupTitle : groupTitle // ignore: cast_nullable_to_non_nullable
 as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String?,titleOrGroupTitle: freezed == titleOrGroupTitle ? _self.titleOrGroupTitle : titleOrGroupTitle // ignore: cast_nullable_to_non_nullable
 as String?,limit: freezed == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
 as int?,offset: freezed == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
 as int?,cursor: freezed == cursor ? _self.cursor : cursor // ignore: cast_nullable_to_non_nullable

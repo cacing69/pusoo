@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pusoo/router.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -31,7 +33,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
             Gap(5),
             FButton(
               style: FButtonStyle.outline(),
-              onPress: () {},
+              onPress: () {
+                // context.pushNamed(RouteName.)
+              },
               prefix: Icon(FIcons.search),
               child: Text("Explore Now"),
             ),

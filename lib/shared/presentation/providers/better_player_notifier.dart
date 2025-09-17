@@ -60,6 +60,17 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
       }),
     ];
 
+    final BetterPlayerSubtitlesConfiguration subtitlesConfiguration =
+        BetterPlayerSubtitlesConfiguration(
+          fontSize: 22.0,
+          fontColor: Colors.white,
+          outlineColor: Colors.black,
+          backgroundColor: Colors.black.withAlpha(100),
+          // fontFamily:
+          // "Roboto", // Pastikan font ini ada di pubspec.yaml Anda
+          alignment: Alignment.bottomCenter,
+        );
+
     return BetterPlayerConfiguration(
       autoPlay: true,
       aspectRatio: 16 / 9,
@@ -75,6 +86,7 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         showControlsOnInitialize: false,
         loadingWidget: FProgress.circularIcon(),
       ),
+      subtitlesConfiguration: subtitlesConfiguration,
     );
   }
 
@@ -117,6 +129,12 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
       await state!.setupDataSource(dataSource);
     } finally {
       _isChangingDataSource = false;
+    }
+  }
+
+  Future<void> loadSubtitle(BetterPlayerSubtitlesSource subtitlesSource) async {
+    if (state != null) {
+      state!.setupSubtitleSource(subtitlesSource);
     }
   }
 
