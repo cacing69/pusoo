@@ -29,4 +29,9 @@ extension StringExt on String {
     // Base64 encode the bytes and make it URL-safe
     return base64Url.encode(bytes);
   }
+
+  bool isValidUrl() {
+    final uri = Uri.tryParse(this);
+    return uri != null && uri.hasScheme && uri.hasAuthority;
+  }
 }

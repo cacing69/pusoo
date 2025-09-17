@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:forui/widgets/progress.dart';
 import 'package:logger/logger.dart';
+import 'package:pusoo/core/extensions/string_ext.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/shared/presentation/providers/logger_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:http/http.dart' as http;
 
 part 'better_player_notifier.g.dart';
 
@@ -119,7 +123,7 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         state = controller;
       }
 
-      final dataSource = _prepareDataSource(
+      final dataSource = await _prepareDataSource(
         track,
         isLiveStream: isLiveStream,
         useUrlOnIndex: useUrlOnIndex,
@@ -138,11 +142,11 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
     }
   }
 
-  BetterPlayerDataSource _prepareDataSource(
+  Future<BetterPlayerDataSource> _prepareDataSource(
     Track track, {
     bool isLiveStream = false,
     int useUrlOnIndex = 0,
-  }) {
+  }) async {
     final Logger log = ref.read(loggerProvider);
     final String videoUrl = track.links[useUrlOnIndex];
 
@@ -198,12 +202,75 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
       log.i("hasLicenseKey: $hasLicenseKey");
       if (hasLicenseKey) {
         final licenseKey = kodiProps["inputstream.adaptive.license_key"];
+        log.i("licenseKey: $licenseKey");
+
         if (drmType == BetterPlayerDrmType.clearKey) {
-          final rawClearKey = licenseKey?.split(":");
-          if (rawClearKey != null && rawClearKey.length == 2) {
-            clearKeyHex = {rawClearKey[0]: rawClearKey[1]};
-          } else {
-            log.e("invalid clearKey format: $licenseKey");
+          // CEK APAKAH VALUE LICENSEKEY BERSIFAT URL ATAU BUKAN, JIKA IYA LAKUKAN REQUEST UNTUK AMBIL KEY
+          if (licenseKey != null) {
+            if (licenseKey.trim().isNotEmpty) {
+              if (licenseKey.isValidUrl()) {
+                Map<String, String>? clearKeyHttpHeader;
+
+                log.d("track.httpHeaders: ${track.extVlcOpts}");
+                if (track.extVlcOpts.isNotEmpty) {
+                  final extVlcOpt = track.extVlcOpts.first;
+                  if (extVlcOpt.containsKey("http-user-agent")) {
+                    clearKeyHttpHeader = {
+                      "User-Agent": extVlcOpt["http-user-agent"]!,
+                    };
+                  }
+                }
+
+                log.d("clearKeyHttpHeader: $clearKeyHttpHeader");
+
+                try {
+                  final response = await http.get(
+                    Uri.parse(licenseKey),
+                    headers: clearKeyHttpHeader,
+                  );
+
+                  if (response.statusCode == 200) {
+                    try {
+                      final decoded = jsonDecode(response.body);
+
+                      if (decoded is Map<String, dynamic>) {
+                        final hasKey = decoded.containsKey("key");
+                        final hasKeyId = decoded.containsKey("keyId");
+
+                        if (hasKey && hasKeyId) {
+                          final key = decoded["key"];
+                          final keyId = decoded["keyId"];
+                          log.i("Key: $key, KeyId: $keyId");
+
+                          clearKeyHex = {keyId: key};
+                          log.i("clearKeyHexFromRequest: $clearKeyHex");
+                        } else {
+                          log.e("Response doesn't have key and keyId");
+                        }
+                      } else {
+                        log.e("Response is not JSON object");
+                      }
+                    } catch (e) {
+                      log.e("Gagal decode JSON: $e");
+                    }
+                  }
+                } catch (e) {
+                  log.e("Error when request clearKey: $licenseKey");
+                }
+                // if (rawClearKey.length == 2) {
+                //   clearKeyHex = {rawClearKey[0]: rawClearKey[1]};
+                // } else {
+                //   log.e("invalid clearKey format: $licenseKey");
+                // }
+              } else {
+                final rawClearKey = licenseKey.split(":");
+                if (rawClearKey.length == 2) {
+                  clearKeyHex = {rawClearKey[0]: rawClearKey[1]};
+                } else {
+                  log.e("invalid clearKey format: $licenseKey");
+                }
+              }
+            }
           }
         } else if (drmType == BetterPlayerDrmType.widevine) {
           licenseUrl = licenseKey;

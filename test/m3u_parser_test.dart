@@ -562,5 +562,32 @@ https://movearnpre.com/stream/o8mt0SmrkOc-Slx_nqid3w/hjkrhuihghfvu/1755466136/27
       expect("Movies,1 Kakak 7 Ponakan (2025)", equals(item.title));
       expect("Movies", equals(item.groupTitle));
     });
+
+    test('TestShouldHaveUserAgentOnHttpHeader:clearKeyOnUrl', () async {
+      // INI ADALAH ERROR DARI PLAYLIST, HARUS NYA ADA group-title="Movies" tetapi dia melakukan kesalahan, jika ada kasus sepert ini maka ambil
+      // group-title="Movies, = groupTitle=Movies
+
+      final String content = r'''
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=https://game.denver1769.fun/Jtv/Jtv.php?id=166&keys
+#EXTINF:-1 tvg-id="166" tvg-logo="https://jiotv.catchup.cdn.jio.com/dare_images/images/Cartoon_Network_Telugu.png" group-title="Telugu",Cartoon Network Telugu
+#EXTVLCOPT:http-user-agent=Denver1769
+https://game.denver1769.fun/Jtv/2HZyBc/Jtv.mpd?id=166|User-Agent=Denver1769
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect(
+        true,
+        equals(item.extVlcOpts.first.containsKey("http-user-agent")),
+      );
+      expect("Denver1769", equals(item.extVlcOpts.first["http-user-agent"]));
+      expect(
+        "https://game.denver1769.fun/Jtv/2HZyBc/Jtv.mpd?id=166",
+        equals(item.links.first),
+      );
+    });
   });
 }
