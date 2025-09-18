@@ -8,6 +8,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pusoo/core/utils/helpers.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
+import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/presentation/providers/better_player_notifier.dart';
 
 class TVPlayerScreen extends ConsumerStatefulWidget {
@@ -88,57 +89,79 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
     );
   }
 
-  Widget _buildButtonFavoriteAndFullScreen(BetterPlayerController? controller) {
+  Widget _buildButtonFavoriteSubtitleAndFullscreen(
+    BetterPlayerController? controller,
+  ) {
+    final betterPlayerController = ref.watch(betterPlayerProvider);
     return SafeArea(
       top: false,
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            child: FButton(
-              style: FButtonStyle.outline(),
-              onPress: () {
-                // controller?.toggleFullScreen();
-              },
-              prefix: const Icon(FIcons.heart),
-              child: const Text("Add to favorite"),
-            ),
-          ),
-          const Gap(10),
-          FButton.icon(
+          FButton(
             style: FButtonStyle.outline(),
-            onPress: () {
-              String subtitle =
-                  "https://gist.githubusercontent.com/cacing69/bee104dbd333b3fa98dab94c7673f1de/raw/f3eb6671a7c8f6d44080a877b8c6efd04f0332bf/gistfile1.txt";
+            onPress: () async {
+              // String subtitle =
+              //     "https://gist.githubusercontent.com/cacing69/bee104dbd333b3fa98dab94c7673f1de/raw/f3eb6671a7c8f6d44080a877b8c6efd04f0332bf/gistfile1.txt";
 
-              final BetterPlayerSubtitlesSource subtitlesSource =
-                  BetterPlayerSubtitlesSource(
-                    type: BetterPlayerSubtitlesSourceType.network,
-                    urls: [subtitle],
-                  );
+              // final BetterPlayerSubtitlesSource subtitlesSource =
+              //     BetterPlayerSubtitlesSource(
+              //       type: BetterPlayerSubtitlesSourceType.network,
+              //       urls: [subtitle],
+              //     );
 
-              // betterPlayerController.setupSubtitleSource(subtitlesSource);
+              // // betterPlayerController.setupSubtitleSource(subtitlesSource);
 
-              ref
-                  .read(betterPlayerProvider.notifier)
-                  .loadSubtitle(subtitlesSource);
+              // ref
+              //     .read(betterPlayerProvider.notifier)
+              //     .loadSubtitle(subtitlesSource);
 
-              showFlutterToast(message: "Subtitle loaded", context: context);
+              // showFlutterToast(message: "Subtitle loaded", context: context);
+              if (controller != null) {
+                if (controller.isPlaying()!) {
+                  controller.pause();
+                }
+              }
+
+              final reuslt = await context.pushNamed(
+                RouteName.subtitleSearch.name,
+              );
+
+              if (reuslt == true) {
+                if (controller != null) {
+                  if (!controller.isPlaying()!) {
+                    controller.play();
+                  }
+                }
+              }
             },
-            child: const Padding(
-              padding: EdgeInsets.all(5.0),
-              child: Icon(FIcons.closedCaption),
-            ),
+            prefix: Icon(FIcons.search),
+            child: Text("Search subtitle"),
           ),
-          const Gap(10),
-          FButton.icon(
-            style: FButtonStyle.outline(),
-            onPress: () {
-              controller?.toggleFullScreen();
-            },
-            child: const Padding(
-              padding: EdgeInsets.all(5.0),
-              child: Icon(FIcons.fullscreen),
-            ),
+          Gap(10),
+          Row(
+            children: [
+              Expanded(
+                child: FButton(
+                  style: FButtonStyle.outline(),
+                  onPress: () {
+                    // controller?.toggleFullScreen();
+                  },
+                  prefix: const Icon(FIcons.heart),
+                  child: const Text("Add to favorite"),
+                ),
+              ),
+              const Gap(10),
+              FButton.icon(
+                style: FButtonStyle.outline(),
+                onPress: () {
+                  controller?.toggleFullScreen();
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: Icon(FIcons.fullscreen),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -315,7 +338,7 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
               const Gap(5),
               Expanded(child: _buildContentScrollable()),
               const Gap(10),
-              _buildButtonFavoriteAndFullScreen(controller),
+              _buildButtonFavoriteSubtitleAndFullscreen(controller),
               const Gap(15),
             ],
           ),
@@ -345,7 +368,7 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
               const Gap(5),
               Expanded(child: _buildContentScrollable()),
               const Gap(5),
-              _buildButtonFavoriteAndFullScreen(controller),
+              _buildButtonFavoriteSubtitleAndFullscreen(controller),
             ],
           ),
         ),

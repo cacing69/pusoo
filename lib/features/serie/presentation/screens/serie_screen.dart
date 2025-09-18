@@ -84,6 +84,7 @@ class _SerieScreenState extends State<SerieScreen> {
         MediaQuery.of(context).orientation == Orientation.portrait;
 
     return FScaffold(
+      childPad: false,
       resizeToAvoidBottomInset: false,
       header: FHeader(
         title: const Text('Series'),

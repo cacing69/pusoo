@@ -56,56 +56,28 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
             },
           ),
         ],
-      ),
-      child: Column(
-        children: [
-          Builder(
-            builder: (context) {
-              return FButton(
-                style: FButtonStyle.outline(),
-                onPress: () async {
-                  final result = await context.pushNamed(
-                    RouteName.addNewSource.name,
-                  );
-
-                  if (result is bool && result) {
-                    // reload available
-                    loadPlaylist();
-
-                    if (context.mounted) {
-                      showFlutterToast(
-                        context: context,
-                        message: "Playlist saved",
-                      );
-
-                      // REFRESH HOME
-                      ref.read(tvTracksFilterProvider.notifier).reset();
-                      ref.read(tvTracksPagingProvider).refresh();
-                      // showFToast(
-                      //   context: context,
-                      //   alignment: FToastAlignment.topCenter,
-                      //   title: const Text('Playlist Saved'),
-                      // );
-                    }
-                  }
-                },
-                prefix: Icon(FIcons.plus),
-                child: Text("Add new source"),
-              );
-            },
-          ),
-          Gap(10),
-          FButton(
-            style: FButtonStyle.destructive(),
+        suffixes: [
+          FHeaderAction(
+            icon: Icon(FIcons.shredder),
             onPress: () async {
               await showFDialog(
                 context: context,
                 builder: (context, style, animation) => FDialog(
                   animation: animation,
                   direction: Axis.horizontal,
-                  title: const Text('Delete all playlist'),
-                  body: Text(
-                    "This action will permanently delete all playlists. You can't undo this.",
+                  title: const Text('Truncate playlist'),
+                  body: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Gap(10),
+                      Text(
+                        "WARNING!",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "This action will permanently delete all playlists. You can't undo this.",
+                      ),
+                    ],
                   ),
                   actions: [
                     FButton(
@@ -114,6 +86,7 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
                       child: const Text('Cancel'),
                     ),
                     FButton(
+                      style: FButtonStyle.destructive(),
                       onPress: () async {
                         removeAllPlaylist();
                         context.pop();
@@ -123,14 +96,54 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
                           context: context,
                         );
                       },
-                      child: const Text('Delete'),
+                      child: const Text('Yes, Delete'),
                     ),
                   ],
                 ),
               );
             },
-            prefix: Icon(FIcons.shredder),
-            child: Text("Remove all source"),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Builder(
+            builder: (context) {
+              return Flexible(
+                flex: 3,
+                child: FButton(
+                  style: FButtonStyle.outline(),
+                  onPress: () async {
+                    final result = await context.pushNamed(
+                      RouteName.addNewSource.name,
+                    );
+
+                    if (result is bool && result) {
+                      // reload available
+                      loadPlaylist();
+
+                      if (context.mounted) {
+                        showFlutterToast(
+                          context: context,
+                          message: "Playlist saved",
+                        );
+
+                        // REFRESH HOME
+                        ref.read(tvTracksFilterProvider.notifier).reset();
+                        ref.read(tvTracksPagingProvider).refresh();
+                        // showFToast(
+                        //   context: context,
+                        //   alignment: FToastAlignment.topCenter,
+                        //   title: const Text('Playlist Saved'),
+                        // );
+                      }
+                    }
+                  },
+                  prefix: Icon(FIcons.plus),
+                  child: Text("Add new source"),
+                ),
+              );
+            },
           ),
           Gap(10),
           Expanded(
@@ -160,7 +173,7 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
                             ),
 
                             title: Text(e.name),
-                            subtitle: Text(e.url ?? "", maxLines: 2),
+                            subtitle: Text(e.url ?? "", maxLines: 1),
                             suffix: Icon(FIcons.chevronRight),
                             onPress: e.isActive
                                 ? () {

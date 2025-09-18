@@ -56,8 +56,8 @@ class _TvScreenState extends ConsumerState<TvScreen>
     return FTextField(
       controller: controller,
       hint: asyncCountTrack.hasValue
-          ? "Find something to watch - ${NumberFormat.decimalPattern().format(asyncCountTrack.value)} channels"
-          : "Find something to watch...",
+          ? "Find a channel - ${NumberFormat.decimalPattern().format(asyncCountTrack.value)} available"
+          : "Find a channel...",
       clearable: (e) => e.text.isNotEmpty,
       onChange: (String value) {
         _debouncer.debounce(

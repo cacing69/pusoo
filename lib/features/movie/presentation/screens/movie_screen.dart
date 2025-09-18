@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:pusoo/core/extensions/string_ext.dart';
 // import 'package:pusoo/core/utils/m3u_parse.dart';
 import 'package:pusoo/router.dart';
@@ -80,169 +81,177 @@ class _MovieScreenState extends State<MovieScreen> {
     });
   }
 
+  bool listViewMode = true;
+
   @override
   Widget build(BuildContext context) {
     final isPotrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
     return FScaffold(
+      childPad: false,
       resizeToAvoidBottomInset: false,
       header: FHeader(
         title: const Text('Movies'),
         suffixes: [
           FHeaderAction(
-            icon: Icon(FIcons.menu, size: 25),
-            onPress: () async {
-              showFSheet(
-                context: context,
-                side: FLayout.ltr,
-                useRootNavigator: true,
-                useSafeArea: false,
-                mainAxisMaxRatio: null,
-                constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.8,
-                  maxHeight: double.infinity,
-                ),
-                barrierDismissible: true,
-                draggable: true,
-                builder: (context) => FScaffold(
-                  child: SafeArea(
-                    child: Column(
-                      spacing: 5,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Gap(10),
-                            Text(
-                              "Category",
-                              style: context.theme.typography.base.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        FDivider(
-                          style: (style) => style.copyWith(
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                          ),
-                        ),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              spacing: 5,
-                              children: [
-                                FItem(
-                                  prefix: Icon(FIcons.tags),
-                                  title: Text("All Movies"),
-                                  suffix: Icon(FIcons.chevronRight),
-                                  onPress: () async {
-                                    // Bisa navigasi ke halaman detail channel per kategori
-                                    debugPrint("All channel selected");
-
-                                    final channelTv =
-                                        await (driftDb.select(
-                                              driftDb.channelDrift,
-                                            )..where(
-                                              (tbl) =>
-                                                  tbl.tvgId.isNotNull() |
-                                                  tbl.tvgId.isNotIn([""]),
-                                            ))
-                                            .get();
-
-                                    // channelTv.then((data) {
-                                    setState(() {
-                                      movies = channelTv;
-
-                                      context.pop();
-                                    });
-                                    // });
-
-                                    // setState(() {
-                                    //   channels = categories[categoryName];
-                                    // });
-                                  },
-                                ),
-                                ...categories.keys.map((categoryName) {
-                                  return FItem(
-                                    prefix: Icon(FIcons.tag),
-                                    title: Text(
-                                      (categoryName as String)
-                                          .capitalizeWords(),
-                                    ),
-                                    suffix: Icon(FIcons.chevronRight),
-                                    onPress: () async {
-                                      final channelTv =
-                                          await (driftDb.select(
-                                                driftDb.channelDrift,
-                                              )..where(
-                                                (tbl) => tbl.groupTitle.like(
-                                                  "%$categoryName%",
-                                                ),
-                                              ))
-                                              .get();
-
-                                      // channelTv.then((data) {
-                                      setState(() {
-                                        movies = channelTv;
-
-                                        context.pop();
-                                      });
-                                      // });
-                                    },
-                                  );
-                                }),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-          FHeaderAction(
-            icon: Icon(FIcons.power, size: 25),
-            onPress: () async {
-              // Hapus semua isi tabel 'playlist'
-              await driftDb.delete(driftDb.playlistDrift).go();
-              await driftDb.delete(driftDb.channelDrift).go();
-
-              debugPrint("All rows has been deleted");
-
-              loadM3U();
-            },
-          ),
-          FHeaderAction(
-            icon: Icon(FIcons.refreshCw, size: 25),
+            icon: Icon(listViewMode ? FIcons.grid2x2 : FIcons.rows3),
             onPress: () async {
               setState(() {
-                movies = [];
+                listViewMode = !listViewMode;
               });
-              loadM3U();
             },
           ),
-          FHeaderAction(
-            icon: Icon(FIcons.plus),
-            onPress: () async {
-              final result = await context.pushNamed(
-                RouteName.addPlaylist.name,
-              );
+          //       showFSheet(
+          //         context: context,
+          //         side: FLayout.ltr,
+          //         useRootNavigator: true,
+          //         useSafeArea: false,
+          //         mainAxisMaxRatio: null,
+          //         constraints: BoxConstraints(
+          //           maxWidth: MediaQuery.of(context).size.width * 0.8,
+          //           maxHeight: double.infinity,
+          //         ),
+          //         barrierDismissible: true,
+          //         draggable: true,
+          //         builder: (context) => FScaffold(
+          //           child: SafeArea(
+          //             child: Column(
+          //               spacing: 5,
+          //               crossAxisAlignment: CrossAxisAlignment.start,
+          //               children: [
+          //                 Row(
+          //                   children: [
+          //                     Gap(10),
+          //                     Text(
+          //                       "Category",
+          //                       style: context.theme.typography.base.copyWith(
+          //                         fontWeight: FontWeight.bold,
+          //                       ),
+          //                     ),
+          //                   ],
+          //                 ),
+          //                 FDivider(
+          //                   style: (style) => style.copyWith(
+          //                     padding: EdgeInsets.symmetric(vertical: 5),
+          //                   ),
+          //                 ),
+          //                 Expanded(
+          //                   child: SingleChildScrollView(
+          //                     child: Column(
+          //                       spacing: 5,
+          //                       children: [
+          //                         FItem(
+          //                           prefix: Icon(FIcons.tags),
+          //                           title: Text("All Movies"),
+          //                           suffix: Icon(FIcons.chevronRight),
+          //                           onPress: () async {
+          //                             // Bisa navigasi ke halaman detail channel per kategori
+          //                             debugPrint("All channel selected");
 
-              if (result is bool && result) {
-                loadM3U();
+          //                             final channelTv =
+          //                                 await (driftDb.select(
+          //                                       driftDb.channelDrift,
+          //                                     )..where(
+          //                                       (tbl) =>
+          //                                           tbl.tvgId.isNotNull() |
+          //                                           tbl.tvgId.isNotIn([""]),
+          //                                     ))
+          //                                     .get();
 
-                // showFToast(
-                //   context: context,
-                //   alignment: FToastAlignment.bottomCenter,
-                //   title: const Text('Playlist Loaded'),
-                //   description: const Text('Lorem ipsum dolor sit amet'),
-                // );
-              }
-            },
-          ),
+          //                             // channelTv.then((data) {
+          //                             setState(() {
+          //                               movies = channelTv;
+
+          //                               context.pop();
+          //                             });
+          //                             // });
+
+          //                             // setState(() {
+          //                             //   channels = categories[categoryName];
+          //                             // });
+          //                           },
+          //                         ),
+          //                         ...categories.keys.map((categoryName) {
+          //                           return FItem(
+          //                             prefix: Icon(FIcons.tag),
+          //                             title: Text(
+          //                               (categoryName as String)
+          //                                   .capitalizeWords(),
+          //                             ),
+          //                             suffix: Icon(FIcons.chevronRight),
+          //                             onPress: () async {
+          //                               final channelTv =
+          //                                   await (driftDb.select(
+          //                                         driftDb.channelDrift,
+          //                                       )..where(
+          //                                         (tbl) => tbl.groupTitle.like(
+          //                                           "%$categoryName%",
+          //                                         ),
+          //                                       ))
+          //                                       .get();
+
+          //                               // channelTv.then((data) {
+          //                               setState(() {
+          //                                 movies = channelTv;
+
+          //                                 context.pop();
+          //                               });
+          //                               // });
+          //                             },
+          //                           );
+          //                         }),
+          //                       ],
+          //                     ),
+          //                   ),
+          //                 ),
+          //               ],
+          //             ),
+          //           ),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          //   FHeaderAction(
+          //     icon: Icon(FIcons.power, size: 25),
+          //     onPress: () async {
+          //       // Hapus semua isi tabel 'playlist'
+          //       await driftDb.delete(driftDb.playlistDrift).go();
+          //       await driftDb.delete(driftDb.channelDrift).go();
+
+          //       debugPrint("All rows has been deleted");
+
+          //       loadM3U();
+          //     },
+          //   ),
+          //   FHeaderAction(
+          //     icon: Icon(FIcons.refreshCw, size: 25),
+          //     onPress: () async {
+          //       setState(() {
+          //         movies = [];
+          //       });
+          //       loadM3U();
+          //     },
+          //   ),
+          //   FHeaderAction(
+          //     icon: Icon(FIcons.plus),
+          //     onPress: () async {
+          //       final result = await context.pushNamed(
+          //         RouteName.addPlaylist.name,
+          //       );
+
+          //       if (result is bool && result) {
+          //         loadM3U();
+
+          //         // showFToast(
+          //         //   context: context,
+          //         //   alignment: FToastAlignment.bottomCenter,
+          //         //   title: const Text('Playlist Loaded'),
+          //         //   description: const Text('Lorem ipsum dolor sit amet'),
+          //         // );
+          //       }
+          //     },
+          //   ),
         ],
       ),
       child: Column(
@@ -250,119 +259,228 @@ class _MovieScreenState extends State<MovieScreen> {
         children: [
           FTextField(hint: "Find something to watch..."),
           Expanded(
-            child: movies.isEmpty
-                ? Center(child: FProgress.circularIcon())
+            child: listViewMode
+                ? ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: 100,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 100,
+                              height: 140,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                      "https://media.designrush.com/tinymce_images/205878/conversions/2.-Wendy-content.jpg",
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Gap(10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Commodo est fugiat sunt ipsum veniam sit adipisicing.",
+                                    style: context.theme.typography.base
+                                        .copyWith(fontWeight: FontWeight.w600),
+                                  ),
+                                  Gap(5),
+                                  Text(
+                                    "Action",
+                                    style: context.theme.typography.sm.copyWith(
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  Gap(5),
+                                  Text(
+                                    "@tvg-id: n/a",
+                                    style: context.theme.typography.xs.copyWith(
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                      // return GestureDetector(
+                      //   onTap: () {
+                      //     // debugPrint(series[index].toString());
+
+                      //     context.pushNamed(
+                      //       RouteName.movieDetail.name,
+                      //       extra: movies[index],
+                      //     );
+                      //   },
+                      //   child: Container(
+                      //     decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(6),
+                      //       border: Border.all(
+                      //         color: context.theme.colors.border,
+                      //         width: 1,
+                      //       ),
+                      //       color: context.theme.colors.disable(
+                      //         context.theme.colors.foreground,
+                      //       ),
+                      //     ),
+                      //     clipBehavior: Clip.antiAlias,
+                      //     child: ClipRRect(
+                      //       borderRadius: BorderRadius.circular(4),
+                      //       child: Stack(
+                      //         children: [
+                      //           SizedBox(
+                      //             width: double.infinity,
+                      //             height: 120, // tinggi tetap
+                      //             child: movies[index].logo?.isNotEmpty ?? false
+                      //                 ? Padding(
+                      //                     padding: const EdgeInsets.all(1.0),
+                      //                     child: Container(
+                      //                       decoration: BoxDecoration(
+                      //                         borderRadius: BorderRadius.circular(4),
+                      //                       ),
+                      //                       clipBehavior: Clip.antiAlias,
+                      //                       child: CachedNetworkImage(
+                      //                         imageUrl: movies[index].logo ?? "",
+                      //                         placeholder: (_, __) => const Center(
+                      //                           child: FProgress.circularIcon(),
+                      //                         ),
+                      //                         errorWidget: (_, __, ___) => Center(
+                      //                           child: Icon(
+                      //                             FIcons.imageOff,
+                      //                             color: context
+                      //                                 .theme
+                      //                                 .colors
+                      //                                 .background
+                      //                                 .withAlpha(200),
+                      //                             size: 40,
+                      //                           ),
+                      //                         ),
+                      //                         fit: BoxFit.cover,
+                      //                       ),
+                      //                     ),
+                      //                   )
+                      //                 : Center(
+                      //                     child: Icon(
+                      //                       FIcons.imageOff,
+                      //                       size: 40,
+                      //                       color: context.theme.colors.background
+                      //                           .withAlpha(200),
+                      //                     ),
+                      //                   ),
+                      //           ),
+                      //           Positioned(
+                      //             left: 0,
+                      //             right: 0,
+                      //             bottom: 0,
+                      //             child: Container(
+                      //               padding: const EdgeInsets.all(6),
+                      //               color: context.theme.colors.background.withAlpha(
+                      //                 125,
+                      //               ),
+                      //               child: Text(
+                      //                 movies[index].name,
+                      //                 maxLines: 1,
+                      //                 overflow: TextOverflow.ellipsis,
+                      //                 style: TextStyle(
+                      //                   color: context.theme.colors.foreground,
+                      //                   fontSize:
+                      //                       context.theme.typography.xs.fontSize,
+                      //                   fontWeight: FontWeight.w600,
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // );
+                    },
+                  )
                 : GridView.builder(
                     padding: EdgeInsets.zero,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: isPotrait ? 4 : 8,
+                      crossAxisCount: 3,
+                      childAspectRatio: 0.57,
                       crossAxisSpacing: 5,
                       mainAxisSpacing: 5,
-                      childAspectRatio: 0.75,
                     ),
-                    itemCount: movies.length,
+                    itemCount: 100,
                     itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          // debugPrint(series[index].toString());
-
-                          context.pushNamed(
-                            RouteName.movieDetail.name,
-                            extra: movies[index],
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(
-                              color: context.theme.colors.border,
-                              width: 1,
-                            ),
-                            color: context.theme.colors.disable(
-                              context.theme.colors.foreground,
-                            ),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: Stack(
-                              children: [
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 120, // tinggi tetap
-                                  child: movies[index].logo?.isNotEmpty ?? false
-                                      ? Padding(
-                                          padding: const EdgeInsets.all(1.0),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
+                      return Column(
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            height: 170,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: Column(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      CachedNetworkImage(
+                                        imageUrl:
+                                            "https://media.designrush.com/tinymce_images/205878/conversions/2.-Wendy-content.jpg",
+                                        fit: BoxFit.cover,
+                                      ),
+                                      Positioned(
+                                        right: 0,
+                                        top: 0,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(4),
                                             ),
-                                            clipBehavior: Clip.antiAlias,
-                                            child: CachedNetworkImage(
-                                              imageUrl:
-                                                  movies[index].logo ?? "",
-                                              placeholder: (_, __) =>
-                                                  const Center(
-                                                    child:
-                                                        FProgress.circularIcon(),
-                                                  ),
-                                              errorWidget: (_, __, ___) =>
-                                                  Center(
-                                                    child: Icon(
-                                                      FIcons.imageOff,
-                                                      color: context
-                                                          .theme
-                                                          .colors
-                                                          .background
-                                                          .withAlpha(200),
-                                                      size: 40,
-                                                    ),
-                                                  ),
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        )
-                                      : Center(
-                                          child: Icon(
-                                            FIcons.imageOff,
-                                            size: 40,
                                             color: context
                                                 .theme
                                                 .colors
                                                 .background
-                                                .withAlpha(200),
+                                                .withAlpha(160),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: Text(
+                                              "Action",
+                                              style: context.theme.typography.xs
+                                                  .copyWith(
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                            ),
                                           ),
                                         ),
-                                ),
-                                Positioned(
-                                  left: 0,
-                                  right: 0,
-                                  bottom: 0,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(6),
-                                    color: context.theme.colors.background
-                                        .withAlpha(125),
-                                    child: Text(
-                                      movies[index].name,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: context.theme.colors.foreground,
-                                        fontSize: context
-                                            .theme
-                                            .typography
-                                            .xs
-                                            .fontSize,
-                                        fontWeight: FontWeight.w600,
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
+                          Expanded(
+                            child: Text(
+                              "Do non aliquip officia ipsum in deserunt magna.",
+
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: context.theme.typography.base.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                       );
                     },
                   ),

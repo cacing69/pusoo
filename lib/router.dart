@@ -8,6 +8,7 @@ import 'package:pusoo/features/movie/presentation/screens/movie_detail_screen.da
 import 'package:pusoo/features/source/presentation/screens/public_source_list_playlist_screen.dart';
 import 'package:pusoo/features/source/presentation/screens/public_source_list_playlist_tracks_screen.dart';
 import 'package:pusoo/features/source/presentation/screens/public_source_list_screen.dart';
+import 'package:pusoo/features/subtitle/presentation/screens/subtitle_search_screen.dart';
 // import 'package:pusoo/features/tv/presentation/screens/tv_player_full_screen.dart';
 import 'package:pusoo/features/tv/presentation/screens/tv_player_screen.dart';
 import 'package:pusoo/features/welcome/presentation/screens/welcome_screen.dart';
@@ -20,16 +21,27 @@ enum RouteName {
   home,
   detail,
   videoPlayer,
-  // videoPlayerFull,
+
+  // tv
   tvPlayer,
-  // tvPlayerFull,
-  addPlaylist,
+
+  // movie
   movieDetail,
+
+  // source
   manageSource,
   addNewSource,
+
+  // playlist
+  addPlaylist,
+
+  // public source
   publicSources,
   publicSourcesPlaylist,
   publicSourcesPlaylistTrack,
+
+  // subtitle
+  subtitleSearch,
 
   // etc..
   youtubeIframePlayer,
@@ -139,6 +151,16 @@ final List<GoRoute> defaultRouter = [
       return PublicSourceListPlaylistTracksScreen();
     },
   ),
+
+  // subtitle
+  GoRoute(
+    path: '/subtitle/search',
+    name: RouteName.subtitleSearch.name,
+    builder: (context, state) {
+      return SubtitleSearchScreen();
+    },
+  ),
+
   // GoRoute(
   //   path: '/iptv-player-full',
   //   name: RouteName.iptvPlayerFull.name,
