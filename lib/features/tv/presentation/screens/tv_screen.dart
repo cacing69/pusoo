@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -52,9 +51,13 @@ class _TvScreenState extends ConsumerState<TvScreen>
   String countTracks = "0";
 
   Widget _buildSearch(TextEditingController controller) {
+    final asyncCountTrack = ref.watch(tvTrackCountProvider);
+
     return FTextField(
       controller: controller,
-      hint: "Find something to watch...",
+      hint: asyncCountTrack.hasValue
+          ? "Find something to watch - ${NumberFormat.decimalPattern().format(asyncCountTrack.value)} channels"
+          : "Find something to watch...",
       clearable: (e) => e.text.isNotEmpty,
       onChange: (String value) {
         _debouncer.debounce(
@@ -186,90 +189,43 @@ class _TvScreenState extends ConsumerState<TvScreen>
                                 ),
                                 Gap(5),
                                 Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // Text(
-                                      //   "Lorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit Amet",
-                                      //   overflow: TextOverflow.ellipsis,
-                                      //   maxLines: 1,
-                                      //   style: TextStyle(
-                                      //     fontSize: context
-                                      //         .theme
-                                      //         .typography
-                                      //         .xs
-                                      //         .fontSize,
-                                      //     fontWeight: FontWeight.w600,
-                                      //   ),
-                                      // ),
-                                      asyncActivePlaylist.when(
-                                        data: (data) => Text(
-                                          data!.name ?? "No Name",
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                            fontSize: context
-                                                .theme
-                                                .typography
-                                                .xs
-                                                .fontSize,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        error: (e, s) => Text(
-                                          "Playlist not available",
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                            fontSize: context
-                                                .theme
-                                                .typography
-                                                .xs
-                                                .fontSize,
-                                            fontWeight: FontWeight.w600,
-                                            color: context.theme.colors.disable(
-                                              context.theme.colors.foreground,
-                                            ),
-                                          ),
-                                        ),
-                                        loading: () => Text(
-                                          "Fetching playlist...",
-                                          style: TextStyle(
-                                            fontSize:
-                                                CustomThemeData.fontSize.xs1,
-                                            fontWeight: FontWeight.w400,
-                                          ),
+                                  child: asyncActivePlaylist.when(
+                                    data: (data) => Text(
+                                      data!.name ?? "No Name",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontSize: context
+                                            .theme
+                                            .typography
+                                            .sm
+                                            .fontSize,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    error: (e, s) => Text(
+                                      "Playlist not available",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontSize: context
+                                            .theme
+                                            .typography
+                                            .xs
+                                            .fontSize,
+                                        fontWeight: FontWeight.w600,
+                                        color: context.theme.colors.disable(
+                                          context.theme.colors.foreground,
                                         ),
                                       ),
-                                      asyncCountTrack.when(
-                                        data: (data) => Text(
-                                          "${NumberFormat.decimalPattern().format(data)} Channel found",
-                                          style: TextStyle(
-                                            fontSize:
-                                                CustomThemeData.fontSize.xs1,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        error: (e, s) => SizedBox.shrink(),
-                                        loading: () => Text(
-                                          "Counting chanels...",
-                                          style: TextStyle(
-                                            fontSize:
-                                                CustomThemeData.fontSize.xs1,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
+                                    ),
+                                    loading: () => Text(
+                                      "Fetching playlist...",
+                                      style: TextStyle(
+                                        fontSize: CustomThemeData.fontSize.xs1,
+                                        fontWeight: FontWeight.w400,
                                       ),
-                                      // Text(
-                                      //   "Lorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit AmetLorem Ipsum Dolor Sit Amet",
-                                      //   style: TextStyle(
-                                      //     fontSize:
-                                      //         CustomThemeData.fontSize.xs1,
-                                      //     fontWeight: FontWeight.w400,
-                                      //   ),
-                                      // ),
-                                    ],
+                                    ),
                                   ),
                                 ),
                                 Icon(FIcons.antenna),
@@ -282,25 +238,6 @@ class _TvScreenState extends ConsumerState<TvScreen>
                     ),
                   )
                 : Flexible(child: _buildSearch(searchController)),
-            //   FTile(
-            //   prefix: SizedBox(
-            //     width: 20,
-            //     height: 20,
-            //     child: Container(
-            //       decoration: BoxDecoration(
-            //         shape: BoxShape.circle,
-            //         color: Colors.green[800],
-            //       ),
-            //     ),
-            //   ),
-            //   title: Text("IPTV-ORG COUNTRY"),
-            //   // subtitle: Text("Active playlist"),
-            //   subtitle: Text("$countTracks channel"),
-            //   suffix: Icon(FIcons.chevronRight),
-            //   onPress: () async {
-
-            //   },
-            // )
           ],
         ),
         suffixes: [
@@ -434,14 +371,6 @@ class _TvScreenState extends ConsumerState<TvScreen>
                   builderDelegate: PagedChildBuilderDelegate(
                     itemBuilder: (context, Track item, index) => GestureDetector(
                       onTap: () {
-                        // debugPrint(series[index].toString());
-                        // ref
-                        //     .read(betterPlayerProvider.notifier)
-                        //     .openMediaStream(
-                        //       tracks[index],
-                        //       isLiveStream: true,
-                        //     );
-
                         context.pushNamed(RouteName.tvPlayer.name, extra: item);
                       },
                       child: Column(
@@ -452,7 +381,7 @@ class _TvScreenState extends ConsumerState<TvScreen>
                               track: item,
                               showLabel: false,
                             ),
-                            title: Text(item.title.trim(), maxLines: 4),
+                            title: Text(item.title.trim(), maxLines: 2),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

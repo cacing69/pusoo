@@ -15,6 +15,15 @@ abstract class ExtVlcOptHeadersExtractor {
         if (key.startsWith('http-')) {
           final headerName = key.substring(5); // Remove 'http-' prefix
           headers[headerName.toLowerCase()] = value; // Convert to lowercase
+        } else if (key == 'network-caching') {
+          // Convert network-caching to cache-control header
+          headers['cache-control'] = 'max-age=$value';
+        } else if (key == '-http-reconnect') {
+          // Convert --http-reconnect to connection headers
+          if (value == 'true') {
+            headers['connection'] = 'keep-alive';
+            headers['keep-alive'] = 'timeout=5, max=1000';
+          }
         }
       }
     }

@@ -1,0 +1,66 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'xtream.g.dart';
+part 'xtream.freezed.dart';
+
+@freezed
+abstract class Xtream with _$Xtream {
+  const factory Xtream({
+    @Default("") String host,
+    @Default("") String username,
+    @Default("") String password,
+    @Default(0) int port,
+    @Default("") String type,
+    @Default("") String output,
+    @Default(false) bool isValid,
+  }) = _Xtream;
+
+  factory Xtream.fromJson(Map<String, dynamic> json) => _$XtreamFromJson(json);
+
+  factory Xtream.fromUrl(String url) {
+    try {
+      final uri = Uri.parse(url);
+      final queryParams = uri.queryParameters;
+      
+      final xtream = Xtream(
+        host: '${uri.scheme}://${uri.host}',
+        username: queryParams['username'] ?? '',
+        password: queryParams['password'] ?? '',
+        port: uri.port,
+        type: queryParams['type'] ?? '',
+        output: queryParams['output'] ?? '',
+        isValid: false, // Will be set by validation
+      );
+      
+      return xtream.copyWith(isValid: _isValidXtreamUrl(xtream));
+    } catch (e) {
+      return Xtream();
+    }
+  }
+
+  /// Validates if an Xtream instance represents a valid Xtream URL
+  static bool _isValidXtreamUrl(Xtream xtream) {
+    // Check if all required fields are present and valid
+    if (xtream.host.isEmpty || xtream.username.isEmpty || xtream.password.isEmpty || xtream.type.isEmpty) {
+      return false;
+    }
+    
+    // Check if host has valid scheme
+    if (!xtream.host.startsWith('http://') && !xtream.host.startsWith('https://')) {
+      return false;
+    }
+    
+    // Check if port is valid (1-65535)
+    if (xtream.port < 1 || xtream.port > 65535) {
+      return false;
+    }
+    
+    // Check if type is valid Xtream type
+    const validTypes = ['m3u', 'm3u_plus'];
+    if (!validTypes.contains(xtream.type)) {
+      return false;
+    }
+    
+    return true;
+  }
+}

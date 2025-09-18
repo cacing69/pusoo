@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart' as drift;
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:forui/forui.dart';
@@ -8,6 +9,7 @@ import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pusoo/core/extensions/string_ext.dart';
 import 'package:pusoo/core/utils/helpers.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
 import 'package:pusoo/features/playlist/presentation/providers/active_playlist_notifier.dart';
@@ -57,6 +59,7 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
     final epgLinkController = useTextEditingController();
 
     return FScaffold(
+      resizeToAvoidBottomInset: false,
       header: FHeader.nested(
         title: Text("Add Playlist"),
         prefixes: [
@@ -98,15 +101,34 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
           Gap(10),
           FTextField.multiline(
             controller: urlController,
-            label: Text("URL"),
+            label: Text("URL/M3U Content"),
             minLines: 6,
             clearable: (TextEditingValue e) => e.text.isNotEmpty,
+          ),
+          Gap(5),
+          FButton(
+            style: FButtonStyle.ghost(),
+            prefix: Icon(FIcons.clipboardPaste),
+            onPress: () async {
+              // paste clipboard here
+              final clipboardData = await Clipboard.getData('text/plain');
+              if (clipboardData != null) {
+                urlController.text = clipboardData.text ?? '';
+                if (context.mounted) {
+                  showFlutterToast(
+                    message: "Pasted from clipboard",
+                    context: context,
+                  );
+                }
+              }
+            },
+            child: Text("Paste URL/M3U Content"),
           ),
           Gap(10),
           FTextField.multiline(
             controller: epgLinkController,
             label: Text("EPG Link (Optional)"),
-            minLines: 3,
+            minLines: 2,
             clearable: (TextEditingValue e) => e.text.isNotEmpty,
           ),
           Gap(10),
@@ -126,6 +148,7 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
           // ),
           // Gap(10),
           SafeArea(
+            top: false,
             child: FButton(
               prefix: isLoading ? FProgress.circularIcon() : null,
               onPress: isLoading
@@ -147,164 +170,189 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
 
                       debugPrint('Playlist Saved!');
 
-                      // Save Channels
-                      try {
-                        final response = await http.get(
-                          Uri.parse(urlController.text.trim()),
-                        );
+                      List<Track> channel = [];
+                      String content = "";
 
-                        if (response.statusCode == 200) {
-                          String content;
+                      if (urlController.text.isValidUrl()) {
+                        // Save Channels
+                        try {
+                          final response = await http.get(
+                            Uri.parse(urlController.text.trim()),
+                          );
 
-                          try {
-                            content = utf8
-                                .decode(response.bodyBytes)
-                                .replaceFirst('\u{FEFF}', '');
-                          } catch (_) {
-                            // fallback ke latin1 jika utf8 gagal
-                            content = latin1.decode(response.bodyBytes);
+                          if (response.statusCode == 200) {
+                            try {
+                              content = utf8
+                                  .decode(response.bodyBytes)
+                                  .replaceFirst('\u{FEFF}', '');
+                            } catch (_) {
+                              // fallback ke latin1 jika utf8 gagal
+                              content = latin1.decode(response.bodyBytes);
+                            }
+
+                            channel = M3UParser.parse(content);
+                          } else {
+                            throw Exception('Failed to load M3U');
                           }
-
-                          final List<Track> channel = M3UParser.parse(content);
-
-                          // cek jika belum ada playlist maka set default
-                          final countExpression = driftDb.playlistDrift.id
-                              .count();
-
-                          // Menggunakan selectOnly dan membaca hasilnya secara langsung
-                          final count =
-                              await (driftDb.selectOnly(driftDb.playlistDrift)
-                                    ..addColumns([countExpression]))
-                                  .map((row) => row.read(countExpression))
-                                  .getSingle();
-
-                          final int playlistId = await driftDb
-                              .into(driftDb.playlistDrift)
-                              .insert(
-                                PlaylistDriftCompanion.insert(
-                                  ulid: playlistUlid,
-                                  name: nameController.text.trim().isNotEmpty
-                                      ? nameController.text.trim()
-                                      : urlController.text.trim(),
-                                  type: drift.Value("m3u"),
-                                  contentType: drift.Value("m3u"),
-                                  filePath: drift.Value(""),
-                                  epgLink: drift.Value(""),
-                                  url: drift.Value(urlController.text.trim()),
-                                  isActive:
-                                      // drift.Value(
-                                      //   true,
-                                      // ),
-                                      drift.Value(count == 0),
-                                ),
-                              );
-
-                          // Menggunakan selectOnly dan membaca hasilnya secara langsung
-                          final isUrlExistOnPlaylisUrlHistory =
-                              await (driftDb.select(driftDb.playlistDrift)
-                                    ..where(
-                                      (tbl) => tbl.url.equals(
-                                        urlController.text.trim(),
-                                      ),
-                                    ))
-                                  .getSingleOrNull() !=
-                              null;
-
-                          if (!isUrlExistOnPlaylisUrlHistory) {
-                            await driftDb
-                                .into(driftDb.playlistUrlHistoryDrift)
-                                .insert(
-                                  PlaylistUrlHistoryDriftCompanion.insert(
-                                    url: drift.Value(urlController.text.trim()),
-                                  ),
-                                );
-                          }
-
-                          // final selectedTemplate = templateContoller.value;
-
-                          // final isLiveTv = playlistTypeController.value
-                          //     .contains(ContentType.live);
-
-                          // final isMovie = playlistTypeController.value.contains(
-                          //   ContentType.live,
-                          // );
-
-                          // final isTvSerie = playlistTypeController.value
-                          //     .contains(ContentType.live);
-
-                          await driftDb.batch((batch) {
-                            batch.insertAll(
-                              driftDb.trackDrift,
-                              channel.map<TrackDriftCompanion>((Track track) {
-                                // debugPrint(ch.toString());
-
-                                return TrackDriftCompanion(
-                                  playlistId: drift.Value(playlistId),
-                                  title: drift.Value(track.title),
-                                  tvgId: drift.Value(track.tvgId),
-                                  tvgLogo: drift.Value(track.tvgLogo),
-                                  groupTitle: drift.Value(track.groupTitle),
-                                  links: drift.Value(jsonEncode(track.links)),
-                                  kodiProps: drift.Value(
-                                    jsonEncode(track.kodiProps),
-                                  ),
-                                  extVlcOpts: drift.Value(
-                                    jsonEncode(track.extVlcOpts),
-                                  ),
-                                  isLiveTv: drift.Value(
-                                    playlistTemplate.liveTvClassifier
-                                            ?.isSatisfiedByAll(track) ??
-                                        false,
-                                  ),
-                                  isMovie: drift.Value(
-                                    playlistTemplate.movieClassifier
-                                            ?.isSatisfiedByAll(track) ??
-                                        false,
-                                  ),
-                                  isTvSerie: drift.Value(
-                                    playlistTemplate.tvSerieClassifier
-                                            ?.isSatisfiedByAll(track) ??
-                                        false,
-                                  ),
-                                );
-                              }).toList(),
-                            );
+                        } catch (e) {
+                          setState(() {
+                            isLoading = false;
                           });
 
-                          if (count == 0) {
-                            // https://raw.githubusercontent.com/RYANTVv3/Ryantv/refs/heads/main/RYANTV.m3u
-                            ref.read(activePlaylistProvider.notifier).perform();
-                            ref
-                                .read(tvTrackCountProvider.notifier)
-                                .perform(TrackDriftFilterQuery(isLiveTv: true));
-                            ref
-                                .read(tvTrackGroupTitlesProvider.notifier)
-                                .perform(TrackDriftFilterQuery(isLiveTv: true));
-                          }
-
                           if (context.mounted) {
-                            setState(() {
-                              isLoading = false;
-                            });
-
-                            context.pop(true);
+                            showFlutterToast(
+                              context: context,
+                              message: 'Error loading M3U: $e',
+                            );
                           }
-                        } else {
-                          throw Exception('Failed to load M3U');
+
+                          debugPrint('Error loading M3U: $e');
                         }
-                      } catch (e) {
+                      } else {
+                        try {
+                          content = utf8
+                              .decode(urlController.text.trim().codeUnits)
+                              .replaceFirst('\u{FEFF}', '');
+                        } catch (_) {
+                          // fallback ke latin1 jika utf8 gagal
+                          content = latin1.decode(
+                            urlController.text.trim().codeUnits,
+                          );
+                        }
+
+                        channel = M3UParser.parse(content);
+                      }
+
+                      // cek jika belum ada playlist maka set default
+                      final countExpression = driftDb.playlistDrift.id.count();
+
+                      String name =
+                          "M3U-${DateTime.now().millisecondsSinceEpoch.toString()}";
+
+                      if (nameController.text.trim().isEmpty &&
+                          urlController.text.isValidUrl()) {
+                        name = urlController.text.getHostUrl();
+                      }
+
+                      // Menggunakan selectOnly dan membaca hasilnya secara langsung
+                      final count =
+                          await (driftDb.selectOnly(driftDb.playlistDrift)
+                                ..addColumns([countExpression]))
+                              .map((row) => row.read(countExpression))
+                              .getSingle();
+
+                      // TODO: ubah type ke xtream jika merupakan type extream
+
+                      final int playlistId = await driftDb
+                          .into(driftDb.playlistDrift)
+                          .insert(
+                            PlaylistDriftCompanion.insert(
+                              ulid: playlistUlid,
+                              name: name,
+                              type: drift.Value("m3u"),
+                              contentType: drift.Value("m3u"),
+                              filePath: drift.Value(""),
+                              epgLink: drift.Value(
+                                epgLinkController.text.trim(),
+                              ),
+                              url: drift.Value(urlController.text.trim()),
+                              isActive:
+                                  // drift.Value(
+                                  //   true,
+                                  // ),
+                                  drift.Value(count == 0),
+                            ),
+                          );
+
+                      // Menggunakan selectOnly dan membaca hasilnya secara langsung
+                      final isUrlExistOnPlaylisUrlHistory =
+                          await (driftDb.select(driftDb.playlistDrift)..where(
+                                (tbl) =>
+                                    tbl.url.equals(urlController.text.trim()),
+                              ))
+                              .getSingleOrNull() !=
+                          null;
+
+                      if (!isUrlExistOnPlaylisUrlHistory) {
+                        await driftDb
+                            .into(driftDb.playlistUrlHistoryDrift)
+                            .insert(
+                              PlaylistUrlHistoryDriftCompanion.insert(
+                                url: drift.Value(urlController.text.trim()),
+                              ),
+                            );
+                      }
+
+                      // final selectedTemplate = templateContoller.value;
+
+                      // final isLiveTv = playlistTypeController.value
+                      //     .contains(ContentType.live);
+
+                      // final isMovie = playlistTypeController.value.contains(
+                      //   ContentType.live,
+                      // );
+
+                      // final isTvSerie = playlistTypeController.value
+                      //     .contains(ContentType.live);
+
+                      if (channel.isNotEmpty) {
+                        await driftDb.batch((batch) {
+                          batch.insertAll(
+                            driftDb.trackDrift,
+                            channel.map<TrackDriftCompanion>((Track track) {
+                              // debugPrint(ch.toString());
+
+                              return TrackDriftCompanion(
+                                playlistId: drift.Value(playlistId),
+                                title: drift.Value(track.title),
+                                tvgId: drift.Value(track.tvgId),
+                                tvgLogo: drift.Value(track.tvgLogo),
+                                groupTitle: drift.Value(track.groupTitle),
+                                links: drift.Value(jsonEncode(track.links)),
+                                kodiProps: drift.Value(
+                                  jsonEncode(track.kodiProps),
+                                ),
+                                extVlcOpts: drift.Value(
+                                  jsonEncode(track.extVlcOpts),
+                                ),
+                                isLiveTv: drift.Value(
+                                  playlistTemplate.liveTvClassifier
+                                          ?.isSatisfiedByAll(track) ??
+                                      false,
+                                ),
+                                isMovie: drift.Value(
+                                  playlistTemplate.movieClassifier
+                                          ?.isSatisfiedByAll(track) ??
+                                      false,
+                                ),
+                                isTvSerie: drift.Value(
+                                  playlistTemplate.tvSerieClassifier
+                                          ?.isSatisfiedByAll(track) ??
+                                      false,
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        });
+
+                        if (count == 0) {
+                          // https://raw.githubusercontent.com/RYANTVv3/Ryantv/refs/heads/main/RYANTV.m3u
+                          ref.read(activePlaylistProvider.notifier).perform();
+                          ref
+                              .read(tvTrackCountProvider.notifier)
+                              .perform(TrackDriftFilterQuery(isLiveTv: true));
+                          ref
+                              .read(tvTrackGroupTitlesProvider.notifier)
+                              .perform(TrackDriftFilterQuery(isLiveTv: true));
+                        }
+                      }
+
+                      if (context.mounted) {
                         setState(() {
                           isLoading = false;
                         });
 
-                        if (context.mounted) {
-                          showFlutterToast(
-                            context: context,
-                            message: 'Error loading M3U: $e',
-                          );
-                        }
-
-                        debugPrint('Error loading M3U: $e');
+                        context.pop(true);
                       }
                     },
               child: Text("Save"),

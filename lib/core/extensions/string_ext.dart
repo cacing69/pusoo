@@ -34,4 +34,26 @@ extension StringExt on String {
     final uri = Uri.tryParse(this);
     return uri != null && uri.hasScheme && uri.hasAuthority;
   }
+
+  String getHostUrl() {
+    final s = trim();
+    if (s.isEmpty) throw Exception("String is empty");
+
+    Uri uri;
+    try {
+      uri = Uri.parse(s);
+      // Jika tidak ada scheme, tambahkan http sebagai default lalu parse ulang
+      if (!uri.hasScheme) {
+        uri = Uri.parse('https://$s');
+      }
+    } catch (e) {
+      throw Exception("String is not a valid URL: $e");
+    }
+
+    if (uri.host.isEmpty) {
+      throw Exception("URL has no host");
+    }
+
+    return uri.host;
+  }
 }

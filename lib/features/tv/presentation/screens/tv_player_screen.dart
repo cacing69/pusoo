@@ -107,6 +107,32 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
           FButton.icon(
             style: FButtonStyle.outline(),
             onPress: () {
+              String subtitle =
+                  "https://gist.githubusercontent.com/cacing69/bee104dbd333b3fa98dab94c7673f1de/raw/f3eb6671a7c8f6d44080a877b8c6efd04f0332bf/gistfile1.txt";
+
+              final BetterPlayerSubtitlesSource subtitlesSource =
+                  BetterPlayerSubtitlesSource(
+                    type: BetterPlayerSubtitlesSourceType.network,
+                    urls: [subtitle],
+                  );
+
+              // betterPlayerController.setupSubtitleSource(subtitlesSource);
+
+              ref
+                  .read(betterPlayerProvider.notifier)
+                  .loadSubtitle(subtitlesSource);
+
+              showFlutterToast(message: "Subtitle loaded", context: context);
+            },
+            child: const Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Icon(FIcons.closedCaption),
+            ),
+          ),
+          const Gap(10),
+          FButton.icon(
+            style: FButtonStyle.outline(),
+            onPress: () {
               controller?.toggleFullScreen();
             },
             child: const Padding(
@@ -190,29 +216,14 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
           ],
         ),
         Gap(10),
-        FButton(
-          style: FButtonStyle.outline(),
-          onPress: () {
-            String subtitle =
-                "https://gist.githubusercontent.com/cacing69/bee104dbd333b3fa98dab94c7673f1de/raw/f3eb6671a7c8f6d44080a877b8c6efd04f0332bf/gistfile1.txt";
+        // FButton(
+        //   style: FButtonStyle.outline(),
+        //   onPress: () {
 
-            final BetterPlayerSubtitlesSource subtitlesSource =
-                BetterPlayerSubtitlesSource(
-                  type: BetterPlayerSubtitlesSourceType.network,
-                  urls: [subtitle],
-                );
-
-            // betterPlayerController.setupSubtitleSource(subtitlesSource);
-
-            ref
-                .read(betterPlayerProvider.notifier)
-                .loadSubtitle(subtitlesSource);
-
-            showFlutterToast(message: "Subtitle loaded", context: context);
-          },
-          prefix: Icon(FIcons.captions),
-          child: Text("Search Subtitle"),
-        ),
+        //   },
+        //   prefix: Icon(FIcons.captions),
+        //   child: Text("Search Subtitle"),
+        // ),
       ],
     );
   }

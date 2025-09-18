@@ -20,9 +20,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
+    final width = MediaQuery.of(context).size.width;
     final isPotrait = orientation == Orientation.portrait;
 
     return FScaffold(
+      resizeToAvoidBottomInset: false,
       footer: isPotrait
           ? FBottomNavigationBar(
               onChange: (index) {
@@ -75,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ? TvScreen()
               : Row(
                   children: [
-                    _buildMenuLandscape(),
+                    _buildMenuLandscape(width),
                     Gap(5),
                     Expanded(child: TvScreen()),
                   ],
@@ -88,9 +90,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildMenuLandscape() {
+  Widget _buildMenuLandscape(double widhtScreen) {
     return SizedBox(
-      width: 55,
+      width: widhtScreen * 0.050,
       child: SafeArea(
         bottom: false,
         child: Column(

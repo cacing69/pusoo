@@ -36,12 +36,22 @@ https://seprai.jasoncreak8.workers.dev/play.mpd?id=6786&type=dash|referrer=https
       expect(result.containsKey("cookie"), equals(true));
 
       // stream_headers adalah hierarki tertinggi, akan ignore vlcopt dan exthttp
-      expect(result["user-agent"], equals("Vidio/6.43.9-8ec34856ef (Linux;Android 11) ExoPlayerLib/2.19.1"));
+      expect(
+        result["user-agent"],
+        equals(
+          "Vidio/6.43.9-8ec34856ef (Linux;Android 11) ExoPlayerLib/2.19.1",
+        ),
+      );
       expect(result["origin"], equals("https://www.vidio.com"));
-      expect(result["cookie"], equals("Edge-Cache-Cookie=URLPrefix=aHR0cHM6Ly9ibGRjbXByb2QtY2RuLnRvZmZlZWxpdmUuY29tLw:Expires=1750297799:KeyName=prod_linear:Signature=TDBMq5Xc03aTvlgHIbGzOJRfXo1Ci6MBkMVPtER7RMKYwBr6xRLqsXpDCYdHaDC_ojg5k5EC7ww-uWB62kirBg"));
+      expect(
+        result["cookie"],
+        equals(
+          "Edge-Cache-Cookie=URLPrefix=aHR0cHM6Ly9ibGRjbXByb2QtY2RuLnRvZmZlZWxpdmUuY29tLw:Expires=1750297799:KeyName=prod_linear:Signature=TDBMq5Xc03aTvlgHIbGzOJRfXo1Ci6MBkMVPtER7RMKYwBr6xRLqsXpDCYdHaDC_ojg5k5EC7ww-uWB62kirBg",
+        ),
+      );
     });
 
-        test('test:2', () async {
+    test('test:2', () async {
       final String content = r'''
 #EXTHTTP:{"cookie":"__hdnea__=st=1758107257~exp=1758193657~acl=/*~hmac=99dec41934473d7fb71e7850a7a088fdb138b63b884a511c262244beefee8bed"}
 #EXTINF:-1 tvg-id="Champions TV 3.id" tvg-logo="https://thumbor.prod.vidiocdn.com/iJMuLDOoWxwxsc7BMjwtBrEowqg=/372x211/filters:strip_icc():quality(70)/vidio-web-prod-livestreaming/uploads/livestreaming/image/6786/champions-tv-3-7898f2.jpg" group-title="PREMIUM SPORT",Champions TV 3
@@ -71,7 +81,12 @@ https://seprai.jasoncreak8.workers.dev/play.mpd?id=6786&type=dash|referrer=https
       expect(result["user-agent"], equals("VidioPlayer/4.3.0-WITH_ADS"));
       expect(result["origin"], equals("https://www.vidio.com"));
       expect(result["referer"], equals("https://www.vidio.com/"));
-      expect(result["cookie"], equals("__hdnea__=st=1758107257~exp=1758193657~acl=/*~hmac=99dec41934473d7fb71e7850a7a088fdb138b63b884a511c262244beefee8bed"));
+      expect(
+        result["cookie"],
+        equals(
+          "__hdnea__=st=1758107257~exp=1758193657~acl=/*~hmac=99dec41934473d7fb71e7850a7a088fdb138b63b884a511c262244beefee8bed",
+        ),
+      );
     });
 
     test('test:3', () async {
@@ -121,7 +136,12 @@ https://seprai.jasoncreak8.workers.dev/play.mpd?id=6786&type=dash|referrer=https
       expect(result.containsKey("user-agent"), equals(true));
 
       // stream_headers adalah hierarki tertinggi, akan ignore vlcopt dan exthttp
-      expect(result["user-agent"], equals("Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"));
+      expect(
+        result["user-agent"],
+        equals(
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
+        ),
+      );
       expect(result["referrer"], equals("https://visionplus.id/"));
     });
 
@@ -148,7 +168,7 @@ https://seprai.jasoncreak8.workers.dev/play.mpd?id=6786&type=dash|referrer=https
       expect(result["user-agent"], equals("VidioPlayer/4.3.0-WITHOUT_ADS"));
       expect(result["referrer"], equals("https://visionplus.id/"));
     });
-    
+
     test('test:6', () async {
       final String content = r'''
 #EXTINF:-1 tvg-id="1123" group-title="Jiostar" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Star_Sports_Select_1.png",Star Sports Select 1
@@ -169,8 +189,54 @@ https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_Select_1_BTS/output/index.mpd
       expect(result.containsKey("cookie"), equals(true));
 
       // stream_headers adalah hierarki tertinggi, akan ignore vlcopt dan exthttp
-      expect(result["user-agent"], equals("plaYtv/7.1.3 (Linux;Android 13) ygx/69.1 ExoPlayerLib/824.0"));
-      expect(result["cookie"], equals("__hdnea__=st=1758107257~exp=1758193657~acl=/*~hmac=99dec41934473d7fb71e7850a7a088fdb138b63b884a511c262244beefee8bed"));
+      expect(
+        result["user-agent"],
+        equals("plaYtv/7.1.3 (Linux;Android 13) ygx/69.1 ExoPlayerLib/824.0"),
+      );
+      expect(
+        result["cookie"],
+        equals(
+          "__hdnea__=st=1758107257~exp=1758193657~acl=/*~hmac=99dec41934473d7fb71e7850a7a088fdb138b63b884a511c262244beefee8bed",
+        ),
+      );
+    });
+
+    test('test:7', () async {
+      final String content = r'''
+#EXTINF:-1 group-title="LIVE | LIGA INGGRIS" tvg-logo="https://i.pinimg.com/236x/dd/7a/94/dd7a94d92ecf53bb3e56de4f7dcff80f.jpg", CH 6
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36
+#EXTVLCOPT:network-caching=1000
+#EXTVLCOPT--http-reconnect=true
+#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
+#KODIPROP:inputstream.adaptive.license_key={dc69b6159a0f9f0a4e03b3ff91cbacd5:d0dcbcd7723bc40df0bf34c9c092d51f}
+#KODIPROP:inputstream.adaptive.stream_headers=cookie=session_id=abc123; user_pref=dark_mode
+https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/out/v1/9f14895badca43e6a716db021dcd0c31/cenc.mpd
+''';
+
+      List<Track> track = M3UParser.parse(content);
+
+      final Map<String, String> result = HttpHeadersFromTrack.build(
+        track.first,
+      );
+
+      expect(result.containsKey("user-agent"), equals(true));
+      expect(result.containsKey("cookie"), equals(true));
+
+      // stream_headers adalah hierarki tertinggi, akan ignore vlcopt dan exthttp
+      expect(
+        result["user-agent"],
+        equals(
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",
+        ),
+      );
+
+      // Header untuk network caching
+      expect(result["cache-control"], equals("max-age=1000"));
+
+      // Header untuk HTTP reconnect (setara dengan --http-reconnect=true)
+      expect(result["connection"], equals("keep-alive"));
+
+      expect(result["keep-alive"], equals("timeout=5, max=1000"));
     });
   });
 }

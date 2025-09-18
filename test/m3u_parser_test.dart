@@ -3,10 +3,7 @@
 // Pusoo - Open Source IPTV Player
 // GitHub: https://github.com/cacing69/pusoo
 
-import 'dart:io';
-
 import 'package:better_player_plus/better_player_plus.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
@@ -1555,6 +1552,272 @@ http://192.168.1.8:35455/mgtv/608807420.m3u8
       expect(result[1].title, equals("CCTV-1 综合"));
     });
 
+    test('TestTrackShouldGiveHeaders:X-TCDN2', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-name="LALIGA TV HYPERMOTION 3" tvg-logo="https://estatico.emisiondof6.com/recorte/m-NEONEGR/wpmarcaficha/MLIGS3" group-title="MOVISTAR+ TV" group-logo="https://play-lh.googleusercontent.com/1FOULln_iZWLP_M-WY4NiolZ4EXr5_aE3ywIIgrT6o717Azi763_92z-Rim-BsQA54k" catchup-type="default" catchup-source="https://cutv-wp0.cdn.telefonica.com/5137/vxfmt=dp/Manifest.mpd?device_profile=DASH_TV_WIDEVINE&start_time={start_iso}&end_time={end_iso}" catchup-days="21", LALIGA TV HYPERMOTION 3
+#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
+#KODIPROP:inputstream.adaptive.stream_headers={"X-TCDN-token":"eyJhbGciOiJFUzI1NiIsImtpZCI6ImI1OGNhNGM0NGFiOTQ0Y2FiY2U4N2FjNGJmZmI4MDNkIiwidHlwIjoiYXQrand0In0.eyJuYmYiOjE3NTc1NDQzMTMsImV4cCI6MTc1NzYzMDcxMywiaXNzIjoiaHR0cHM6Ly9pZHNlcnZlci5kb2Y2LmNvbSIsImF1ZCI6InRjZG4iLCJjbGllbnRfaWQiOiJtb3Zpc3RhcnBsdXMiLCJzdWIiOiI3YTdmN3Y4QzhUOGc4diIsImF1dGhfdGltZSI6MTc1NzU0NDMxMywiaWRwIjoibW92aXN0YXIrIiwidWlkIjoiTlRzU21NUjFKQ0tyT3NTS3RETlJCRE5paUZ5S1IrS291SFFFMEExUmhpbz0iLCJhY2MiOiJTSU8vRnlhclFNaVB6ZmtqOEJjdDY0VUZFcTZLbEJoK0JBeHhmYzR4YWJjPSIsImp0aSI6IkM1QjRGNDA2RUE4OTE1QjNGNkIxRTlGOTBCOTgzM0ZFIiwiaWF0IjoxNzU3NTQ0MzEzLCJzY29wZSI6ImNkbiJ9.IW1RBlKWQGSWFsVyI-ORgFnjTKep-W5t3V4GdA7YSI--xKG2rx2SbFvsOSRusVkbd7VXiRy64l1VR39HpBEsCA"}
+#KODIPROP:inputstream.adaptive.license_key=8726ee7d09dc41a688ada5df49c08ea1:8ce090ab40e5af32015422775fb1bc5c
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36
+http://3segdiv-dash-movistarplus.emisiondof6.com/manifest.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("LALIGA TV HYPERMOTION 3"));
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.stream_headers",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.stream_headers"],
+        equals(
+          "{\"X-TCDN-token\":\"eyJhbGciOiJFUzI1NiIsImtpZCI6ImI1OGNhNGM0NGFiOTQ0Y2FiY2U4N2FjNGJmZmI4MDNkIiwidHlwIjoiYXQrand0In0.eyJuYmYiOjE3NTc1NDQzMTMsImV4cCI6MTc1NzYzMDcxMywiaXNzIjoiaHR0cHM6Ly9pZHNlcnZlci5kb2Y2LmNvbSIsImF1ZCI6InRjZG4iLCJjbGllbnRfaWQiOiJtb3Zpc3RhcnBsdXMiLCJzdWIiOiI3YTdmN3Y4QzhUOGc4diIsImF1dGhfdGltZSI6MTc1NzU0NDMxMywiaWRwIjoibW92aXN0YXIrIiwidWlkIjoiTlRzU21NUjFKQ0tyT3NTS3RETlJCRE5paUZ5S1IrS291SFFFMEExUmhpbz0iLCJhY2MiOiJTSU8vRnlhclFNaVB6ZmtqOEJjdDY0VUZFcTZLbEJoK0JBeHhmYzR4YWJjPSIsImp0aSI6IkM1QjRGNDA2RUE4OTE1QjNGNkIxRTlGOTBCOTgzM0ZFIiwiaWF0IjoxNzU3NTQ0MzEzLCJzY29wZSI6ImNkbiJ9.IW1RBlKWQGSWFsVyI-ORgFnjTKep-W5t3V4GdA7YSI--xKG2rx2SbFvsOSRusVkbd7VXiRy64l1VR39HpBEsCA\"}",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "8726ee7d09dc41a688ada5df49c08ea1:8ce090ab40e5af32015422775fb1bc5c",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.manifest_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.manifest_type"],
+        equals("mpd"),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_type"],
+        equals("org.w3.clearkey"),
+      );
+
+      expect(result[0].attributes.containsKey("catchup-days"), equals(true));
+      expect(result[0].attributes["catchup-days"], equals("21"));
+
+      expect(
+        result[0].extVlcOpts.first.containsKey("http-user-agent"),
+        equals(true),
+      );
+      expect(
+        result[0].extVlcOpts.first["http-user-agent"],
+        equals(
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+        ),
+      );
+    });
+
+    test('TestTrackShouldGiveHeaders:X-TCDN2', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-name="LALIGA TV HYPERMOTION 3" tvg-logo="https://estatico.emisiondof6.com/recorte/m-NEONEGR/wpmarcaficha/MLIGS3" group-title="MOVISTAR+ TV" group-logo="https://play-lh.googleusercontent.com/1FOULln_iZWLP_M-WY4NiolZ4EXr5_aE3ywIIgrT6o717Azi763_92z-Rim-BsQA54k" catchup-type="default" catchup-source="https://cutv-wp0.cdn.telefonica.com/5137/vxfmt=dp/Manifest.mpd?device_profile=DASH_TV_WIDEVINE&start_time={start_iso}&end_time={end_iso}" catchup-days="21", LALIGA TV HYPERMOTION 3
+#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
+#KODIPROP:inputstream.adaptive.stream_headers={"X-TCDN-token":"eyJhbGciOiJFUzI1NiIsImtpZCI6ImI1OGNhNGM0NGFiOTQ0Y2FiY2U4N2FjNGJmZmI4MDNkIiwidHlwIjoiYXQrand0In0.eyJuYmYiOjE3NTc1NDQzMTMsImV4cCI6MTc1NzYzMDcxMywiaXNzIjoiaHR0cHM6Ly9pZHNlcnZlci5kb2Y2LmNvbSIsImF1ZCI6InRjZG4iLCJjbGllbnRfaWQiOiJtb3Zpc3RhcnBsdXMiLCJzdWIiOiI3YTdmN3Y4QzhUOGc4diIsImF1dGhfdGltZSI6MTc1NzU0NDMxMywiaWRwIjoibW92aXN0YXIrIiwidWlkIjoiTlRzU21NUjFKQ0tyT3NTS3RETlJCRE5paUZ5S1IrS291SFFFMEExUmhpbz0iLCJhY2MiOiJTSU8vRnlhclFNaVB6ZmtqOEJjdDY0VUZFcTZLbEJoK0JBeHhmYzR4YWJjPSIsImp0aSI6IkM1QjRGNDA2RUE4OTE1QjNGNkIxRTlGOTBCOTgzM0ZFIiwiaWF0IjoxNzU3NTQ0MzEzLCJzY29wZSI6ImNkbiJ9.IW1RBlKWQGSWFsVyI-ORgFnjTKep-W5t3V4GdA7YSI--xKG2rx2SbFvsOSRusVkbd7VXiRy64l1VR39HpBEsCA"}
+#KODIPROP:inputstream.adaptive.license_key=8726ee7d09dc41a688ada5df49c08ea1:8ce090ab40e5af32015422775fb1bc5c
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36
+http://3segdiv-dash-movistarplus.emisiondof6.com/manifest.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("LALIGA TV HYPERMOTION 3"));
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.stream_headers",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.stream_headers"],
+        equals(
+          "{\"X-TCDN-token\":\"eyJhbGciOiJFUzI1NiIsImtpZCI6ImI1OGNhNGM0NGFiOTQ0Y2FiY2U4N2FjNGJmZmI4MDNkIiwidHlwIjoiYXQrand0In0.eyJuYmYiOjE3NTc1NDQzMTMsImV4cCI6MTc1NzYzMDcxMywiaXNzIjoiaHR0cHM6Ly9pZHNlcnZlci5kb2Y2LmNvbSIsImF1ZCI6InRjZG4iLCJjbGllbnRfaWQiOiJtb3Zpc3RhcnBsdXMiLCJzdWIiOiI3YTdmN3Y4QzhUOGc4diIsImF1dGhfdGltZSI6MTc1NzU0NDMxMywiaWRwIjoibW92aXN0YXIrIiwidWlkIjoiTlRzU21NUjFKQ0tyT3NTS3RETlJCRE5paUZ5S1IrS291SFFFMEExUmhpbz0iLCJhY2MiOiJTSU8vRnlhclFNaVB6ZmtqOEJjdDY0VUZFcTZLbEJoK0JBeHhmYzR4YWJjPSIsImp0aSI6IkM1QjRGNDA2RUE4OTE1QjNGNkIxRTlGOTBCOTgzM0ZFIiwiaWF0IjoxNzU3NTQ0MzEzLCJzY29wZSI6ImNkbiJ9.IW1RBlKWQGSWFsVyI-ORgFnjTKep-W5t3V4GdA7YSI--xKG2rx2SbFvsOSRusVkbd7VXiRy64l1VR39HpBEsCA\"}",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "8726ee7d09dc41a688ada5df49c08ea1:8ce090ab40e5af32015422775fb1bc5c",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.manifest_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.manifest_type"],
+        equals("mpd"),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_type"],
+        equals("org.w3.clearkey"),
+      );
+
+      expect(result[0].attributes.containsKey("catchup-days"), equals(true));
+      expect(result[0].attributes["catchup-days"], equals("21"));
+
+      expect(
+        result[0].extVlcOpts.first.containsKey("http-user-agent"),
+        equals(true),
+      );
+      expect(
+        result[0].extVlcOpts.first["http-user-agent"],
+        equals(
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+        ),
+      );
+    });
+
+    test('TestTrackShouldGiveHeaders:ClearKey:1', () async {
+      final String content = r'''
+#EXTINF:-1 group-title="RYANTV CHANNELS" tvg-id="" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/BBC_Lifestyle2.svg/1200px-BBC_Lifestyle2.svg.png",BBC Lifestyle
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
+#KODIPROP:inputstream.adaptive.license_key=f429292dc744f284355308561577ac10:b12e1f894129c517dc8845baaeebec8a
+#KODIPROP:inputstream.adaptive.stream_headers=referer=https://astrogo.astro.com.my//&user-agent=Mozilla/5.0 (Linux; Android 10; MI 9 Build/QKQ1.190825.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/111.0.5563.58 Mobile Safari/537.36
+https://linearjitp-playback.astro.com.my/dash-wv/linear/5050/default_ott.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("BBC Lifestyle"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.stream_headers"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.stream_headers"], equals("referer=https://astrogo.astro.com.my//&user-agent=Mozilla/5.0 (Linux; Android 10; MI 9 Build/QKQ1.190825.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/111.0.5563.58 Mobile Safari/537.36"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_key"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.license_key"], equals("f429292dc744f284355308561577ac10:b12e1f894129c517dc8845baaeebec8a"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.manifest_type"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.manifest_type"], equals("dash"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_type"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.license_type"], equals("org.w3.clearkey"));
+      expect(result[0].links.first, equals("https://linearjitp-playback.astro.com.my/dash-wv/linear/5050/default_ott.mpd"));
+    });
+    
+    test('TestTrackShouldGiveHeaders:ClearKeyValueUrl:1', () async {
+      final String content = r'''
+#EXTINF:-1 group-title="RYANTV CHANNELS" tvg-id="" tvg-logo="https://poster.starhubgo.com/Linear_channels2/316_1920x1080_HTV.png" ,Cartoon Network
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 12; Pixel 3a XL Build/SP2A.220505.008; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/114.0.5715.0 Mobile Safari/537.36
+#KODIPROP:inputstream.adaptive.license_key=https://ck-dash-mpd.aqfadtv.xyz/dash-ck/linear/509
+https://linearjitp-playback.astro.com.my/dash-wv/linear/509/default_ott.mpd
+
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("Cartoon Network"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_key"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.license_key"], equals("https://ck-dash-mpd.aqfadtv.xyz/dash-ck/linear/509"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.manifest_type"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.manifest_type"], equals("dash"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_type"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.license_type"], equals("clearkey"));
+      expect(result[0].links.first, equals("https://linearjitp-playback.astro.com.my/dash-wv/linear/509/default_ott.mpd"));
+      expect(result[0].extVlcOpts.first.containsKey("http-user-agent"), equals(true));
+      expect(result[0].extVlcOpts.first["http-user-agent"], equals("Mozilla/5.0 (Linux; Android 12; Pixel 3a XL Build/SP2A.220505.008; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/114.0.5715.0 Mobile Safari/537.36"));
+    });
+    
+    test('TestTrackShouldGiveHeaders:ClearKeyValueUrl:1', () async {
+      final String content = r'''
+#EXTINF:-1 group-title="RYANTV CHANNELS" tvg-id="" tvg-logo="http://115.146.176.131:80/images/2acf9495fde07739914e7a7bb3ffee94.png", CNN
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
+#KODIPROP:inputstream.adaptive.license_key={"keys":[{"kty":"oct","k":"v34bl1VcSst0VfcRsqn/Fg","kid":"G2GKKRzs5EyYRd3fxP2bEA"}],"type":"temporary"}
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 14; 27821-67832-42-315-4231-233-21-43-12-1312-321-23-21-232-) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36
+https://linearjitp-playback.astro.com.my/dash-wv/linear/2503/default_ott.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("CNN"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_key"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.license_key"], equals("{\"keys\":[{\"kty\":\"oct\",\"k\":\"v34bl1VcSst0VfcRsqn/Fg\",\"kid\":\"G2GKKRzs5EyYRd3fxP2bEA\"}],\"type\":\"temporary\"}"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.manifest_type"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.manifest_type"], equals("dash"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_type"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.license_type"], equals("org.w3.clearkey"));
+      expect(result[0].links.first, equals("https://linearjitp-playback.astro.com.my/dash-wv/linear/2503/default_ott.mpd"));
+      expect(result[0].extVlcOpts.first.containsKey("http-user-agent"), equals(true));
+      expect(result[0].extVlcOpts.first["http-user-agent"], equals("Mozilla/5.0 (Linux; Android 14; 27821-67832-42-315-4231-233-21-43-12-1312-321-23-21-232-) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"));
+    });
+    
+    test('TestTrackShouldGiveHeaders:ClearKeyJsonPure:1', () async {
+      final String content = r'''
+#EXTINF:-1 group-title="RYANTV CHANNELS" tvg-id="" tvg-logo="https://logo.iptveditor.com/tlc.png" ,TLC
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key={ "keys":[ { "kty":"oct", "k":"f15saWmN3vy3RVNDGyscmA", "kid":"lC7BViA7Ksod3zSY9mPBEA" } ], "type":"temporary" }
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 14; 27821-67832-42-315-4231-233-21-43-12-1312-321-23-21-232-) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36
+https://linearjitp-playback.astro.com.my/dash-wv/linear/2709/default_ott.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("TLC"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_key"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.license_key"], equals("{ \"keys\":[ { \"kty\":\"oct\", \"k\":\"f15saWmN3vy3RVNDGyscmA\", \"kid\":\"lC7BViA7Ksod3zSY9mPBEA\" } ], \"type\":\"temporary\" }"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.manifest_type"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.manifest_type"], equals("dash"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_type"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.license_type"], equals("clearkey"));
+      expect(result[0].links.first, equals("https://linearjitp-playback.astro.com.my/dash-wv/linear/2709/default_ott.mpd"));
+      expect(result[0].extVlcOpts.first.containsKey("http-user-agent"), equals(true));
+      expect(result[0].extVlcOpts.first["http-user-agent"], equals("Mozilla/5.0 (Linux; Android 14; 27821-67832-42-315-4231-233-21-43-12-1312-321-23-21-232-) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"));
+    });
+    
+    test('TestTrackShouldGiveHeaders:ClearKeyJsonPure:1', () async {
+      final String content = r'''
+#EXTINF:-1 group-title="RYANTV CHANNELS" tvg-id="" tvg-logo="https://i.imgur.com/LkisXI3.png",Golf Pass
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key={"0020212a47511b226f7cc9d030aa171b":"323c16315e1cb8d7c821facc3c1778a4"}
+https://fsly.stream.peacocktv.com/Content/CMAF_CTR-4s-v2/Live/channel(vc124phhny)/master.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("Golf Pass"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_key"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.license_key"], equals("{\"0020212a47511b226f7cc9d030aa171b\":\"323c16315e1cb8d7c821facc3c1778a4\"}"));
+      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_type"), equals(true));
+      expect(result[0].kodiProps.first["inputstream.adaptive.license_type"], equals("clearkey"));
+      expect(result[0].links.first, equals("https://fsly.stream.peacocktv.com/Content/CMAF_CTR-4s-v2/Live/channel(vc124phhny)/master.mpd"));
+    });
+
     // TEST TEMPORARY WITH FILE
 
     // test('tmpTest:GenericCase:1', () async {
@@ -1568,12 +1831,12 @@ http://192.168.1.8:35455/mgtv/608807420.m3u8
     //   expect(result.length, 15691);
     // });
 
-    test('tmpTest:GenericCase:2', () async {
-      final String key = BetterPlayerClearKeyUtils.generateKey({
-        "71cbdf02b595468bb77398222e1ade09": "c3f2aa420b8908ab8761571c01899460",
-      });
+    // test('tmpTest:GenericCase:2', () async {
+    //   final String key = BetterPlayerClearKeyUtils.generateKey({
+    //     "71cbdf02b595468bb77398222e1ade09": "c3f2aa420b8908ab8761571c01899460",
+    //   });
 
-      print(key);
-    });
+    //   print(key);
+    // });
   });
 }

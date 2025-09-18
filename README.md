@@ -3,6 +3,8 @@
 **Pusoo** is an **open-source IPTV Player** built with **Flutter**.
 It is designed to make IPTV streaming simple, lightweight, and modern - running across multiple platforms.
 
+This project is currently under active development. I'm working on it in my spare time and will release a beta version as soon as possible.
+
 ---
 
 ## Features
