@@ -99,6 +99,14 @@ class _PublicSourceListScreenState extends State<PublicSourceListScreen> {
               //   ),
               //   suffix: Icon(FIcons.chevronRight),
               // ),
+              // FItem(
+              //   prefix: Icon(FIcons.folderRoot),
+              //   title: Text("abusaeeidx/IPTV-Scraper-Zilla"),
+              //   subtitle: Text(
+              //     "https://github.com/abusaeeidx/IPTV-Scraper-Zilla",
+              //   ),
+              //   suffix: Icon(FIcons.chevronRight),
+              // ),
             ],
           ),
         ],

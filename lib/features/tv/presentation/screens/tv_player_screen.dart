@@ -29,7 +29,7 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(betterPlayerProvider.notifier)
-          .openMediaStream(widget.track, isLiveStream: false);
+          .openMediaStream(widget.track, isLiveStream: true);
     });
   }
 

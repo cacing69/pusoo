@@ -1,5 +1,12 @@
+// Copyright (c) 2025, Ibnul Mutaki (@cacing69)
+// Licensed under the MIT License
+// Pusoo - Open Source IPTV Player
+// GitHub: https://github.com/cacing69/pusoo
+
 import 'dart:io';
 
+import 'package:better_player_plus/better_player_plus.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
@@ -17,7 +24,7 @@ http://202.80.222.20/cdn/iptv/Tvod/001/channel2000020/1024.m3u8
 
       Track item = check[check.length - 1];
 
-      expect("Hanacaraka, Lorem Ipsum", equals(item.title));
+      expect(item.title, equals("Hanacaraka, Lorem Ipsum"));
     });
 
     test('testUrlIncludeHttpHeaderUserAgent', () async {
@@ -33,15 +40,16 @@ https://op-group1-swiftservehd-1.dens.tv/h/h217/02.m3u8|user-agent=DENSGO/3.00.0
       Map<String, String> httpHeaders = item.httpHeaders.first;
 
       expect(
-        "https://op-group1-swiftservehd-1.dens.tv/h/h217/02.m3u8",
-        equals(item.links.first),
+        item.links.first,
+
+        equals("https://op-group1-swiftservehd-1.dens.tv/h/h217/02.m3u8"),
       );
 
-      expect(true, equals(httpHeaders.containsKey("user-agent")));
+      expect(httpHeaders.containsKey("user-agent"), equals(true));
 
       expect(
-        "DENSGO/3.00.00 (Linux;Android 15.0.0;) ExoPlayerLib/2.19.1",
-        equals(httpHeaders["user-agent"]),
+        httpHeaders["user-agent"],
+        equals("DENSGO/3.00.00 (Linux;Android 15.0.0;) ExoPlayerLib/2.19.1"),
       );
     });
 
@@ -63,13 +71,15 @@ https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/in
       Map<String, String> httpHeaders = item.httpHeaders.first;
 
       expect(
-        "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/index.mpd",
-        equals(item.links.first),
+        item.links.first,
+        equals(
+          "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/index.mpd",
+        ),
       );
 
-      expect(true, equals(httpHeaders.containsKey("referrer")));
+      expect(httpHeaders.containsKey("referrer"), equals(true));
 
-      expect("https://visionplus.id/", equals(httpHeaders["referrer"]));
+      expect(httpHeaders["referrer"], equals("https://visionplus.id/"));
     });
 
     test('testKodiPropTypeDashAndClearKey', () async {
@@ -89,33 +99,35 @@ https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/in
 
       Map<String, String> kodiProps = item.kodiProps.first;
 
-      expect(true, equals(kodiProps.containsKey("inputstreamaddon")));
+      expect(kodiProps.containsKey("inputstreamaddon"), equals(true));
       expect(
-        true,
-        equals(kodiProps.containsKey("inputstream.adaptive.manifest_type")),
+        kodiProps.containsKey("inputstream.adaptive.manifest_type"),
+        equals(true),
       );
       expect(
-        true,
-        equals(kodiProps.containsKey("inputstream.adaptive.license_type")),
+        kodiProps.containsKey("inputstream.adaptive.license_type"),
+        equals(true),
       );
       expect(
-        true,
-        equals(kodiProps.containsKey("inputstream.adaptive.license_key")),
+        kodiProps.containsKey("inputstream.adaptive.license_key"),
+        equals(true),
       );
 
       // Test Value
-      expect("inputstream.adaptive", equals(kodiProps["inputstreamaddon"]));
+      expect(kodiProps["inputstreamaddon"], equals("inputstream.adaptive"));
 
-      expect("dash", equals(kodiProps["inputstream.adaptive.manifest_type"]));
+      expect(kodiProps["inputstream.adaptive.manifest_type"], equals("dash"));
 
       expect(
-        "clearkey",
-        equals(kodiProps["inputstream.adaptive.license_type"]),
+        kodiProps["inputstream.adaptive.license_type"],
+        equals("clearkey"),
       );
 
       expect(
-        "b576e5f5f1bc4cbaa866e5b0face5a30:3377be6c3b5f688ebed687312c9b9d95",
-        equals(kodiProps["inputstream.adaptive.license_key"]),
+        kodiProps["inputstream.adaptive.license_key"],
+        equals(
+          "b576e5f5f1bc4cbaa866e5b0face5a30:3377be6c3b5f688ebed687312c9b9d95",
+        ),
       );
     });
 
@@ -136,12 +148,14 @@ https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/in
 
       Map<String, String> extVlcOpts = item.extVlcOpts.first;
 
-      expect(true, equals(extVlcOpts.containsKey("http-user-agent")));
+      expect(extVlcOpts.containsKey("http-user-agent"), equals(true));
 
       // Test Value
       expect(
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
-        equals(extVlcOpts["http-user-agent"]),
+        extVlcOpts["http-user-agent"],
+        equals(
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
+        ),
       );
     });
 
@@ -161,16 +175,18 @@ https://d3b0v7fggu5zwm.cloudfront.net/out/v1/d2c68a3dfb644808b416bd90dcc92d5f/in
 
       Map<String, String> extVlcOpts = item.extVlcOpts.first;
 
-      expect(true, equals(extVlcOpts.containsKey("http-user-agent")));
-      expect(true, equals(extVlcOpts.containsKey("http-referrer")));
+      expect(extVlcOpts.containsKey("http-user-agent"), equals(true));
+      expect(extVlcOpts.containsKey("http-referrer"), equals(true));
 
       // Test Value
       expect(
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
-        equals(extVlcOpts["http-user-agent"]),
+        extVlcOpts["http-user-agent"],
+        equals(
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+        ),
       );
 
-      expect("https://visionplus.id/", equals(extVlcOpts["http-referrer"]));
+      expect(extVlcOpts["http-referrer"], equals("https://visionplus.id/"));
     });
 
     test('testKodiPropsWhereHasDoubleLicenseKeyAndDoubleUrl:1', () async {
@@ -187,9 +203,9 @@ https://fta4-cdn-flr.visionplus.id/out/v1/63c0da12bb4d48afbaf053f51dff2353/index
 
       Track item = result.first;
 
-      expect(2, equals(item.links.length));
-      expect(2, equals(item.httpHeaders.length));
-      expect(2, equals(item.kodiProps.length));
+      expect(item.links.length, equals(2));
+      expect(item.httpHeaders.length, equals(2));
+      expect(item.kodiProps.length, equals(2));
 
       // LICENSE_KEY
       expect(
@@ -214,28 +230,30 @@ https://fta4-cdn-flr.visionplus.id/out/v1/63c0da12bb4d48afbaf053f51dff2353/index
       );
 
       // HTTP HEADER
-      expect(true, equals(item.httpHeaders[0].containsKey("referer")));
-      expect(true, equals(item.httpHeaders[0].containsKey("user-agent")));
+      expect(item.httpHeaders[0].containsKey("referer"), equals(true));
+      expect(item.httpHeaders[0].containsKey("user-agent"), equals(true));
 
       expect(
-        "https://www.visionplus.id/",
-        equals(item.httpHeaders[0]["referer"]),
+        item.httpHeaders[0]["referer"],
+        equals("https://www.visionplus.id/"),
       );
       expect(
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",
         equals(item.httpHeaders[0]["user-agent"]),
       );
 
-      expect(true, equals(item.httpHeaders[1].containsKey("referer")));
-      expect(true, equals(item.httpHeaders[1].containsKey("user-agent")));
+      expect(item.httpHeaders[1].containsKey("referer"), equals(true));
+      expect(item.httpHeaders[1].containsKey("user-agent"), equals(true));
 
       expect(
-        "https://www.visionplus.id/",
-        equals(item.httpHeaders[1]["referer"]),
+        item.httpHeaders[1]["referer"],
+        equals("https://www.visionplus.id/"),
       );
       expect(
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",
-        equals(item.httpHeaders[1]["user-agent"]),
+        item.httpHeaders[1]["user-agent"],
+        equals(
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",
+        ),
       );
     });
 
@@ -255,33 +273,35 @@ https://cdnjkt913.transvision.co.id:1000/live/master/3/4028c68571b3914b01720e7ff
       Map<String, String> kodiProps = item.kodiProps.first;
 
       expect(
-        true,
-        equals(kodiProps.containsKey("inputstream.adaptive.license_type")),
+        kodiProps.containsKey("inputstream.adaptive.license_type"),
+        equals(true),
       );
 
       expect(
-        true,
-        equals(kodiProps.containsKey("inputstream.adaptive.license_key")),
+        kodiProps.containsKey("inputstream.adaptive.license_key"),
+        equals(true),
       );
 
       expect(
-        true,
-        equals(kodiProps.containsKey("inputstream.adaptive.stream_headers")),
+        kodiProps.containsKey("inputstream.adaptive.stream_headers"),
+        equals(true),
       );
 
       expect(
-        "com.widevine.alpha",
-        equals(kodiProps["inputstream.adaptive.license_type"]),
+        kodiProps["inputstream.adaptive.license_type"],
+        equals("com.widevine.alpha"),
       );
 
       expect(
-        "https://cubmu-cindo.cenc16995.workers.dev/",
-        equals(kodiProps["inputstream.adaptive.license_key"]),
+        kodiProps["inputstream.adaptive.license_key"],
+        equals("https://cubmu-cindo.cenc16995.workers.dev/"),
       );
 
       expect(
-        "user-agent=Xstream XGO/1.22 (Linux;Android 9) ExoPlayerLib/2.10.5",
-        equals(kodiProps["inputstream.adaptive.stream_headers"]),
+        kodiProps["inputstream.adaptive.stream_headers"],
+        equals(
+          "user-agent=Xstream XGO/1.22 (Linux;Android 9) ExoPlayerLib/2.10.5",
+        ),
       );
     });
 
@@ -317,8 +337,8 @@ https://otte.live.fly.ww.aiv-cdn.net/lhr-nitro/live/clients/dash/enc/f0qvkrra8j/
 
       Track item = result.first;
 
-      expect("TNT SPORTS 2 FHD", equals(item.title));
-      expect("TNT 2", equals(item.attributes["tvg-id"]));
+      expect(item.title, equals("TNT SPORTS 2 FHD"));
+      expect(item.attributes["tvg-id"], equals("TNT 2"));
     });
 
     test('testeHaveAttrXuiId', () async {
@@ -330,7 +350,7 @@ https://raw.githubusercontent.com/B-inal-123/s-asia/inal-22/Nowsport2.m3u8
 
       Track item = result.first;
 
-      expect("{XUI_ID}", equals(item.attributes["xui-id"]));
+      expect(item.attributes["xui-id"], equals("{XUI_ID}"));
     });
 
     test('testeExtVlcOptHasNetworkCachingAndHttpReconnect', () async {
@@ -380,28 +400,36 @@ https://atemecdnbalancer-voe.sysln.id/live/eds/ONEHD/mpd/ONEHD.mpd
           .where((track) => track.title.contains("ONE HD"))
           .toList();
 
-      expect(2, equals(items.length));
+      expect(items.length, equals(2));
 
       // CHECCK EVERY ITEM
       // ONE HD : 1
       expect(
-        "https://atemecdnbalancer-voe.sysln.id/live/eds/ONEHD/mpd/ONEHD.mpd",
-        equals(items[0].links.first),
+        items[0].links.first,
+        equals(
+          "https://atemecdnbalancer-voe.sysln.id/live/eds/ONEHD/mpd/ONEHD.mpd",
+        ),
       );
 
       expect(
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCDGeSdmHlQ9vXAaRORx9-fhbeCx8_81AnQQ&s",
-        equals(items[0].attributes["tvg-logo"]),
+        items[0].attributes["tvg-logo"],
+        equals(
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCDGeSdmHlQ9vXAaRORx9-fhbeCx8_81AnQQ&s",
+        ),
       );
 
       // ONE HD : 2
       expect(
-        "https://atemecdnbalancer-voe.sysln.id/live/eds/ONEHD/mpd/ONEHD.mpd",
-        equals(items[1].links.first),
+        items[1].links.first,
+        equals(
+          "https://atemecdnbalancer-voe.sysln.id/live/eds/ONEHD/mpd/ONEHD.mpd",
+        ),
       );
       expect(
-        "https://www.visionplus.id/images/repository/634/634-LOGO-m.png",
-        equals(items[1].attributes["tvg-logo"]),
+        items[1].attributes["tvg-logo"],
+        equals(
+          "https://www.visionplus.id/images/repository/634/634-LOGO-m.png",
+        ),
       );
     });
 
@@ -424,18 +452,18 @@ https://edge-hls.doppiocdn.net/hls/167924361/master/167924361_auto.m3u8
 
       Track item = result.last;
 
-      expect("aktif malam", equals(item.title));
+      expect(item.title, equals("aktif malam"));
 
-      expect(true, equals(item.attributes.containsKey("group-title")));
-      expect("🔒 TENSI SUB 🔒", equals(item.attributes["group-title"]));
+      expect(item.attributes.containsKey("group-title"), equals(true));
+      expect(item.attributes["group-title"], equals("🔒 TENSI SUB 🔒"));
 
-      expect(true, equals(item.attributes.containsKey("tvg-logo")));
+      expect(item.attributes.containsKey("tvg-logo"), equals(true));
       expect(
-        "https://www.mediafire.com/convkey/334f/6h7nlypi651hwqd5g",
-        equals(item.attributes["tvg-logo"]),
+        item.attributes["tvg-logo"],
+        equals("https://www.mediafire.com/convkey/334f/6h7nlypi651hwqd5g"),
       );
 
-      expect(2, equals(item.links.length));
+      expect(item.links.length, equals(2));
       expect(
         "https://edge-hls.sacdnssedge.com/hls/196205035/master/196205035_auto.m3u8",
         equals(item.links[0]),
@@ -477,21 +505,21 @@ https://cloud.hownetwork.xyz//yyy/aa22ef3010059045c5718c02809b6519/26/480.m3u8
 https://cloud.hownetwork.xyz//yyy/44ba82ad20755da74ad2129bc718cca4/19/480.m3u8
 
 ''').where((track) => track.title.contains("BLOOD AND SAND-S1")).toList();
-      expect(13, equals(result.length));
+      expect(result.length, equals(13));
 
-      expect("BLOOD AND SAND-S1 EPS 1", equals(result[0].title));
-      expect("BLOOD AND SAND-S1 EPS 2", equals(result[1].title));
-      expect("BLOOD AND SAND-S1 EPS 3", equals(result[2].title));
-      expect("BLOOD AND SAND-S1 EPS 4", equals(result[3].title));
-      expect("BLOOD AND SAND-S1 EPS 5", equals(result[4].title));
-      expect("BLOOD AND SAND-S1 EPS 6", equals(result[5].title));
-      expect("BLOOD AND SAND-S1 EPS 7", equals(result[6].title));
-      expect("BLOOD AND SAND-S1 EPS 8", equals(result[7].title));
-      expect("BLOOD AND SAND-S1 EPS 9", equals(result[8].title));
-      expect("BLOOD AND SAND-S1 EPS 10", equals(result[9].title));
-      expect("BLOOD AND SAND-S1 EPS 11", equals(result[10].title));
-      expect("BLOOD AND SAND-S1 EPS 12", equals(result[11].title));
-      expect("BLOOD AND SAND-S1 EPS 13", equals(result[12].title));
+      expect(result[0].title, equals("BLOOD AND SAND-S1 EPS 1"));
+      expect(result[1].title, equals("BLOOD AND SAND-S1 EPS 2"));
+      expect(result[2].title, equals("BLOOD AND SAND-S1 EPS 3"));
+      expect(result[3].title, equals("BLOOD AND SAND-S1 EPS 4"));
+      expect(result[4].title, equals("BLOOD AND SAND-S1 EPS 5"));
+      expect(result[5].title, equals("BLOOD AND SAND-S1 EPS 6"));
+      expect(result[6].title, equals("BLOOD AND SAND-S1 EPS 7"));
+      expect(result[7].title, equals("BLOOD AND SAND-S1 EPS 8"));
+      expect(result[8].title, equals("BLOOD AND SAND-S1 EPS 9"));
+      expect(result[9].title, equals("BLOOD AND SAND-S1 EPS 10"));
+      expect(result[10].title, equals("BLOOD AND SAND-S1 EPS 11"));
+      expect(result[11].title, equals("BLOOD AND SAND-S1 EPS 12"));
+      expect(result[12].title, equals("BLOOD AND SAND-S1 EPS 13"));
     });
 
     test('checkLastTitle:maytoko:NBA TV:ShouldHave:4 rows', () async {
@@ -511,10 +539,10 @@ https://cdn08jtedge.indihometv.com/dassdvr/133/nba/manifest.mpd
 https://sweet-night-1d1d.worst.workers.dev/?id=6717&type=dash
 ''').where((track) => track.title.contains("NBA TV")).toList();
 
-      expect(2, equals(result.length));
+      expect(result.length, equals(2));
 
-      expect("NBA TV (Indi)", equals(result[0].title));
-      expect("NBA TV", equals(result[1].title));
+      expect(result[0].title, equals("NBA TV (Indi)"));
+      expect(result[1].title, equals("NBA TV"));
     });
 
     test('testTvgIdAndTvgLogoOnTrack:1', () async {
@@ -528,14 +556,16 @@ http://royalibox.com:80/plcedarkaouishbissm/px6pzjgmf8/1163984
 
       final Track item = result.first;
 
-      expect("AstroPremierLeague.my", equals(item.tvgId));
-      expect("MY | Astro Premier League 1 FHD", equals(item.tvgName));
+      expect(item.tvgId, equals("AstroPremierLeague.my"));
+      expect(item.tvgName, equals("MY | Astro Premier League 1 FHD"));
       expect(
-        "https://b1gchlogos.xyz/wp-content/uploads/2024/10/Astro_Premier_League_1_2024.png",
-        equals(item.tvgLogo),
+        item.tvgLogo,
+        equals(
+          "https://b1gchlogos.xyz/wp-content/uploads/2024/10/Astro_Premier_League_1_2024.png",
+        ),
       );
-      expect("CHANNEL | SPORTS", equals(item.groupTitle));
-      expect("MY | Astro Premier League 1", equals(item.title));
+      expect(item.groupTitle, equals("CHANNEL | SPORTS"));
+      expect(item.title, equals("MY | Astro Premier League 1"));
     });
 
     test('TestShouldGetName:The Life of Chuck (2025)', () async {
@@ -549,8 +579,8 @@ http://s1.gmtcloud.site/video/moviess/TheLifeofChuck2024.mp4?id=0
 
       final Track item = result.first;
 
-      expect("The Life of Chuck (2025)", equals(item.title));
-      expect("RYANTV MOVIES 2025", equals(item.groupTitle));
+      expect(item.title, equals("The Life of Chuck (2025)"));
+      expect(item.groupTitle, equals("RYANTV MOVIES 2025"));
     });
 
     test('TestShouldGetName:1 Kakak 7 Ponakan (2025)', () async {
@@ -566,8 +596,8 @@ https://movearnpre.com/stream/o8mt0SmrkOc-Slx_nqid3w/hjkrhuihghfvu/1755466136/27
 
       final Track item = result.first;
 
-      expect("Movies,1 Kakak 7 Ponakan (2025)", equals(item.title));
-      expect("Movies", equals(item.groupTitle));
+      expect(item.title, equals("Movies,1 Kakak 7 Ponakan (2025)"));
+      expect(item.groupTitle, equals("Movies"));
     });
 
     test('TestShouldHaveUserAgentOnHttpHeader:clearKeyOnUrl', () async {
@@ -587,14 +617,14 @@ https://game.denver1769.fun/Jtv/2HZyBc/Jtv.mpd?id=166|User-Agent=Denver1769
         true,
         equals(item.extVlcOpts.first.containsKey("http-user-agent")),
       );
-      expect("Denver1769", equals(item.extVlcOpts.first["http-user-agent"]));
+      expect(item.extVlcOpts.first["http-user-agent"], equals("Denver1769"));
       expect(
-        "https://game.denver1769.fun/Jtv/2HZyBc/Jtv.mpd?id=166",
-        equals(item.links.first),
+        item.links.first,
+        equals("https://game.denver1769.fun/Jtv/2HZyBc/Jtv.mpd?id=166"),
       );
 
-      expect(true, equals(item.httpHeaders.first.containsKey("user-agent")));
-      expect("Denver1769", equals(item.httpHeaders.first["user-agent"]));
+      expect(item.httpHeaders.first.containsKey("user-agent"), equals(true));
+      expect(item.httpHeaders.first["user-agent"], equals("Denver1769"));
     });
 
     test('TestShouldHaveUserAgentOnHttpHeader:clearKeyOnUrl', () async {
@@ -613,18 +643,20 @@ https://bldcmprod-cdn.toffeelive.com/cdn/live/sony_sports_1_hd/playlist.m3u8
         true,
         equals(item.extVlcOpts.first.containsKey("http-user-agent")),
       );
-      expect("LIVE", equals(item.groupTitle));
-      expect("tv", equals(item.title));
-      expect("", equals(item.extVlcOpts.first["http-user-agent"]));
+      expect(item.groupTitle, equals("LIVE"));
+      expect(item.title, equals("tv"));
+      expect(item.extVlcOpts.first["http-user-agent"], equals(""));
       expect(
         "https://bldcmprod-cdn.toffeelive.com/cdn/live/sony_sports_1_hd/playlist.m3u8",
         equals(item.links.first),
       );
 
-      expect(true, equals(item.httpHeaders.first.containsKey("cookie")));
+      expect(item.httpHeaders.first.containsKey("cookie"), equals(true));
       expect(
-        "Edge-Cache-Cookie=URLPrefix=aHR0cHM6Ly9ibGRjbXByb2QtY2RuLnRvZmZlZWxpdmUuY29tLw:Expires=1750297799:KeyName=prod_linear:Signature=TDBMq5Xc03aTvlgHIbGzOJRfXo1Ci6MBkMVPtER7RMKYwBr6xRLqsXpDCYdHaDC_ojg5k5EC7ww-uWB62kirBg",
-        equals(item.httpHeaders.first["cookie"]),
+        item.httpHeaders.first["cookie"],
+        equals(
+          "Edge-Cache-Cookie=URLPrefix=aHR0cHM6Ly9ibGRjbXByb2QtY2RuLnRvZmZlZWxpdmUuY29tLw:Expires=1750297799:KeyName=prod_linear:Signature=TDBMq5Xc03aTvlgHIbGzOJRfXo1Ci6MBkMVPtER7RMKYwBr6xRLqsXpDCYdHaDC_ojg5k5EC7ww-uWB62kirBg",
+        ),
       );
     });
 
@@ -864,7 +896,6 @@ https://d3b0v7fggu5zwm.cloudfront.net/out/v1/8554b3cb938e44038093df2d65080932/in
       );
 
       final extVlcOpts = item.extVlcOpts.first;
-      print(item.extVlcOpts);
       expect(extVlcOpts.containsKey("http-referrer"), equals(true));
       expect(extVlcOpts["http-referrer"], equals("https://www.visionplus.id/"));
       expect(extVlcOpts.containsKey("http-user-agent"), equals(true));
@@ -895,7 +926,7 @@ https://d3b0v7fggu5zwm.cloudfront.net/out/v1/8554b3cb938e44038093df2d65080932/in
         ),
       );
     });
-    
+
     test('TestKodiPropsHasStreamHeaders', () async {
       final String content = r'''
 #EXTINF:-1 group-title="RYANTV CHANNELS" tvg-id="" tvg-logo="https://i.imgur.com/61MSiq9.png", France24
@@ -911,15 +942,36 @@ https://linearjitp-playback.astro.com.my/dash-wv/linear/9985/default_ott.mpd
       final Track item = result.first;
 
       final kodiProps = item.kodiProps.first;
-      expect(kodiProps.containsKey("inputstream.adaptive.license_type"), equals(true));
-      expect(kodiProps["inputstream.adaptive.license_type"], equals("org.w3.clearkey"));
-      expect(kodiProps.containsKey("inputstream.adaptive.license_key"), equals(true));
-      expect(kodiProps["inputstream.adaptive.license_key"], equals("3b0c1cebd0c4518d600f52c354ed1910:76d409ffc4eaa012c61d8c31bd13df5d"));
-      expect(kodiProps.containsKey("inputstream.adaptive.stream_headers"), equals(true));
-      expect(kodiProps["inputstream.adaptive.stream_headers"], equals("referer=https://astrogo.astro.com.my//&user-agent=Mozilla/5.0 (Linux; Android 10; MI 9 Build/QKQ1.190825.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/111.0.5563.58 Mobile Safari/537.36"));
+      expect(
+        kodiProps.containsKey("inputstream.adaptive.license_type"),
+        equals(true),
+      );
+      expect(
+        kodiProps["inputstream.adaptive.license_type"],
+        equals("org.w3.clearkey"),
+      );
+      expect(
+        kodiProps.containsKey("inputstream.adaptive.license_key"),
+        equals(true),
+      );
+      expect(
+        kodiProps["inputstream.adaptive.license_key"],
+        equals(
+          "3b0c1cebd0c4518d600f52c354ed1910:76d409ffc4eaa012c61d8c31bd13df5d",
+        ),
+      );
+      expect(
+        kodiProps.containsKey("inputstream.adaptive.stream_headers"),
+        equals(true),
+      );
+      expect(
+        kodiProps["inputstream.adaptive.stream_headers"],
+        equals(
+          "referer=https://astrogo.astro.com.my//&user-agent=Mozilla/5.0 (Linux; Android 10; MI 9 Build/QKQ1.190825.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/111.0.5563.58 Mobile Safari/537.36",
+        ),
+      );
     });
-    
-    
+
     test('TestKodiPropsHasStreamHeaders', () async {
       final String content = r'''
 #EXTINF:-1 group-title="RYANTV CHANNELS" tvg-id="" tvg-logo="https://i.imgur.com/eE9IBhJ.png",tvN Premium
@@ -936,14 +988,36 @@ http://linearjitp-playback.astro.com.my/dash-wv/linear/1001/default_ott.mpd
       final Track item = result.first;
 
       final kodiProps = item.kodiProps.first;
-      expect(kodiProps.containsKey("inputstream.adaptive.license_type"), equals(true));
-      expect(kodiProps["inputstream.adaptive.license_type"], equals("org.w3.clearkey"));
-      expect(kodiProps.containsKey("inputstream.adaptive.license_key"), equals(true));
-      expect(kodiProps["inputstream.adaptive.license_key"], equals("faf4d62bb898de503446c28fb1aa9210:19e80ecc5d337215c64004cb49c9cb01"));
-      expect(kodiProps.containsKey("inputstream.adaptive.stream_headers"), equals(true));
-      expect(kodiProps["inputstream.adaptive.stream_headers"], equals("User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"));
+      expect(
+        kodiProps.containsKey("inputstream.adaptive.license_type"),
+        equals(true),
+      );
+      expect(
+        kodiProps["inputstream.adaptive.license_type"],
+        equals("org.w3.clearkey"),
+      );
+      expect(
+        kodiProps.containsKey("inputstream.adaptive.license_key"),
+        equals(true),
+      );
+      expect(
+        kodiProps["inputstream.adaptive.license_key"],
+        equals(
+          "faf4d62bb898de503446c28fb1aa9210:19e80ecc5d337215c64004cb49c9cb01",
+        ),
+      );
+      expect(
+        kodiProps.containsKey("inputstream.adaptive.stream_headers"),
+        equals(true),
+      );
+      expect(
+        kodiProps["inputstream.adaptive.stream_headers"],
+        equals(
+          "User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        ),
+      );
     });
-    
+
     test('TestExtVlcOptHasHttpUserAgent', () async {
       final String content = r'''
 #EXTINF:-1 tvg-id="1123" group-title="Jiostar" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Star_Sports_Select_1.png",Star Sports Select 1
@@ -961,22 +1035,57 @@ https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_Select_1_BTS/output/index.mpd
       expect(item.title, equals("Star Sports Select 1"));
       expect(item.groupTitle, equals("Jiostar"));
       expect(item.tvgId, equals("1123"));
-      expect(item.tvgLogo, equals("https://jiotvimages.cdn.jio.com/dare_images/images/Star_Sports_Select_1.png"));
-      expect(item.links.first, equals("https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_Select_1_BTS/output/index.mpd?__hdnea__=st=1758107257~exp=1758193657~acl=/*~hmac=99dec41934473d7fb71e7850a7a088fdb138b63b884a511c262244beefee8bed&xxx=%7Ccookie=__hdnea__=st=1758107257~exp=1758193657~acl=/*~hmac=99dec41934473d7fb71e7850a7a088fdb138b63b884a511c262244beefee8bed"));
+      expect(
+        item.tvgLogo,
+        equals(
+          "https://jiotvimages.cdn.jio.com/dare_images/images/Star_Sports_Select_1.png",
+        ),
+      );
+      expect(
+        item.links.first,
+        equals(
+          "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_Select_1_BTS/output/index.mpd?__hdnea__=st=1758107257~exp=1758193657~acl=/*~hmac=99dec41934473d7fb71e7850a7a088fdb138b63b884a511c262244beefee8bed&xxx=%7Ccookie=__hdnea__=st=1758107257~exp=1758193657~acl=/*~hmac=99dec41934473d7fb71e7850a7a088fdb138b63b884a511c262244beefee8bed",
+        ),
+      );
 
-      expect(item.kodiProps.first.containsKey("inputstream.adaptive.license_type"), equals(true));
-      expect(item.kodiProps.first["inputstream.adaptive.license_type"], equals("clearkey"));
-      expect(item.kodiProps.first.containsKey("inputstream.adaptive.license_key"), equals(true));
-      expect(item.kodiProps.first["inputstream.adaptive.license_key"], equals("ea7985dacbb95f1c9d62e5a1675142e5:39d5910ca04841b5f32bf24623cdae58"));
+      expect(
+        item.kodiProps.first.containsKey("inputstream.adaptive.license_type"),
+        equals(true),
+      );
+      expect(
+        item.kodiProps.first["inputstream.adaptive.license_type"],
+        equals("clearkey"),
+      );
+      expect(
+        item.kodiProps.first.containsKey("inputstream.adaptive.license_key"),
+        equals(true),
+      );
+      expect(
+        item.kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "ea7985dacbb95f1c9d62e5a1675142e5:39d5910ca04841b5f32bf24623cdae58",
+        ),
+      );
 
-      expect(item.extVlcOpts.first.containsKey("http-user-agent"), equals(true));
-      expect(item.extVlcOpts.first["http-user-agent"], equals("plaYtv/7.1.3 (Linux;Android 13) ygx/69.1 ExoPlayerLib/824.0"));
+      expect(
+        item.extVlcOpts.first.containsKey("http-user-agent"),
+        equals(true),
+      );
+      expect(
+        item.extVlcOpts.first["http-user-agent"],
+        equals("plaYtv/7.1.3 (Linux;Android 13) ygx/69.1 ExoPlayerLib/824.0"),
+      );
 
       expect(item.httpHeaders.first.containsKey("cookie"), equals(true));
-      expect(item.httpHeaders.first["cookie"], equals("__hdnea__=st=1758107257~exp=1758193657~acl=/*~hmac=99dec41934473d7fb71e7850a7a088fdb138b63b884a511c262244beefee8bed"));
+      expect(
+        item.httpHeaders.first["cookie"],
+        equals(
+          "__hdnea__=st=1758107257~exp=1758193657~acl=/*~hmac=99dec41934473d7fb71e7850a7a088fdb138b63b884a511c262244beefee8bed",
+        ),
+      );
     });
-    
-    test('TestExDesc', () async {
+
+    test('TestExtDesc', () async {
       final String content = r'''
 #EXTINF:-1 media="true" tvg-logo="https://cfvod.kaltura.com/p/4526593/sp/452659300/thumbnail/entry_id/1_pbep9odt/width/0/height/0/quality/85", Obscene Beauty
 #EXTDESC: Mergulhando na cena Neo-Burlesca de Nova Iorque, este documentário explora a sexualidade, comédia e arte dessa cultura, analisando como os artistas utilizam os seus três minutos em palco como uma plataforma para comentário sociopolítico.
@@ -986,10 +1095,464 @@ https://cfvod.kaltura.com/hls/p/4526593/sp/452659300/serveFlavor/entryId/1_1fxmr
       List<Track> result = M3UParser.parse(content);
 
       final Track item = result.first;
-      
+
       expect(item.title, equals("Obscene Beauty"));
-      expect(item.desc, equals("Mergulhando na cena Neo-Burlesca de Nova Iorque, este documentário explora a sexualidade, comédia e arte dessa cultura, analisando como os artistas utilizam os seus três minutos em palco como uma plataforma para comentário sociopolítico."));
-      expect(item.links.first, equals("https://cfvod.kaltura.com/hls/p/4526593/sp/452659300/serveFlavor/entryId/1_1fxmr1o3/v/1/ev/7/flavorId/1_eac4uysh/name/a.mp4/index.m3u8"));
+      expect(
+        item.desc,
+        equals(
+          "Mergulhando na cena Neo-Burlesca de Nova Iorque, este documentário explora a sexualidade, comédia e arte dessa cultura, analisando como os artistas utilizam os seus três minutos em palco como uma plataforma para comentário sociopolítico.",
+        ),
+      );
+      expect(
+        item.links.first,
+        equals(
+          "https://cfvod.kaltura.com/hls/p/4526593/sp/452659300/serveFlavor/entryId/1_1fxmr1o3/v/1/ev/7/flavorId/1_eac4uysh/name/a.mp4/index.m3u8",
+        ),
+      );
+    });
+
+    test('TestTrackWhereHasKodiPropMimeType', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="Champions TV 3.id" tvg-logo="https://thumbor.prod.vidiocdn.com/iJMuLDOoWxwxsc7BMjwtBrEowqg=/372x211/filters:strip_icc():quality(70)/vidio-web-prod-livestreaming/uploads/livestreaming/image/6786/champions-tv-3-7898f2.jpg" group-title="PREMIUM SPORT",Champions TV 3
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1
+#EXTVLCOPT:http-user-agent=VidioPlayer/4.3.0-WITH_ADS
+#KODIPROP:mimetype=application/dash+xml
+#KODIPROP:inputstream=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.stream_headers=origin=https://www.vidio.com&referer=https://www.vidio.com/&user-agent=Vidio/6.43.9-8ec34856ef (Linux;Android 11) ExoPlayerLib/2.19.1
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha
+#KODIPROP:inputstream.adaptive.license_key=https://seprai.jasoncreak8.workers.dev/play.mpd?id=6786&type=drm
+https://seprai.jasoncreak8.workers.dev/play.mpd?id=6786&type=dash
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect(item.title, equals("Champions TV 3"));
+      expect(item.groupTitle, equals("PREMIUM SPORT"));
+
+      final extVlcOpt = item.extVlcOpts;
+
+      expect(extVlcOpt.first.containsKey("http-user-agent"), equals(true));
+      expect(
+        extVlcOpt.first["http-user-agent"],
+        equals("VidioPlayer/4.3.0-WITH_ADS"),
+      );
+
+      final kodiProps = item.kodiProps;
+
+      expect(1, equals(kodiProps.length));
+
+      expect(kodiProps.first.containsKey("mimetype"), equals(true));
+      expect(kodiProps.first.containsKey("inputstream"), equals(true));
+      expect(
+        kodiProps.first.containsKey("inputstream.adaptive.stream_headers"),
+        equals(true),
+      );
+      expect(
+        kodiProps.first.containsKey("inputstream.adaptive.manifest_type"),
+        equals(true),
+      );
+      expect(
+        kodiProps.first.containsKey("inputstream.adaptive.license_type"),
+        equals(true),
+      );
+      expect(
+        kodiProps.first.containsKey("inputstream.adaptive.license_key"),
+        equals(true),
+      );
+
+      expect(kodiProps.first["mimetype"], equals("application/dash+xml"));
+      expect(
+        kodiProps.first["inputstream.adaptive.stream_headers"],
+        equals(
+          "origin=https://www.vidio.com&referer=https://www.vidio.com/&user-agent=Vidio/6.43.9-8ec34856ef (Linux;Android 11) ExoPlayerLib/2.19.1",
+        ),
+      );
+
+      expect(
+        kodiProps.first["inputstream.adaptive.manifest_type"],
+        equals("dash"),
+      );
+
+      expect(
+        kodiProps.first["inputstream.adaptive.license_type"],
+        equals("com.widevine.alpha"),
+      );
+
+      expect(
+        kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "https://seprai.jasoncreak8.workers.dev/play.mpd?id=6786&type=drm",
+        ),
+      );
+    });
+
+    test('TestTrackShouldGiveName:TNT SPORTS 4', () async {
+      final String content = r'''
+#EXTINF:0 tvg-id="TNT 4" tvg-logo="https://i.ibb.co.com/yJ8TWnb/Tntsports4.png" group-title="Sports",TNT SPORTS 4
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=e31a5a81caff5d07ea2411a571fc2e59:96c5ef69479732ae734f962748c19729
+https://otte.live.fly.ww.aiv-cdn.net/lhr-nitro/live/clients/dash/enc/i2pcjr4pe5/out/v1/912e9db56d75403b8a9ac0a719110f36/cenc.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect(item.title, equals("TNT SPORTS 4"));
+      expect(item.groupTitle, equals("Sports"));
+      expect(item.tvgId, equals("TNT 4"));
+      expect(
+        item.tvgLogo,
+        equals("https://i.ibb.co.com/yJ8TWnb/Tntsports4.png"),
+      );
+      expect(
+        item.links.first,
+        equals(
+          "https://otte.live.fly.ww.aiv-cdn.net/lhr-nitro/live/clients/dash/enc/i2pcjr4pe5/out/v1/912e9db56d75403b8a9ac0a719110f36/cenc.mpd",
+        ),
+      );
+
+      expect(
+        item.kodiProps.first.containsKey("inputstreamaddon"),
+        equals(true),
+      );
+      expect(
+        item.kodiProps.first["inputstreamaddon"],
+        equals("inputstream.adaptive"),
+      );
+      expect(
+        item.kodiProps.first.containsKey("inputstream.adaptive.manifest_type"),
+        equals(true),
+      );
+      expect(
+        item.kodiProps.first["inputstream.adaptive.manifest_type"],
+        equals("dash"),
+      );
+      expect(
+        item.kodiProps.first.containsKey("inputstream.adaptive.license_type"),
+        equals(true),
+      );
+      expect(
+        item.kodiProps.first["inputstream.adaptive.license_type"],
+        equals("clearkey"),
+      );
+      expect(
+        item.kodiProps.first.containsKey("inputstream.adaptive.license_key"),
+        equals(true),
+      );
+      expect(
+        item.kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "e31a5a81caff5d07ea2411a571fc2e59:96c5ef69479732ae734f962748c19729",
+        ),
+      );
+
+      expect(
+        item.extVlcOpts.first.containsKey("http-user-agent"),
+        equals(true),
+      );
+      expect(
+        item.extVlcOpts.first["http-user-agent"],
+        equals(
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
+        ),
+      );
+    });
+
+    test('TestTrackShouldGiveName:ZEE ZEST HD 195.181.169.162', () async {
+      final String content = r'''
+#EXTINF:-1, ZEE ZEST HD 195.181.169.162
+http://195.181.169.162:80/LIVING_FOODZ_HD/index.mpd?token=test
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect(item.title, equals("ZEE ZEST HD 195.181.169.162"));
+    });
+
+    test('TestTrackShouldGiveName:JKN 18 (1080p)', () async {
+      final String content = r'''
+#EXTINF:-1 group-title="v2hcdn" tvg-id="JKN18.th",JKN 18 (1080p)
+https://lb1-live-mv.v2h-cdn.com/hls/ffda/jkn18/jkn18.m3u8
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect(item.title, equals("JKN 18 (1080p)"));
+      expect(item.groupTitle, equals("v2hcdn"));
+      expect(item.tvgId, equals("JKN18.th"));
+    });
+
+    test('TestTrackShouldGiveName:MV Mall DD (1080p)', () async {
+      final String content = r'''
+#EXTINF:-1 group-title="v2hcdn" tvg-id="DramaChannel.th",MV Mall DD (1080p)
+https://lb1-live-mv.v2h-cdn.com/hls/fdee/mvmalldd/mvmalldd.m3u8
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect(item.title, equals("MV Mall DD (1080p)"));
+      expect(item.groupTitle, equals("v2hcdn"));
+      expect(item.tvgId, equals("DramaChannel.th"));
+    });
+
+    test('TestTrackShouldGiveName:MY: Astro Sports UHD', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="Astro.Sports.UHD.my" tvg-name="MY: Astro Sports UHD" tvg-logo="https://i.ibb.co/3hW45Pb/Astro-Sports-UHD.png group-title="hilaytv",MY: Astro Sports UHD
+https://a1xs.vip/9000001
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect(item.title, equals("MY: Astro Sports UHD"));
+      expect(item.groupTitle, equals("hilaytv"));
+      expect(item.tvgId, equals("Astro.Sports.UHD.my"));
+      expect(item.tvgName, equals("MY: Astro Sports UHD"));
+      expect(
+        item.tvgLogo,
+        equals("https://i.ibb.co/3hW45Pb/Astro-Sports-UHD.png"),
+      );
+    });
+
+    test(
+      'TestTrackShouldGiveUrl:https://c3c275b999764df8a2dd55ffe2996818.mediatailor.eu-west-1.amazonaws.com/v1/manifest/0547f18649bd788bec7b67b746e47670f558b6b2/production-LiveChannel-6576/5a098a95-cc1e-4e08-8785-65fe2ac4dda3/5.m3u8',
+      () async {
+        final String content = r'''
+#EXTINF:-1 group-title="TV" tvg-logo="https://raw.githubusercontent.com/Corvisier/IPTV/main/logos/Africa_news.png",Africa News
+#https://c3c275b999764df8a2dd55ffe2996818.mediatailor.eu-west-1.amazonaws.com/v1/master/0547f18649bd788bec7b67b746e47670f558b6b2/production-LiveChannel-6576/bitok/eyJzdGlkIjoiZjdlNjYzYmUtOTVlNi00MWUxLTg0NjctZjBiNzg2MzZjMjNjIiwibWt0IjoicHQiLCJjaCI6NjU4MywicHRmIjo1fQ%3D%3D/26036/africanews-en.m3u8
+https://c3c275b999764df8a2dd55ffe2996818.mediatailor.eu-west-1.amazonaws.com/v1/manifest/0547f18649bd788bec7b67b746e47670f558b6b2/production-LiveChannel-6576/5a098a95-cc1e-4e08-8785-65fe2ac4dda3/5.m3u8
+
+''';
+
+        final String content2 = r'''
+#EXTINF:-1 group-title="TV" tvg-logo="https://raw.githubusercontent.com/Corvisier/IPTV/main/logos/Africa_news.png",Africa News
+https://c3c275b999764df8a2dd55ffe2996818.mediatailor.eu-west-1.amazonaws.com/v1/manifest/0547f18649bd788bec7b67b746e47670f558b6b2/production-LiveChannel-6576/5a098a95-cc1e-4e08-8785-65fe2ac4dda3/5.m3u8
+#https://c3c275b999764df8a2dd55ffe2996818.mediatailor.eu-west-1.amazonaws.com/v1/master/0547f18649bd788bec7b67b746e47670f558b6b2/production-LiveChannel-6576/bitok/eyJzdGlkIjoiZjdlNjYzYmUtOTVlNi00MWUxLTg0NjctZjBiNzg2MzZjMjNjIiwibWt0IjoicHQiLCJjaCI6NjU4MywicHRmIjo1fQ%3D%3D/26036/africanews-en.m3u8
+
+''';
+
+        List<Track> result = M3UParser.parse(content);
+        List<Track> result2 = M3UParser.parse(content2);
+
+        final Track item = result.first;
+        final Track item2 = result2.first;
+
+        expect(item.links.first, equals(item2.links.first));
+      },
+    );
+
+    test('TestTrackShouldGiveName:AVFM', () async {
+      final String content = r'''
+#EXTINF:-1 radio="true" group-title="Rádios" tvg-logo="https://radioavfm.net/wp-content/uploads/2017/06/avfm-logo-horizontal.png,AVFM
+https://uk2.streamingpulse.com/ssl/radioavfm
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect(item.title, equals("AVFM"));
+      expect(item.groupTitle, equals("Rádios"));
+      expect(
+        item.tvgLogo,
+        equals(
+          "https://radioavfm.net/wp-content/uploads/2017/06/avfm-logo-horizontal.png",
+        ),
+      );
+      expect(
+        item.links.first,
+        equals("https://uk2.streamingpulse.com/ssl/radioavfm"),
+      );
+    });
+
+    test('TestTrackShouldGiveName:Movies Action', () async {
+      final String content = r'''
+#EXTINF: -1 channel-id="405" group-title="Foxtel Go" tvg-chno="405" tvg-id="SHA" tvg-logo="https://raw.githubusercontent.com/coxy86/autvicons/main/foxtelaction2.png" tvg-name="Movies Action" , Movies Action
+
+#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha
+#KODIPROP:inputstream.adaptive.license_key=https://foxtelott.live.ott.irdeto.com/widevine/getlicense?CrmId=foxtelott&AccountId=foxtelott&ContentId=jit_527477&SessionId=D3CA6992DB9DF598&Ticket=A8F5549B20BEA10F
+
+https://foxteldashmtlive01.akamaized.net/v1/dash/40a0de4a910d426b321814c25ab1ea7bbc30818d/prod-dash-switch-akamai/live/channel032/channel032_mcs.isml/playlist_medium.mpd?ads.auhead=%2F21780812979%2Ffoxtellive&ads.correlator=858631889&ads.auapp=foxtelgo&ads.auchtag=SHA&ads.audev=pcbrowser%2Fwindows&ads.idm=04&ads.location=nsw&ads.idfx_hashed=9a1eab2d1262e2e8f02ebc1e07f6576a&ads.account_hashed=b72c26959f64f71916424989bc2251f8&ads.manufacturer=Google&ads.gizmo_type=pcbrowser&ads.gizmo_model=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F126.0.0.0+Safari%2F537.36&ads.gizmo_osEnvironment=WINDOWS&ads.app_id=FOXTELGO&ads.app_ver_short=3.4.3&ads.ppid=68c5358edca40ebe98575504c0a3e6409a1eab2d1262e2e8f02ebc1e07f6576a&ads.dph=68c5358edca40ebe98575504c0a3e6409a1eab2d1262e2e8f02ebc1e07f6576a&ads.ip=203.196.54.25&ads.userAgent=Mozilla%252F5.0%2520%2528Windows%2520NT%252010.0%253B%2520Win64%253B%2520x64%2529%2520AppleWebKit%252F537.36%2520%2528KHTML%252C%2520like%2520Gecko%2529%2520Chrome%252F126.0.0.0%2520Safari%252F537.36&ads.url=http%3A%2F%2Ffoxtel.com.au%2Fads&ads.descUrl=http%3A%2F%2Ffoxtel.com.au%2Fads&ads.ip_postcode=3000&ads.tzlocale=AU-VIC&ads.npa=0&aws.sessionId=5ee43c21-7298-4b2b-ac9b-78186de8576d&hdnts=exp=1758189712~hmac=8009ef797c871b5c563befd93be88b9210f47d3f010558edbebcc33bc13361fd
+
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect(item.title, equals("Movies Action"));
+      expect(item.groupTitle, equals("Foxtel Go"));
+      expect(item.attributes['channel-id'], equals("405"));
+      expect(item.attributes['tvg-chno'], equals("405"));
+      expect(item.tvgId, equals("SHA"));
+      expect(
+        item.tvgLogo,
+        equals(
+          "https://raw.githubusercontent.com/coxy86/autvicons/main/foxtelaction2.png",
+        ),
+      );
+      expect(item.tvgName, equals("Movies Action"));
+      expect(
+        item.links.first,
+        equals(
+          "https://foxteldashmtlive01.akamaized.net/v1/dash/40a0de4a910d426b321814c25ab1ea7bbc30818d/prod-dash-switch-akamai/live/channel032/channel032_mcs.isml/playlist_medium.mpd?ads.auhead=%2F21780812979%2Ffoxtellive&ads.correlator=858631889&ads.auapp=foxtelgo&ads.auchtag=SHA&ads.audev=pcbrowser%2Fwindows&ads.idm=04&ads.location=nsw&ads.idfx_hashed=9a1eab2d1262e2e8f02ebc1e07f6576a&ads.account_hashed=b72c26959f64f71916424989bc2251f8&ads.manufacturer=Google&ads.gizmo_type=pcbrowser&ads.gizmo_model=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F126.0.0.0+Safari%2F537.36&ads.gizmo_osEnvironment=WINDOWS&ads.app_id=FOXTELGO&ads.app_ver_short=3.4.3&ads.ppid=68c5358edca40ebe98575504c0a3e6409a1eab2d1262e2e8f02ebc1e07f6576a&ads.dph=68c5358edca40ebe98575504c0a3e6409a1eab2d1262e2e8f02ebc1e07f6576a&ads.ip=203.196.54.25&ads.userAgent=Mozilla%252F5.0%2520%2528Windows%2520NT%252010.0%253B%2520Win64%253B%2520x64%2529%2520AppleWebKit%252F537.36%2520%2528KHTML%252C%2520like%2520Gecko%2529%2520Chrome%252F126.0.0.0%2520Safari%252F537.36&ads.url=http%3A%2F%2Ffoxtel.com.au%2Fads&ads.descUrl=http%3A%2F%2Ffoxtel.com.au%2Fads&ads.ip_postcode=3000&ads.tzlocale=AU-VIC&ads.npa=0&aws.sessionId=5ee43c21-7298-4b2b-ac9b-78186de8576d&hdnts=exp=1758189712~hmac=8009ef797c871b5c563befd93be88b9210f47d3f010558edbebcc33bc13361fd",
+        ),
+      );
+    });
+
+    test('TestTrackShouldGiveName:Movies Romance', () async {
+      final String content = r'''
+#EXTINF: -1 channel-id="408" group-title="Foxtel Go" tvg-chno="408" tvg-id="SHD" tvg-logo="https://raw.githubusercontent.com/coxy86/autvicons/main/foxtelromance2.png" tvg-name="Movies Romance" , Movies Romance
+
+#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha
+#KODIPROP:inputstream.adaptive.license_key=https://foxtelott.live.ott.irdeto.com/widevine/getlicense?CrmId=foxtelott&AccountId=foxtelott&ContentId=jit_527482&SessionId=D3CA6992DB9DF598&Ticket=A8F5549B20BEA10F
+
+https://foxteldashmtlive01.akamaized.net/v1/dash/40a0de4a910d426b321814c25ab1ea7bbc30818d/prod-dash-switch-akamai/live/channel053/channel053_mcs.isml/playlist_medium.mpd?ads.auhead=%2F21780812979%2Ffoxtellive&ads.correlator=2098895009&ads.auapp=foxtelgo&ads.auchtag=SHD&ads.audev=pcbrowser%2Fwindows&ads.idm=04&ads.location=nsw&ads.idfx_hashed=9a1eab2d1262e2e8f02ebc1e07f6576a&ads.account_hashed=b72c26959f64f71916424989bc2251f8&ads.manufacturer=Google&ads.gizmo_type=pcbrowser&ads.gizmo_model=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F126.0.0.0+Safari%2F537.36&ads.gizmo_osEnvironment=WINDOWS&ads.app_id=FOXTELGO&ads.app_ver_short=3.4.3&ads.ppid=68c5358edca40ebe98575504c0a3e6409a1eab2d1262e2e8f02ebc1e07f6576a&ads.dph=68c5358edca40ebe98575504c0a3e6409a1eab2d1262e2e8f02ebc1e07f6576a&ads.ip=203.196.54.25&ads.userAgent=Mozilla%252F5.0%2520%2528Windows%2520NT%252010.0%253B%2520Win64%253B%2520x64%2529%2520AppleWebKit%252F537.36%2520%2528KHTML%252C%2520like%2520Gecko%2529%2520Chrome%252F126.0.0.0%2520Safari%252F537.36&ads.url=http%3A%2F%2Ffoxtel.com.au%2Fads&ads.descUrl=http%3A%2F%2Ffoxtel.com.au%2Fads&ads.ip_postcode=3000&ads.tzlocale=AU-VIC&ads.npa=0&aws.sessionId=fbe93b2a-be30-44fd-a92d-a813ff3318e0&hdnts=exp=1758189737~hmac=bd345027ebf1a9b6ed34d0d5f567eb1365f33d24ed70c8eb9f6871153b79fc58
+
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect(item.title, equals("Movies Romance"));
+      expect(item.groupTitle, equals("Foxtel Go"));
+      expect(item.attributes['channel-id'], equals("408"));
+      expect(item.attributes['tvg-chno'], equals("408"));
+      expect(item.tvgId, equals("SHD"));
+      expect(
+        item.tvgLogo,
+        equals(
+          "https://raw.githubusercontent.com/coxy86/autvicons/main/foxtelromance2.png",
+        ),
+      );
+      expect(item.tvgName, equals("Movies Romance"));
+      expect(
+        item.links.first,
+        equals(
+          "https://foxteldashmtlive01.akamaized.net/v1/dash/40a0de4a910d426b321814c25ab1ea7bbc30818d/prod-dash-switch-akamai/live/channel053/channel053_mcs.isml/playlist_medium.mpd?ads.auhead=%2F21780812979%2Ffoxtellive&ads.correlator=2098895009&ads.auapp=foxtelgo&ads.auchtag=SHD&ads.audev=pcbrowser%2Fwindows&ads.idm=04&ads.location=nsw&ads.idfx_hashed=9a1eab2d1262e2e8f02ebc1e07f6576a&ads.account_hashed=b72c26959f64f71916424989bc2251f8&ads.manufacturer=Google&ads.gizmo_type=pcbrowser&ads.gizmo_model=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F126.0.0.0+Safari%2F537.36&ads.gizmo_osEnvironment=WINDOWS&ads.app_id=FOXTELGO&ads.app_ver_short=3.4.3&ads.ppid=68c5358edca40ebe98575504c0a3e6409a1eab2d1262e2e8f02ebc1e07f6576a&ads.dph=68c5358edca40ebe98575504c0a3e6409a1eab2d1262e2e8f02ebc1e07f6576a&ads.ip=203.196.54.25&ads.userAgent=Mozilla%252F5.0%2520%2528Windows%2520NT%252010.0%253B%2520Win64%253B%2520x64%2529%2520AppleWebKit%252F537.36%2520%2528KHTML%252C%2520like%2520Gecko%2529%2520Chrome%252F126.0.0.0%2520Safari%252F537.36&ads.url=http%3A%2F%2Ffoxtel.com.au%2Fads&ads.descUrl=http%3A%2F%2Ffoxtel.com.au%2Fads&ads.ip_postcode=3000&ads.tzlocale=AU-VIC&ads.npa=0&aws.sessionId=fbe93b2a-be30-44fd-a92d-a813ff3318e0&hdnts=exp=1758189737~hmac=bd345027ebf1a9b6ed34d0d5f567eb1365f33d24ed70c8eb9f6871153b79fc58",
+        ),
+      );
+    });
+
+    test('TestTrackShouldGiveNameGroupTitle:Variedades:1', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="DMaisTV.br" tvg-name="D+ TV" tvg-logo="http://www.cxtv.com.br/img/Tvs/Logo/5a0ca2ab1c68adcde7bf577af87071b8.jpg", D+ TV
+#EXTGRP:Variedades
+https://stmv1.samcast.com.br/demaistv6503/demaistv6503/chunklist_w1316191273.m3u8
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect(item.title, equals("D+ TV"));
+      expect(item.groupTitle, equals("Variedades"));
+      expect(item.tvgId, equals("DMaisTV.br"));
+      expect(item.tvgName, equals("D+ TV"));
+      expect(
+        item.tvgLogo,
+        equals(
+          "http://www.cxtv.com.br/img/Tvs/Logo/5a0ca2ab1c68adcde7bf577af87071b8.jpg",
+        ),
+      );
+      expect(
+        item.links.first,
+        equals(
+          "https://stmv1.samcast.com.br/demaistv6503/demaistv6503/chunklist_w1316191273.m3u8",
+        ),
+      );
+    });
+
+    test('TestTrackShouldGiveNameGroupTitle:Variedades:2', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="DMaisTV.br" group-title="Variedades" tvg-name="D+ TV" tvg-logo="http://www.cxtv.com.br/img/Tvs/Logo/5a0ca2ab1c68adcde7bf577af87071b8.jpg", D+ TV
+#EXTGRP:Variedades
+https://stmv1.samcast.com.br/demaistv6503/demaistv6503/chunklist_w1316191273.m3u8
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect(item.title, equals("D+ TV"));
+      expect(item.groupTitle, equals("Variedades"));
+      expect(item.tvgId, equals("DMaisTV.br"));
+      expect(item.tvgName, equals("D+ TV"));
+      expect(
+        item.tvgLogo,
+        equals(
+          "http://www.cxtv.com.br/img/Tvs/Logo/5a0ca2ab1c68adcde7bf577af87071b8.jpg",
+        ),
+      );
+      expect(
+        item.links.first,
+        equals(
+          "https://stmv1.samcast.com.br/demaistv6503/demaistv6503/chunklist_w1316191273.m3u8",
+        ),
+      );
+    });
+
+    test('TestTrackShouldGiveNameGroupTitle:Variedades:3', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="DMaisTV.br" group-title="Variedades" tvg-name="D+ TV" tvg-logo="http://www.cxtv.com.br/img/Tvs/Logo/5a0ca2ab1c68adcde7bf577af87071b8.jpg", D+ TV
+https://stmv1.samcast.com.br/demaistv6503/demaistv6503/chunklist_w1316191273.m3u8
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      final Track item = result.first;
+
+      expect(item.title, equals("D+ TV"));
+      expect(item.groupTitle, equals("Variedades"));
+      expect(item.tvgId, equals("DMaisTV.br"));
+      expect(item.tvgName, equals("D+ TV"));
+      expect(
+        item.tvgLogo,
+        equals(
+          "http://www.cxtv.com.br/img/Tvs/Logo/5a0ca2ab1c68adcde7bf577af87071b8.jpg",
+        ),
+      );
+      expect(
+        item.links.first,
+        equals(
+          "https://stmv1.samcast.com.br/demaistv6503/demaistv6503/chunklist_w1316191273.m3u8",
+        ),
+      );
+    });
+
+    test('TestTrackShouldGiveTracks:Length2', () async {
+      final String content = r'''
+IPV4,#genre#
+#EXTM3U x-tvg-url="https://fy.188766.xyz/e.xml"
+#EXTINF:-1 tvg-id="CCTV1" tvg-name="CCTV1" tvg-logo="https://fy.188766.xyz/logo/fanmingming/live/tv/CCTV1.png" group-title="央视频道",CCTV-1 综合
+http://192.168.1.8:35455/bst/cctv1hd@4000000.m3u8
+#EXTINF:-1 tvg-id="CCTV1" tvg-name="CCTV1" tvg-logo="https://fy.188766.xyz/logo/fanmingming/live/tv/CCTV1.png" group-title="央视频道",CCTV-1 综合
+http://192.168.1.8:35455/mgtv/608807420.m3u8
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result.length, equals(2));
+
+      expect(result[0].title, equals("CCTV-1 综合"));
+      expect(result[1].title, equals("CCTV-1 综合"));
     });
 
     // TEST TEMPORARY WITH FILE
@@ -1004,5 +1567,13 @@ https://cfvod.kaltura.com/hls/p/4526593/sp/452659300/serveFlavor/entryId/1_1fxmr
 
     //   expect(result.length, 15691);
     // });
+
+    test('tmpTest:GenericCase:2', () async {
+      final String key = BetterPlayerClearKeyUtils.generateKey({
+        "71cbdf02b595468bb77398222e1ade09": "c3f2aa420b8908ab8761571c01899460",
+      });
+
+      print(key);
+    });
   });
 }

@@ -1,3 +1,8 @@
+// Copyright (c) 2025, Ibnul Mutaki (@cacing69)
+// Licensed under the MIT License
+// Pusoo - Open Source IPTV Player
+// GitHub: https://github.com/cacing69/pusoo
+
 import 'dart:convert';
 import 'dart:core';
 
@@ -8,7 +13,7 @@ abstract class M3UParser {
   static final _attributeRegex = RegExp(r'([a-zA-Z0-9_-]+)=\"([^\"]*)\"');
   static final _attributeRegexQuoted = RegExp(r'([a-zA-Z0-9_-]+)="([^"]*)"');
   static final _attributeRegexMixed = RegExp(r'([a-zA-Z0-9_-]+)=([^,]+?)(?=,|$)');
-  static final _extInfRegex = RegExp(r'#EXTINF:(-?\d*),?(.*)');
+  static final _extInfRegex = RegExp(r'#EXTINF:\s*(-?\d*),?\s*(.*)');
   static final _extStreamInfRegex = RegExp(r'#EXT-X-STREAM-INF:.*?group-title="([^"]*)"\s+tvg-logo="([^"]*)"\s+tvg-id="([^"]*)"\s*,\s*(.*)');
 
   static List<Track> parse(String m3u) {
@@ -19,7 +24,9 @@ abstract class M3UParser {
     Map<String, List<String>> tempExtVlcOptLists = {};
     Map<String, List<String>> tempKodiPropLists = {};
     List<ExtXMedia> tempExtXMedias = [];
+    List<Map<String, String>> tempHttpHeaders = [];
     String tempDesc = '';
+    String tempGroupTitle = '';
 
     void finalizeAndAddTrack() {
       if (currentTrack == null) return;
@@ -32,20 +39,36 @@ abstract class M3UParser {
         for (int i = 0; i < urlCount; i++) {
           final Map<String, String> vlcOptMap = {};
           tempExtVlcOptLists.forEach((key, values) {
-            if (i < values.length) {
-              vlcOptMap[key] = values[i];
-            } else if (values.length == 1) {
-              vlcOptMap[key] = values[0];
+            if (values.isNotEmpty) {
+              if (urlCount == 1) {
+                // For single URL, always take the last value when there are multiple values
+                vlcOptMap[key] = values.last;
+              } else {
+                // For multiple URLs, take the value at index i, or last value if i >= values.length
+                if (i < values.length) {
+                  vlcOptMap[key] = values[i];
+                } else {
+                  vlcOptMap[key] = values.last;
+                }
+              }
             }
           });
           finalExtVlcOpt.add(vlcOptMap);
 
           final Map<String, String> kodiPropMap = {};
           tempKodiPropLists.forEach((key, values) {
-            if (i < values.length) {
-              kodiPropMap[key] = values[i];
-            } else if (values.length == 1) {
-              kodiPropMap[key] = values[0];
+            if (values.isNotEmpty) {
+              if (urlCount == 1) {
+                // For single URL, always take the last value when there are multiple values
+                kodiPropMap[key] = values.last;
+              } else {
+                // For multiple URLs, take the value at index i, or last value if i >= values.length
+                if (i < values.length) {
+                  kodiPropMap[key] = values[i];
+                } else {
+                  kodiPropMap[key] = values.last;
+                }
+              }
             }
           });
           finalKodiProp.add(kodiPropMap);
@@ -55,7 +78,8 @@ abstract class M3UParser {
         final Map<String, String> vlcOptMap = {};
         tempExtVlcOptLists.forEach((key, values) {
           if (values.isNotEmpty) {
-            vlcOptMap[key] = values[0];
+            // Take the last value when there are multiple values
+            vlcOptMap[key] = values.last;
           }
         });
         if (vlcOptMap.isNotEmpty) {
@@ -65,7 +89,8 @@ abstract class M3UParser {
         final Map<String, String> kodiPropMap = {};
         tempKodiPropLists.forEach((key, values) {
           if (values.isNotEmpty) {
-            kodiPropMap[key] = values[0];
+            // Take the last value when there are multiple values
+            kodiPropMap[key] = values.last;
           }
         });
         if (kodiPropMap.isNotEmpty) {
@@ -77,13 +102,17 @@ abstract class M3UParser {
         extVlcOpts: finalExtVlcOpt,
         kodiProps: finalKodiProp,
         extXMedias: tempExtXMedias,
+        httpHeaders: tempHttpHeaders.isNotEmpty ? tempHttpHeaders : currentTrack!.httpHeaders,
         desc: tempDesc,
+        groupTitle: tempGroupTitle.isNotEmpty ? tempGroupTitle : currentTrack!.groupTitle,
       );
       tracks.add(currentTrack!);
       tempExtVlcOptLists = {};
       tempKodiPropLists = {};
       tempExtXMedias = [];
+      tempHttpHeaders = [];
       tempDesc = '';
+      tempGroupTitle = '';
     }
 
     final bool isStrict = m3u.contains('#EXTM3U');
@@ -190,6 +219,121 @@ abstract class M3UParser {
             title = title.substring(1).trim();
           }
           
+          // Handle case where tvg-logo is not properly closed (malformed)
+          // Look for tvg-logo=" without closing quote followed by group-title, but not if properly quoted
+          final unclosedTvgLogoRegex = RegExp(r'tvg-logo="([^"]*)\s+group-title="([^"]*)"');
+          final unclosedTvgLogoMatch = unclosedTvgLogoRegex.firstMatch(titlePart);
+          if (unclosedTvgLogoMatch != null && !titlePart.contains('tvg-logo="' + unclosedTvgLogoMatch.group(1)! + '"')) {
+            // This is a malformed tvg-logo, fix it
+            final tvgLogoValue = unclosedTvgLogoMatch.group(1)!;
+            final groupTitleValue = unclosedTvgLogoMatch.group(2)!;
+            
+            // Override the attributes
+            attributes['tvg-logo'] = tvgLogoValue;
+            attributes['group-title'] = groupTitleValue;
+            
+            // Remove the malformed part from remainingTitlePart
+            final malformedPattern = 'tvg-logo="' + tvgLogoValue + ' group-title="' + groupTitleValue + '"';
+            remainingTitlePart = remainingTitlePart.replaceFirst(malformedPattern, '');
+          }
+
+          // Handle case where tvg-logo is not properly closed (malformed)
+          // Look for pattern like tvg-logo="value without closing quote followed by group-title="value"
+          final unclosedTvgLogoGeneralRegex = RegExp(r'tvg-logo="([^"]*)\s+group-title="([^"]*)"');
+          final unclosedTvgLogoGeneralMatch = unclosedTvgLogoGeneralRegex.firstMatch(remainingTitlePart);
+          if (unclosedTvgLogoGeneralMatch != null) {
+            final tvgLogoValue = unclosedTvgLogoGeneralMatch.group(1)!;
+            final groupTitleValue = unclosedTvgLogoGeneralMatch.group(2)!;
+            
+            // Fix the attributes
+            attributes['tvg-logo'] = tvgLogoValue;
+            attributes['group-title'] = groupTitleValue;
+            
+            // Remove the malformed part from remainingTitlePart
+            final malformedPattern = 'tvg-logo="' + tvgLogoValue + ' group-title="' + groupTitleValue + '"';
+            remainingTitlePart = remainingTitlePart.replaceFirst(malformedPattern, '');
+          }
+
+          // Handle case where tvg-logo is not properly closed (malformed) - more specific pattern
+          // Look for pattern like tvg-logo="value without closing quote followed by group-title="value",title
+          final unclosedTvgLogoWithCommaRegex = RegExp(r'tvg-logo="([^"]*)\s+group-title="([^"]*)",(.*)');
+          final unclosedTvgLogoWithCommaMatch = unclosedTvgLogoWithCommaRegex.firstMatch(remainingTitlePart);
+          if (unclosedTvgLogoWithCommaMatch != null) {
+            final tvgLogoValue = unclosedTvgLogoWithCommaMatch.group(1)!;
+            final groupTitleValue = unclosedTvgLogoWithCommaMatch.group(2)!;
+            final titleValue = unclosedTvgLogoWithCommaMatch.group(3)!;
+            
+            // Fix the attributes
+            attributes['tvg-logo'] = tvgLogoValue;
+            attributes['group-title'] = groupTitleValue;
+            
+            // Set the title
+            title = titleValue.trim();
+            
+            // Remove the malformed part from remainingTitlePart
+            final malformedPattern = 'tvg-logo="' + tvgLogoValue + ' group-title="' + groupTitleValue + '",' + titleValue;
+            remainingTitlePart = remainingTitlePart.replaceFirst(malformedPattern, '');
+          }
+
+          // Handle case where tvg-logo is not properly closed (malformed) - even more specific pattern
+          // Look for pattern like tvg-logo="value without closing quote followed by group-title="value",title
+          final unclosedTvgLogoWithCommaRegex2 = RegExp(r'tvg-logo="([^"]*)\s+group-title="([^"]*)",(.*)');
+          final unclosedTvgLogoWithCommaMatch2 = unclosedTvgLogoWithCommaRegex2.firstMatch(titlePart);
+          if (unclosedTvgLogoWithCommaMatch2 != null) {
+            final tvgLogoValue = unclosedTvgLogoWithCommaMatch2.group(1)!;
+            final groupTitleValue = unclosedTvgLogoWithCommaMatch2.group(2)!;
+            final titleValue = unclosedTvgLogoWithCommaMatch2.group(3)!;
+            
+            // Fix the attributes
+            attributes['tvg-logo'] = tvgLogoValue;
+            attributes['group-title'] = groupTitleValue;
+            
+            // Set the title
+            title = titleValue.trim();
+            
+            // Remove the malformed part from remainingTitlePart
+            final malformedPattern = 'tvg-logo="' + tvgLogoValue + ' group-title="' + groupTitleValue + '",' + titleValue;
+            remainingTitlePart = remainingTitlePart.replaceFirst(malformedPattern, '');
+          }
+
+          // Handle case where tvg-logo is not properly closed (malformed) - pattern with comma directly after tvg-logo
+          // Look for pattern like tvg-logo="value,title
+          final unclosedTvgLogoWithCommaDirectRegex = RegExp(r'tvg-logo="([^"]*),([^"]*)$');
+          final unclosedTvgLogoWithCommaDirectMatch = unclosedTvgLogoWithCommaDirectRegex.firstMatch(remainingTitlePart);
+          if (unclosedTvgLogoWithCommaDirectMatch != null) {
+            final tvgLogoValue = unclosedTvgLogoWithCommaDirectMatch.group(1)!;
+            final titleValue = unclosedTvgLogoWithCommaDirectMatch.group(2)!;
+            
+            // Fix the attributes
+            attributes['tvg-logo'] = tvgLogoValue;
+            
+            // Set the title
+            title = titleValue.trim();
+            
+            // Remove the malformed part from remainingTitlePart
+            final malformedPattern = 'tvg-logo="' + tvgLogoValue + ',' + titleValue;
+            remainingTitlePart = remainingTitlePart.replaceFirst(malformedPattern, '');
+          }
+
+          // Handle case where tvg-logo is not properly closed (malformed) - pattern with comma directly after tvg-logo in titlePart
+          // Look for pattern like tvg-logo="value,title
+          final unclosedTvgLogoWithCommaDirectRegex2 = RegExp(r'tvg-logo="([^"]*),([^"]*)$');
+          final unclosedTvgLogoWithCommaDirectMatch2 = unclosedTvgLogoWithCommaDirectRegex2.firstMatch(titlePart);
+          if (unclosedTvgLogoWithCommaDirectMatch2 != null) {
+            final tvgLogoValue = unclosedTvgLogoWithCommaDirectMatch2.group(1)!;
+            final titleValue = unclosedTvgLogoWithCommaDirectMatch2.group(2)!;
+            
+            // Fix the attributes
+            attributes['tvg-logo'] = tvgLogoValue;
+            
+            // Set the title
+            title = titleValue.trim();
+            
+            // Remove the malformed part from remainingTitlePart
+            final malformedPattern = 'tvg-logo="' + tvgLogoValue + ',' + titleValue;
+            remainingTitlePart = remainingTitlePart.replaceFirst(malformedPattern, '');
+          }
+
           // Handle case where group-title is not properly closed (malformed)
           // Look for group-title=" without closing quote followed by comma, but not if properly quoted
           final unclosedGroupTitleRegex = RegExp(r'group-title="([^"]*),(.*)');
@@ -287,13 +431,13 @@ abstract class M3UParser {
           tempKodiPropLists.putIfAbsent(key, () => []).add(value);
         }
       } else if (trimmedLine.startsWith('#EXTHTTP:')) {
-        if (currentTrack != null) {
-          final jsonString = trimmedLine.substring(9);
-          try {
-            final headers = json.decode(jsonString) as Map<String, dynamic>;
-            final newHeaders =
-                headers.map((key, value) => MapEntry(key, value.toString()));
+        final jsonString = trimmedLine.substring(9);
+        try {
+          final headers = json.decode(jsonString) as Map<String, dynamic>;
+          final newHeaders =
+              headers.map((key, value) => MapEntry(key, value.toString()));
 
+          if (currentTrack != null) {
             if (currentTrack!.httpHeaders.isEmpty) {
               currentTrack = currentTrack!.copyWith(
                 httpHeaders: [newHeaders],
@@ -305,9 +449,12 @@ abstract class M3UParser {
                 httpHeaders: [existingHeaders],
               );
             }
-          } catch (e) {
-            print('Error parsing #EXTHTTP JSON: $e');
+          } else {
+            // Store headers for when track is created
+            tempHttpHeaders.add(newHeaders);
           }
+        } catch (e) {
+          print('Error parsing #EXTHTTP JSON: $e');
         }
       } else if (trimmedLine.startsWith('#EXT-X-MEDIA:')) {
         if (currentTrack != null) {
@@ -336,6 +483,13 @@ abstract class M3UParser {
         if (currentTrack != null) {
           final descString = trimmedLine.substring(9); // Skip #EXTDESC:
           tempDesc = descString.trim();
+        }
+      } else if (trimmedLine.startsWith('#EXTGRP:')) {
+        final groupString = trimmedLine.substring(8); // Skip #EXTGRP:
+        final groupTitle = groupString.trim();
+        tempGroupTitle = groupTitle;
+        if (currentTrack != null) {
+          currentTrack = currentTrack!.copyWith(groupTitle: groupTitle);
         }
       } else if (!trimmedLine.startsWith('#')) {
         // URL Line - only process if it looks like a valid URL

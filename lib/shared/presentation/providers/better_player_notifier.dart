@@ -4,11 +4,11 @@ import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:forui/widgets/progress.dart';
 import 'package:logger/logger.dart';
-import 'package:pusoo/core/extensions/string_ext.dart';
+import 'package:pusoo/core/utils/clear_key_license_key_extractor.dart';
+import 'package:pusoo/core/utils/http_headers_from_track.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/shared/presentation/providers/logger_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:http/http.dart' as http;
 
 part 'better_player_notifier.g.dart';
 
@@ -155,8 +155,9 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
     log.i("[BetterPlayerNotifier] Current state is null: ${state == null}");
     log.i(track.links[useUrlOnIndex]);
 
-    Map<String, String>? clearKeyHex;
+    // Map<String, String>? clearKeyHex;
     String? licenseUrl;
+    String? clearKey; // gunakan ini untuk di clearKey
     BetterPlayerVideoFormat? videoFormat;
     final uri = Uri.parse(videoUrl);
     final path = uri.path;
@@ -173,8 +174,10 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
 
     BetterPlayerDrmType? drmType;
     BetterPlayerDrmConfiguration? drmConfiguration;
-    Map<String, String>? httpHeaders;
-    Map<String, String> tmpHttpHeaders = {};
+    // Map<String, String>? httpHeaders;
+    
+    final httpHeaders = HttpHeadersFromTrack.build(track);
+    // log.d("httpHeaders from HttpHeadersFromTrack: $allHeaders");
 
     if (track.kodiProps.isNotEmpty) {
       final kodiProps = track.kodiProps.first;
@@ -208,68 +211,80 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
           // CEK APAKAH VALUE LICENSEKEY BERSIFAT URL ATAU BUKAN, JIKA IYA LAKUKAN REQUEST UNTUK AMBIL KEY
           if (licenseKey != null) {
             if (licenseKey.trim().isNotEmpty) {
-              if (licenseKey.isValidUrl()) {
-                Map<String, String>? clearKeyHttpHeader;
+              // IMPLEMENTASI CLEAR KEY
+              
 
-                log.d("track.httpHeaders: ${track.extVlcOpts}");
-                if (track.extVlcOpts.isNotEmpty) {
-                  final extVlcOpt = track.extVlcOpts.first;
-                  if (extVlcOpt.containsKey("http-user-agent")) {
-                    clearKeyHttpHeader = {
-                      "User-Agent": extVlcOpt["http-user-agent"]!,
-                    };
-                  }
-                }
+              final clearKeyData = await ClearKeyLicenseKeyExtractor.extract(licenseKey, headers: httpHeaders);
+              log.i("clearKeyData: $clearKeyData");
+              
+              if (clearKeyData.isNotEmpty) {
+                // Extract keyId and key from the response
 
-                log.d("clearKeyHttpHeader: $clearKeyHttpHeader");
-
-                try {
-                  final response = await http.get(
-                    Uri.parse(licenseKey),
-                    headers: clearKeyHttpHeader,
-                  );
-
-                  if (response.statusCode == 200) {
-                    try {
-                      final decoded = jsonDecode(response.body);
-
-                      if (decoded is Map<String, dynamic>) {
-                        final hasKey = decoded.containsKey("key");
-                        final hasKeyId = decoded.containsKey("keyId");
-
-                        if (hasKey && hasKeyId) {
-                          final key = decoded["key"];
-                          final keyId = decoded["keyId"];
-                          log.i("Key: $key, KeyId: $keyId");
-
-                          clearKeyHex = {keyId: key};
-                          log.i("clearKeyHexFromRequest: $clearKeyHex");
-                        } else {
-                          log.e("Response doesn't have key and keyId");
-                        }
-                      } else {
-                        log.e("Response is not JSON object");
-                      }
-                    } catch (e) {
-                      log.e("Gagal decode JSON: $e");
-                    }
-                  }
-                } catch (e) {
-                  log.e("Error when request clearKey: $licenseKey");
-                }
-                // if (rawClearKey.length == 2) {
-                //   clearKeyHex = {rawClearKey[0]: rawClearKey[1]};
-                // } else {
-                //   log.e("invalid clearKey format: $licenseKey");
-                // }
+                  clearKey = jsonEncode(clearKeyData);
               } else {
-                final rawClearKey = licenseKey.split(":");
-                if (rawClearKey.length == 2) {
-                  clearKeyHex = {rawClearKey[0]: rawClearKey[1]};
-                } else {
-                  log.e("invalid clearKey format: $licenseKey");
-                }
+                log.e("Failed to extract clearKey data from: $licenseKey");
               }
+
+              // if (licenseKey.isValidUrl()) {
+              //   Map<String, String>? clearKeyHttpHeader;
+
+              //   // Use HttpHeadersFromTrack to get headers with proper priority
+              //   final allHeaders = HttpHeadersFromTrack.build(track);
+              //   if (allHeaders.containsKey("user-agent")) {
+              //     clearKeyHttpHeader = {
+              //       "User-Agent": allHeaders["user-agent"]!,
+              //     };
+              //   }
+
+              //   log.d("clearKeyHttpHeader: $clearKeyHttpHeader");
+
+              //   try {
+              //     final response = await http.get(
+              //       Uri.parse(licenseKey),
+              //       headers: clearKeyHttpHeader,
+              //     );
+
+              //     if (response.statusCode == 200) {
+              //       try {
+              //         final decoded = jsonDecode(response.body);
+
+              //         if (decoded is Map<String, dynamic>) {
+              //           final hasKey = decoded.containsKey("key");
+              //           final hasKeyId = decoded.containsKey("keyId");
+
+              //           if (hasKey && hasKeyId) {
+              //             final key = decoded["key"];
+              //             final keyId = decoded["keyId"];
+              //             log.i("Key: $key, KeyId: $keyId");
+
+              //             clearKeyHex = {keyId: key};
+              //             log.i("clearKeyHexFromRequest: $clearKeyHex");
+              //           } else {
+              //             log.e("Response doesn't have key and keyId");
+              //           }
+              //         } else {
+              //           log.e("Response is not JSON object");
+              //         }
+              //       } catch (e) {
+              //         log.e("Gagal decode JSON: $e");
+              //       }
+              //     }
+              //   } catch (e) {
+              //     log.e("Error when request clearKey: $licenseKey");
+              //   }
+              //   // if (rawClearKey.length == 2) {
+              //   //   clearKeyHex = {rawClearKey[0]: rawClearKey[1]};
+              //   // } else {
+              //   //   log.e("invalid clearKey format: $licenseKey");
+              //   // }
+              // } else {
+              //   final rawClearKey = licenseKey.split(":");
+              //   if (rawClearKey.length == 2) {
+              //     clearKeyHex = {rawClearKey[0]: rawClearKey[1]};
+              //   } else {
+              //     log.e("invalid clearKey format: $licenseKey");
+              //   }
+              // }
             }
           }
         } else if (drmType == BetterPlayerDrmType.widevine) {
@@ -294,44 +309,24 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
       }
     }
 
-    log.d("httpHeaders:extvlcopt: ${track.extVlcOpts}");
-
-    if (track.extVlcOpts.isNotEmpty) {
-      final bool hasUserAgent = track.extVlcOpts.first.containsKey(
-        "http-user-agent",
-      );
-      if (hasUserAgent) {
-        tmpHttpHeaders["User-Agent"] =
-            "${track.extVlcOpts.first["http-user-agent"]}";
-      }
-      final bool hasReferrer = track.extVlcOpts.first.containsKey(
-        "http-referrer",
-      );
-      if (hasReferrer) {
-        tmpHttpHeaders["Referrer"] =
-            "${track.extVlcOpts.first["http-referrer"]}";
-      }
-    }
+    // Use HttpHeadersFromTrack to get all headers with proper priority
+    // final allHeaders = HttpHeadersFromTrack.build(track);
+    // log.d("httpHeaders from HttpHeadersFromTrack: $allHeaders");
+    
+    // if (allHeaders.isNotEmpty) {
+    //   httpHeaders = allHeaders;
+    // }
 
     if (drmType != null) {
       drmConfiguration = BetterPlayerDrmConfiguration(
         drmType: drmType,
-        clearKey: drmType == BetterPlayerDrmType.clearKey
-            ? BetterPlayerClearKeyUtils.generateKey(clearKeyHex!)
-            : null,
+        clearKey: clearKey,
         licenseUrl: drmType == BetterPlayerDrmType.widevine ? licenseUrl : null,
         headers: drmType == BetterPlayerDrmType.widevine ? httpHeaders : null,
       );
     }
 
-    log.i("httpHeaders:begin $httpHeaders");
-
-    if (tmpHttpHeaders.isNotEmpty) {
-      httpHeaders = tmpHttpHeaders;
-    }
-
-    log.i("httpHeaders:tmp $tmpHttpHeaders");
-    log.i("httpHeaders:end $httpHeaders");
+    log.i("httpHeaders:final $httpHeaders");
 
     final BetterPlayerDataSource betterPlayerDataSource =
         BetterPlayerDataSource(

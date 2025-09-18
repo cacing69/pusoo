@@ -1,3 +1,8 @@
+// Copyright (c) 2025, Ibnul Mutaki (@cacing69)
+// Licensed under the MIT License
+// Pusoo - Open Source IPTV Player
+// GitHub: https://github.com/cacing69/pusoo
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pusoo/core/utils/stream_headers_extractor.dart';
 
