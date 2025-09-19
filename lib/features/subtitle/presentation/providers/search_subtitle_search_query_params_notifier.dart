@@ -8,7 +8,9 @@ class SearchSubtitleQueryParamsNotifier
     extends _$SearchSubtitleQueryParamsNotifier {
   @override
   SearchSubtitleQueryParams build() {
-    return SearchSubtitleQueryParams();
+    return SearchSubtitleQueryParams(
+      languages: 'id', // Default language
+    );
   }
 
   void updateQuery(String query) {

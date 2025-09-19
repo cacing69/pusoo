@@ -33,9 +33,10 @@ class _SearchSubtitleScreenState extends ConsumerState<SearchSubtitleScreen> {
       previous,
       next,
     ) {
-      if (previous?.query != next.query && next.query?.isNotEmpty == true) {
+      // Only refresh when query actually changes (not when page changes)
+      if (previous?.query != next.query) {
         final log = ref.read(loggerProvider);
-        log.i("Query params changed, refreshing paging...");
+        log.i("Query changed from '${previous?.query}' to '${next.query}', refreshing paging...");
         ref.read(searchSubtitlePagingProvider).refresh();
       }
     });
@@ -112,7 +113,16 @@ class _SearchSubtitleScreenState extends ConsumerState<SearchSubtitleScreen> {
               child: RefreshIndicator(
                 child: PagingListener(
                   controller: ref.watch(searchSubtitlePagingProvider),
-                  builder: (context, state, fetchNextPage) => PagedListView(
+                  builder: (context, state, fetchNextPage) {
+                    // Cek apakah ada query
+                    final queryState = ref.watch(searchSubtitleQueryParamsProvider);
+                    if (queryState.query == null || queryState.query!.isEmpty) {
+                      return Center(
+                        child: Text("Enter a query to search for subtitles"),
+                      );
+                    }
+                    
+                    return PagedListView(
                     padding: EdgeInsets.zero,
                     state: state,
                     fetchNextPage: fetchNextPage,
@@ -126,8 +136,19 @@ class _SearchSubtitleScreenState extends ConsumerState<SearchSubtitleScreen> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(FIcons.user, size: 15),
-                                  Gap(5),
+                                  Gap(2),
+                                  Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: context.theme.colors.foreground,
+                                  ),
+                                  child: 
+                                  Padding(padding: EdgeInsets.all(2),
+                                    child: Icon(FIcons.user, size: 17, color: context.theme.colors.background,),
+                                  ),
+                                  
+                                  ),
+                                  Gap(7),
                                   Flexible(
                                     child: Row(
                                       mainAxisAlignment:
@@ -141,11 +162,12 @@ class _SearchSubtitleScreenState extends ConsumerState<SearchSubtitleScreen> {
                                                 fontWeight: FontWeight.w500,
                                               ),
                                         ),
+                                        Text("${index + 1}"),
                                         Row(
                                           children: [
                                             SizedBox(
-                                              height: 10,
-                                              width: 16,
+                                              height: 13,
+                                              width: 20,
                                               child:
                                                   CountryFlag.fromLanguageCode(
                                                     item.attributes?.language ??
@@ -219,13 +241,12 @@ class _SearchSubtitleScreenState extends ConsumerState<SearchSubtitleScreen> {
                       newPageProgressIndicatorBuilder: (context) =>
                           FProgress.circularIcon(),
                     ),
-                  ),
+                  );
+                  },
                 ),
                 onRefresh: () async {
                   ref.read(searchSubtitlePagingProvider).refresh();
                 },
-              ),
-            ),
             // FItem(
             //   prefix: Icon(FIcons.captions),
             //   title: Text("Subtitle 1"),
@@ -252,6 +273,8 @@ class _SearchSubtitleScreenState extends ConsumerState<SearchSubtitleScreen> {
             //     context.pop(true);
             //   },
             // ),
+              ),
+            ),
           ],
         ),
       ),

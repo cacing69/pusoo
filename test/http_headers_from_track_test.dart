@@ -31,20 +31,20 @@ https://seprai.jasoncreak8.workers.dev/play.mpd?id=6786&type=dash|referrer=https
         track.first,
       );
 
-      expect(result.containsKey("user-agent"), equals(true));
-      expect(result.containsKey("origin"), equals(true));
-      expect(result.containsKey("cookie"), equals(true));
+      expect(result.containsKey("User-Agent"), equals(true));
+      expect(result.containsKey("Origin"), equals(true));
+      expect(result.containsKey("Cookie"), equals(true));
 
       // stream_headers adalah hierarki tertinggi, akan ignore vlcopt dan exthttp
       expect(
-        result["user-agent"],
+        result["User-Agent"],
         equals(
           "Vidio/6.43.9-8ec34856ef (Linux;Android 11) ExoPlayerLib/2.19.1",
         ),
       );
-      expect(result["origin"], equals("https://www.vidio.com"));
+      expect(result["Origin"], equals("https://www.vidio.com"));
       expect(
-        result["cookie"],
+        result["Cookie"],
         equals(
           "Edge-Cache-Cookie=URLPrefix=aHR0cHM6Ly9ibGRjbXByb2QtY2RuLnRvZmZlZWxpdmUuY29tLw:Expires=1750297799:KeyName=prod_linear:Signature=TDBMq5Xc03aTvlgHIbGzOJRfXo1Ci6MBkMVPtER7RMKYwBr6xRLqsXpDCYdHaDC_ojg5k5EC7ww-uWB62kirBg",
         ),
@@ -72,17 +72,17 @@ https://seprai.jasoncreak8.workers.dev/play.mpd?id=6786&type=dash|referrer=https
         track.first,
       );
 
-      expect(result.containsKey("user-agent"), equals(true));
-      expect(result.containsKey("origin"), equals(true));
-      expect(result.containsKey("referer"), equals(true));
-      expect(result.containsKey("cookie"), equals(true));
+      expect(result.containsKey("User-Agent"), equals(true));
+      expect(result.containsKey("Origin"), equals(true));
+      expect(result.containsKey("Referer"), equals(true));
+      expect(result.containsKey("Cookie"), equals(true));
 
       // stream_headers adalah hierarki tertinggi, akan ignore vlcopt dan exthttp
-      expect(result["user-agent"], equals("VidioPlayer/4.3.0-WITH_ADS"));
-      expect(result["origin"], equals("https://www.vidio.com"));
-      expect(result["referer"], equals("https://www.vidio.com/"));
+      expect(result["User-Agent"], equals("VidioPlayer/4.3.0-WITH_ADS"));
+      expect(result["Origin"], equals("https://www.vidio.com"));
+      expect(result["Referer"], equals("https://www.vidio.com/"));
       expect(
-        result["cookie"],
+        result["Cookie"],
         equals(
           "__hdnea__=st=1758107257~exp=1758193657~acl=/*~hmac=99dec41934473d7fb71e7850a7a088fdb138b63b884a511c262244beefee8bed",
         ),
@@ -108,11 +108,11 @@ https://seprai.jasoncreak8.workers.dev/play.mpd?id=6786&type=dash|referrer=https
         track.first,
       );
 
-      expect(result.containsKey("user-agent"), equals(true));
+      expect(result.containsKey("User-Agent"), equals(true));
 
       // stream_headers adalah hierarki tertinggi, akan ignore vlcopt dan exthttp
-      expect(result["user-agent"], equals("VidioPlayer/4.3.0-WITH_ADS"));
-      expect(result["referrer"], equals("https://visionplus.id/"));
+      expect(result["User-Agent"], equals("VidioPlayer/4.3.0-WITH_ADS"));
+      expect(result["Referer"], equals("https://visionplus.id/"));
     });
 
     test('test:4', () async {
@@ -133,16 +133,16 @@ https://seprai.jasoncreak8.workers.dev/play.mpd?id=6786&type=dash|referrer=https
         track.first,
       );
 
-      expect(result.containsKey("user-agent"), equals(true));
+      expect(result.containsKey("User-Agent"), equals(true));
 
       // stream_headers adalah hierarki tertinggi, akan ignore vlcopt dan exthttp
       expect(
-        result["user-agent"],
+        result["User-Agent"],
         equals(
           "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
         ),
       );
-      expect(result["referrer"], equals("https://visionplus.id/"));
+      expect(result["Referer"], equals("https://visionplus.id/"));
     });
 
     test('test:5', () async {
@@ -162,11 +162,11 @@ https://seprai.jasoncreak8.workers.dev/play.mpd?id=6786&type=dash|referrer=https
         track.first,
       );
 
-      expect(result.containsKey("user-agent"), equals(true));
+      expect(result.containsKey("User-Agent"), equals(true));
 
       // stream_headers adalah hierarki tertinggi, akan ignore vlcopt dan exthttp
-      expect(result["user-agent"], equals("VidioPlayer/4.3.0-WITHOUT_ADS"));
-      expect(result["referrer"], equals("https://visionplus.id/"));
+      expect(result["User-Agent"], equals("VidioPlayer/4.3.0-WITHOUT_ADS"));
+      expect(result["Referer"], equals("https://visionplus.id/"));
     });
 
     test('test:6', () async {
@@ -185,16 +185,16 @@ https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_Select_1_BTS/output/index.mpd
         track.first,
       );
 
-      expect(result.containsKey("user-agent"), equals(true));
-      expect(result.containsKey("cookie"), equals(true));
+      expect(result.containsKey("User-Agent"), equals(true));
+      expect(result.containsKey("Cookie"), equals(true));
 
       // stream_headers adalah hierarki tertinggi, akan ignore vlcopt dan exthttp
       expect(
-        result["user-agent"],
+        result["User-Agent"],
         equals("plaYtv/7.1.3 (Linux;Android 13) ygx/69.1 ExoPlayerLib/824.0"),
       );
       expect(
-        result["cookie"],
+        result["Cookie"],
         equals(
           "__hdnea__=st=1758107257~exp=1758193657~acl=/*~hmac=99dec41934473d7fb71e7850a7a088fdb138b63b884a511c262244beefee8bed",
         ),
@@ -219,24 +219,24 @@ https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/
         track.first,
       );
 
-      expect(result.containsKey("user-agent"), equals(true));
-      expect(result.containsKey("cookie"), equals(true));
+      expect(result.containsKey("User-Agent"), equals(true));
+      expect(result.containsKey("Cookie"), equals(true));
 
       // stream_headers adalah hierarki tertinggi, akan ignore vlcopt dan exthttp
       expect(
-        result["user-agent"],
+        result["User-Agent"],
         equals(
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",
         ),
       );
 
       // Header untuk network caching
-      expect(result["cache-control"], equals("max-age=1000"));
+      expect(result["Cache-Control"], equals("max-age=1000"));
 
       // Header untuk HTTP reconnect (setara dengan --http-reconnect=true)
-      expect(result["connection"], equals("keep-alive"));
+      expect(result["Connection"], equals("keep-alive"));
 
-      expect(result["keep-alive"], equals("timeout=5, max=1000"));
+      expect(result["Keep-Alive"], equals("timeout=5, max=1000"));
     });
   });
 }

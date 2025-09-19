@@ -24,10 +24,12 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     final urlController = useTextEditingController();
     return FScaffold(
       header: FHeader(title: Text("Explore")),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
           Text(
             "Discover all content",
             style: context.theme.typography.xl.copyWith(
@@ -96,27 +98,30 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                         animation: animation,
                         direction: Axis.horizontal,
                         title: const Text('Please enter the URL'),
-                        body: Column(
-                          children: [
-                            Gap(10),
-                            FTextField(maxLines: 4, controller: urlController),
-                            Gap(5),
-                            FButton(
-                              style: FButtonStyle.ghost(),
-                              prefix: Icon(FIcons.clipboardPaste),
-                              onPress: () async {
-                                // paste clipboard here
-                                final clipboardData = await Clipboard.getData(
-                                  'text/plain',
-                                );
-                                if (clipboardData != null) {
-                                  urlController.text = clipboardData.text ?? '';
-                                  openVideoUrl(urlController.text);
-                                }
-                              },
-                              child: Text("Paste & Open URL"),
-                            ),
-                          ],
+                        body: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Gap(10),
+                              FTextField(maxLines: 4, controller: urlController),
+                              Gap(5),
+                              FButton(
+                                style: FButtonStyle.ghost(),
+                                prefix: Icon(FIcons.clipboardPaste),
+                                onPress: () async {
+                                  // paste clipboard here
+                                  final clipboardData = await Clipboard.getData(
+                                    'text/plain',
+                                  );
+                                  if (clipboardData != null) {
+                                    urlController.text = clipboardData.text ?? '';
+                                    openVideoUrl(urlController.text);
+                                  }
+                                },
+                                child: Text("Paste & Open URL"),
+                              ),
+                            ],
+                          ),
                         ),
                         actions: [
                           FButton(
@@ -150,6 +155,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
             child: Text("Add New Source"),
           ),
         ],
+        ),
       ),
     );
   }

@@ -18,9 +18,8 @@ Dio dioOpenSubtitles(Ref ref) {
         'Content-Type': 'application/json',
         'Accept-Encoding': 'gzip, deflate',
         'Accept-Language': 'en-US',
-        'User-Agent': 'Pusoo v1.0.0',
-        'connection': 'keep-alive',
-        "Api-Key": "6CpnKXZPWSiJJl8sjzPb7id8taErmFlO",
+        'Connection': 'keep-alive',
+        'Api-Key': '6CpnKXZPWSiJJl8sjzPb7id8taErmFlO',
       },
     ),
   );

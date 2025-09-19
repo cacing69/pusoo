@@ -131,11 +131,6 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
                         // REFRESH HOME
                         ref.read(tvTracksFilterProvider.notifier).reset();
                         ref.read(tvTracksPagingProvider).refresh();
-                        // showFToast(
-                        //   context: context,
-                        //   alignment: FToastAlignment.topCenter,
-                        //   title: const Text('Playlist Saved'),
-                        // );
                       }
                     }
                   },

@@ -53,7 +53,7 @@ class TvgLogoViewer extends StatelessWidget {
                               size: 40,
                             ),
                           ),
-                          fit: BoxFit.contain,
+                          fit: BoxFit.fitWidth,
                         ),
                       ),
                     )

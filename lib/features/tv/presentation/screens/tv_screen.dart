@@ -26,8 +26,7 @@ class TvScreen extends StatefulHookConsumerWidget {
   ConsumerState<TvScreen> createState() => _TvScreenState();
 }
 
-class _TvScreenState extends ConsumerState<TvScreen>
-    with TickerProviderStateMixin {
+class _TvScreenState extends ConsumerState<TvScreen> {
   final Debouncer _debouncer = Debouncer();
   final Duration _debounceDuration = const Duration(milliseconds: 500);
 

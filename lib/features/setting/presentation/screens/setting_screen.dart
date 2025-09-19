@@ -23,7 +23,7 @@ class _SettingScreenState extends State<SettingScreen> {
               label: Text("Source"),
               children: [
                 FTile(
-                  prefix: Icon(FIcons.listVideo),
+                  prefix: Icon(FIcons.database),
                   title: Text("Manage Sources"),
                   suffix: Icon(FIcons.chevronRight),
                   onPress: () {
@@ -31,7 +31,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   },
                 ),
                 FTile(
-                  prefix: Icon(FIcons.compass),
+                  prefix: Icon(FIcons.serverCog),
                   title: Text("Public Sources"),
                   subtitle: Text("Browse freely available information sources"),
                   suffix: Icon(FIcons.chevronRight),

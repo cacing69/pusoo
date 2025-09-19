@@ -71,38 +71,17 @@ class _PublicSourceListPlaylistScreenState
           ),
           FItemGroup(
             children: [
+              
               FItem(
                 prefix: Icon(FIcons.folderGit2),
-                title: Text("Main Playlist"),
-                subtitle: Text("https://iptv-org.github.io/iptv/index.m3u"),
-                suffix: Icon(FIcons.chevronRight),
-                onPress: () {
-                  context.pushNamed(RouteName.publicSourcesPlaylistTrack.name);
-                },
-              ),
-              FItem(
-                prefix: Icon(FIcons.folderGit2),
-                title: Text("Grouped by category"),
-                subtitle: Text(
-                  "https://iptv-org.github.io/iptv/index.category.m3u",
-                ),
-                suffix: Icon(FIcons.chevronRight),
-              ),
-              FItem(
-                prefix: Icon(FIcons.folderGit2),
-                title: Text("Grouped by Language"),
-                subtitle: Text(
-                  "https://iptv-org.github.io/iptv/index.language.m3u",
-                ),
-                suffix: Icon(FIcons.chevronRight),
-              ),
-              FItem(
-                prefix: Icon(FIcons.folderGit2),
-                title: Text("Grouped by Broadcast Area"),
+                title: Text("IPTV-ORG Playlist"),
                 subtitle: Text(
                   "https://iptv-org.github.io/iptv/index.country.m3u",
                 ),
                 suffix: Icon(FIcons.chevronRight),
+                onPress: () {
+                  context.pushNamed(RouteName.publicSourcesPlaylistTrack.name);
+                },
               ),
             ],
           ),

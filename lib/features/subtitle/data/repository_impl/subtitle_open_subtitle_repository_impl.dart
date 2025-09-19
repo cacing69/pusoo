@@ -1,8 +1,5 @@
 // import 'dart:convert';
 
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:logger/logger.dart';
 import 'package:pusoo/core/errors/failure.dart';
@@ -15,130 +12,132 @@ import 'package:pusoo/shared/domain/repositories/open_subtitles/subtitle_reposit
 
 class SubtitleOpenSubtitleRepositoryImpl implements SubtitleRepository {
   final OpenSubtitlesClient client;
-  final Logger logger;
+  final Logger log;
 
-  SubtitleOpenSubtitleRepositoryImpl(this.client, this.logger);
+  SubtitleOpenSubtitleRepositoryImpl(this.client, this.log);
 
   @override
   Future<Either<Failure, TOpenSubtitleSearchResponse<List<Subtitle>>>> search(
     SearchSubtitleQueryParams params,
   ) async {
-    try {
-      // final result = await client.searchSubtitle(params);
+    return Right(await client.searchSubtitle(params));
+    // try {
+    //   // final result = await client.searchSubtitle(params);
 
-      // final url =
-      //     'https://api.opensubtitles.com/api/v1/subtitles?page=1&User-Agent=Pusoo%20v1.0.0&query=el%20camino&languages=id';
+    //   // final url =
+    //   //     'https://api.opensubtitles.com/api/v1/subtitles?page=1&User-Agent=Pusoo%20v1.0.0&query=el%20camino&languages=id';
 
-      final url =
-          'https://api.opensubtitles.com/api/v1/subtitles?page=1&User-Agent=Pusoo%20v1.0.0&query=el%20camino&languages=';
+    //   final url =
+    //       'https://api.opensubtitles.com/api/v1/subtitles?page=1&User-Agent=Pusoo%20v1.0.0&query=el%20camino&languages=';
 
-      // Headers yang diperlukan
-      final headers = {
-        'User-Agent': 'Pusoo v1.0.0',
-        'Api-Key': '6CpnKXZPWSiJJl8sjzPb7id8taErmFlO',
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      };
+    //   // Headers yang diperlukan
+    //   final headers = {
+    //     'User-Agent': 'Pusoo v1.0.0',
+    //     'Api-Key': '6CpnKXZPWSiJJl8sjzPb7id8taErmFlO',
+    //     'Content-Type': 'application/json',
+    //     'Accept': 'application/json',
+    //   };
 
-      final client = HttpClient();
-      final request = await client.getUrl(Uri.parse(url));
+    //   final client = HttpClient();
+    //   final request = await client.getUrl(Uri.parse(url));
 
-      headers.forEach((key, value) {
-        request.headers.set(key, value);
-      });
+    //   headers.forEach((key, value) {
+    //     request.headers.set(key, value);
+    //   });
 
-      final response = await request.close();
+    //   final response = await request.close();
 
-      final responseBody = await response.transform(utf8.decoder).join();
+    //   final responseBody = await response.transform(utf8.decoder).join();
 
-      if (response.statusCode == 200) {
-        try {
-          final jsonData = json.decode(responseBody);
+    //   if (response.statusCode == 200) {
+    //     try {
+    //       final jsonData = json.decode(responseBody);
 
-          // final data = jsonData['data'] as List<dynamic>? ?? [];
+    //       // final data = jsonData['data'] as List<dynamic>? ?? [];
 
-          // logger.d(data);
+    //       // logger.d(data);
 
-          // final subtitles = data.map((item) {
-          //   try {
-          //     return Subtitle.fromJson(item as Map<String, dynamic>);
-          //   } catch (e) {
-          //     logger.e('Error parsing subtitle item: $e');
-          //     logger.e('Raw item data: $item');
-          //     return Subtitle(
-          //       id: item['id']?.toString(),
-          //       type: item['type']?.toString(),
-          //       attributes: null,
-          //     );
-          //   }
-          // }).toList();
+    //       // final subtitles = data.map((item) {
+    //       //   try {
+    //       //     return Subtitle.fromJson(item as Map<String, dynamic>);
+    //       //   } catch (e) {
+    //       //     logger.e('Error parsing subtitle item: $e');
+    //       //     logger.e('Raw item data: $item');
+    //       //     return Subtitle(
+    //       //       id: item['id']?.toString(),
+    //       //       type: item['type']?.toString(),
+    //       //       attributes: null,
+    //       //     );
+    //       //   }
+    //       // }).toList();
 
-          final searchResponse =
-              TOpenSubtitleSearchResponse<List<Subtitle>>.fromJson(jsonData, (
-                json,
-              ) {
-                if (json is List) {
-                  return json.map((item) {
-                    try {
-                      return Subtitle.fromJson(item);
-                    } catch (e) {
-                      logger.e('Error parsing subtitle item: $e');
-                      logger.e('Raw item data: $item');
-                      return Subtitle(
-                        id: item['id']?.toString(),
-                        type: item['type']?.toString(),
-                        attributes: null,
-                      );
-                    }
-                  }).toList();
-                }
-                return <Subtitle>[];
-              });
+    //       final searchResponse =
+    //           TOpenSubtitleSearchResponse<List<Subtitle>>.fromJson(jsonData, (
+    //             json,
+    //           ) {
+    //             if (json is List) {
+    //               return json.map((item) {
+    //                 try {
+    //                   return Subtitle.fromJson(item);
+    //                 } catch (e) {
+    //                   logger.e('Error parsing subtitle item: $e');
+    //                   logger.e('Raw item data: $item');
+    //                   return Subtitle(
+    //                     id: item['id']?.toString(),
+    //                     type: item['type']?.toString(),
+    //                     attributes: null,
+    //                   );
+    //                 }
+    //               }).toList();
+    //             }
+    //             return <Subtitle>[];
+    //           });
 
-          // final searchResponse =
-          //     TOpenSubtitleSearchResponse<List<Subtitle>>.fromJson(jsonData, (
-          //       json,
-          //     ) {
-          //       if (json is List) {
-          //         return json.map((item) {
-          //           try {
-          //             return Subtitle.fromJson(item as Map<String, dynamic>);
-          //           } catch (e) {
-          //             logger.e('Error parsing subtitle item: $e');
-          //             logger.e('Raw item data: $item');
-          //             return Subtitle(
-          //               id: item['id']?.toString(),
-          //               type: item['type']?.toString(),
-          //               attributes: null,
-          //             );
-          //           }
-          //         }).toList();
-          //       }
-          //       return <Subtitle>[];
-          //     });
+    //       // final searchResponse =
+    //       //     TOpenSubtitleSearchResponse<List<Subtitle>>.fromJson(jsonData, (
+    //       //       json,
+    //       //     ) {
+    //       //       if (json is List) {
+    //       //         return json.map((item) {
+    //       //           try {
+    //       //             return Subtitle.fromJson(item as Map<String, dynamic>);
+    //       //           } catch (e) {
+    //       //             logger.e('Error parsing subtitle item: $e');
+    //       //             logger.e('Raw item data: $item');
+    //       //             return Subtitle(
+    //       //               id: item['id']?.toString(),
+    //       //               type: item['type']?.toString(),
+    //       //               attributes: null,
+    //       //             );
+    //       //           }
+    //       //         }).toList();
+    //       //       }
+    //       //       return <Subtitle>[];
+    //       //     });
 
-          return Right(searchResponse);
-        } catch (e) {
-          logger.e('Error parsing response: $e');
-          logger.e('Raw Response Body:');
-          logger.e(responseBody);
-        }
-      }
+    //       client.close();
 
-      client.close();
+    //       return Right(searchResponse);
+    //     } catch (e) {
+    //       client.close();
+    //       logger.e('Error parsing response: $e');
+    //       logger.e('Raw Response Body:');
+    //       logger.e(responseBody);
+    //     }
+    //   }
 
-      return Right(TOpenSubtitleSearchResponse(data: []));
+    //   return Right(TOpenSubtitleSearchResponse(data: []));
 
-      // final result = await client.(params);
-      // return Right(result);
+    //   // final result = await client.(params);
+    //   // return Right(result);
 
-      // return  Right(client.searchSubtitle(queryParams));
-    } on Exception catch (e) {
-      return Left(ClientRepositoryFailure(message: e.toString()));
-    } catch (e) {
-      return Left(
-        ServerFailure(message: 'An unexpected error occurred: ${e.toString()}'),
-      );
-    }
+    //   // return  Right(client.searchSubtitle(queryParams));
+    // } on Exception catch (e) {
+    //   return Left(ClientRepositoryFailure(message: e.toString()));
+    // } catch (e) {
+    //   return Left(
+    //     ServerFailure(message: 'An unexpected error occurred: ${e.toString()}'),
+    //   );
+    // }
   }
 }
