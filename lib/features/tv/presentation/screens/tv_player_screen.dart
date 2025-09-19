@@ -35,11 +35,6 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
     final isPotrait = orientation == Orientation.portrait;
@@ -92,7 +87,6 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
   Widget _buildButtonFavoriteSubtitleAndFullscreen(
     BetterPlayerController? controller,
   ) {
-    final betterPlayerController = ref.watch(betterPlayerProvider);
     return SafeArea(
       top: false,
       child: Column(
@@ -134,7 +128,7 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
                 }
               }
             },
-            prefix: Icon(FIcons.search),
+            prefix: Icon(FIcons.captions),
             child: Text("Search subtitle"),
           ),
           Gap(10),

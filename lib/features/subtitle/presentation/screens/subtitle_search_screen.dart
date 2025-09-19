@@ -39,6 +39,8 @@ class _SubtitleSearchScreenState extends ConsumerState<SubtitleSearchScreen> {
               Flexible(child: FTextField(label: Text("Language"))),
             ],
           ),
+
+          Gap(5),
           FTextField(label: Text("Query")),
           Gap(5),
           FButton(
