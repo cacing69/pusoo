@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tmdb_http_client.dart';
+part of 'dio_tmdb.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,24 +9,24 @@ part of 'tmdb_http_client.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(tmdbHttpClient)
-const tmdbHttpClientProvider = TmdbHttpClientProvider._();
+@ProviderFor(dioTmdb)
+const dioTmdbProvider = DioTmdbProvider._();
 
-final class TmdbHttpClientProvider extends $FunctionalProvider<Dio, Dio, Dio>
+final class DioTmdbProvider extends $FunctionalProvider<Dio, Dio, Dio>
     with $Provider<Dio> {
-  const TmdbHttpClientProvider._()
+  const DioTmdbProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'tmdbHttpClientProvider',
+        name: r'dioTmdbProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$tmdbHttpClientHash();
+  String debugGetCreateSourceHash() => _$dioTmdbHash();
 
   @$internal
   @override
@@ -35,7 +35,7 @@ final class TmdbHttpClientProvider extends $FunctionalProvider<Dio, Dio, Dio>
 
   @override
   Dio create(Ref ref) {
-    return tmdbHttpClient(ref);
+    return dioTmdb(ref);
   }
 
   /// {@macro riverpod.override_with_value}
@@ -47,4 +47,4 @@ final class TmdbHttpClientProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$tmdbHttpClientHash() => r'998e50087d8a88a4d7f69ea3d26308c62660278c';
+String _$dioTmdbHash() => r'bf36deb0c7a9dcb2ed8c97b9a9f6719828c5bfa2';

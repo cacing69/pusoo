@@ -21,6 +21,14 @@ class ServerFailure extends Failure {
   const ServerFailure({required super.message, super.data});
 }
 
+class ClientRepositoryFailure extends Failure {
+  const ClientRepositoryFailure({required super.message, super.data});
+}
+
+class UsecaseFailure extends Failure {
+  const UsecaseFailure({required super.message, super.data});
+}
+
 class CacheFailure extends Failure {
   const CacheFailure({required super.message, super.data});
 }

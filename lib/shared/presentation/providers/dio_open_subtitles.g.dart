@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'open_subtitles_http_client.dart';
+part of 'dio_open_subtitles.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,25 +9,24 @@ part of 'open_subtitles_http_client.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(openSubtitlesHttpClient)
-const openSubtitlesHttpClientProvider = OpenSubtitlesHttpClientProvider._();
+@ProviderFor(dioOpenSubtitles)
+const dioOpenSubtitlesProvider = DioOpenSubtitlesProvider._();
 
-final class OpenSubtitlesHttpClientProvider
-    extends $FunctionalProvider<Dio, Dio, Dio>
+final class DioOpenSubtitlesProvider extends $FunctionalProvider<Dio, Dio, Dio>
     with $Provider<Dio> {
-  const OpenSubtitlesHttpClientProvider._()
+  const DioOpenSubtitlesProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'openSubtitlesHttpClientProvider',
+        name: r'dioOpenSubtitlesProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$openSubtitlesHttpClientHash();
+  String debugGetCreateSourceHash() => _$dioOpenSubtitlesHash();
 
   @$internal
   @override
@@ -36,7 +35,7 @@ final class OpenSubtitlesHttpClientProvider
 
   @override
   Dio create(Ref ref) {
-    return openSubtitlesHttpClient(ref);
+    return dioOpenSubtitles(ref);
   }
 
   /// {@macro riverpod.override_with_value}
@@ -48,5 +47,4 @@ final class OpenSubtitlesHttpClientProvider
   }
 }
 
-String _$openSubtitlesHttpClientHash() =>
-    r'c28c4aac2c24f28fa9f05c0464215076b7f12a93';
+String _$dioOpenSubtitlesHash() => r'456dac28d5f1c92004b50a4a92eea7676ee497eb';

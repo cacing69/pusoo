@@ -316,17 +316,17 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                                   jsonEncode(track.extVlcOpts),
                                 ),
                                 isLiveTv: drift.Value(
-                                  playlistTemplate.liveTvClassifier
+                                  xtreamPlaylistTemplate.liveTvClassifier
                                           ?.isSatisfiedByAll(track) ??
                                       false,
                                 ),
                                 isMovie: drift.Value(
-                                  playlistTemplate.movieClassifier
+                                  xtreamPlaylistTemplate.movieClassifier
                                           ?.isSatisfiedByAll(track) ??
                                       false,
                                 ),
                                 isTvSerie: drift.Value(
-                                  playlistTemplate.tvSerieClassifier
+                                  xtreamPlaylistTemplate.tvSerieClassifier
                                           ?.isSatisfiedByAll(track) ??
                                       false,
                                 ),

@@ -42,7 +42,7 @@ class _SubtitleSearchScreenState extends ConsumerState<SubtitleSearchScreen> {
 
           Gap(5),
           FTextField(label: Text("Query")),
-          Gap(5),
+          Gap(10),
           FButton(
             onPress: () {},
             prefix: Icon(FIcons.search),
