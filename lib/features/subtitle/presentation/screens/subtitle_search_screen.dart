@@ -30,6 +30,7 @@ class _SubtitleSearchScreenState extends ConsumerState<SubtitleSearchScreen> {
         ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             spacing: 10,
@@ -51,7 +52,12 @@ class _SubtitleSearchScreenState extends ConsumerState<SubtitleSearchScreen> {
           ),
           Text("Results"),
           FItem(
+            prefix: Icon(FIcons.captions),
             title: Text("Subtitle 1"),
+            suffix: Icon(FIcons.download),
+            details: Text("English"),
+            subtitle: Text("BLuray 1080HD"),
+
             onPress: () async {
               String subtitle =
                   // "https://gist.githubusercontent.com/cacing69/bee104dbd333b3fa98dab94c7673f1de/raw/f3eb6671a7c8f6d44080a877b8c6efd04f0332bf/gistfile1.txt";
