@@ -20,7 +20,7 @@ class SubtitleOpenSubtitleRepositoryImpl implements SubtitleRepository {
   Future<Either<Failure, TOpenSubtitleSearchResponse<List<Subtitle>>>> search(
     SearchSubtitleQueryParams params,
   ) async {
-    return Right(await client.searchSubtitle(params));
+    return Right(await client.search(params));
     // try {
     //   // final result = await client.searchSubtitle(params);
 

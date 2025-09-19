@@ -47,4 +47,4 @@ final class DioOpenSubtitlesProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$dioOpenSubtitlesHash() => r'0aa208cd5e7792b0c334988ca285da664a2a3e68';
+String _$dioOpenSubtitlesHash() => r'03eef5fc20ecefc10e0c123a78b38152f4cb9323';

@@ -10,6 +10,8 @@ part 'search_subtitle_paging_notifier.g.dart';
 
 @riverpod
 class SearchSubtitlePagingNotifier extends _$SearchSubtitlePagingNotifier {
+  String? _lastError;
+
   @override
   PagingController<int, Subtitle> build() {
     final log = ref.read(loggerProvider);
@@ -75,10 +77,12 @@ class SearchSubtitlePagingNotifier extends _$SearchSubtitlePagingNotifier {
           
           return result.fold(
             (failure) {
+              _lastError = failure.message;
               log.e("SearchSubtitleUsecase failed: $failure");
-              return <Subtitle>[];
+              throw Exception(failure.message);
             },
             (response) {
+              _lastError = null; // Clear error on success
               final data = response.data ?? [];
               log.i("Received ${data.length} subtitles for page $pageKey");
               log.i("Response totalCount: ${response.totalCount ?? 'unknown'}");
@@ -88,6 +92,7 @@ class SearchSubtitlePagingNotifier extends _$SearchSubtitlePagingNotifier {
             },
           );
         } catch (e) {
+          _lastError = e.toString();
           log.e("Error fetching subtitle page: $e");
           rethrow;
         }
@@ -102,4 +107,6 @@ class SearchSubtitlePagingNotifier extends _$SearchSubtitlePagingNotifier {
 
     return controller;
   }
+
+  String? get lastError => _lastError;
 }

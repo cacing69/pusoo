@@ -8,6 +8,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:pusoo/core/configs/env.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -76,7 +77,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         url,
         headers: {
           "Authorization":
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5OGRiOTFmZjdmYjg1OGI5NThjYWJiMjIzYjYzNWY1YSIsIm5iZiI6MTc1NzczNTgyNS41ODUsInN1YiI6IjY4YzRlYjkxMTUzMzljYjRjZDg1NjI1NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.JNfOMZqbQAVTt5u0UZhSNWgwfpvlwfwwRil5QMaHJXA",
+              "Bearer ${Env.tmdbReadAccessToken}",
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
@@ -98,7 +99,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             urlDetail,
             headers: {
               "Authorization":
-                  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5OGRiOTFmZjdmYjg1OGI5NThjYWJiMjIzYjYzNWY1YSIsIm5iZiI6MTc1NzczNTgyNS41ODUsInN1YiI6IjY4YzRlYjkxMTUzMzljYjRjZDg1NjI1NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.JNfOMZqbQAVTt5u0UZhSNWgwfpvlwfwwRil5QMaHJXA",
+                  "Bearer ${Env.tmdbReadAccessToken}",
               "Content-Type": "application/json",
               "Accept": "application/json",
             },
@@ -131,7 +132,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             urlVideos,
             headers: {
               "Authorization":
-                  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5OGRiOTFmZjdmYjg1OGI5NThjYWJiMjIzYjYzNWY1YSIsIm5iZiI6MTc1NzczNTgyNS41ODUsInN1YiI6IjY4YzRlYjkxMTUzMzljYjRjZDg1NjI1NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.JNfOMZqbQAVTt5u0UZhSNWgwfpvlwfwwRil5QMaHJXA",
+                  "Bearer ${Env.tmdbReadAccessToken}",
               "Content-Type": "application/json",
               "Accept": "application/json",
             },

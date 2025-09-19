@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:pusoo/core/configs/env.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 // ignore: unnecessary_import
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,14 +13,15 @@ part 'dio_open_subtitles.g.dart';
 Dio dioOpenSubtitles(Ref ref) {
   final dio = Dio(
     BaseOptions(
-      baseUrl: "https://api.opensubtitles.com",
+      baseUrl: "",
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Accept-Encoding': 'gzip, deflate',
         'Accept-Language': 'en-US',
         'Connection': 'keep-alive',
-        'Api-Key': '6CpnKXZPWSiJJl8sjzPb7id8taErmFlO',
+        'Api-Key': Env.openSubtitlesApiKey, // 41a97db583e09927f82691dea4c69876eeb5b270
+        'User-Agent': 'Pusoo v1.0.0',
       },
     ),
   );

@@ -18,7 +18,34 @@ class _OpenSubtitlesClient implements OpenSubtitlesClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<TOpenSubtitleSearchResponse<List<Subtitle>>> searchSubtitle(
+  Future<AuthLogin> login(LoginRequestBody requestBody) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = requestBody;
+    final _options = _setStreamType<AuthLogin>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/v1/login',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late AuthLogin _value;
+    try {
+      _value = AuthLogin.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<TOpenSubtitleSearchResponse<List<Subtitle>>> search(
     SearchSubtitleQueryParams queryParams,
   ) async {
     final _extra = <String, dynamic>{};
@@ -52,6 +79,36 @@ class _OpenSubtitlesClient implements OpenSubtitlesClient {
                   .toList()
             : List.empty(),
       );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<DownloadSubtitle> download(
+    SearchSubtitleQueryParams queryParams,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.addAll(queryParams.toJson());
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<DownloadSubtitle>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/v1/download',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late DownloadSubtitle _value;
+    try {
+      _value = DownloadSubtitle.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

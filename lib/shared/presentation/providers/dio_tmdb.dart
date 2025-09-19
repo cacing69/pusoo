@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:pusoo/core/configs/env.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dio_tmdb.g.dart';
@@ -20,7 +21,7 @@ Dio dioTmdb(Ref ref) {
         'Content-Type': 'application/json',
         'connection': 'keep-alive',
         "Authorization":
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5OGRiOTFmZjdmYjg1OGI5NThjYWJiMjIzYjYzNWY1YSIsIm5iZiI6MTc1NzczNTgyNS41ODUsInN1YiI6IjY4YzRlYjkxMTUzMzljYjRjZDg1NjI1NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.JNfOMZqbQAVTt5u0UZhSNWgwfpvlwfwwRil5QMaHJXA",
+            "Bearer ${Env.tmdbReadAccessToken}",
       },
     ),
   );
