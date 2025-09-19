@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 
 part 'playlist.g.dart';
 part 'playlist.freezed.dart';
@@ -25,7 +24,4 @@ abstract class Playlist with _$Playlist {
 
   factory Playlist.fromJson(Map<String, dynamic> json) =>
       _$PlaylistFromJson(json);
-
-  factory Playlist.fromDrift(PlaylistDriftData drift) =>
-      Playlist.fromJson(drift.toJson());
 }

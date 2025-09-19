@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tmdb_http_client.dart';
+part of 'open_subtitles_http_client.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,24 +9,25 @@ part of 'tmdb_http_client.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(tmdbHttpClient)
-const tmdbHttpClientProvider = TmdbHttpClientProvider._();
+@ProviderFor(openSubtitlesHttpClient)
+const openSubtitlesHttpClientProvider = OpenSubtitlesHttpClientProvider._();
 
-final class TmdbHttpClientProvider extends $FunctionalProvider<Dio, Dio, Dio>
+final class OpenSubtitlesHttpClientProvider
+    extends $FunctionalProvider<Dio, Dio, Dio>
     with $Provider<Dio> {
-  const TmdbHttpClientProvider._()
+  const OpenSubtitlesHttpClientProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'tmdbHttpClientProvider',
+        name: r'openSubtitlesHttpClientProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$tmdbHttpClientHash();
+  String debugGetCreateSourceHash() => _$openSubtitlesHttpClientHash();
 
   @$internal
   @override
@@ -35,7 +36,7 @@ final class TmdbHttpClientProvider extends $FunctionalProvider<Dio, Dio, Dio>
 
   @override
   Dio create(Ref ref) {
-    return tmdbHttpClient(ref);
+    return openSubtitlesHttpClient(ref);
   }
 
   /// {@macro riverpod.override_with_value}
@@ -47,4 +48,5 @@ final class TmdbHttpClientProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$tmdbHttpClientHash() => r'998e50087d8a88a4d7f69ea3d26308c62660278c';
+String _$openSubtitlesHttpClientHash() =>
+    r'c28c4aac2c24f28fa9f05c0464215076b7f12a93';

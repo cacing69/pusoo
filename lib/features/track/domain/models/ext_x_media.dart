@@ -1,35 +1,3 @@
-// class ExtXMedia {
-//   final String type;
-//   final String groupId;
-//   final String language;
-//   final String name;
-//   final bool isDefault;
-//   final bool autoSelect;
-//   final String uri;
-
-//   ExtXMedia({
-//     required this.type,
-//     required this.groupId,
-//     required this.language,
-//     required this.name,
-//     this.isDefault = false,
-//     this.autoSelect = false,
-//     required this.uri,
-//   });
-
-//   factory ExtXMedia.fromMap(Map<String, String> map) {
-//     return ExtXMedia(
-//       type: map["TYPE"] ?? "",
-//       groupId: map["GROUP-ID"] ?? "",
-//       language: map["LANGUAGE"] ?? "",
-//       name: map["NAME"] ?? "",
-//       isDefault: map["DEFAULT"] == "YES",
-//       autoSelect: map["AUTOSELECT"] == "YES",
-//       uri: map["URI"] ?? "",
-//     );
-//   }
-// }
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'ext_x_media.g.dart';

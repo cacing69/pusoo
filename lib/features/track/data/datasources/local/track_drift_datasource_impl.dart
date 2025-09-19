@@ -4,6 +4,7 @@ import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:pusoo/features/track/data/datasources/local/track_datasource.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:drift/drift.dart' as drift;
+import 'package:pusoo/features/track/data/models/track_drift_data_ext.dart';
 
 class TrackDriftDatasourceImpl implements TrackDatasource {
   late final Logger _log;
@@ -133,11 +134,10 @@ class TrackDriftDatasourceImpl implements TrackDatasource {
     // 5. Eksekusi query dan lakukan mapping hasil
     final trackDriftDataRows = await query.get();
 
-    final List<Track> mapToTrack = trackDriftDataRows.map((result) {
-      _log.i(
-        "row.toString:[1]: ${result.readTable(driftDb.trackDrift).toString()}",
-      );
-      return Track.fromDriftTypedResult(result);
+    final List<Track> mapToTrack = trackDriftDataRows.map((
+      drift.TypedResult result,
+    ) {
+      return result.toEntity();
     }).toList();
 
     return mapToTrack;

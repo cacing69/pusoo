@@ -1,10 +1,6 @@
-import 'dart:convert';
-
-import 'package:drift/drift.dart' as drift;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pusoo/features/playlist/domain/models/playlist.dart';
 import 'package:pusoo/features/track/domain/models/ext_x_media.dart';
-import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 
 part 'track.g.dart';
 part 'track.freezed.dart';
@@ -39,75 +35,75 @@ abstract class Track with _$Track {
 
   factory Track.fromJson(Map<String, dynamic> json) => _$TrackFromJson(json);
 
-  factory Track.fromDrift(TrackDriftData trackDrift) {
-    final json = trackDrift.toJson();
+  // factory Track.fromDrift(TrackDriftData trackDrift) {
+  //   final json = trackDrift.toJson();
 
-    void convertStringToList(String fieldName) {
-      final dynamic fieldValue = json[fieldName];
-      if (fieldValue is String) {
-        if (fieldValue.isEmpty) {
-          json[fieldName] = [];
-        } else {
-          try {
-            final decoded = jsonDecode(fieldValue);
-            if (decoded is List) {
-              json[fieldName] = decoded;
-            } else {
-              json[fieldName] = [decoded];
-            }
-          } catch (e) {
-            json[fieldName] = [fieldValue];
-          }
-        }
-      } else if (fieldValue is! List) {
-        json[fieldName] = [];
-      }
-    }
+  //   void convertStringToList(String fieldName) {
+  //     final dynamic fieldValue = json[fieldName];
+  //     if (fieldValue is String) {
+  //       if (fieldValue.isEmpty) {
+  //         json[fieldName] = [];
+  //       } else {
+  //         try {
+  //           final decoded = jsonDecode(fieldValue);
+  //           if (decoded is List) {
+  //             json[fieldName] = decoded;
+  //           } else {
+  //             json[fieldName] = [decoded];
+  //           }
+  //         } catch (e) {
+  //           json[fieldName] = [fieldValue];
+  //         }
+  //       }
+  //     } else if (fieldValue is! List) {
+  //       json[fieldName] = [];
+  //     }
+  //   }
 
-    convertStringToList('links');
-    convertStringToList('extVlcOpts');
-    convertStringToList('kodiProps');
-    convertStringToList('httpHeaders');
+  //   convertStringToList('links');
+  //   convertStringToList('extVlcOpts');
+  //   convertStringToList('kodiProps');
+  //   convertStringToList('httpHeaders');
 
-    return Track.fromJson(json);
-  }
+  //   return Track.fromJson(json);
+  // }
 
-  factory Track.fromDriftTypedResult(drift.TypedResult result) {
-    dynamic json = result.readTable(driftDb.trackDrift).toJson();
-    final playlistJson = result.readTable(driftDb.playlistDrift).toJson();
+  // factory Track.fromDriftTypedResult(drift.TypedResult result) {
+  //   dynamic json = result.readTable(driftDb.trackDrift).toJson();
+  //   final playlistJson = result.readTable(driftDb.playlistDrift).toJson();
 
-    void convertStringToList(String fieldName) {
-      final dynamic fieldValue = json[fieldName];
-      if (fieldValue is String) {
-        if (fieldValue.isEmpty) {
-          json[fieldName] = [];
-        } else {
-          try {
-            final decoded = jsonDecode(fieldValue);
-            if (decoded is List) {
-              json[fieldName] = decoded;
-            } else {
-              json[fieldName] = [decoded];
-            }
-          } catch (e) {
-            json[fieldName] = [fieldValue];
-          }
-        }
-      } else if (fieldValue is! List) {
-        json[fieldName] = [];
-      }
-    }
+  //   void convertStringToList(String fieldName) {
+  //     final dynamic fieldValue = json[fieldName];
+  //     if (fieldValue is String) {
+  //       if (fieldValue.isEmpty) {
+  //         json[fieldName] = [];
+  //       } else {
+  //         try {
+  //           final decoded = jsonDecode(fieldValue);
+  //           if (decoded is List) {
+  //             json[fieldName] = decoded;
+  //           } else {
+  //             json[fieldName] = [decoded];
+  //           }
+  //         } catch (e) {
+  //           json[fieldName] = [fieldValue];
+  //         }
+  //       }
+  //     } else if (fieldValue is! List) {
+  //       json[fieldName] = [];
+  //     }
+  //   }
 
-    convertStringToList('links');
-    convertStringToList('extVlcOpts');
-    convertStringToList('kodiProps');
+  //   convertStringToList('links');
+  //   convertStringToList('extVlcOpts');
+  //   convertStringToList('kodiProps');
 
-    json['playlist'] = playlistJson;
+  //   json['playlist'] = playlistJson;
 
-    print(
-      "track.fromDriftTypedResult.toString:[convert]: ${result.readTable(driftDb.trackDrift).toString()}",
-    );
+  //   print(
+  //     "track.fromDriftTypedResult.toString:[convert]: ${result.readTable(driftDb.trackDrift).toString()}",
+  //   );
 
-    return Track.fromJson(json);
-  }
+  //   return Track.fromJson(json);
+  // }
 }

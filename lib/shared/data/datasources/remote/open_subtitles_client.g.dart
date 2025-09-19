@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tmdb_api_client.dart';
+part of 'open_subtitles_client.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'tmdb_api_client.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter
 
-class _TMDBApiClient implements TMDBApiClient {
-  _TMDBApiClient(this._dio, {this.baseUrl, this.errorLogger});
+class _OpenSubtitlesClient implements OpenSubtitlesClient {
+  _OpenSubtitlesClient(this._dio, {this.baseUrl, this.errorLogger});
 
   final Dio _dio;
 
@@ -171,51 +171,3 @@ class _TMDBApiClient implements TMDBApiClient {
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }
-
-// **************************************************************************
-// RiverpodGenerator
-// **************************************************************************
-
-// GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, type=warning
-
-@ProviderFor(tmdbApiClient)
-const tmdbApiClientProvider = TmdbApiClientProvider._();
-
-final class TmdbApiClientProvider
-    extends $FunctionalProvider<TMDBApiClient, TMDBApiClient, TMDBApiClient>
-    with $Provider<TMDBApiClient> {
-  const TmdbApiClientProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'tmdbApiClientProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$tmdbApiClientHash();
-
-  @$internal
-  @override
-  $ProviderElement<TMDBApiClient> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  TMDBApiClient create(Ref ref) {
-    return tmdbApiClient(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(TMDBApiClient value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<TMDBApiClient>(value),
-    );
-  }
-}
-
-String _$tmdbApiClientHash() => r'32b1a716fee873c5184cac13d982d6f72089397b';

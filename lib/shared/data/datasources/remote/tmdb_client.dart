@@ -10,18 +10,12 @@ import 'package:pusoo/shared/data/models/tmdb_api/search_movie_response.dart';
 import 'package:pusoo/shared/data/models/tmdb_api/t_search_response.dart';
 import 'package:pusoo/shared/presentation/providers/tmdb_http_client.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'tmdb_api_client.g.dart';
-
-@riverpod
-TMDBApiClient tmdbApiClient(Ref ref) {
-  return TMDBApiClient(ref.read(tmddbHttpClientProvider));
-}
+part 'tmdb_client.g.dart';
 
 @RestApi()
-abstract class TMDBApiClient {
-  factory TMDBApiClient(Dio dio, {String baseUrl}) = _TMDBApiClient;
+abstract class TMDBClient {
+  factory TMDBClient(Dio dio, {String baseUrl}) = _TMDBClient;
 
   // MOVIES SECTIONßß
   @GET("/3/movie/{movieId}")

@@ -1,5 +1,6 @@
 import 'package:logger/logger.dart';
 import 'package:pusoo/features/playlist/data/datasources/local/playlist_datasource.dart';
+import 'package:pusoo/features/playlist/data/models/playlist_drift_data_ext.dart';
 import 'package:pusoo/features/playlist/domain/models/playlist.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 
@@ -17,7 +18,7 @@ class PlaylistDriftDatasourceImpl implements PlaylistDatasource {
 
       _log.i(playlist);
 
-      return Playlist.fromDrift(playlist);
+      return playlist.toEntity();
     } catch (e) {
       throw Exception(e.toString());
     }
