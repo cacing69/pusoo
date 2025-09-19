@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Subtitle {
 
-@JsonKey(name: "id") String? get id;@JsonKey(name: "type") String? get type;@JsonKey(name: "attributes") dynamic get attributes;@JsonKey(name: "data") List<dynamic>? get data;
+@JsonKey(name: "id") String? get id;@JsonKey(name: "type") String? get type;@JsonKey(name: "attributes") SubtitleAttribute? get attributes;@JsonKey(name: "data") List<dynamic>? get data;
 /// Create a copy of Subtitle
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $SubtitleCopyWith<Subtitle> get copyWith => _$SubtitleCopyWithImpl<Subtitle>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Subtitle&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other.attributes, attributes)&&const DeepCollectionEquality().equals(other.data, data));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Subtitle&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&const DeepCollectionEquality().equals(other.data, data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,const DeepCollectionEquality().hash(attributes),const DeepCollectionEquality().hash(data));
+int get hashCode => Object.hash(runtimeType,id,type,attributes,const DeepCollectionEquality().hash(data));
 
 @override
 String toString() {
@@ -48,11 +48,11 @@ abstract mixin class $SubtitleCopyWith<$Res>  {
   factory $SubtitleCopyWith(Subtitle value, $Res Function(Subtitle) _then) = _$SubtitleCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "id") String? id,@JsonKey(name: "type") String? type,@JsonKey(name: "attributes") dynamic attributes,@JsonKey(name: "data") List<dynamic>? data
+@JsonKey(name: "id") String? id,@JsonKey(name: "type") String? type,@JsonKey(name: "attributes") SubtitleAttribute? attributes,@JsonKey(name: "data") List<dynamic>? data
 });
 
 
-
+$SubtitleAttributeCopyWith<$Res>? get attributes;
 
 }
 /// @nodoc
@@ -70,11 +70,23 @@ class _$SubtitleCopyWithImpl<$Res>
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String?,attributes: freezed == attributes ? _self.attributes : attributes // ignore: cast_nullable_to_non_nullable
-as dynamic,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
+as SubtitleAttribute?,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as List<dynamic>?,
   ));
 }
+/// Create a copy of Subtitle
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SubtitleAttributeCopyWith<$Res>? get attributes {
+    if (_self.attributes == null) {
+    return null;
+  }
 
+  return $SubtitleAttributeCopyWith<$Res>(_self.attributes!, (value) {
+    return _then(_self.copyWith(attributes: value));
+  });
+}
 }
 
 
@@ -156,7 +168,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "type")  String? type, @JsonKey(name: "attributes")  dynamic attributes, @JsonKey(name: "data")  List<dynamic>? data)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "type")  String? type, @JsonKey(name: "attributes")  SubtitleAttribute? attributes, @JsonKey(name: "data")  List<dynamic>? data)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Subtitle() when $default != null:
 return $default(_that.id,_that.type,_that.attributes,_that.data);case _:
@@ -177,7 +189,7 @@ return $default(_that.id,_that.type,_that.attributes,_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "type")  String? type, @JsonKey(name: "attributes")  dynamic attributes, @JsonKey(name: "data")  List<dynamic>? data)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "type")  String? type, @JsonKey(name: "attributes")  SubtitleAttribute? attributes, @JsonKey(name: "data")  List<dynamic>? data)  $default,) {final _that = this;
 switch (_that) {
 case _Subtitle():
 return $default(_that.id,_that.type,_that.attributes,_that.data);case _:
@@ -197,7 +209,7 @@ return $default(_that.id,_that.type,_that.attributes,_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "type")  String? type, @JsonKey(name: "attributes")  dynamic attributes, @JsonKey(name: "data")  List<dynamic>? data)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "type")  String? type, @JsonKey(name: "attributes")  SubtitleAttribute? attributes, @JsonKey(name: "data")  List<dynamic>? data)?  $default,) {final _that = this;
 switch (_that) {
 case _Subtitle() when $default != null:
 return $default(_that.id,_that.type,_that.attributes,_that.data);case _:
@@ -217,7 +229,7 @@ class _Subtitle implements Subtitle {
 
 @override@JsonKey(name: "id") final  String? id;
 @override@JsonKey(name: "type") final  String? type;
-@override@JsonKey(name: "attributes") final  dynamic attributes;
+@override@JsonKey(name: "attributes") final  SubtitleAttribute? attributes;
  final  List<dynamic>? _data;
 @override@JsonKey(name: "data") List<dynamic>? get data {
   final value = _data;
@@ -241,12 +253,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Subtitle&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other.attributes, attributes)&&const DeepCollectionEquality().equals(other._data, _data));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Subtitle&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&const DeepCollectionEquality().equals(other._data, _data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,const DeepCollectionEquality().hash(attributes),const DeepCollectionEquality().hash(_data));
+int get hashCode => Object.hash(runtimeType,id,type,attributes,const DeepCollectionEquality().hash(_data));
 
 @override
 String toString() {
@@ -261,11 +273,11 @@ abstract mixin class _$SubtitleCopyWith<$Res> implements $SubtitleCopyWith<$Res>
   factory _$SubtitleCopyWith(_Subtitle value, $Res Function(_Subtitle) _then) = __$SubtitleCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "id") String? id,@JsonKey(name: "type") String? type,@JsonKey(name: "attributes") dynamic attributes,@JsonKey(name: "data") List<dynamic>? data
+@JsonKey(name: "id") String? id,@JsonKey(name: "type") String? type,@JsonKey(name: "attributes") SubtitleAttribute? attributes,@JsonKey(name: "data") List<dynamic>? data
 });
 
 
-
+@override $SubtitleAttributeCopyWith<$Res>? get attributes;
 
 }
 /// @nodoc
@@ -283,12 +295,24 @@ class __$SubtitleCopyWithImpl<$Res>
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String?,attributes: freezed == attributes ? _self.attributes : attributes // ignore: cast_nullable_to_non_nullable
-as dynamic,data: freezed == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
+as SubtitleAttribute?,data: freezed == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
 as List<dynamic>?,
   ));
 }
 
+/// Create a copy of Subtitle
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SubtitleAttributeCopyWith<$Res>? get attributes {
+    if (_self.attributes == null) {
+    return null;
+  }
 
+  return $SubtitleAttributeCopyWith<$Res>(_self.attributes!, (value) {
+    return _then(_self.copyWith(attributes: value));
+  });
+}
 }
 
 // dart format on

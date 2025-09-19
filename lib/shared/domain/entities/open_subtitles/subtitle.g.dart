@@ -9,7 +9,9 @@ part of 'subtitle.dart';
 _Subtitle _$SubtitleFromJson(Map<String, dynamic> json) => _Subtitle(
   id: json['id'] as String?,
   type: json['type'] as String?,
-  attributes: json['attributes'],
+  attributes: json['attributes'] == null
+      ? null
+      : SubtitleAttribute.fromJson(json['attributes'] as Map<String, dynamic>),
   data: json['data'] as List<dynamic>?,
 );
 
