@@ -14,7 +14,6 @@ SubtitleRepository subtitleRepository(Ref ref) {
   );
 }
 
-// USE CASE
 @riverpod
 SearchSubtitleUsecase searcSubtitleUsecase(Ref ref) {
   return SearchSubtitleUsecase(

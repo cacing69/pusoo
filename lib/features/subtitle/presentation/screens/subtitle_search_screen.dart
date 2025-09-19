@@ -62,7 +62,6 @@ class _SubtitleSearchScreenState extends ConsumerState<SubtitleSearchScreen> {
 
             onPress: () async {
               String subtitle =
-                  // "https://gist.githubusercontent.com/cacing69/bee104dbd333b3fa98dab94c7673f1de/raw/f3eb6671a7c8f6d44080a877b8c6efd04f0332bf/gistfile1.txt";
                   "https://gist.githubusercontent.com/matibzurovski/d690d5c14acbaa399e7f0829f9d6888e/raw/63578ca30e7430be1fa4942d4d8dd599f78151c7/example.srt";
 
               final BetterPlayerSubtitlesSource subtitlesSource =
@@ -71,15 +70,12 @@ class _SubtitleSearchScreenState extends ConsumerState<SubtitleSearchScreen> {
                     urls: [subtitle],
                   );
 
-              // betterPlayerController.setupSubtitleSource(subtitlesSource);
-
               ref
                   .read(betterPlayerProvider.notifier)
                   .loadSubtitle(subtitlesSource);
 
               showFlutterToast(message: "Subtitle loaded", context: context);
 
-              // context.pop();
               context.pop(true);
             },
           ),

@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:forui/forui.dart';
-// import 'package:forui_hooks/forui_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -18,11 +17,8 @@ import 'package:pusoo/features/tv/presentation/providers/tv_track_count_notifier
 import 'package:pusoo/features/tv/presentation/providers/tv_track_group_titles_notifier.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:http/http.dart' as http;
-// import 'package:pusoo/features/playlist/domain/models/playlist.dart';
-// import 'package:pusoo/shared/data/models/playlist_template.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/shared/data/playlist_template_reff.dart';
-// import 'package:pusoo/shared/data/playlist_template_reff.dart';
 import 'package:ulid/ulid.dart';
 
 class AddNewPlaylistScreen extends StatefulHookConsumerWidget {
@@ -36,26 +32,15 @@ class AddNewPlaylistScreen extends StatefulHookConsumerWidget {
 class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
   bool isLoading = false;
 
-  // final playlistTypeController = FSelectTileGroupController<ContentType>.radio(
-  //   ContentType.live,
-  // );
-
   @override
   void dispose() {
-    // playlistTypeController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final nameController = useTextEditingController();
-    // final templateContoller = useFSelectController<PlaylistTemplate>();
-    final urlController = useTextEditingController(
-      // text:
-      //     "https://raw.githubusercontent.com/kshshuGyUWGG799vfaga/new-m3u/refs/heads/main/2025",
-      // text:
-      //     "http://ogietv.biz.id:80/get.php?username=maksin&password=123456&type=m3u_plus&output=mpegts",
-    );
+    final urlController = useTextEditingController();
     final epgLinkController = useTextEditingController();
 
     return FScaffold(
@@ -73,23 +58,6 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          // FSelectTileGroup(
-          //   selectController: playlistTypeController,
-          //   label: const Text('Playlist Type'),
-          //   description: const Text('Select playlist type.'),
-          //   children: [
-          //     FSelectTile(
-          //       title: const Text('Live TV'),
-          //       value: ContentType.live,
-          //       suffix: Icon(FIcons.monitor),
-          //     ),
-          //     FSelectTile(
-          //       title: const Text('VOD'),
-          //       value: ContentType.vod,
-          //       suffix: Icon(FIcons.monitorPlay),
-          //     ),
-          //   ],
-          // ),
           Gap(10),
           FTextField(
             controller: nameController,
@@ -110,7 +78,6 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
             style: FButtonStyle.ghost(),
             prefix: Icon(FIcons.clipboardPaste),
             onPress: () async {
-              // paste clipboard here
               final clipboardData = await Clipboard.getData('text/plain');
               if (clipboardData != null) {
                 urlController.text = clipboardData.text ?? '';
@@ -132,21 +99,6 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
             clearable: (TextEditingValue e) => e.text.isNotEmpty,
           ),
           Gap(10),
-          // FSelect<PlaylistTemplate>.rich(
-          //   controller: templateContoller,
-          //   label: Text("Template"),
-          //   hint: 'Select template',
-          //   format: (s) => s.label ?? "",
-          //   children: [
-          //     ...listPlaylistTemplate.map(
-          //       (template) => FSelectItem(
-          //         title: Text(template.label ?? ""),
-          //         value: template,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // Gap(10),
           SafeArea(
             top: false,
             child: FButton(
@@ -174,7 +126,6 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                       String content = "";
 
                       if (urlController.text.isValidUrl()) {
-                        // Save Channels
                         try {
                           final response = await http.get(
                             Uri.parse(urlController.text.trim()),
@@ -186,7 +137,6 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                                   .decode(response.bodyBytes)
                                   .replaceFirst('\u{FEFF}', '');
                             } catch (_) {
-                              // fallback ke latin1 jika utf8 gagal
                               content = latin1.decode(response.bodyBytes);
                             }
 
@@ -214,7 +164,6 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                               .decode(urlController.text.trim().codeUnits)
                               .replaceFirst('\u{FEFF}', '');
                         } catch (_) {
-                          // fallback ke latin1 jika utf8 gagal
                           content = latin1.decode(
                             urlController.text.trim().codeUnits,
                           );
@@ -223,7 +172,6 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                         channel = M3UParser.parse(content);
                       }
 
-                      // cek jika belum ada playlist maka set default
                       final countExpression = driftDb.playlistDrift.id.count();
 
                       String name =
@@ -234,14 +182,11 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                         name = urlController.text.getHostUrl();
                       }
 
-                      // Menggunakan selectOnly dan membaca hasilnya secara langsung
                       final count =
                           await (driftDb.selectOnly(driftDb.playlistDrift)
                                 ..addColumns([countExpression]))
                               .map((row) => row.read(countExpression))
                               .getSingle();
-
-                      // TODO: ubah type ke xtream jika merupakan type extream
 
                       final int playlistId = await driftDb
                           .into(driftDb.playlistDrift)
@@ -256,15 +201,10 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                                 epgLinkController.text.trim(),
                               ),
                               url: drift.Value(urlController.text.trim()),
-                              isActive:
-                                  // drift.Value(
-                                  //   true,
-                                  // ),
-                                  drift.Value(count == 0),
+                              isActive: drift.Value(count == 0),
                             ),
                           );
 
-                      // Menggunakan selectOnly dan membaca hasilnya secara langsung
                       final isUrlExistOnPlaylisUrlHistory =
                           await (driftDb.select(driftDb.playlistDrift)..where(
                                 (tbl) =>
@@ -283,25 +223,11 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                             );
                       }
 
-                      // final selectedTemplate = templateContoller.value;
-
-                      // final isLiveTv = playlistTypeController.value
-                      //     .contains(ContentType.live);
-
-                      // final isMovie = playlistTypeController.value.contains(
-                      //   ContentType.live,
-                      // );
-
-                      // final isTvSerie = playlistTypeController.value
-                      //     .contains(ContentType.live);
-
                       if (channel.isNotEmpty) {
                         await driftDb.batch((batch) {
                           batch.insertAll(
                             driftDb.trackDrift,
                             channel.map<TrackDriftCompanion>((Track track) {
-                              // debugPrint(ch.toString());
-
                               return TrackDriftCompanion(
                                 playlistId: drift.Value(playlistId),
                                 title: drift.Value(track.title),
@@ -336,7 +262,6 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                         });
 
                         if (count == 0) {
-                          // https://raw.githubusercontent.com/RYANTVv3/Ryantv/refs/heads/main/RYANTV.m3u
                           ref.read(activePlaylistProvider.notifier).perform();
                           ref
                               .read(tvTrackCountProvider.notifier)

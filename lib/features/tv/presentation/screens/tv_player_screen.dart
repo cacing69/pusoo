@@ -41,8 +41,6 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
 
     final betterPlayerController = ref.watch(betterPlayerProvider);
 
-    // Hapus logika pengecekan orientasi. Selalu gunakan layout potret
-    // dan biarkan player yang meng-handle mode lanskap melalui fullscreen.
     return FScaffold(
       header: isPotrait
           ? FHeader.nested(
@@ -73,7 +71,6 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
               ],
             )
           : SizedBox.shrink(),
-      // SELALU gunakan _buildPotraitLayout untuk menghindari konflik
       child: isPotrait
           ? _buildPotraitLayout(context, betterPlayerController, widget.track)
           : _buildLandscapeLayout(
@@ -94,22 +91,6 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
           FButton(
             style: FButtonStyle.outline(),
             onPress: () async {
-              // String subtitle =
-              //     "https://gist.githubusercontent.com/cacing69/bee104dbd333b3fa98dab94c7673f1de/raw/f3eb6671a7c8f6d44080a877b8c6efd04f0332bf/gistfile1.txt";
-
-              // final BetterPlayerSubtitlesSource subtitlesSource =
-              //     BetterPlayerSubtitlesSource(
-              //       type: BetterPlayerSubtitlesSourceType.network,
-              //       urls: [subtitle],
-              //     );
-
-              // // betterPlayerController.setupSubtitleSource(subtitlesSource);
-
-              // ref
-              //     .read(betterPlayerProvider.notifier)
-              //     .loadSubtitle(subtitlesSource);
-
-              // showFlutterToast(message: "Subtitle loaded", context: context);
               if (controller != null) {
                 if (controller.isPlaying()!) {
                   controller.pause();
@@ -138,7 +119,6 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
                 child: FButton(
                   style: FButtonStyle.outline(),
                   onPress: () {
-                    // controller?.toggleFullScreen();
                   },
                   prefix: const Icon(FIcons.heart),
                   child: const Text("Add to favorite"),
@@ -233,14 +213,6 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
           ],
         ),
         Gap(10),
-        // FButton(
-        //   style: FButtonStyle.outline(),
-        //   onPress: () {
-
-        //   },
-        //   prefix: Icon(FIcons.captions),
-        //   child: Text("Search Subtitle"),
-        // ),
       ],
     );
   }

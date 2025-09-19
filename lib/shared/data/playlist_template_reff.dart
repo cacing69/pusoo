@@ -13,9 +13,3 @@ final xtreamPlaylistTemplate = PlaylistTemplate(
   ]),
   tvSerieClassifier: Classificator([IsUrlContainsSeriesWithSlashsRule()]),
 );
-
-// final Map<String, PlaylistTemplate> mapPlaylistTemplate = {
-//   "general": playlistTemplate,
-// };
-
-// final List<PlaylistTemplate> listPlaylistTemplate = [playlistTemplate];

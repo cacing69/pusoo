@@ -10,7 +10,6 @@ part 'open_subtitles_client.g.dart';
 abstract class OpenSubtitlesClient {
   factory OpenSubtitlesClient(Dio dio, {String baseUrl}) = _OpenSubtitlesClient;
 
-  // MOVIES SECTION
   @GET("/api/v1/subtitles")
   Future<TOpenSubtitleSearchResponse<List<Subtitle>>> searchSubtitle(
     @Queries() SearchSubtitleQueryParams queryParams,
