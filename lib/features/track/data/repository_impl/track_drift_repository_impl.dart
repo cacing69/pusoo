@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:pusoo/core/errors/failure.dart';
 import 'package:pusoo/features/track/data/datasources/local/track_datasource.dart';
 import 'package:pusoo/features/track/domain/repostiory/track_repository.dart';
-import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
+import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 
 class TrackDriftRepositoryImpl implements TrackRepository {
@@ -11,9 +11,7 @@ class TrackDriftRepositoryImpl implements TrackRepository {
   TrackDriftRepositoryImpl(this._datasource);
 
   @override
-  Future<Either<Failure, List<Track>>> get(
-    TrackDriftFilterQuery? params,
-  ) async {
+  Future<Either<Failure, List<Track>>> get(TrackFilterQuery? params) async {
     try {
       final result = await _datasource.get(params);
       return Right(result);
@@ -24,7 +22,7 @@ class TrackDriftRepositoryImpl implements TrackRepository {
 
   @override
   Future<Either<Failure, List<String>>> getGroupTitle(
-    TrackDriftFilterQuery? params,
+    TrackFilterQuery? params,
   ) async {
     try {
       final result = await _datasource.getGroupTitle(params);
@@ -35,7 +33,7 @@ class TrackDriftRepositoryImpl implements TrackRepository {
   }
 
   @override
-  Future<Either<Failure, int>> count(TrackDriftFilterQuery? params) async {
+  Future<Either<Failure, int>> count(TrackFilterQuery? params) async {
     try {
       final result = await _datasource.count(params);
       return Right(result);

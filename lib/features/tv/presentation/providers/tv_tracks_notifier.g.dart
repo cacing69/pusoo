@@ -41,7 +41,7 @@ final class TvTracksNotifierProvider
   }
 }
 
-String _$tvTracksNotifierHash() => r'fcb1974661a50e1725ca50ebb77a6e71999d90fc';
+String _$tvTracksNotifierHash() => r'3bfd3f38075045ce6b60b7b7058e324df374b4d4';
 
 abstract class _$TvTracksNotifier extends $Notifier<AsyncValue<List<Track>?>> {
   AsyncValue<List<Track>?> build();

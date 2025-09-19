@@ -42,7 +42,7 @@ final class TvTrackCountNotifierProvider
 }
 
 String _$tvTrackCountNotifierHash() =>
-    r'b842060e338f0e01ea35b9434b60ef94ce73af9c';
+    r'1ee777f16897dbcc82b772fc377d280dff664744';
 
 abstract class _$TvTrackCountNotifier extends $Notifier<AsyncValue<int?>> {
   AsyncValue<int?> build();

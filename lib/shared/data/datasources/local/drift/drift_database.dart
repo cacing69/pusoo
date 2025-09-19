@@ -3,7 +3,7 @@ import 'package:drift/drift.dart';
 import 'package:pusoo/shared/data/models/drift/channel_drift.dart';
 import 'package:pusoo/features/playlist/domain/models/playlist_drift.dart';
 import 'package:pusoo/shared/data/models/drift/playlist_url_history_drift.dart';
-import 'package:pusoo/features/track/domain/models/track_drift.dart';
+import 'package:pusoo/features/track/data/models/track_drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 

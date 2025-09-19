@@ -1,5 +1,5 @@
 import 'package:logger/logger.dart';
-import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
+import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:pusoo/features/track/data/datasources/local/track_datasource.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
@@ -11,7 +11,7 @@ class TrackDriftDatasourceImpl implements TrackDatasource {
   TrackDriftDatasourceImpl(this._log);
 
   @override
-  Future<int> count(TrackDriftFilterQuery? params) async {
+  Future<int> count(TrackFilterQuery? params) async {
     // cek jika belum ada playlist maka set default
     final countExpression = driftDb.trackDrift.id.count();
 
@@ -38,7 +38,7 @@ class TrackDriftDatasourceImpl implements TrackDatasource {
   }
 
   @override
-  Future<List<Track>> get(TrackDriftFilterQuery? params) async {
+  Future<List<Track>> get(TrackFilterQuery? params) async {
     // 1. Gunakan List untuk menampung semua kondisi WHERE secara dinamis
     final List<drift.Expression<bool>> whereClauses = [
       // Kondisi statis dari kode Anda sebelumnya untuk memastikan ini adalah Live TV
@@ -144,7 +144,7 @@ class TrackDriftDatasourceImpl implements TrackDatasource {
   }
 
   @override
-  Future<List<String>> getGroupTitle(TrackDriftFilterQuery? params) {
+  Future<List<String>> getGroupTitle(TrackFilterQuery? params) {
     final query = driftDb.selectOnly(driftDb.trackDrift)
       ..addColumns([driftDb.trackDrift.groupTitle])
       ..groupBy([driftDb.trackDrift.groupTitle]);

@@ -13,7 +13,7 @@ part of 'tv_tracks_filter_notifier.dart';
 const tvTracksFilterProvider = TvTracksFilterNotifierProvider._();
 
 final class TvTracksFilterNotifierProvider
-    extends $NotifierProvider<TvTracksFilterNotifier, TrackDriftFilterQuery> {
+    extends $NotifierProvider<TvTracksFilterNotifier, TrackFilterQuery> {
   const TvTracksFilterNotifierProvider._()
     : super(
         from: null,
@@ -33,30 +33,29 @@ final class TvTracksFilterNotifierProvider
   TvTracksFilterNotifier create() => TvTracksFilterNotifier();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(TrackDriftFilterQuery value) {
+  Override overrideWithValue(TrackFilterQuery value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<TrackDriftFilterQuery>(value),
+      providerOverride: $SyncValueProvider<TrackFilterQuery>(value),
     );
   }
 }
 
 String _$tvTracksFilterNotifierHash() =>
-    r'16f318ab1dc1d3948934d23d02c7c94d1e641584';
+    r'7594dc14b9e9415a29606252af30b2c9180e7f06';
 
-abstract class _$TvTracksFilterNotifier
-    extends $Notifier<TrackDriftFilterQuery> {
-  TrackDriftFilterQuery build();
+abstract class _$TvTracksFilterNotifier extends $Notifier<TrackFilterQuery> {
+  TrackFilterQuery build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<TrackDriftFilterQuery, TrackDriftFilterQuery>;
+    final ref = this.ref as $Ref<TrackFilterQuery, TrackFilterQuery>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<TrackDriftFilterQuery, TrackDriftFilterQuery>,
-              TrackDriftFilterQuery,
+              AnyNotifier<TrackFilterQuery, TrackFilterQuery>,
+              TrackFilterQuery,
               Object?,
               Object?
             >;

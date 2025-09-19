@@ -1,4 +1,4 @@
-import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
+import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'tv_tracks_filter_notifier.g.dart';
@@ -7,8 +7,8 @@ part 'tv_tracks_filter_notifier.g.dart';
 class TvTracksFilterNotifier extends _$TvTracksFilterNotifier {
   // Metode build ini akan dipanggil pertama kali oleh Riverpod
   @override
-  TrackDriftFilterQuery build() {
-    return TrackDriftFilterQuery(limit: 20);
+  TrackFilterQuery build() {
+    return TrackFilterQuery(limit: 20);
   }
 
   void changeTitle(String? query) {
@@ -20,6 +20,6 @@ class TvTracksFilterNotifier extends _$TvTracksFilterNotifier {
   }
 
   void reset() {
-    state = TrackDriftFilterQuery(limit: 20);
+    state = TrackFilterQuery(limit: 20);
   }
 }

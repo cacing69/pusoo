@@ -9,7 +9,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:pusoo/core/utils/theme_app.dart';
 import 'package:pusoo/features/playlist/presentation/providers/active_playlist_notifier.dart';
-import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
+import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_track_count_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_track_group_titles_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_paging_notifier.dart';
@@ -40,11 +40,11 @@ class _TvScreenState extends ConsumerState<TvScreen>
 
       ref
           .read(tvTrackGroupTitlesProvider.notifier)
-          .perform(TrackDriftFilterQuery(isLiveTv: true));
+          .perform(TrackFilterQuery(isLiveTv: true));
 
       ref
           .read(tvTrackCountProvider.notifier)
-          .perform(TrackDriftFilterQuery(isLiveTv: true));
+          .perform(TrackFilterQuery(isLiveTv: true));
     });
   }
 

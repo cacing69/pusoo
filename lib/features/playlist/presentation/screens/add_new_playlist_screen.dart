@@ -13,7 +13,7 @@ import 'package:pusoo/core/extensions/string_ext.dart';
 import 'package:pusoo/core/utils/helpers.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
 import 'package:pusoo/features/playlist/presentation/providers/active_playlist_notifier.dart';
-import 'package:pusoo/features/track/domain/models/track_drift_filter_query.dart';
+import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_track_count_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_track_group_titles_notifier.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
@@ -340,10 +340,10 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                           ref.read(activePlaylistProvider.notifier).perform();
                           ref
                               .read(tvTrackCountProvider.notifier)
-                              .perform(TrackDriftFilterQuery(isLiveTv: true));
+                              .perform(TrackFilterQuery(isLiveTv: true));
                           ref
                               .read(tvTrackGroupTitlesProvider.notifier)
-                              .perform(TrackDriftFilterQuery(isLiveTv: true));
+                              .perform(TrackFilterQuery(isLiveTv: true));
                         }
                       }
 
