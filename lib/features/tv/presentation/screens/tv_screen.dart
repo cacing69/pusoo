@@ -141,8 +141,6 @@ class _TvScreenState extends ConsumerState<TvScreen>
 
     final asyncGroupTitles = ref.watch(tvTrackGroupTitlesProvider);
 
-    final asyncCountTrack = ref.watch(tvTrackCountProvider);
-
     final asyncActivePlaylist = ref.watch(activePlaylistProvider);
 
     MediaQuery.of(context).orientation == Orientation.portrait;
@@ -364,142 +362,60 @@ class _TvScreenState extends ConsumerState<TvScreen>
             child: RefreshIndicator(
               child: PagingListener(
                 controller: ref.watch(tvTracksPagingProvider),
-                builder: (context, state, fetchNextPage) => PagedListView(
-                  padding: EdgeInsets.zero,
-                  state: state,
-                  fetchNextPage: fetchNextPage,
-                  builderDelegate: PagedChildBuilderDelegate(
-                    itemBuilder: (context, Track item, index) => GestureDetector(
-                      onTap: () {
-                        context.pushNamed(RouteName.tvPlayer.name, extra: item);
-                      },
-                      child: Column(
-                        children: [
-                          FItem(
-                            prefix: TvgLogoViewer(
-                              size: 50,
-                              track: item,
-                              showLabel: false,
+                builder: (BuildContext context, state, fetchNextPage) =>
+                    PagedListView(
+                      padding: EdgeInsets.zero,
+                      state: state,
+                      fetchNextPage: fetchNextPage,
+                      builderDelegate: PagedChildBuilderDelegate(
+                        itemBuilder: (context, Track item, index) => Column(
+                          children: [
+                            FItem(
+                              onPress: () {
+                                context.pushNamed(
+                                  RouteName.tvPlayer.name,
+                                  extra: item,
+                                );
+                              },
+                              prefix: TvgLogoViewer(
+                                size: 50,
+                                track: item,
+                                showLabel: false,
+                              ),
+                              title: Text(item.title.trim(), maxLines: 2),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  item.groupTitle.trim().isNotEmpty
+                                      ? Text(item.groupTitle.trim())
+                                      : Text("Miscellaneous"),
+                                  item.tvgId.trim().isNotEmpty
+                                      ? Text(item.tvgId.trim(), maxLines: 2)
+                                      : Text("@tvg-id: n/a"),
+                                ],
+                              ),
+                              suffix: Icon(FIcons.play),
                             ),
-                            title: Text(item.title.trim(), maxLines: 2),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                item.groupTitle.trim().isNotEmpty
-                                    ? Text(item.groupTitle.trim())
-                                    : Text("Miscellaneous"),
-                                item.tvgId.trim().isNotEmpty
-                                    ? Text(item.tvgId.trim(), maxLines: 2)
-                                    : Text("@tvg-id: n/a"),
-                              ],
+                            FDivider(
+                              style: (style) => style.copyWith(
+                                padding: EdgeInsets.symmetric(vertical: 2),
+                                width: 1,
+                              ),
                             ),
-                            suffix: Icon(FIcons.play),
-                          ),
-                          FDivider(
-                            style: (style) => style.copyWith(
-                              padding: EdgeInsets.symmetric(vertical: 2),
-                              width: 1,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
+                        firstPageProgressIndicatorBuilder: (context) =>
+                            FProgress.circularIcon(),
+                        newPageProgressIndicatorBuilder: (context) =>
+                            FProgress.circularIcon(),
                       ),
-                      // Column(
-                      //   children: [
-                      //     Row(
-                      //       mainAxisAlignment: MainAxisAlignment.start,
-                      //       crossAxisAlignment: CrossAxisAlignment.start,
-                      //       children: [
-                      //         TvgLogoViewer(
-                      //           size: 50,
-                      //           track: item,
-                      //           showLabel: false,
-                      //         ),
-                      //         Gap(5),
-                      //         Expanded(
-                      //           child: Column(
-                      //             crossAxisAlignment: CrossAxisAlignment.start,
-                      //             children: [
-                      //               Text(
-                      //                 item.title,
-                      //                 maxLines: 1,
-                      //                 overflow: TextOverflow.ellipsis,
-                      //               ),
-                      //               Text(
-                      //                 item.groupTitle,
-                      //                 style: context.theme.typography.sm
-                      //                     .copyWith(
-                      //                       color: context.theme.colors.disable(
-                      //                         context.theme.colors.foreground,
-                      //                       ),
-                      //                     ),
-                      //                 maxLines: 1,
-                      //                 overflow: TextOverflow.ellipsis,
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //     Gap(3),
-                      //   ],
-                      // ),
-
-                      // Container(
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.circular(6),
-                      //     border: Border.all(
-                      //       color: context.theme.colors.border,
-                      //       width: 1,
-                      //     ),
-                      //     color: context.theme.colors.disable(
-                      //       context.theme.colors.foreground,
-                      //     ),
-                      //   ),
-                      //   clipBehavior: Clip.antiAlias,
-                      //   child: ClipRRect(
-                      //     borderRadius: BorderRadius.circular(4),
-                      //     child: Stack(
-                      //       children: [
-                      //         TvgLogoViewer(track: item),
-                      //         Positioned(
-                      //           left: 0,
-                      //           right: 0,
-                      //           bottom: 0,
-                      //           child: Container(
-                      //             padding: const EdgeInsets.all(6),
-                      //             color: context.theme.colors.background
-                      //                 .withAlpha(125),
-                      //             child: Text(
-                      //               item.title,
-                      //               maxLines: 1,
-                      //               overflow: TextOverflow.ellipsis,
-                      //               style: TextStyle(
-                      //                 color:
-                      //                     context.theme.colors.foreground,
-                      //                 fontSize:
-                      //                     CustomThemeData.fontSize.xs1,
-                      //                 fontWeight: FontWeight.w600,
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
+                      // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      //   crossAxisCount: isPotrait ? 4 : 8,
+                      //   crossAxisSpacing: 5,
+                      //   mainAxisSpacing: 5,
+                      //   childAspectRatio: 1,
                       // ),
                     ),
-                    firstPageProgressIndicatorBuilder: (context) =>
-                        FProgress.circularIcon(),
-                    newPageProgressIndicatorBuilder: (context) =>
-                        FProgress.circularIcon(),
-                  ),
-                  // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  //   crossAxisCount: isPotrait ? 4 : 8,
-                  //   crossAxisSpacing: 5,
-                  //   mainAxisSpacing: 5,
-                  //   childAspectRatio: 1,
-                  // ),
-                ),
               ),
               onRefresh: () async {
                 searchController.text = "";

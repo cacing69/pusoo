@@ -21,7 +21,7 @@ _SearchSubtitleQueryParams _$SearchSubtitleQueryParamsFromJson(
   movieHashMatch: json['movie_hash_match'] as String?,
   orderBy: json['order_by'] as String?,
   orderDirection: json['order_direction'] as String?,
-  page: (json['page'] as num?)?.toInt(),
+  page: (json['page'] as num?)?.toInt() ?? 1,
   parentFeatureId: (json['parent_feature_id'] as num?)?.toInt(),
   parentImdbId: (json['parent_imdb_id'] as num?)?.toInt(),
   parentTmdbId: (json['parent_tmdb_id'] as num?)?.toInt(),
@@ -32,7 +32,7 @@ _SearchSubtitleQueryParams _$SearchSubtitleQueryParamsFromJson(
   type: json['type'] as String?,
   uploaderId: (json['uploader_id'] as num?)?.toInt(),
   year: (json['year'] as num?)?.toInt(),
-  userAgent: json['User-Agent'] as String?,
+  userAgent: json['User-Agent'] as String? ?? "Pusoo v1.0.0",
 );
 
 Map<String, dynamic> _$SearchSubtitleQueryParamsToJson(

@@ -417,7 +417,7 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         final response = await request.close();
 
         final contentType = response.headers.contentType?.mimeType
-            ?.toLowerCase();
+            .toLowerCase();
         log.i("Content-Type from HEAD request: $contentType");
 
         if (contentType != null) {
@@ -444,7 +444,7 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
 
         if (response.statusCode == 206 || response.statusCode == 200) {
           final contentType = response.headers.contentType?.mimeType
-              ?.toLowerCase();
+              .toLowerCase();
           log.i("Content-Type from GET request: $contentType");
 
           if (contentType != null) {

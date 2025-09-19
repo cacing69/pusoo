@@ -7,10 +7,9 @@ part 'subtitle.freezed.dart';
 @freezed
 abstract class Subtitle with _$Subtitle {
   const factory Subtitle({
-    @JsonKey(name: "id") String? id,
-    @JsonKey(name: "type") String? type,
-    @JsonKey(name: "attributes") SubtitleAttribute? attributes,
-    @JsonKey(name: "data") List<dynamic>? data,
+    String? id,
+    String? type,
+    SubtitleAttribute? attributes,
   }) = _Subtitle;
 
   factory Subtitle.fromJson(Map<String, dynamic> json) =>

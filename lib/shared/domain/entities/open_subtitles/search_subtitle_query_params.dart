@@ -18,7 +18,7 @@ abstract class SearchSubtitleQueryParams with _$SearchSubtitleQueryParams {
     @JsonKey(name: "movie_hash_match") String? movieHashMatch,
     @JsonKey(name: "order_by") String? orderBy,
     @JsonKey(name: "order_direction") String? orderDirection,
-    int? page,
+    @Default(1) int page,
     @JsonKey(name: "parent_feature_id") int? parentFeatureId,
     @JsonKey(name: "parent_imdb_id") int? parentImdbId,
     @JsonKey(name: "parent_tmdb_id") int? parentTmdbId,
@@ -29,7 +29,7 @@ abstract class SearchSubtitleQueryParams with _$SearchSubtitleQueryParams {
     String? type,
     @JsonKey(name: "uploader_id") int? uploaderId,
     int? year,
-    @JsonKey(name: "User-Agent") String? userAgent,
+    @JsonKey(name: "User-Agent") @Default("Pusoo v1.0.0") String userAgent,
   }) = _SearchSubtitleQueryParams;
 
   factory SearchSubtitleQueryParams.fromJson(Map<String, dynamic> json) =>

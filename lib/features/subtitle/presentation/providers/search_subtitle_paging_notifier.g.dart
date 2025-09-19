@@ -48,7 +48,7 @@ final class SearchSubtitlePagingNotifierProvider
 }
 
 String _$searchSubtitlePagingNotifierHash() =>
-    r'bc39e3d5fac969c0e49bdd2bbedde1b37d456622';
+    r'7cfdb45084374d6e604cfc88045c7e18cd0a16fc';
 
 abstract class _$SearchSubtitlePagingNotifier
     extends $Notifier<PagingController<int, Subtitle>> {

@@ -4,11 +4,7 @@ import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
-import 'package:hive_ce/hive.dart';
-import 'package:pusoo/core/extensions/string_ext.dart';
 // import 'package:pusoo/core/utils/m3u_parse.dart';
-import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 
 class MovieScreen extends StatefulWidget {

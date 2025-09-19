@@ -42,7 +42,7 @@ final class BetterPlayerNotifierProvider
 }
 
 String _$betterPlayerNotifierHash() =>
-    r'9560b3de47d3c0d105b70e8f4efdbc166a8e0e08';
+    r'd208ee177ecc6b8e09094d69d4d2e33679dc239b';
 
 abstract class _$BetterPlayerNotifier
     extends $Notifier<BetterPlayerController?> {

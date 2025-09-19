@@ -30,13 +30,13 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         children: [
           Text(
             "Discover all content",
-            style: context.theme.typography.base.copyWith(
+            style: context.theme.typography.xl.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             "from your watchlist",
-            style: context.theme.typography.sm.copyWith(
+            style: context.theme.typography.base.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -88,6 +88,8 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                 child: FButton(
                   style: FButtonStyle.outline(),
                   onPress: () async {
+                    urlController.text = "";
+
                     await showFDialog(
                       context: context,
                       builder: (context, style, animation) => FDialog(
@@ -96,7 +98,8 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                         title: const Text('Please enter the URL'),
                         body: Column(
                           children: [
-                            FTextField(maxLines: 5, controller: urlController),
+                            Gap(10),
+                            FTextField(maxLines: 4, controller: urlController),
                             Gap(5),
                             FButton(
                               style: FButtonStyle.ghost(),
@@ -108,15 +111,10 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                                 );
                                 if (clipboardData != null) {
                                   urlController.text = clipboardData.text ?? '';
-                                  if (context.mounted) {
-                                    showFlutterToast(
-                                      message: "Pasted from clipboard",
-                                      context: context,
-                                    );
-                                  }
+                                  openVideoUrl(urlController.text);
                                 }
                               },
-                              child: Text("Paste URL"),
+                              child: Text("Paste & Open URL"),
                             ),
                           ],
                         ),
@@ -128,31 +126,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                           ),
                           FButton(
                             onPress: () async {
-                              if (urlController.text.trim().isNotEmpty) {
-                                if (urlController.text.trim().isValidUrl()) {
-                                  context.pushNamed(
-                                    RouteName.tvPlayer.name,
-                                    extra: Track(
-                                      title: "Pusoo - Open Source IPTV Player",
-                                      tvgId:
-                                          "https://tv.aliman.id/aliman/live.m3u8",
-                                      links: [
-                                        "https://tv.aliman.id/aliman/live.m3u8",
-                                      ],
-                                    ),
-                                  );
-                                } else {
-                                  showFlutterToast(
-                                    message: "Invalid URL",
-                                    context: context,
-                                  );
-                                }
-                              } else {
-                                showFlutterToast(
-                                  message: "URL cannot be empty",
-                                  context: context,
-                                );
-                              }
+                              openVideoUrl(urlController.text);
                             },
                             child: const Text('Open'),
                           ),
@@ -178,5 +152,24 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         ],
       ),
     );
+  }
+
+  void openVideoUrl(String url) async {
+    if (url.trim().isNotEmpty) {
+      if (url.trim().isValidUrl()) {
+        context.pushNamed(
+          RouteName.tvPlayer.name,
+          extra: Track(
+            title: "Pusoo - Open Source IPTV Player",
+            tvgId: "Online Video Player",
+            links: [url.trim()],
+          ),
+        );
+      } else {
+        showFlutterToast(message: "Invalid URL", context: context);
+      }
+    } else {
+      showFlutterToast(message: "URL cannot be empty", context: context);
+    }
   }
 }

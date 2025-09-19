@@ -12,12 +12,10 @@ _Subtitle _$SubtitleFromJson(Map<String, dynamic> json) => _Subtitle(
   attributes: json['attributes'] == null
       ? null
       : SubtitleAttribute.fromJson(json['attributes'] as Map<String, dynamic>),
-  data: json['data'] as List<dynamic>?,
 );
 
 Map<String, dynamic> _$SubtitleToJson(_Subtitle instance) => <String, dynamic>{
   'id': instance.id,
   'type': instance.type,
   'attributes': instance.attributes,
-  'data': instance.data,
 };

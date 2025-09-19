@@ -49,7 +49,7 @@ final class SearchSubtitleQueryParamsNotifierProvider
 }
 
 String _$searchSubtitleQueryParamsNotifierHash() =>
-    r'3147d326ee8d9233dcf5e00938093d77b7ff4886';
+    r'3d2cf21fff9c9ecd9f6fee048f6e65394963e380';
 
 abstract class _$SearchSubtitleQueryParamsNotifier
     extends $Notifier<SearchSubtitleQueryParams> {

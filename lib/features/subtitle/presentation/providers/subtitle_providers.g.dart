@@ -9,10 +9,11 @@ part of 'subtitle_providers.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(subtitleRepository)
-const subtitleRepositoryProvider = SubtitleRepositoryProvider._();
+@ProviderFor(subtitleOpenSubtitlesRepository)
+const subtitleOpenSubtitlesRepositoryProvider =
+    SubtitleOpenSubtitlesRepositoryProvider._();
 
-final class SubtitleRepositoryProvider
+final class SubtitleOpenSubtitlesRepositoryProvider
     extends
         $FunctionalProvider<
           SubtitleRepository,
@@ -20,19 +21,19 @@ final class SubtitleRepositoryProvider
           SubtitleRepository
         >
     with $Provider<SubtitleRepository> {
-  const SubtitleRepositoryProvider._()
+  const SubtitleOpenSubtitlesRepositoryProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'subtitleRepositoryProvider',
+        name: r'subtitleOpenSubtitlesRepositoryProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$subtitleRepositoryHash();
+  String debugGetCreateSourceHash() => _$subtitleOpenSubtitlesRepositoryHash();
 
   @$internal
   @override
@@ -42,7 +43,7 @@ final class SubtitleRepositoryProvider
 
   @override
   SubtitleRepository create(Ref ref) {
-    return subtitleRepository(ref);
+    return subtitleOpenSubtitlesRepository(ref);
   }
 
   /// {@macro riverpod.override_with_value}
@@ -54,13 +55,13 @@ final class SubtitleRepositoryProvider
   }
 }
 
-String _$subtitleRepositoryHash() =>
-    r'a3f3e8a639b4fc60731d12f39ef96508f3b95d72';
+String _$subtitleOpenSubtitlesRepositoryHash() =>
+    r'bcf38c759d129d6442f797d65bcf39ddf78ab49b';
 
-@ProviderFor(searcSubtitleUsecase)
-const searcSubtitleUsecaseProvider = SearcSubtitleUsecaseProvider._();
+@ProviderFor(searchSubtitleUsecase)
+const searchSubtitleUsecaseProvider = SearchSubtitleUsecaseProvider._();
 
-final class SearcSubtitleUsecaseProvider
+final class SearchSubtitleUsecaseProvider
     extends
         $FunctionalProvider<
           SearchSubtitleUsecase,
@@ -68,19 +69,19 @@ final class SearcSubtitleUsecaseProvider
           SearchSubtitleUsecase
         >
     with $Provider<SearchSubtitleUsecase> {
-  const SearcSubtitleUsecaseProvider._()
+  const SearchSubtitleUsecaseProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'searcSubtitleUsecaseProvider',
+        name: r'searchSubtitleUsecaseProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$searcSubtitleUsecaseHash();
+  String debugGetCreateSourceHash() => _$searchSubtitleUsecaseHash();
 
   @$internal
   @override
@@ -90,7 +91,7 @@ final class SearcSubtitleUsecaseProvider
 
   @override
   SearchSubtitleUsecase create(Ref ref) {
-    return searcSubtitleUsecase(ref);
+    return searchSubtitleUsecase(ref);
   }
 
   /// {@macro riverpod.override_with_value}
@@ -102,5 +103,5 @@ final class SearcSubtitleUsecaseProvider
   }
 }
 
-String _$searcSubtitleUsecaseHash() =>
-    r'c31970064cc501f2403575f7ac743cb7d831a44e';
+String _$searchSubtitleUsecaseHash() =>
+    r'ac5cab0050bf16771186888895b2bf6b66c67741';

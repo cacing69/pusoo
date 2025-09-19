@@ -51,7 +51,7 @@ final class SearchSubtitleNotifierProvider
 }
 
 String _$searchSubtitleNotifierHash() =>
-    r'1a600e15cc9ca2527958abcef45a29600c48f4fb';
+    r'4f99e2d8a08223ae72bf49c48b04894a5ad71d82';
 
 abstract class _$SearchSubtitleNotifier
     extends

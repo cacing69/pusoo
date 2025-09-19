@@ -10,4 +10,16 @@ class SearchSubtitleQueryParamsNotifier
   SearchSubtitleQueryParams build() {
     return SearchSubtitleQueryParams();
   }
+
+  void updateQuery(String query) {
+    state = state.copyWith(query: query);
+  }
+
+  void updateLanguage(String language) {
+    state = state.copyWith(languages: language);
+  }
+
+  void updatePage(int page) {
+    state = state.copyWith(page: page);
+  }
 }

@@ -31,8 +31,7 @@ abstract class SubtitleAttribute with _$SubtitleAttribute {
     @JsonKey(name: "legacy_subtitle_id") int? legacySubtitleId,
     @JsonKey(name: "legacy_uploader_id") int? legacyUploaderId,
     AttributeUploader? uploader,
-    @JsonKey(name: "feature_details")
-    List<AttributeFeatureDetail>? featureDetails,
+    @JsonKey(name: "feature_details") AttributeFeatureDetail? featureDetails,
     String? url,
     @JsonKey(name: "related_links") List<AttributeRelatedLink>? relatedLinks,
     List<AttributeFile>? files,
