@@ -18,7 +18,7 @@ class _OpenSubtitlesClient implements OpenSubtitlesClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<MovieDetailsResponse> movieDetails(
+  Future<TOpenSubtitleSearchResponse<Subtitle>> movieDetails(
     String movieId,
     MovieDetailsQueryParams queryParams,
   ) async {
@@ -27,7 +27,7 @@ class _OpenSubtitlesClient implements OpenSubtitlesClient {
     queryParameters.addAll(queryParams.toJson());
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<MovieDetailsResponse>(
+    final _options = _setStreamType<TOpenSubtitleSearchResponse<Subtitle>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -38,104 +38,11 @@ class _OpenSubtitlesClient implements OpenSubtitlesClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late MovieDetailsResponse _value;
+    late TOpenSubtitleSearchResponse<Subtitle> _value;
     try {
-      _value = MovieDetailsResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<MovieCreditsResponse> movieCredits(
-    String movieId,
-    MovieCreditsQueryParams queryParams,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(queryParams.toJson());
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<MovieCreditsResponse>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/3/movie/${movieId}/credits',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late MovieCreditsResponse _value;
-    try {
-      _value = MovieCreditsResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<MovieVideosResponse> movieVideos(
-    String movieId,
-    MovieVideosQueryParams queryParams,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(queryParams.toJson());
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<MovieVideosResponse>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/3/movie/${movieId}/videos',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late MovieVideosResponse _value;
-    try {
-      _value = MovieVideosResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<TSeaerchResponse<SearchMovieResponse>> searchMovie(
-    String movieId,
-    SearchMovieQueryParams queryParams,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(queryParams.toJson());
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<TSeaerchResponse<SearchMovieResponse>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/3/search/movie',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late TSeaerchResponse<SearchMovieResponse> _value;
-    try {
-      _value = TSeaerchResponse<SearchMovieResponse>.fromJson(
+      _value = TOpenSubtitleSearchResponse<Subtitle>.fromJson(
         _result.data!,
-        (json) => SearchMovieResponse.fromJson(json as Map<String, dynamic>),
+        (json) => Subtitle.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

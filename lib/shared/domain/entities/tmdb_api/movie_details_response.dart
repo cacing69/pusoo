@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pusoo/shared/data/models/tmdb_api/genre.dart';
-import 'package:pusoo/shared/data/models/tmdb_api/production_company.dart';
-import 'package:pusoo/shared/data/models/tmdb_api/production_country.dart';
-import 'package:pusoo/shared/data/models/tmdb_api/spoken_language.dart';
+import 'package:pusoo/shared/domain/entities/tmdb_api/genre.dart';
+import 'package:pusoo/shared/domain/entities/tmdb_api/production_company.dart';
+import 'package:pusoo/shared/domain/entities/tmdb_api/production_country.dart';
+import 'package:pusoo/shared/domain/entities/tmdb_api/spoken_language.dart';
 
 part 'movie_details_response.g.dart';
 part 'movie_details_response.freezed.dart';

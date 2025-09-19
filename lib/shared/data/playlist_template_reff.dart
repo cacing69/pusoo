@@ -2,7 +2,7 @@ import 'package:pusoo/shared/data/models/clasification_rules/rules/is_url_contai
 import 'package:pusoo/shared/data/models/clasification_rules/classificator.dart';
 import 'package:pusoo/shared/data/models/clasification_rules/rules/is_url_contains_series_with_slashs_rule.dart';
 import 'package:pusoo/shared/data/models/clasification_rules/rules/is_url_not_contains_movie_and_series_with_slashs_rule.dart';
-import 'package:pusoo/shared/data/models/playlist_template.dart';
+import 'package:pusoo/shared/domain/entities/playlist_template.dart';
 
 final playlistTemplate = PlaylistTemplate(
   name: "general",

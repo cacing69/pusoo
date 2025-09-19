@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pusoo/shared/data/models/tmdb_api/movie_cast.dart';
-import 'package:pusoo/shared/data/models/tmdb_api/movie_crew.dart';
+import 'package:pusoo/shared/domain/entities/tmdb_api/movie_cast.dart';
+import 'package:pusoo/shared/domain/entities/tmdb_api/movie_crew.dart';
 
 part 'movie_credits_response.g.dart';
 part 'movie_credits_response.freezed.dart';

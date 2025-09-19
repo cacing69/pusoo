@@ -1,29 +1,31 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 't_search_response.dart';
+part of 't_open_subtitle_search_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TSeaerchResponse<T> _$TSeaerchResponseFromJson<T>(
+TOpenSubtitleSearchResponse<T> _$TOpenSubtitleSearchResponseFromJson<T>(
   Map<String, dynamic> json,
   T Function(Object? json) fromJsonT,
-) => TSeaerchResponse<T>(
+) => TOpenSubtitleSearchResponse<T>(
   totalPages: (json['total_pages'] as num?)?.toInt(),
-  totalResults: (json['total_results'] as num?)?.toInt(),
+  totalCount: (json['total_count'] as num?)?.toInt(),
   page: (json['page'] as num?)?.toInt(),
-  results: _$nullableGenericFromJson(json['results'], fromJsonT),
+  data: _$nullableGenericFromJson(json['data'], fromJsonT),
+  perPage: (json['per_page'] as num?)?.toInt(),
 );
 
-Map<String, dynamic> _$TSeaerchResponseToJson<T>(
-  TSeaerchResponse<T> instance,
+Map<String, dynamic> _$TOpenSubtitleSearchResponseToJson<T>(
+  TOpenSubtitleSearchResponse<T> instance,
   Object? Function(T value) toJsonT,
 ) => <String, dynamic>{
   'page': instance.page,
-  'results': _$nullableGenericToJson(instance.results, toJsonT),
+  'data': _$nullableGenericToJson(instance.data, toJsonT),
   'total_pages': instance.totalPages,
-  'total_results': instance.totalResults,
+  'total_count': instance.totalCount,
+  'per_page': instance.perPage,
 };
 
 T? _$nullableGenericFromJson<T>(

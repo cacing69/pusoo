@@ -111,7 +111,7 @@ class _TMDBClient implements TMDBClient {
   }
 
   @override
-  Future<TSeaerchResponse<SearchMovieResponse>> searchMovie(
+  Future<TTMDBSearchResponse<SearchMovieResponse>> searchMovie(
     String movieId,
     SearchMovieQueryParams queryParams,
   ) async {
@@ -120,7 +120,7 @@ class _TMDBClient implements TMDBClient {
     queryParameters.addAll(queryParams.toJson());
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<TSeaerchResponse<SearchMovieResponse>>(
+    final _options = _setStreamType<TTMDBSearchResponse<SearchMovieResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -131,9 +131,9 @@ class _TMDBClient implements TMDBClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late TSeaerchResponse<SearchMovieResponse> _value;
+    late TTMDBSearchResponse<SearchMovieResponse> _value;
     try {
-      _value = TSeaerchResponse<SearchMovieResponse>.fromJson(
+      _value = TTMDBSearchResponse<SearchMovieResponse>.fromJson(
         _result.data!,
         (json) => SearchMovieResponse.fromJson(json as Map<String, dynamic>),
       );

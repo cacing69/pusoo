@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 't_search_response.g.dart';
+part 't_open_subtitle_search_response.g.dart';
 
 @JsonSerializable(genericArgumentFactories: true)
-class TSeaerchResponse<T> {
+class TOpenSubtitleSearchResponse<T> {
   final int? page;
   final T? data;
 
@@ -16,7 +16,7 @@ class TSeaerchResponse<T> {
   @JsonKey(name: 'per_page')
   final int? perPage;
 
-  TSeaerchResponse({
+  TOpenSubtitleSearchResponse({
     this.totalPages,
     this.totalCount,
     this.page,
@@ -24,24 +24,24 @@ class TSeaerchResponse<T> {
     this.perPage,
   });
 
-  factory TSeaerchResponse.fromJson(
+  factory TOpenSubtitleSearchResponse.fromJson(
     Map<String, dynamic> json,
     T Function(Object? json) fromJsonT,
   ) {
-    return _$TSeaerchResponseFromJson(json, fromJsonT);
+    return _$TOpenSubtitleSearchResponseFromJson(json, fromJsonT);
   }
 
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
-      _$TSeaerchResponseToJson(this, toJsonT);
+      _$TOpenSubtitleSearchResponseToJson(this, toJsonT);
 
-  TSeaerchResponse<T> copyWith({
+  TOpenSubtitleSearchResponse<T> copyWith({
     int? page,
     T? data,
     int? totalPages,
     int? totalCount,
     int? perPage,
   }) {
-    return TSeaerchResponse<T>(
+    return TOpenSubtitleSearchResponse<T>(
       page: page ?? this.page,
       totalPages: totalPages ?? this.totalPages,
       totalCount: totalCount ?? this.totalCount,

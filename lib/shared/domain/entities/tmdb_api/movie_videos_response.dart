@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pusoo/shared/data/models/tmdb_api/movie_video.dart';
+import 'package:pusoo/shared/domain/entities/tmdb_api/movie_video.dart';
 
 part 'movie_videos_response.g.dart';
 part 'movie_videos_response.freezed.dart';

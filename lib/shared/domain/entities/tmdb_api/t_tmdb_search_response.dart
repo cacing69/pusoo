@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 't_search_response.g.dart';
+part 't_tmdb_search_response.g.dart';
 
 @JsonSerializable(genericArgumentFactories: true)
-class TSeaerchResponse<T> {
+class TTMDBSearchResponse<T> {
   final int? page;
   final T? results;
 
@@ -13,30 +13,30 @@ class TSeaerchResponse<T> {
   @JsonKey(name: 'total_results')
   final int? totalResults;
 
-  TSeaerchResponse({
+  TTMDBSearchResponse({
     this.totalPages,
     this.totalResults,
     this.page,
     this.results,
   });
 
-  factory TSeaerchResponse.fromJson(
+  factory TTMDBSearchResponse.fromJson(
     Map<String, dynamic> json,
     T Function(Object? json) fromJsonT,
   ) {
-    return _$TSeaerchResponseFromJson(json, fromJsonT);
+    return _$TTMDBSearchResponseFromJson(json, fromJsonT);
   }
 
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
-      _$TSeaerchResponseToJson(this, toJsonT);
+      _$TTMDBSearchResponseToJson(this, toJsonT);
 
-  TSeaerchResponse<T> copyWith({
+  TTMDBSearchResponse<T> copyWith({
     int? page,
     T? results,
     int? totalPages,
     int? totalResults,
   }) {
-    return TSeaerchResponse<T>(
+    return TTMDBSearchResponse<T>(
       page: page ?? this.page,
       totalPages: totalPages ?? this.totalPages,
       totalResults: totalResults ?? this.totalResults,
