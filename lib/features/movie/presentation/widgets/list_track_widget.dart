@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:forui/forui.dart';
 import 'package:forui/theme.dart';
 import 'package:gap/gap.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
@@ -30,6 +31,15 @@ class _ListTrackWidgetState extends State<ListTrackWidget> {
                 imageUrl:
                     "https://media.designrush.com/tinymce_images/205878/conversions/2.-Wendy-content.jpg",
                 fit: BoxFit.cover,
+                placeholder: (_, __) =>
+                    const Center(child: FProgress.circularIcon()),
+                errorWidget: (_, __, ___) => Center(
+                  child: Icon(
+                    FIcons.imageOff,
+                    color: context.theme.colors.background.withAlpha(200),
+                    size: 40,
+                  ),
+                ),
               ),
             ),
           ),

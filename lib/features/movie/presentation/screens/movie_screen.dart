@@ -54,7 +54,17 @@ class _MovieScreenState extends State<MovieScreen> {
       childPad: false,
       resizeToAvoidBottomInset: false,
       header: FHeader(
-        title: const Text('Movies'),
+        title: Row(
+          children: [
+            const Text('Movies'),
+            Gap(10),
+            !isPotrait
+                ? Expanded(
+                    child: FTextField(hint: "Find something to watch..."),
+                  )
+                : SizedBox.shrink(),
+          ],
+        ),
         suffixes: [
           FHeaderAction(
             icon: Icon(listViewMode ? FIcons.grid2x2 : FIcons.rows3),
@@ -69,7 +79,9 @@ class _MovieScreenState extends State<MovieScreen> {
       child: Column(
         spacing: 10,
         children: [
-          FTextField(hint: "Find something to watch..."),
+          isPotrait
+              ? FTextField(hint: "Find something to watch...")
+              : SizedBox.shrink(),
           Expanded(
             child: listViewMode
                 ? ListView.builder(

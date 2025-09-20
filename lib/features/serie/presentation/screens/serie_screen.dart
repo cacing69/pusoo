@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
+import 'package:gap/gap.dart';
 import 'package:pusoo/features/movie/presentation/widgets/grid_track_widget.dart';
 import 'package:pusoo/features/movie/presentation/widgets/list_track_widget.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
@@ -28,7 +29,17 @@ class _SerieScreenState extends State<SerieScreen> {
       childPad: false,
       resizeToAvoidBottomInset: false,
       header: FHeader(
-        title: const Text('Movies'),
+        title: Row(
+          children: [
+            const Text('TV Series'),
+            Gap(10),
+            !isPotrait
+                ? Expanded(
+                    child: FTextField(hint: "Find something to watch..."),
+                  )
+                : SizedBox.shrink(),
+          ],
+        ),
         suffixes: [
           FHeaderAction(
             icon: Icon(listViewMode ? FIcons.grid2x2 : FIcons.rows3),
@@ -43,7 +54,9 @@ class _SerieScreenState extends State<SerieScreen> {
       child: Column(
         spacing: 10,
         children: [
-          FTextField(hint: "Find something to watch..."),
+          isPotrait
+              ? FTextField(hint: "Find something to watch...")
+              : SizedBox.shrink(),
           Expanded(
             child: listViewMode
                 ? ListView.builder(
