@@ -132,6 +132,21 @@ class $SourceDriftTable extends SourceDrift
     ),
     clientDefault: () => false,
   );
+  static const VerificationMeta _isPublicMeta = const VerificationMeta(
+    'isPublic',
+  );
+  @override
+  late final GeneratedColumn<bool> isPublic = GeneratedColumn<bool>(
+    'is_public',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_public" IN (0, 1))',
+    ),
+    clientDefault: () => false,
+  );
   static const VerificationMeta _lastUpdatedMeta = const VerificationMeta(
     'lastUpdated',
   );
@@ -168,6 +183,7 @@ class $SourceDriftTable extends SourceDrift
     template,
     isActive,
     isPersonal,
+    isPublic,
     lastUpdated,
     createdAt,
   ];
@@ -253,6 +269,12 @@ class $SourceDriftTable extends SourceDrift
         isPersonal.isAcceptableOrUnknown(data['is_personal']!, _isPersonalMeta),
       );
     }
+    if (data.containsKey('is_public')) {
+      context.handle(
+        _isPublicMeta,
+        isPublic.isAcceptableOrUnknown(data['is_public']!, _isPublicMeta),
+      );
+    }
     if (data.containsKey('last_updated')) {
       context.handle(
         _lastUpdatedMeta,
@@ -321,6 +343,10 @@ class $SourceDriftTable extends SourceDrift
         DriftSqlType.bool,
         data['${effectivePrefix}is_personal'],
       )!,
+      isPublic: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_public'],
+      )!,
       lastUpdated: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}last_updated'],
@@ -350,6 +376,7 @@ class SourceDriftData extends DataClass implements Insertable<SourceDriftData> {
   final String? template;
   final bool isActive;
   final bool isPersonal;
+  final bool isPublic;
   final DateTime? lastUpdated;
   final DateTime createdAt;
   const SourceDriftData({
@@ -364,6 +391,7 @@ class SourceDriftData extends DataClass implements Insertable<SourceDriftData> {
     this.template,
     required this.isActive,
     required this.isPersonal,
+    required this.isPublic,
     this.lastUpdated,
     required this.createdAt,
   });
@@ -393,6 +421,7 @@ class SourceDriftData extends DataClass implements Insertable<SourceDriftData> {
     }
     map['is_active'] = Variable<bool>(isActive);
     map['is_personal'] = Variable<bool>(isPersonal);
+    map['is_public'] = Variable<bool>(isPublic);
     if (!nullToAbsent || lastUpdated != null) {
       map['last_updated'] = Variable<DateTime>(lastUpdated);
     }
@@ -421,6 +450,7 @@ class SourceDriftData extends DataClass implements Insertable<SourceDriftData> {
           : Value(template),
       isActive: Value(isActive),
       isPersonal: Value(isPersonal),
+      isPublic: Value(isPublic),
       lastUpdated: lastUpdated == null && nullToAbsent
           ? const Value.absent()
           : Value(lastUpdated),
@@ -445,6 +475,7 @@ class SourceDriftData extends DataClass implements Insertable<SourceDriftData> {
       template: serializer.fromJson<String?>(json['template']),
       isActive: serializer.fromJson<bool>(json['isActive']),
       isPersonal: serializer.fromJson<bool>(json['isPersonal']),
+      isPublic: serializer.fromJson<bool>(json['isPublic']),
       lastUpdated: serializer.fromJson<DateTime?>(json['lastUpdated']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
@@ -464,6 +495,7 @@ class SourceDriftData extends DataClass implements Insertable<SourceDriftData> {
       'template': serializer.toJson<String?>(template),
       'isActive': serializer.toJson<bool>(isActive),
       'isPersonal': serializer.toJson<bool>(isPersonal),
+      'isPublic': serializer.toJson<bool>(isPublic),
       'lastUpdated': serializer.toJson<DateTime?>(lastUpdated),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
@@ -481,6 +513,7 @@ class SourceDriftData extends DataClass implements Insertable<SourceDriftData> {
     Value<String?> template = const Value.absent(),
     bool? isActive,
     bool? isPersonal,
+    bool? isPublic,
     Value<DateTime?> lastUpdated = const Value.absent(),
     DateTime? createdAt,
   }) => SourceDriftData(
@@ -495,6 +528,7 @@ class SourceDriftData extends DataClass implements Insertable<SourceDriftData> {
     template: template.present ? template.value : this.template,
     isActive: isActive ?? this.isActive,
     isPersonal: isPersonal ?? this.isPersonal,
+    isPublic: isPublic ?? this.isPublic,
     lastUpdated: lastUpdated.present ? lastUpdated.value : this.lastUpdated,
     createdAt: createdAt ?? this.createdAt,
   );
@@ -515,6 +549,7 @@ class SourceDriftData extends DataClass implements Insertable<SourceDriftData> {
       isPersonal: data.isPersonal.present
           ? data.isPersonal.value
           : this.isPersonal,
+      isPublic: data.isPublic.present ? data.isPublic.value : this.isPublic,
       lastUpdated: data.lastUpdated.present
           ? data.lastUpdated.value
           : this.lastUpdated,
@@ -536,6 +571,7 @@ class SourceDriftData extends DataClass implements Insertable<SourceDriftData> {
           ..write('template: $template, ')
           ..write('isActive: $isActive, ')
           ..write('isPersonal: $isPersonal, ')
+          ..write('isPublic: $isPublic, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -555,6 +591,7 @@ class SourceDriftData extends DataClass implements Insertable<SourceDriftData> {
     template,
     isActive,
     isPersonal,
+    isPublic,
     lastUpdated,
     createdAt,
   );
@@ -573,6 +610,7 @@ class SourceDriftData extends DataClass implements Insertable<SourceDriftData> {
           other.template == this.template &&
           other.isActive == this.isActive &&
           other.isPersonal == this.isPersonal &&
+          other.isPublic == this.isPublic &&
           other.lastUpdated == this.lastUpdated &&
           other.createdAt == this.createdAt);
 }
@@ -589,6 +627,7 @@ class SourceDriftCompanion extends UpdateCompanion<SourceDriftData> {
   final Value<String?> template;
   final Value<bool> isActive;
   final Value<bool> isPersonal;
+  final Value<bool> isPublic;
   final Value<DateTime?> lastUpdated;
   final Value<DateTime> createdAt;
   const SourceDriftCompanion({
@@ -603,6 +642,7 @@ class SourceDriftCompanion extends UpdateCompanion<SourceDriftData> {
     this.template = const Value.absent(),
     this.isActive = const Value.absent(),
     this.isPersonal = const Value.absent(),
+    this.isPublic = const Value.absent(),
     this.lastUpdated = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
@@ -618,6 +658,7 @@ class SourceDriftCompanion extends UpdateCompanion<SourceDriftData> {
     this.template = const Value.absent(),
     this.isActive = const Value.absent(),
     this.isPersonal = const Value.absent(),
+    this.isPublic = const Value.absent(),
     this.lastUpdated = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : name = Value(name),
@@ -634,6 +675,7 @@ class SourceDriftCompanion extends UpdateCompanion<SourceDriftData> {
     Expression<String>? template,
     Expression<bool>? isActive,
     Expression<bool>? isPersonal,
+    Expression<bool>? isPublic,
     Expression<DateTime>? lastUpdated,
     Expression<DateTime>? createdAt,
   }) {
@@ -649,6 +691,7 @@ class SourceDriftCompanion extends UpdateCompanion<SourceDriftData> {
       if (template != null) 'template': template,
       if (isActive != null) 'is_active': isActive,
       if (isPersonal != null) 'is_personal': isPersonal,
+      if (isPublic != null) 'is_public': isPublic,
       if (lastUpdated != null) 'last_updated': lastUpdated,
       if (createdAt != null) 'created_at': createdAt,
     });
@@ -666,6 +709,7 @@ class SourceDriftCompanion extends UpdateCompanion<SourceDriftData> {
     Value<String?>? template,
     Value<bool>? isActive,
     Value<bool>? isPersonal,
+    Value<bool>? isPublic,
     Value<DateTime?>? lastUpdated,
     Value<DateTime>? createdAt,
   }) {
@@ -681,6 +725,7 @@ class SourceDriftCompanion extends UpdateCompanion<SourceDriftData> {
       template: template ?? this.template,
       isActive: isActive ?? this.isActive,
       isPersonal: isPersonal ?? this.isPersonal,
+      isPublic: isPublic ?? this.isPublic,
       lastUpdated: lastUpdated ?? this.lastUpdated,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -722,6 +767,9 @@ class SourceDriftCompanion extends UpdateCompanion<SourceDriftData> {
     if (isPersonal.present) {
       map['is_personal'] = Variable<bool>(isPersonal.value);
     }
+    if (isPublic.present) {
+      map['is_public'] = Variable<bool>(isPublic.value);
+    }
     if (lastUpdated.present) {
       map['last_updated'] = Variable<DateTime>(lastUpdated.value);
     }
@@ -745,6 +793,7 @@ class SourceDriftCompanion extends UpdateCompanion<SourceDriftData> {
           ..write('template: $template, ')
           ..write('isActive: $isActive, ')
           ..write('isPersonal: $isPersonal, ')
+          ..write('isPublic: $isPublic, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -1934,6 +1983,7 @@ typedef $$SourceDriftTableCreateCompanionBuilder =
       Value<String?> template,
       Value<bool> isActive,
       Value<bool> isPersonal,
+      Value<bool> isPublic,
       Value<DateTime?> lastUpdated,
       Value<DateTime> createdAt,
     });
@@ -1950,6 +2000,7 @@ typedef $$SourceDriftTableUpdateCompanionBuilder =
       Value<String?> template,
       Value<bool> isActive,
       Value<bool> isPersonal,
+      Value<bool> isPublic,
       Value<DateTime?> lastUpdated,
       Value<DateTime> createdAt,
     });
@@ -2038,6 +2089,11 @@ class $$SourceDriftTableFilterComposer
 
   ColumnFilters<bool> get isPersonal => $composableBuilder(
     column: $table.isPersonal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPublic => $composableBuilder(
+    column: $table.isPublic,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2141,6 +2197,11 @@ class $$SourceDriftTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isPublic => $composableBuilder(
+    column: $table.isPublic,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get lastUpdated => $composableBuilder(
     column: $table.lastUpdated,
     builder: (column) => ColumnOrderings(column),
@@ -2197,6 +2258,9 @@ class $$SourceDriftTableAnnotationComposer
     column: $table.isPersonal,
     builder: (column) => column,
   );
+
+  GeneratedColumn<bool> get isPublic =>
+      $composableBuilder(column: $table.isPublic, builder: (column) => column);
 
   GeneratedColumn<DateTime> get lastUpdated => $composableBuilder(
     column: $table.lastUpdated,
@@ -2271,6 +2335,7 @@ class $$SourceDriftTableTableManager
                 Value<String?> template = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
                 Value<bool> isPersonal = const Value.absent(),
+                Value<bool> isPublic = const Value.absent(),
                 Value<DateTime?> lastUpdated = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => SourceDriftCompanion(
@@ -2285,6 +2350,7 @@ class $$SourceDriftTableTableManager
                 template: template,
                 isActive: isActive,
                 isPersonal: isPersonal,
+                isPublic: isPublic,
                 lastUpdated: lastUpdated,
                 createdAt: createdAt,
               ),
@@ -2301,6 +2367,7 @@ class $$SourceDriftTableTableManager
                 Value<String?> template = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
                 Value<bool> isPersonal = const Value.absent(),
+                Value<bool> isPublic = const Value.absent(),
                 Value<DateTime?> lastUpdated = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => SourceDriftCompanion.insert(
@@ -2315,6 +2382,7 @@ class $$SourceDriftTableTableManager
                 template: template,
                 isActive: isActive,
                 isPersonal: isPersonal,
+                isPublic: isPublic,
                 lastUpdated: lastUpdated,
                 createdAt: createdAt,
               ),

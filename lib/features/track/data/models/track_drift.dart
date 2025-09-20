@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:pusoo/features/playlist/data/models/playlist_drift.dart';
 import 'package:pusoo/features/source/data/models/source_drift.dart';
 
 class TrackDrift extends Table {

@@ -11,7 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pusoo/core/extensions/string_ext.dart';
 import 'package:pusoo/core/utils/helpers.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
-import 'package:pusoo/features/playlist/presentation/providers/active_playlist_notifier.dart';
+import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/features/source/presentation/providers/active_source_notifier.dart';
 import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_track_count_notifier.dart';
@@ -23,7 +23,8 @@ import 'package:pusoo/shared/data/playlist_template_reff.dart';
 import 'package:ulid/ulid.dart';
 
 class AddNewPlaylistScreen extends StatefulHookConsumerWidget {
-  const AddNewPlaylistScreen({super.key});
+  final Source source;
+  const AddNewPlaylistScreen({required this.source, super.key});
 
   @override
   ConsumerState<AddNewPlaylistScreen> createState() =>

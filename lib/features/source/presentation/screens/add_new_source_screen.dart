@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pusoo/features/source/domain/entities/source.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/router.dart';
 
 class AddNewSourceScreen extends StatefulWidget {
@@ -39,6 +41,7 @@ class _CreateNewPlaylistOptionState extends State<AddNewSourceScreen> {
               onPress: () async {
                 final result = await context.pushNamed(
                   RouteName.addPlaylist.name,
+                  extra: Source(isEmpty: true),
                 );
 
                 if (result is bool && result) {

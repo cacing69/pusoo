@@ -15,6 +15,7 @@ abstract class Source with _$Source {
     String? epgLink,
     String? url,
     @Default(false) bool? isActive,
+    @Default(false) bool? isEmpty,
 
     // Atribut untuk Xtream Codes
     String? username,
