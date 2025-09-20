@@ -31,6 +31,14 @@ class _SettingScreenState extends State<SettingScreen> {
                   },
                 ),
                 FTile(
+                  prefix: Icon(FIcons.userPen),
+                  title: Text("Personal Playlist"),
+                  suffix: Icon(FIcons.chevronRight),
+                  onPress: () {
+                    context.pushNamed(RouteName.managerPeronalPlaylist.name);
+                  },
+                ),
+                FTile(
                   prefix: Icon(FIcons.serverCog),
                   title: Text("Public Sources"),
                   subtitle: Text("Browse freely available information sources"),

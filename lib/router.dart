@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:pusoo/features/playlist/presentation/screens/manage_personal_playlist_screen.dart';
 import 'package:pusoo/features/source/presentation/screens/add_new_source_screen.dart';
 import 'package:pusoo/features/playlist/presentation/screens/add_new_playlist_screen.dart';
 import 'package:pusoo/features/detail/presentation/screens/detail_screen.dart';
@@ -34,6 +35,7 @@ enum RouteName {
 
   // playlist
   addPlaylist,
+  managerPeronalPlaylist,
 
   // public source
   publicSources,
@@ -62,6 +64,11 @@ final List<GoRoute> defaultRouter = [
     path: '/playlist/add',
     name: RouteName.addPlaylist.name,
     builder: (context, state) => AddNewPlaylistScreen(),
+  ),
+  GoRoute(
+    path: '/playlist/personal',
+    name: RouteName.managerPeronalPlaylist.name,
+    builder: (context, state) => ManagePersonalPlaylistScreen(),
   ),
   GoRoute(
     path: '/detail/:movieId',

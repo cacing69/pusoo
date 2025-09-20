@@ -157,6 +157,7 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
                             prefix: SizedBox(
                               width: 20,
                               height: 20,
+
                               child: Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
@@ -168,6 +169,7 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
                             ),
 
                             title: Text(e.name),
+                            details: Text("Playlist"),
                             subtitle: Text(e.url ?? "", maxLines: 1),
                             suffix: Icon(FIcons.chevronRight),
                             onPress: e.isActive
