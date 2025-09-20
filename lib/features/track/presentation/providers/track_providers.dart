@@ -3,6 +3,7 @@ import 'package:pusoo/features/track/data/repository_impl/track_drift_repository
 import 'package:pusoo/features/track/domain/usecases/count_track_usecase.dart';
 import 'package:pusoo/features/track/domain/usecases/get_group_titles_track_usecase.dart';
 import 'package:pusoo/features/track/domain/usecases/get_tracks_usecase.dart';
+import 'package:pusoo/features/track/domain/usecases/refresh_all_track_usecase.dart';
 import 'package:pusoo/shared/presentation/providers/logger_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -41,4 +42,9 @@ CountTrackUsecase countTrackUsecase(Ref ref) {
     ref.read(trackDriftRepositoryProvider),
     ref.read(loggerProvider),
   );
+}
+
+@riverpod
+RefreshAllTrackUsecase refreshAllTrackUsecase(Ref ref) {
+  return RefreshAllTrackUsecase(ref);
 }

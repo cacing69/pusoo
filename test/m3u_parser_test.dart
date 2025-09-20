@@ -1713,17 +1713,58 @@ https://linearjitp-playback.astro.com.my/dash-wv/linear/5050/default_ott.mpd
       List<Track> result = M3UParser.parse(content);
 
       expect(result[0].title, equals("BBC Lifestyle"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.stream_headers"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.stream_headers"], equals("referer=https://astrogo.astro.com.my//&user-agent=Mozilla/5.0 (Linux; Android 10; MI 9 Build/QKQ1.190825.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/111.0.5563.58 Mobile Safari/537.36"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_key"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.license_key"], equals("f429292dc744f284355308561577ac10:b12e1f894129c517dc8845baaeebec8a"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.manifest_type"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.manifest_type"], equals("dash"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_type"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.license_type"], equals("org.w3.clearkey"));
-      expect(result[0].links.first, equals("https://linearjitp-playback.astro.com.my/dash-wv/linear/5050/default_ott.mpd"));
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.stream_headers",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.stream_headers"],
+        equals(
+          "referer=https://astrogo.astro.com.my//&user-agent=Mozilla/5.0 (Linux; Android 10; MI 9 Build/QKQ1.190825.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/111.0.5563.58 Mobile Safari/537.36",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "f429292dc744f284355308561577ac10:b12e1f894129c517dc8845baaeebec8a",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.manifest_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.manifest_type"],
+        equals("dash"),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_type"],
+        equals("org.w3.clearkey"),
+      );
+      expect(
+        result[0].links.first,
+        equals(
+          "https://linearjitp-playback.astro.com.my/dash-wv/linear/5050/default_ott.mpd",
+        ),
+      );
     });
-    
+
     test('TestTrackShouldGiveHeaders:ClearKeyValueUrl:1', () async {
       final String content = r'''
 #EXTINF:-1 group-title="RYANTV CHANNELS" tvg-id="" tvg-logo="https://poster.starhubgo.com/Linear_channels2/316_1920x1080_HTV.png" ,Cartoon Network
@@ -1739,17 +1780,54 @@ https://linearjitp-playback.astro.com.my/dash-wv/linear/509/default_ott.mpd
       List<Track> result = M3UParser.parse(content);
 
       expect(result[0].title, equals("Cartoon Network"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_key"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.license_key"], equals("https://ck-dash-mpd.aqfadtv.xyz/dash-ck/linear/509"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.manifest_type"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.manifest_type"], equals("dash"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_type"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.license_type"], equals("clearkey"));
-      expect(result[0].links.first, equals("https://linearjitp-playback.astro.com.my/dash-wv/linear/509/default_ott.mpd"));
-      expect(result[0].extVlcOpts.first.containsKey("http-user-agent"), equals(true));
-      expect(result[0].extVlcOpts.first["http-user-agent"], equals("Mozilla/5.0 (Linux; Android 12; Pixel 3a XL Build/SP2A.220505.008; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/114.0.5715.0 Mobile Safari/537.36"));
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_key"],
+        equals("https://ck-dash-mpd.aqfadtv.xyz/dash-ck/linear/509"),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.manifest_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.manifest_type"],
+        equals("dash"),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_type"],
+        equals("clearkey"),
+      );
+      expect(
+        result[0].links.first,
+        equals(
+          "https://linearjitp-playback.astro.com.my/dash-wv/linear/509/default_ott.mpd",
+        ),
+      );
+      expect(
+        result[0].extVlcOpts.first.containsKey("http-user-agent"),
+        equals(true),
+      );
+      expect(
+        result[0].extVlcOpts.first["http-user-agent"],
+        equals(
+          "Mozilla/5.0 (Linux; Android 12; Pixel 3a XL Build/SP2A.220505.008; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/114.0.5715.0 Mobile Safari/537.36",
+        ),
+      );
     });
-    
+
     test('TestTrackShouldGiveHeaders:ClearKeyValueUrl:1', () async {
       final String content = r'''
 #EXTINF:-1 group-title="RYANTV CHANNELS" tvg-id="" tvg-logo="http://115.146.176.131:80/images/2acf9495fde07739914e7a7bb3ffee94.png", CNN
@@ -1764,17 +1842,56 @@ https://linearjitp-playback.astro.com.my/dash-wv/linear/2503/default_ott.mpd
       List<Track> result = M3UParser.parse(content);
 
       expect(result[0].title, equals("CNN"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_key"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.license_key"], equals("{\"keys\":[{\"kty\":\"oct\",\"k\":\"v34bl1VcSst0VfcRsqn/Fg\",\"kid\":\"G2GKKRzs5EyYRd3fxP2bEA\"}],\"type\":\"temporary\"}"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.manifest_type"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.manifest_type"], equals("dash"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_type"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.license_type"], equals("org.w3.clearkey"));
-      expect(result[0].links.first, equals("https://linearjitp-playback.astro.com.my/dash-wv/linear/2503/default_ott.mpd"));
-      expect(result[0].extVlcOpts.first.containsKey("http-user-agent"), equals(true));
-      expect(result[0].extVlcOpts.first["http-user-agent"], equals("Mozilla/5.0 (Linux; Android 14; 27821-67832-42-315-4231-233-21-43-12-1312-321-23-21-232-) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"));
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "{\"keys\":[{\"kty\":\"oct\",\"k\":\"v34bl1VcSst0VfcRsqn/Fg\",\"kid\":\"G2GKKRzs5EyYRd3fxP2bEA\"}],\"type\":\"temporary\"}",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.manifest_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.manifest_type"],
+        equals("dash"),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_type"],
+        equals("org.w3.clearkey"),
+      );
+      expect(
+        result[0].links.first,
+        equals(
+          "https://linearjitp-playback.astro.com.my/dash-wv/linear/2503/default_ott.mpd",
+        ),
+      );
+      expect(
+        result[0].extVlcOpts.first.containsKey("http-user-agent"),
+        equals(true),
+      );
+      expect(
+        result[0].extVlcOpts.first["http-user-agent"],
+        equals(
+          "Mozilla/5.0 (Linux; Android 14; 27821-67832-42-315-4231-233-21-43-12-1312-321-23-21-232-) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36",
+        ),
+      );
     });
-    
+
     test('TestTrackShouldGiveHeaders:ClearKeyJsonPure:1', () async {
       final String content = r'''
 #EXTINF:-1 group-title="RYANTV CHANNELS" tvg-id="" tvg-logo="https://logo.iptveditor.com/tlc.png" ,TLC
@@ -1789,17 +1906,56 @@ https://linearjitp-playback.astro.com.my/dash-wv/linear/2709/default_ott.mpd
       List<Track> result = M3UParser.parse(content);
 
       expect(result[0].title, equals("TLC"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_key"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.license_key"], equals("{ \"keys\":[ { \"kty\":\"oct\", \"k\":\"f15saWmN3vy3RVNDGyscmA\", \"kid\":\"lC7BViA7Ksod3zSY9mPBEA\" } ], \"type\":\"temporary\" }"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.manifest_type"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.manifest_type"], equals("dash"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_type"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.license_type"], equals("clearkey"));
-      expect(result[0].links.first, equals("https://linearjitp-playback.astro.com.my/dash-wv/linear/2709/default_ott.mpd"));
-      expect(result[0].extVlcOpts.first.containsKey("http-user-agent"), equals(true));
-      expect(result[0].extVlcOpts.first["http-user-agent"], equals("Mozilla/5.0 (Linux; Android 14; 27821-67832-42-315-4231-233-21-43-12-1312-321-23-21-232-) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"));
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "{ \"keys\":[ { \"kty\":\"oct\", \"k\":\"f15saWmN3vy3RVNDGyscmA\", \"kid\":\"lC7BViA7Ksod3zSY9mPBEA\" } ], \"type\":\"temporary\" }",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.manifest_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.manifest_type"],
+        equals("dash"),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_type"],
+        equals("clearkey"),
+      );
+      expect(
+        result[0].links.first,
+        equals(
+          "https://linearjitp-playback.astro.com.my/dash-wv/linear/2709/default_ott.mpd",
+        ),
+      );
+      expect(
+        result[0].extVlcOpts.first.containsKey("http-user-agent"),
+        equals(true),
+      );
+      expect(
+        result[0].extVlcOpts.first["http-user-agent"],
+        equals(
+          "Mozilla/5.0 (Linux; Android 14; 27821-67832-42-315-4231-233-21-43-12-1312-321-23-21-232-) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36",
+        ),
+      );
     });
-    
+
     test('TestTrackShouldGiveHeaders:ClearKeyJsonPure:1', () async {
       final String content = r'''
 #EXTINF:-1 group-title="RYANTV CHANNELS" tvg-id="" tvg-logo="https://i.imgur.com/LkisXI3.png",Golf Pass
@@ -1811,11 +1967,47 @@ https://fsly.stream.peacocktv.com/Content/CMAF_CTR-4s-v2/Live/channel(vc124phhny
       List<Track> result = M3UParser.parse(content);
 
       expect(result[0].title, equals("Golf Pass"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_key"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.license_key"], equals("{\"0020212a47511b226f7cc9d030aa171b\":\"323c16315e1cb8d7c821facc3c1778a4\"}"));
-      expect(result[0].kodiProps.first.containsKey("inputstream.adaptive.license_type"), equals(true));
-      expect(result[0].kodiProps.first["inputstream.adaptive.license_type"], equals("clearkey"));
-      expect(result[0].links.first, equals("https://fsly.stream.peacocktv.com/Content/CMAF_CTR-4s-v2/Live/channel(vc124phhny)/master.mpd"));
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "{\"0020212a47511b226f7cc9d030aa171b\":\"323c16315e1cb8d7c821facc3c1778a4\"}",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_type"],
+        equals("clearkey"),
+      );
+      expect(
+        result[0].links.first,
+        equals(
+          "https://fsly.stream.peacocktv.com/Content/CMAF_CTR-4s-v2/Live/channel(vc124phhny)/master.mpd",
+        ),
+      );
+    });
+
+    test('TestTrackShouldGiveLength:1', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-name="卡酷动画",BRTV卡酷少儿[高清]
+http://192.168.1.4:7088/rtp/239.3.1.189:8000
+# #EXTINF:-1 tvg-name="北京纪实",BRTV冬奥纪实[高清]
+# http://192.168.1.4:7088/rtp/239.3.1.243:8000
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result.length, equals(1));
     });
 
     // TEST TEMPORARY WITH FILE

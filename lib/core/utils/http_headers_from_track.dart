@@ -11,7 +11,7 @@ abstract class HttpHeadersFromTrack {
   static Map<String, String> build(Track track) {
     final Map<String, String> headers = {};
     final Map<String, String> normalizedHeaders = {};
-    
+
     // Priority 3: Extract headers from httpHeaders (lowest priority)
     for (final httpHeader in track.httpHeaders) {
       for (final entry in httpHeader.entries) {
@@ -21,15 +21,18 @@ abstract class HttpHeadersFromTrack {
         }
       }
     }
-    
+
     // Priority 2: Extract headers from extVlcOpts (medium priority)
     // This will override httpHeaders
-    final extVlcOptHeaders = ExtVlcOptHeadersExtractor.extract(track.extVlcOpts);
+    final extVlcOptHeaders = ExtVlcOptHeadersExtractor.extract(
+      track.extVlcOpts,
+    );
     for (final entry in extVlcOptHeaders.entries) {
       final normalizedKey = _normalizeHeaderName(entry.key);
-      normalizedHeaders[normalizedKey] = entry.value; // Override with extVlcOpts
+      normalizedHeaders[normalizedKey] =
+          entry.value; // Override with extVlcOpts
     }
-    
+
     // Priority 1: Extract headers from kodiProps stream_headers (highest priority)
     // This will override any existing headers
     for (final kodiProp in track.kodiProps) {
@@ -38,21 +41,22 @@ abstract class HttpHeadersFromTrack {
         final streamHeadersMap = StreamHeadersExtractor.extract(streamHeaders);
         for (final entry in streamHeadersMap.entries) {
           final normalizedKey = _normalizeHeaderName(entry.key);
-          normalizedHeaders[normalizedKey] = entry.value; // Always override with stream_headers
+          normalizedHeaders[normalizedKey] =
+              entry.value; // Always override with stream_headers
         }
       }
     }
-    
+
     return normalizedHeaders;
   }
-  
+
   /// Normalizes header names to standard format (Title-Case)
   static String _normalizeHeaderName(String headerName) {
     if (headerName.isEmpty) return headerName;
-    
+
     // Convert to lowercase first
     final lowerCase = headerName.toLowerCase();
-    
+
     // Handle special cases for common headers
     switch (lowerCase) {
       case 'content-type':
@@ -158,8 +162,6 @@ abstract class HttpHeadersFromTrack {
         return 'Range';
       case 'if-match':
         return 'If-Match';
-      case 'if-none-match':
-        return 'If-None-Match';
       case 'vary':
         return 'Vary';
       case 'age':
@@ -176,12 +178,6 @@ abstract class HttpHeadersFromTrack {
         return 'Location';
       case 'refresh':
         return 'Refresh';
-      case 'www-authenticate':
-        return 'WWW-Authenticate';
-      case 'proxy-authenticate':
-        return 'Proxy-Authenticate';
-      case 'proxy-authorization':
-        return 'Proxy-Authorization';
       case 'expect':
         return 'Expect';
       case 'max-forwards':
@@ -208,22 +204,24 @@ abstract class HttpHeadersFromTrack {
         return 'Sec-CH-UA-Mobile';
       case 'sec-ch-ua-platform':
         return 'Sec-CH-UA-Platform';
+      case 'x-tcdn-token':
+        return 'X-TCDN-token';
       default:
         // For custom headers, convert to Title-Case
         return _toTitleCase(lowerCase);
     }
   }
-  
+
   /// Converts a string to Title-Case (e.g., "x-custom-header" -> "X-Custom-Header")
   static String _toTitleCase(String input) {
     if (input.isEmpty) return input;
-    
+
     final parts = input.split('-');
     final titleCaseParts = parts.map((part) {
       if (part.isEmpty) return part;
       return part[0].toUpperCase() + part.substring(1).toLowerCase();
     });
-    
+
     return titleCaseParts.join('-');
   }
 }

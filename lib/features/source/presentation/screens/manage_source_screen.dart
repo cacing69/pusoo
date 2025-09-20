@@ -4,6 +4,8 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pusoo/core/utils/helpers.dart';
+import 'package:pusoo/core/utils/usecase.dart';
+import 'package:pusoo/features/track/presentation/providers/track_providers.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_filter_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_paging_notifier.dart';
 import 'package:pusoo/router.dart';
@@ -127,9 +129,9 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
                           message: "Playlist saved",
                         );
 
-                        // REFRESH HOME
-                        ref.read(tvTracksFilterProvider.notifier).reset();
-                        ref.read(tvTracksPagingProvider).refresh();
+                        ref
+                            .read(refreshAllTrackUsecaseProvider)
+                            .call(NoParams());
                       }
                     }
                   },

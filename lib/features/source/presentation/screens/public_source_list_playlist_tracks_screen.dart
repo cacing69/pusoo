@@ -7,10 +7,13 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:pusoo/core/utils/helpers.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
+import 'package:pusoo/core/utils/usecase.dart';
 import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:http/http.dart' as http;
+import 'package:pusoo/features/track/presentation/providers/track_providers.dart';
 import 'package:pusoo/features/tv/presentation/widgets/tvg_logo_viewer.dart';
 import 'package:pusoo/router.dart';
 
@@ -143,11 +146,19 @@ class _PublicSourceListPlaylistChannelsScreenState
           ),
           Gap(5),
           FButton(
-            onPress: () {
-              context.pushNamed(
+            onPress: () async {
+              final result = await context.pushNamed(
                 RouteName.addPlaylist.name,
                 extra: widget.source,
               );
+
+              if (result is bool && result) {
+                if (context.mounted) {
+                  showFlutterToast(context: context, message: "Playlist saved");
+
+                  ref.read(refreshAllTrackUsecaseProvider).call(NoParams());
+                }
+              }
             },
             prefix: Icon(FIcons.bookmark),
             child: Text("Add to My Playlist"),

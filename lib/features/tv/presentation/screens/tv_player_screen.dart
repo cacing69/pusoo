@@ -10,6 +10,7 @@ import 'package:pusoo/core/utils/helpers.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/presentation/providers/better_player_notifier.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class TVPlayerScreen extends ConsumerStatefulWidget {
   final Track track;
@@ -21,16 +22,31 @@ class TVPlayerScreen extends ConsumerStatefulWidget {
 class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
     with SingleTickerProviderStateMixin {
   final GlobalKey _playerKey = GlobalKey();
-  String? urlActive;
+  YoutubePlayerController? _youtubePlayerController;
+
+  bool isYoutube = false;
 
   @override
   void initState() {
     super.initState();
 
+    isYoutube = false;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(betterPlayerProvider.notifier)
-          .openMediaStream(widget.track, isLiveStream: true);
+      if (isYoutube) {
+        _youtubePlayerController = YoutubePlayerController.fromVideoId(
+          videoId: "6jZDSSZZxjQ",
+          autoPlay: true,
+          params: const YoutubePlayerParams(
+            showFullscreenButton: true,
+            showControls: true,
+          ),
+        );
+      } else {
+        ref
+            .read(betterPlayerProvider.notifier)
+            .openMediaStream(widget.track, isLiveStream: true);
+      }
     });
   }
 
@@ -118,8 +134,7 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
               Expanded(
                 child: FButton(
                   style: FButtonStyle.outline(),
-                  onPress: () {
-                  },
+                  onPress: () {},
                   prefix: const Icon(FIcons.heart),
                   child: const Text("Add to favorite"),
                 ),
@@ -280,6 +295,31 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
     );
   }
 
+  Widget _buildYoutubePlayer(YoutubePlayerController controller) {
+    return SizedBox(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.width * 9.0 / 16.0,
+      child: YoutubePlayerScaffold(
+        aspectRatio: 16 / 9,
+        builder: (context, player) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              player,
+              Gap(5),
+              Text("Lorem"),
+              Gap(5),
+
+              Text("Other Trailers"),
+              Gap(5),
+            ],
+          );
+        },
+        controller: controller,
+      ),
+    );
+  }
+
   Widget _buildPotraitLayout(
     BuildContext context,
     BetterPlayerController? controller,
@@ -288,7 +328,13 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(flex: 1, child: _buildVideoPlayer(controller)),
+        Expanded(
+          flex: 1,
+          child: isYoutube
+              ? _buildYoutubePlayer(_youtubePlayerController!)
+              : _buildVideoPlayer(controller),
+        ),
+
         FDivider(
           style: (style) =>
               style.copyWith(padding: const EdgeInsets.symmetric(vertical: 10)),

@@ -246,3 +246,51 @@ final class CountTrackUsecaseProvider
 }
 
 String _$countTrackUsecaseHash() => r'70e90d2d3fce13160f19313eda8efdd68252d76f';
+
+@ProviderFor(refreshAllTrackUsecase)
+const refreshAllTrackUsecaseProvider = RefreshAllTrackUsecaseProvider._();
+
+final class RefreshAllTrackUsecaseProvider
+    extends
+        $FunctionalProvider<
+          RefreshAllTrackUsecase,
+          RefreshAllTrackUsecase,
+          RefreshAllTrackUsecase
+        >
+    with $Provider<RefreshAllTrackUsecase> {
+  const RefreshAllTrackUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'refreshAllTrackUsecaseProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$refreshAllTrackUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<RefreshAllTrackUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  RefreshAllTrackUsecase create(Ref ref) {
+    return refreshAllTrackUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(RefreshAllTrackUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<RefreshAllTrackUsecase>(value),
+    );
+  }
+}
+
+String _$refreshAllTrackUsecaseHash() =>
+    r'1367a0dd6c202a88547252d14e3a6a89aaab8374';

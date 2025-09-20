@@ -82,7 +82,7 @@ class _MovieScreenState extends State<MovieScreen> {
                 : GridView.builder(
                     padding: EdgeInsets.zero,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
+                      crossAxisCount: isPotrait ? 3 : 6,
                       childAspectRatio: 0.57,
                       crossAxisSpacing: 5,
                       mainAxisSpacing: 5,
