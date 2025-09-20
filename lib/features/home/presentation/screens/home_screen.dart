@@ -25,6 +25,66 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return FScaffold(
       resizeToAvoidBottomInset: false,
+      sidebar: isPotrait
+          ? SizedBox.shrink()
+          : FSidebar(
+              children: [
+                FSidebarGroup(
+                  children: [
+                    FSidebarItem(
+                      icon: const Icon(FIcons.earth),
+                      label: const Text('Explore'),
+                      selected: selectedIndex == 0,
+                      onPress: () {
+                        setState(() {
+                          selectedIndex = 0;
+                        });
+                      },
+                    ),
+                    FSidebarItem(
+                      icon: const Icon(FIcons.monitor),
+                      selected: selectedIndex == 1,
+                      label: const Text('Live TV'),
+                      onPress: () {
+                        setState(() {
+                          selectedIndex = 1;
+                        });
+                      },
+                    ),
+                    FSidebarItem(
+                      icon: const Icon(FIcons.monitorPlay),
+                      selected: selectedIndex == 2,
+                      label: const Text('Movies'),
+                      onPress: () {
+                        setState(() {
+                          selectedIndex = 2;
+                        });
+                      },
+                    ),
+                    FSidebarItem(
+                      icon: const Icon(FIcons.monitorCheck),
+                      selected: selectedIndex == 3,
+                      label: const Text('TV Series'),
+                      onPress: () {
+                        setState(() {
+                          selectedIndex = 3;
+                        });
+                      },
+                    ),
+                    FSidebarItem(
+                      icon: const Icon(FIcons.settings),
+                      selected: selectedIndex == 4,
+                      label: const Text('Settings'),
+                      onPress: () {
+                        setState(() {
+                          selectedIndex = 4;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
       footer: isPotrait
           ? FBottomNavigationBar(
               onChange: (index) {
@@ -34,36 +94,89 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               children: [
                 FBottomNavigationBarItem(
-                  icon: Icon(FIcons.earth),
-                  label: Text('Explore'),
+                  icon: Icon(
+                    FIcons.earth,
+                    color: selectedIndex == 0
+                        ? context.theme.colors.primary
+                        : null,
+                  ),
+                  label: Text(
+                    'Explore',
+                    style: TextStyle(
+                      color: selectedIndex == 0
+                          ? context.theme.colors.primary
+                          : null,
+                      fontWeight: selectedIndex == 0 ? FontWeight.w600 : null,
+                    ),
+                  ),
                 ),
                 FBottomNavigationBarItem(
-                  icon: Icon(FIcons.monitor),
-                  label: Text('Live TV'),
+                  icon: Icon(
+                    FIcons.monitor,
+                    color: selectedIndex == 1
+                        ? context.theme.colors.primary
+                        : null,
+                  ),
+                  label: Text(
+                    'Live TV',
+                    style: TextStyle(
+                      color: selectedIndex == 1
+                          ? context.theme.colors.primary
+                          : null,
+                      fontWeight: selectedIndex == 1 ? FontWeight.w600 : null,
+                    ),
+                  ),
                 ),
                 FBottomNavigationBarItem(
-                  icon: Icon(FIcons.monitorPlay),
-                  label: Text('Movies'),
+                  icon: Icon(
+                    FIcons.monitorPlay,
+                    color: selectedIndex == 2
+                        ? context.theme.colors.primary
+                        : null,
+                  ),
+                  label: Text(
+                    'Movies',
+                    style: TextStyle(
+                      color: selectedIndex == 2
+                          ? context.theme.colors.primary
+                          : null,
+                      fontWeight: selectedIndex == 2 ? FontWeight.w600 : null,
+                    ),
+                  ),
                 ),
                 FBottomNavigationBarItem(
-                  icon: Icon(FIcons.monitorCheck),
-                  label: Text('TV Series'),
+                  icon: Icon(
+                    FIcons.monitorCheck,
+                    color: selectedIndex == 3
+                        ? context.theme.colors.primary
+                        : null,
+                  ),
+                  label: Text(
+                    'TV Series',
+                    style: TextStyle(
+                      color: selectedIndex == 3
+                          ? context.theme.colors.primary
+                          : null,
+                      fontWeight: selectedIndex == 3 ? FontWeight.w600 : null,
+                    ),
+                  ),
                 ),
-                // FBottomNavigationBarItem(
-                //   icon: Icon(FIcons.boomBox),
-                //   label: Text('Radio'),
-                // ),
-                // FBottomNavigationBarItem(
-                //   icon: Icon(FIcons.heart),
-                //   label: Text('Favorites'),
-                // ),
-                // FBottomNavigationBarItem(
-                //   icon: Icon(FIcons.list),
-                //   label: Text('Playlist'),
-                // ),
                 FBottomNavigationBarItem(
-                  icon: Icon(FIcons.settings),
-                  label: Text('Setting'),
+                  icon: Icon(
+                    FIcons.settings,
+                    color: selectedIndex == 4
+                        ? context.theme.colors.primary
+                        : null,
+                  ),
+                  label: Text(
+                    'Settings',
+                    style: TextStyle(
+                      color: selectedIndex == 4
+                          ? context.theme.colors.primary
+                          : null,
+                      fontWeight: selectedIndex == 4 ? FontWeight.w600 : null,
+                    ),
+                  ),
                 ),
               ],
             )
@@ -72,67 +185,11 @@ class _HomeScreenState extends State<HomeScreen> {
         index: selectedIndex,
         children: [
           ExploreScreen(),
-
-          isPotrait
-              ? TvScreen()
-              : Row(
-                  children: [
-                    _buildMenuLandscape(width),
-                    Gap(5),
-                    Expanded(child: TvScreen()),
-                  ],
-                ),
+          TvScreen(),
           MovieScreen(),
           SerieScreen(),
           SettingScreen(),
         ],
-      ),
-    );
-  }
-
-  Widget _buildMenuLandscape(double widhtScreen) {
-    return SizedBox(
-      width: widhtScreen * 0.050,
-      child: SafeArea(
-        bottom: false,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Icon(
-              FIcons.earth,
-              size: 30,
-              color: context.theme.colors.disable(
-                context.theme.colors.foreground,
-              ),
-            ),
-            Icon(
-              FIcons.monitor,
-              size: 30,
-              color: context.theme.colors.foreground,
-            ),
-            Icon(
-              FIcons.monitorPlay,
-              size: 30,
-              color: context.theme.colors.disable(
-                context.theme.colors.foreground,
-              ),
-            ),
-            Icon(
-              FIcons.monitorCheck,
-              size: 30,
-              color: context.theme.colors.disable(
-                context.theme.colors.foreground,
-              ),
-            ),
-            Icon(
-              FIcons.settings,
-              size: 30,
-              color: context.theme.colors.disable(
-                context.theme.colors.foreground,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

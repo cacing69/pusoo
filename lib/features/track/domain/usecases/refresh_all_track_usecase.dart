@@ -1,6 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:pusoo/core/errors/failure.dart';
 import 'package:pusoo/core/utils/usecase.dart';
+import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
+import 'package:pusoo/features/tv/presentation/providers/tv_track_count_notifier.dart';
+import 'package:pusoo/features/tv/presentation/providers/tv_track_group_titles_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_filter_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_paging_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,6 +16,16 @@ class RefreshAllTrackUsecase implements UseCase<void, NoParams> {
   @override
   Future<Either<Failure, void>> call(NoParams? params) async {
     // REFRESH HOME
+
+    // TV
+    ref
+        .read(tvTrackGroupTitlesProvider.notifier)
+        .perform(TrackFilterQuery(isLiveTv: true));
+
+    ref
+        .read(tvTrackCountProvider.notifier)
+        .perform(TrackFilterQuery(isLiveTv: true));
+
     ref.read(tvTracksFilterProvider.notifier).reset();
     ref.read(tvTracksPagingProvider).refresh();
 

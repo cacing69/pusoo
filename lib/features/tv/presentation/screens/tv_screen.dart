@@ -8,7 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:pusoo/core/utils/theme_app.dart';
-import 'package:pusoo/features/playlist/presentation/providers/active_playlist_notifier.dart';
 import 'package:pusoo/features/source/presentation/providers/active_source_notifier.dart';
 import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_track_count_notifier.dart';
@@ -47,8 +46,6 @@ class _TvScreenState extends ConsumerState<TvScreen> {
           .perform(TrackFilterQuery(isLiveTv: true));
     });
   }
-
-  String countTracks = "0";
 
   Widget _buildSearch(TextEditingController controller) {
     final asyncCountTrack = ref.watch(tvTrackCountProvider);
