@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 
 part 'source.g.dart';
 part 'source.freezed.dart';
@@ -15,7 +16,19 @@ abstract class Source with _$Source {
     String? epgLink,
     String? url,
     @Default(false) bool? isActive,
-    @Default(false) bool? isEmpty,
+    @Default(false) bool? isPersonal,
+    @Default(false) bool? isPublic,
+
+    @Default(false) bool isEmpty,
+
+    String? homepage,
+    String? owner,
+    String? description,
+    String? repository,
+
+    List<Track>? tracks,
+
+    //>? isEmpty,
 
     // Atribut untuk Xtream Codes
     String? username,

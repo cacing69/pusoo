@@ -56,7 +56,7 @@ class _SerieScreenState extends State<SerieScreen> {
     //   List<Map> expandedSeries = [];
 
     //   for (var ch in filtered) {
-    //     final rawCategories = ch.groupTitle?.split(';') ?? ["Miscellaneous"];
+    //     final rawCategories = ch.groupTitle?.split(';') ?? ["Unknown"];
     //     for (var cat in rawCategories) {
     //       // buat salinan channel tapi dengan kategori tunggal
     //       final newCh = Map<String, dynamic>.from(ch.toJson());

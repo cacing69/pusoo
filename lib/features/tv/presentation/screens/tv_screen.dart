@@ -313,7 +313,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                                         prefix: Icon(FIcons.tag),
                                         title: Text(
                                           e.trim().isEmpty
-                                              ? "Miscellaneous"
+                                              ? "Unknown"
                                               : e.trim(),
                                         ),
                                         suffix: Icon(FIcons.chevronRight),
@@ -388,7 +388,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                                 children: [
                                   item.groupTitle.trim().isNotEmpty
                                       ? Text(item.groupTitle.trim())
-                                      : Text("Miscellaneous"),
+                                      : Text("Unknown"),
                                   item.tvgId.trim().isNotEmpty
                                       ? Text(item.tvgId.trim(), maxLines: 2)
                                       : Text("@tvg-id: n/a"),

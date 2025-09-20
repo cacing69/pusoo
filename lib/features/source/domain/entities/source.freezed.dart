@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Source {
 
- int? get id; String? get name; String get type; String? get contentType; String? get filePath; String? get template; String? get epgLink; String? get url; bool? get isActive; bool? get isEmpty;// Atribut untuk Xtream Codes
+ int? get id; String? get name; String get type; String? get contentType; String? get filePath; String? get template; String? get epgLink; String? get url; bool? get isActive; bool? get isPersonal; bool? get isPublic; bool get isEmpty; String? get homepage; String? get owner; String? get description; String? get repository; List<Track>? get tracks;//>? isEmpty,
+// Atribut untuk Xtream Codes
  String? get username; String? get password; String? get serverUrl;
 /// Create a copy of Source
 /// with the given fields replaced by the non-null parameter values.
@@ -29,16 +30,16 @@ $SourceCopyWith<Source> get copyWith => _$SourceCopyWithImpl<Source>(this as Sou
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Source&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&(identical(other.filePath, filePath) || other.filePath == filePath)&&(identical(other.template, template) || other.template == template)&&(identical(other.epgLink, epgLink) || other.epgLink == epgLink)&&(identical(other.url, url) || other.url == url)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isEmpty, isEmpty) || other.isEmpty == isEmpty)&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.serverUrl, serverUrl) || other.serverUrl == serverUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Source&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&(identical(other.filePath, filePath) || other.filePath == filePath)&&(identical(other.template, template) || other.template == template)&&(identical(other.epgLink, epgLink) || other.epgLink == epgLink)&&(identical(other.url, url) || other.url == url)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isPersonal, isPersonal) || other.isPersonal == isPersonal)&&(identical(other.isPublic, isPublic) || other.isPublic == isPublic)&&(identical(other.isEmpty, isEmpty) || other.isEmpty == isEmpty)&&(identical(other.homepage, homepage) || other.homepage == homepage)&&(identical(other.owner, owner) || other.owner == owner)&&(identical(other.description, description) || other.description == description)&&(identical(other.repository, repository) || other.repository == repository)&&const DeepCollectionEquality().equals(other.tracks, tracks)&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.serverUrl, serverUrl) || other.serverUrl == serverUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,type,contentType,filePath,template,epgLink,url,isActive,isEmpty,username,password,serverUrl);
+int get hashCode => Object.hashAll([runtimeType,id,name,type,contentType,filePath,template,epgLink,url,isActive,isPersonal,isPublic,isEmpty,homepage,owner,description,repository,const DeepCollectionEquality().hash(tracks),username,password,serverUrl]);
 
 @override
 String toString() {
-  return 'Source(id: $id, name: $name, type: $type, contentType: $contentType, filePath: $filePath, template: $template, epgLink: $epgLink, url: $url, isActive: $isActive, isEmpty: $isEmpty, username: $username, password: $password, serverUrl: $serverUrl)';
+  return 'Source(id: $id, name: $name, type: $type, contentType: $contentType, filePath: $filePath, template: $template, epgLink: $epgLink, url: $url, isActive: $isActive, isPersonal: $isPersonal, isPublic: $isPublic, isEmpty: $isEmpty, homepage: $homepage, owner: $owner, description: $description, repository: $repository, tracks: $tracks, username: $username, password: $password, serverUrl: $serverUrl)';
 }
 
 
@@ -49,7 +50,7 @@ abstract mixin class $SourceCopyWith<$Res>  {
   factory $SourceCopyWith(Source value, $Res Function(Source) _then) = _$SourceCopyWithImpl;
 @useResult
 $Res call({
- int? id, String? name, String type, String? contentType, String? filePath, String? template, String? epgLink, String? url, bool? isActive, bool? isEmpty, String? username, String? password, String? serverUrl
+ int? id, String? name, String type, String? contentType, String? filePath, String? template, String? epgLink, String? url, bool? isActive, bool? isPersonal, bool? isPublic, bool isEmpty, String? homepage, String? owner, String? description, String? repository, List<Track>? tracks, String? username, String? password, String? serverUrl
 });
 
 
@@ -66,7 +67,7 @@ class _$SourceCopyWithImpl<$Res>
 
 /// Create a copy of Source
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? type = null,Object? contentType = freezed,Object? filePath = freezed,Object? template = freezed,Object? epgLink = freezed,Object? url = freezed,Object? isActive = freezed,Object? isEmpty = freezed,Object? username = freezed,Object? password = freezed,Object? serverUrl = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? type = null,Object? contentType = freezed,Object? filePath = freezed,Object? template = freezed,Object? epgLink = freezed,Object? url = freezed,Object? isActive = freezed,Object? isPersonal = freezed,Object? isPublic = freezed,Object? isEmpty = null,Object? homepage = freezed,Object? owner = freezed,Object? description = freezed,Object? repository = freezed,Object? tracks = freezed,Object? username = freezed,Object? password = freezed,Object? serverUrl = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -77,8 +78,15 @@ as String?,template: freezed == template ? _self.template : template // ignore: 
 as String?,epgLink: freezed == epgLink ? _self.epgLink : epgLink // ignore: cast_nullable_to_non_nullable
 as String?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,isActive: freezed == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
-as bool?,isEmpty: freezed == isEmpty ? _self.isEmpty : isEmpty // ignore: cast_nullable_to_non_nullable
-as bool?,username: freezed == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
+as bool?,isPersonal: freezed == isPersonal ? _self.isPersonal : isPersonal // ignore: cast_nullable_to_non_nullable
+as bool?,isPublic: freezed == isPublic ? _self.isPublic : isPublic // ignore: cast_nullable_to_non_nullable
+as bool?,isEmpty: null == isEmpty ? _self.isEmpty : isEmpty // ignore: cast_nullable_to_non_nullable
+as bool,homepage: freezed == homepage ? _self.homepage : homepage // ignore: cast_nullable_to_non_nullable
+as String?,owner: freezed == owner ? _self.owner : owner // ignore: cast_nullable_to_non_nullable
+as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,repository: freezed == repository ? _self.repository : repository // ignore: cast_nullable_to_non_nullable
+as String?,tracks: freezed == tracks ? _self.tracks : tracks // ignore: cast_nullable_to_non_nullable
+as List<Track>?,username: freezed == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String?,password: freezed == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String?,serverUrl: freezed == serverUrl ? _self.serverUrl : serverUrl // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -166,10 +174,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? name,  String type,  String? contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  bool? isEmpty,  String? username,  String? password,  String? serverUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? name,  String type,  String? contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  bool? isPersonal,  bool? isPublic,  bool isEmpty,  String? homepage,  String? owner,  String? description,  String? repository,  List<Track>? tracks,  String? username,  String? password,  String? serverUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Source() when $default != null:
-return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,_that.template,_that.epgLink,_that.url,_that.isActive,_that.isEmpty,_that.username,_that.password,_that.serverUrl);case _:
+return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,_that.template,_that.epgLink,_that.url,_that.isActive,_that.isPersonal,_that.isPublic,_that.isEmpty,_that.homepage,_that.owner,_that.description,_that.repository,_that.tracks,_that.username,_that.password,_that.serverUrl);case _:
   return orElse();
 
 }
@@ -187,10 +195,10 @@ return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? name,  String type,  String? contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  bool? isEmpty,  String? username,  String? password,  String? serverUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? name,  String type,  String? contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  bool? isPersonal,  bool? isPublic,  bool isEmpty,  String? homepage,  String? owner,  String? description,  String? repository,  List<Track>? tracks,  String? username,  String? password,  String? serverUrl)  $default,) {final _that = this;
 switch (_that) {
 case _Source():
-return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,_that.template,_that.epgLink,_that.url,_that.isActive,_that.isEmpty,_that.username,_that.password,_that.serverUrl);case _:
+return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,_that.template,_that.epgLink,_that.url,_that.isActive,_that.isPersonal,_that.isPublic,_that.isEmpty,_that.homepage,_that.owner,_that.description,_that.repository,_that.tracks,_that.username,_that.password,_that.serverUrl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +215,10 @@ return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? name,  String type,  String? contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  bool? isEmpty,  String? username,  String? password,  String? serverUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? name,  String type,  String? contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  bool? isPersonal,  bool? isPublic,  bool isEmpty,  String? homepage,  String? owner,  String? description,  String? repository,  List<Track>? tracks,  String? username,  String? password,  String? serverUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _Source() when $default != null:
-return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,_that.template,_that.epgLink,_that.url,_that.isActive,_that.isEmpty,_that.username,_that.password,_that.serverUrl);case _:
+return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,_that.template,_that.epgLink,_that.url,_that.isActive,_that.isPersonal,_that.isPublic,_that.isEmpty,_that.homepage,_that.owner,_that.description,_that.repository,_that.tracks,_that.username,_that.password,_that.serverUrl);case _:
   return null;
 
 }
@@ -222,7 +230,7 @@ return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,
 @JsonSerializable()
 
 class _Source implements Source {
-  const _Source({this.id, this.name, this.type = "m3u", this.contentType, this.filePath, this.template, this.epgLink, this.url, this.isActive = false, this.isEmpty = false, this.username, this.password, this.serverUrl});
+  const _Source({this.id, this.name, this.type = "m3u", this.contentType, this.filePath, this.template, this.epgLink, this.url, this.isActive = false, this.isPersonal = false, this.isPublic = false, this.isEmpty = false, this.homepage, this.owner, this.description, this.repository, final  List<Track>? tracks, this.username, this.password, this.serverUrl}): _tracks = tracks;
   factory _Source.fromJson(Map<String, dynamic> json) => _$SourceFromJson(json);
 
 @override final  int? id;
@@ -234,7 +242,23 @@ class _Source implements Source {
 @override final  String? epgLink;
 @override final  String? url;
 @override@JsonKey() final  bool? isActive;
-@override@JsonKey() final  bool? isEmpty;
+@override@JsonKey() final  bool? isPersonal;
+@override@JsonKey() final  bool? isPublic;
+@override@JsonKey() final  bool isEmpty;
+@override final  String? homepage;
+@override final  String? owner;
+@override final  String? description;
+@override final  String? repository;
+ final  List<Track>? _tracks;
+@override List<Track>? get tracks {
+  final value = _tracks;
+  if (value == null) return null;
+  if (_tracks is EqualUnmodifiableListView) return _tracks;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+//>? isEmpty,
 // Atribut untuk Xtream Codes
 @override final  String? username;
 @override final  String? password;
@@ -253,16 +277,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Source&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&(identical(other.filePath, filePath) || other.filePath == filePath)&&(identical(other.template, template) || other.template == template)&&(identical(other.epgLink, epgLink) || other.epgLink == epgLink)&&(identical(other.url, url) || other.url == url)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isEmpty, isEmpty) || other.isEmpty == isEmpty)&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.serverUrl, serverUrl) || other.serverUrl == serverUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Source&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&(identical(other.filePath, filePath) || other.filePath == filePath)&&(identical(other.template, template) || other.template == template)&&(identical(other.epgLink, epgLink) || other.epgLink == epgLink)&&(identical(other.url, url) || other.url == url)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isPersonal, isPersonal) || other.isPersonal == isPersonal)&&(identical(other.isPublic, isPublic) || other.isPublic == isPublic)&&(identical(other.isEmpty, isEmpty) || other.isEmpty == isEmpty)&&(identical(other.homepage, homepage) || other.homepage == homepage)&&(identical(other.owner, owner) || other.owner == owner)&&(identical(other.description, description) || other.description == description)&&(identical(other.repository, repository) || other.repository == repository)&&const DeepCollectionEquality().equals(other._tracks, _tracks)&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.serverUrl, serverUrl) || other.serverUrl == serverUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,type,contentType,filePath,template,epgLink,url,isActive,isEmpty,username,password,serverUrl);
+int get hashCode => Object.hashAll([runtimeType,id,name,type,contentType,filePath,template,epgLink,url,isActive,isPersonal,isPublic,isEmpty,homepage,owner,description,repository,const DeepCollectionEquality().hash(_tracks),username,password,serverUrl]);
 
 @override
 String toString() {
-  return 'Source(id: $id, name: $name, type: $type, contentType: $contentType, filePath: $filePath, template: $template, epgLink: $epgLink, url: $url, isActive: $isActive, isEmpty: $isEmpty, username: $username, password: $password, serverUrl: $serverUrl)';
+  return 'Source(id: $id, name: $name, type: $type, contentType: $contentType, filePath: $filePath, template: $template, epgLink: $epgLink, url: $url, isActive: $isActive, isPersonal: $isPersonal, isPublic: $isPublic, isEmpty: $isEmpty, homepage: $homepage, owner: $owner, description: $description, repository: $repository, tracks: $tracks, username: $username, password: $password, serverUrl: $serverUrl)';
 }
 
 
@@ -273,7 +297,7 @@ abstract mixin class _$SourceCopyWith<$Res> implements $SourceCopyWith<$Res> {
   factory _$SourceCopyWith(_Source value, $Res Function(_Source) _then) = __$SourceCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String? name, String type, String? contentType, String? filePath, String? template, String? epgLink, String? url, bool? isActive, bool? isEmpty, String? username, String? password, String? serverUrl
+ int? id, String? name, String type, String? contentType, String? filePath, String? template, String? epgLink, String? url, bool? isActive, bool? isPersonal, bool? isPublic, bool isEmpty, String? homepage, String? owner, String? description, String? repository, List<Track>? tracks, String? username, String? password, String? serverUrl
 });
 
 
@@ -290,7 +314,7 @@ class __$SourceCopyWithImpl<$Res>
 
 /// Create a copy of Source
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? type = null,Object? contentType = freezed,Object? filePath = freezed,Object? template = freezed,Object? epgLink = freezed,Object? url = freezed,Object? isActive = freezed,Object? isEmpty = freezed,Object? username = freezed,Object? password = freezed,Object? serverUrl = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? type = null,Object? contentType = freezed,Object? filePath = freezed,Object? template = freezed,Object? epgLink = freezed,Object? url = freezed,Object? isActive = freezed,Object? isPersonal = freezed,Object? isPublic = freezed,Object? isEmpty = null,Object? homepage = freezed,Object? owner = freezed,Object? description = freezed,Object? repository = freezed,Object? tracks = freezed,Object? username = freezed,Object? password = freezed,Object? serverUrl = freezed,}) {
   return _then(_Source(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -301,8 +325,15 @@ as String?,template: freezed == template ? _self.template : template // ignore: 
 as String?,epgLink: freezed == epgLink ? _self.epgLink : epgLink // ignore: cast_nullable_to_non_nullable
 as String?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,isActive: freezed == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
-as bool?,isEmpty: freezed == isEmpty ? _self.isEmpty : isEmpty // ignore: cast_nullable_to_non_nullable
-as bool?,username: freezed == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
+as bool?,isPersonal: freezed == isPersonal ? _self.isPersonal : isPersonal // ignore: cast_nullable_to_non_nullable
+as bool?,isPublic: freezed == isPublic ? _self.isPublic : isPublic // ignore: cast_nullable_to_non_nullable
+as bool?,isEmpty: null == isEmpty ? _self.isEmpty : isEmpty // ignore: cast_nullable_to_non_nullable
+as bool,homepage: freezed == homepage ? _self.homepage : homepage // ignore: cast_nullable_to_non_nullable
+as String?,owner: freezed == owner ? _self.owner : owner // ignore: cast_nullable_to_non_nullable
+as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,repository: freezed == repository ? _self.repository : repository // ignore: cast_nullable_to_non_nullable
+as String?,tracks: freezed == tracks ? _self._tracks : tracks // ignore: cast_nullable_to_non_nullable
+as List<Track>?,username: freezed == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String?,password: freezed == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String?,serverUrl: freezed == serverUrl ? _self.serverUrl : serverUrl // ignore: cast_nullable_to_non_nullable
 as String?,

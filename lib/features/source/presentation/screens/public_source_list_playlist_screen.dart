@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/router.dart';
 
 class PublicSourceListPlaylistScreen extends StatefulWidget {
-  const PublicSourceListPlaylistScreen({super.key});
+  final Source source;
+
+  const PublicSourceListPlaylistScreen({required this.source, super.key});
 
   @override
   State<PublicSourceListPlaylistScreen> createState() =>
@@ -16,6 +19,7 @@ class _PublicSourceListPlaylistScreenState
     extends State<PublicSourceListPlaylistScreen> {
   @override
   Widget build(BuildContext context) {
+    final source = widget.source;
     return FScaffold(
       header: FHeader.nested(
         title: Text("Available Playlists"),
@@ -33,55 +37,46 @@ class _PublicSourceListPlaylistScreenState
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Icon(FIcons.atSign),
-                  Gap(5),
-                  Text(
-                    "iptv-org/iptv",
-                    style: context.theme.typography.base.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+              // Row(
+              //   children: [
+              //     Icon(FIcons.atSign),
+              //     Gap(5),
+              //     Text(
+              //       source.name!,
+              //       style: context.theme.typography.base.copyWith(
+              //         fontWeight: FontWeight.bold,
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              FTile(
+                prefix: Icon(FIcons.github),
+                title: Text(source.name!),
+                suffix: Icon(FIcons.externalLink),
+                subtitle: Text(source.description!, maxLines: 3),
               ),
               Gap(10),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Collection of publicly available IPTV channels from all over the world",
-                  style: context.theme.typography.sm,
-                ),
-              ),
-              FItem(
-                prefix: Icon(FIcons.globe),
-                title: Text("Homepage"),
-                suffix: Icon(FIcons.externalLink),
-              ),
-              FItem(
-                prefix: Icon(FIcons.github),
-                title: Text("Gitub Repository"),
-                suffix: Icon(FIcons.externalLink),
-              ),
             ],
           ),
-          FDivider(
-            style: (style) =>
-                style.copyWith(padding: EdgeInsets.symmetric(vertical: 10)),
-          ),
           FItemGroup(
+            divider: FItemDivider.indented,
             children: [
-              
-              FItem(
-                prefix: Icon(FIcons.folderGit2),
-                title: Text("IPTV-ORG Playlist"),
-                subtitle: Text(
-                  "https://iptv-org.github.io/iptv/index.country.m3u",
+              ...source.tracks!.map(
+                (track) => FItem(
+                  prefix: Icon(FIcons.folderGit2),
+                  title: Text(track.title),
+                  subtitle: Text(track.links.first),
+                  suffix: Icon(FIcons.chevronRight),
+                  onPress: () {
+                    context.pushNamed(
+                      RouteName.publicSourcesPlaylistChannels.name,
+                      extra: source.copyWith(
+                        name: "${source.name} (${track.title})",
+                        tracks: [track],
+                      ),
+                    );
+                  },
                 ),
-                suffix: Icon(FIcons.chevronRight),
-                onPress: () {
-                  context.pushNamed(RouteName.publicSourcesPlaylistTrack.name);
-                },
               ),
             ],
           ),

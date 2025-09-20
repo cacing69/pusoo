@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -9,22 +8,31 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
+import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:http/http.dart' as http;
 import 'package:pusoo/features/tv/presentation/widgets/tvg_logo_viewer.dart';
+import 'package:pusoo/router.dart';
 
-class PublicSourceListPlaylistTracksScreen extends StatefulHookConsumerWidget {
-  const PublicSourceListPlaylistTracksScreen({super.key});
+class PublicSourceListPlaylistChannelsScreen
+    extends StatefulHookConsumerWidget {
+  final Source source;
+
+  const PublicSourceListPlaylistChannelsScreen({
+    required this.source,
+    super.key,
+  });
 
   @override
-  ConsumerState<PublicSourceListPlaylistTracksScreen> createState() =>
-      _PublicSourceListPlaylistTracksScreenState();
+  ConsumerState<PublicSourceListPlaylistChannelsScreen> createState() =>
+      _PublicSourceListPlaylistChannelsScreenState();
 }
 
-class _PublicSourceListPlaylistTracksScreenState
-    extends ConsumerState<PublicSourceListPlaylistTracksScreen> {
+class _PublicSourceListPlaylistChannelsScreenState
+    extends ConsumerState<PublicSourceListPlaylistChannelsScreen> {
   final Debouncer _debouncer = Debouncer();
   final Duration _debounceDuration = const Duration(milliseconds: 500);
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -33,7 +41,7 @@ class _PublicSourceListPlaylistTracksScreenState
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         final response = await http.get(
-          Uri.parse("https://iptv-org.github.io/iptv/index.m3u"),
+          Uri.parse(widget.source.tracks!.first.links.first),
         );
 
         if (response.statusCode == 200) {
@@ -52,9 +60,14 @@ class _PublicSourceListPlaylistTracksScreenState
 
           setState(() {
             tracks = M3UParser.parse(content);
+            isLoading = false;
           });
         }
-      } catch (e) {}
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     });
   }
 
@@ -84,7 +97,7 @@ class _PublicSourceListPlaylistTracksScreenState
               Icon(FIcons.folderGit2),
               Gap(5),
               Text(
-                "Main Playlist (${NumberFormat.decimalPattern().format(tracks.length)} channels)",
+                "Channels : ${NumberFormat.decimalPattern().format(tracks.length)}",
                 style: context.theme.typography.base.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -95,7 +108,7 @@ class _PublicSourceListPlaylistTracksScreenState
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "The main playlist containing all channels available in the repository",
+              "All channels available in this playlist",
               style: context.theme.typography.sm,
             ),
           ),
@@ -107,9 +120,6 @@ class _PublicSourceListPlaylistTracksScreenState
               _debouncer.debounce(
                 duration: _debounceDuration,
                 onDebounce: () async {
-                  // ref.read(tvTracksFilterProvider.notifier).changeTitle(value);
-                  // ref.read(tvTracksPagingProvider).refresh();
-
                   if (searchController.text.trim().isNotEmpty) {
                     setState(() {
                       tracksFiltered = tracks
@@ -132,12 +142,35 @@ class _PublicSourceListPlaylistTracksScreenState
             },
           ),
           Gap(5),
-          FButton(onPress: () {}, child: Text("Load Channels to My Playlist")),
+          FButton(
+            onPress: () {
+              context.pushNamed(
+                RouteName.addPlaylist.name,
+                extra: widget.source,
+              );
+            },
+            prefix: Icon(FIcons.bookmark),
+            child: Text("Add to My Playlist"),
+          ),
           FDivider(
             style: (style) =>
                 style.copyWith(padding: EdgeInsets.symmetric(vertical: 10)),
           ),
-          Expanded(child: _buildResult()),
+
+          Expanded(
+            child: isLoading
+                ? Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FProgress.circularIcon(),
+                        Text("Loading channels..."),
+                      ],
+                    ),
+                  )
+                : _buildResult(),
+          ),
         ],
       ),
     );
@@ -152,7 +185,7 @@ class _PublicSourceListPlaylistTracksScreenState
             prefix: Icon(FIcons.tvMinimal),
             title: Text(track.title),
             details: Text(
-              track.groupTitle.isNotEmpty ? track.groupTitle : "Miscellaneous",
+              track.groupTitle.isNotEmpty ? track.groupTitle : "Unknown",
             ),
             subtitle: Text("https://iptv-org.github.io/iptv/index.m3u"),
             suffix: Icon(FIcons.chevronRight),
@@ -183,7 +216,7 @@ class _PublicSourceListPlaylistTracksScreenState
                             title: Text(
                               track.groupTitle.isNotEmpty
                                   ? track.groupTitle
-                                  : "Miscellaneous",
+                                  : "Unknown",
                             ),
                             subtitle: Text("Category"),
                           ),

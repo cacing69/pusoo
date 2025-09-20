@@ -144,7 +144,7 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
             child: Builder(
               builder: (context) {
                 if (playlist.isEmpty) {
-                  return Expanded(child: Center(child: Text("No Data")));
+                  return Center(child: Text("No Data"));
                 } else {
                   return SingleChildScrollView(
                     child: Column(
@@ -156,7 +156,6 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
                             prefix: SizedBox(
                               width: 20,
                               height: 20,
-
                               child: Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
@@ -166,10 +165,17 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
                                 ),
                               ),
                             ),
-
-                            title: Text(e.name),
+                            title: Text(
+                              e.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                             details: Text("Playlist"),
-                            subtitle: Text(e.url ?? "", maxLines: 1),
+                            subtitle: Text(
+                              e.url ?? "",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                             suffix: Icon(FIcons.chevronRight),
                             onPress: e.isActive
                                 ? () {

@@ -17,6 +17,11 @@ class SourceDrift extends Table {
   BoolColumn get isPersonal => boolean().clientDefault(() => false)();
   BoolColumn get isPublic => boolean().clientDefault(() => false)();
 
+  TextColumn get homepage => text().nullable()();
+  TextColumn get owner => text().nullable()();
+  TextColumn get description => text().nullable()();
+  TextColumn get repository => text().nullable()();
+
   DateTimeColumn get lastUpdated => dateTime().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 

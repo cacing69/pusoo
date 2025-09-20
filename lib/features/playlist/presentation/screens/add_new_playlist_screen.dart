@@ -40,9 +40,20 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final nameController = useTextEditingController();
-    final urlController = useTextEditingController();
+    final nameController = useTextEditingController(
+      text: widget.source.isEmpty ? "" : widget.source.name,
+    );
+    final urlController = useTextEditingController(
+      text: widget.source.isEmpty
+          ? ""
+          : widget.source.tracks!.first.links.first,
+    );
     final epgLinkController = useTextEditingController();
 
     return FScaffold(
@@ -176,8 +187,9 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
 
                       final countExpression = driftDb.sourceDrift.id.count();
 
-                      String name =
-                          "M3U-${DateTime.now().millisecondsSinceEpoch.toString()}";
+                      String name = widget.source.isEmpty
+                          ? "M3U-${DateTime.now().millisecondsSinceEpoch.toString()}"
+                          : nameController.text.trim();
 
                       if (nameController.text.trim().isEmpty &&
                           urlController.text.isValidUrl()) {
@@ -204,16 +216,19 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                               ),
                               url: drift.Value(urlController.text.trim()),
                               isActive: drift.Value(count == 0),
+                              isPublic: drift.Value(
+                                widget.source.isPublic ?? false,
+                              ),
                             ),
                           );
 
-                      final isUrlExistOnPlaylisUrlHistory =
-                          await (driftDb.select(driftDb.sourceDrift)..where(
-                                (tbl) =>
-                                    tbl.url.equals(urlController.text.trim()),
-                              ))
-                              .getSingleOrNull() !=
-                          null;
+                      // final isUrlExistOnPlaylisUrlHistory =
+                      //     await (driftDb.select(driftDb.sourceDrift)..where(
+                      //           (tbl) =>
+                      //               tbl.url.equals(urlController.text.trim()),
+                      //         ))
+                      //         .getSingleOrNull() !=
+                      //     null;
 
                       // TODO : Save history on hive
 

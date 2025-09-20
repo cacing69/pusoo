@@ -11,10 +11,8 @@ import 'package:pusoo/features/source/presentation/screens/public_source_list_pl
 import 'package:pusoo/features/source/presentation/screens/public_source_list_playlist_tracks_screen.dart';
 import 'package:pusoo/features/source/presentation/screens/public_source_list_screen.dart';
 import 'package:pusoo/features/subtitle/presentation/screens/search_subtitle_screen.dart';
-// import 'package:pusoo/features/tv/presentation/screens/tv_player_full_screen.dart';
 import 'package:pusoo/features/tv/presentation/screens/tv_player_screen.dart';
 import 'package:pusoo/features/welcome/presentation/screens/welcome_screen.dart';
-import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/shared/presentation/screens/youtube_iframe_player_screen.dart';
 
@@ -41,7 +39,7 @@ enum RouteName {
   // public source
   publicSources,
   publicSourcesPlaylist,
-  publicSourcesPlaylistTrack,
+  publicSourcesPlaylistChannels,
 
   // subtitle
   subtitleSearch,
@@ -151,14 +149,16 @@ final List<GoRoute> defaultRouter = [
     path: '/source/public-sources/playlist',
     name: RouteName.publicSourcesPlaylist.name,
     builder: (context, state) {
-      return PublicSourceListPlaylistScreen();
+      return PublicSourceListPlaylistScreen(source: state.extra as Source);
     },
   ),
   GoRoute(
     path: '/source/public-sources/playlist/tracks',
-    name: RouteName.publicSourcesPlaylistTrack.name,
+    name: RouteName.publicSourcesPlaylistChannels.name,
     builder: (context, state) {
-      return PublicSourceListPlaylistTracksScreen();
+      return PublicSourceListPlaylistChannelsScreen(
+        source: state.extra as Source,
+      );
     },
   ),
 
