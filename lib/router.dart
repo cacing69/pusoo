@@ -102,7 +102,7 @@ final List<GoRoute> defaultRouter = [
     path: '/movie-detail',
     name: RouteName.movieDetail.name,
     builder: (context, state) {
-      return MovieDetailScreen(channel: state.extra as ChannelDriftData);
+      return MovieDetailScreen(track: state.extra as Track);
     },
   ),
   // GoRoute(

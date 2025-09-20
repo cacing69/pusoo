@@ -18,10 +18,10 @@ class ManageSourceScreen extends ConsumerStatefulWidget {
 }
 
 class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
-  List<PlaylistDriftData> playlist = [];
+  List<SourceDriftData> playlist = [];
 
   void loadPlaylist() async {
-    final allPlaylists = await driftDb.select(driftDb.playlistDrift).get();
+    final allPlaylists = await driftDb.select(driftDb.sourceDrift).get();
 
     setState(() {
       playlist = allPlaylists;
@@ -30,8 +30,7 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
 
   void removeAllPlaylist() async {
     // Hapus semua isi tabel 'playlist'
-    await driftDb.delete(driftDb.playlistDrift).go();
-    await driftDb.delete(driftDb.channelDrift).go();
+    await driftDb.delete(driftDb.sourceDrift).go();
     await driftDb.delete(driftDb.trackDrift).go();
 
     loadPlaylist();
@@ -212,13 +211,13 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
                                                   onPress: () async {
                                                     // update data old selected as false
                                                     await (driftDb.update(
-                                                          driftDb.playlistDrift,
+                                                          driftDb.sourceDrift,
                                                         )..where(
                                                           (tbl) => tbl.isActive
                                                               .equals(true),
                                                         ))
                                                         .write(
-                                                          const PlaylistDriftCompanion(
+                                                          const SourceDriftCompanion(
                                                             isActive:
                                                                 drift.Value(
                                                                   false,
@@ -228,13 +227,13 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
 
                                                     // update data old selected as false
                                                     await (driftDb.update(
-                                                          driftDb.playlistDrift,
+                                                          driftDb.sourceDrift,
                                                         )..where(
                                                           (tbl) => tbl.id
                                                               .equals(e.id),
                                                         ))
                                                         .write(
-                                                          const PlaylistDriftCompanion(
+                                                          const SourceDriftCompanion(
                                                             isActive:
                                                                 drift.Value(
                                                                   true,
@@ -275,7 +274,7 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
                                                   onPress: () async {
                                                     // delete channel first
                                                     await (driftDb.delete(
-                                                          driftDb.playlistDrift,
+                                                          driftDb.sourceDrift,
                                                         )..where(
                                                           (tbl) => tbl.id
                                                               .equals(e.id),
@@ -284,11 +283,10 @@ class _ManageSourceScreenState extends ConsumerState<ManageSourceScreen> {
 
                                                     // delete channel first
                                                     await (driftDb.delete(
-                                                          driftDb.channelDrift,
+                                                          driftDb.trackDrift,
                                                         )..where(
-                                                          (tbl) => tbl
-                                                              .playlistId
-                                                              .equals(""),
+                                                          (tbl) => tbl.sourceId
+                                                              .equals(e.id),
                                                         ))
                                                         .go();
 

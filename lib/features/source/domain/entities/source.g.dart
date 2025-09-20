@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'playlist.dart';
+part of 'source.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_Playlist _$PlaylistFromJson(Map<String, dynamic> json) => _Playlist(
+_Source _$SourceFromJson(Map<String, dynamic> json) => _Source(
   id: (json['id'] as num?)?.toInt(),
   name: json['name'] as String?,
   type: json['type'] as String? ?? "m3u",
@@ -21,7 +21,7 @@ _Playlist _$PlaylistFromJson(Map<String, dynamic> json) => _Playlist(
   serverUrl: json['serverUrl'] as String?,
 );
 
-Map<String, dynamic> _$PlaylistToJson(_Playlist instance) => <String, dynamic>{
+Map<String, dynamic> _$SourceToJson(_Source instance) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,
   'type': instance.type,

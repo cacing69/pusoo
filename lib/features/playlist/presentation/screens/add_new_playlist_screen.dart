@@ -12,6 +12,7 @@ import 'package:pusoo/core/extensions/string_ext.dart';
 import 'package:pusoo/core/utils/helpers.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
 import 'package:pusoo/features/playlist/presentation/providers/active_playlist_notifier.dart';
+import 'package:pusoo/features/source/presentation/providers/active_source_notifier.dart';
 import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_track_count_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_track_group_titles_notifier.dart';
@@ -172,7 +173,7 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                         channel = M3UParser.parse(content);
                       }
 
-                      final countExpression = driftDb.playlistDrift.id.count();
+                      final countExpression = driftDb.sourceDrift.id.count();
 
                       String name =
                           "M3U-${DateTime.now().millisecondsSinceEpoch.toString()}";
@@ -183,15 +184,15 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                       }
 
                       final count =
-                          await (driftDb.selectOnly(driftDb.playlistDrift)
+                          await (driftDb.selectOnly(driftDb.sourceDrift)
                                 ..addColumns([countExpression]))
                               .map((row) => row.read(countExpression))
                               .getSingle();
 
                       final int playlistId = await driftDb
-                          .into(driftDb.playlistDrift)
+                          .into(driftDb.sourceDrift)
                           .insert(
-                            PlaylistDriftCompanion.insert(
+                            SourceDriftCompanion.insert(
                               ulid: playlistUlid,
                               name: name,
                               type: drift.Value("m3u"),
@@ -206,22 +207,24 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                           );
 
                       final isUrlExistOnPlaylisUrlHistory =
-                          await (driftDb.select(driftDb.playlistDrift)..where(
+                          await (driftDb.select(driftDb.sourceDrift)..where(
                                 (tbl) =>
                                     tbl.url.equals(urlController.text.trim()),
                               ))
                               .getSingleOrNull() !=
                           null;
 
-                      if (!isUrlExistOnPlaylisUrlHistory) {
-                        await driftDb
-                            .into(driftDb.playlistUrlHistoryDrift)
-                            .insert(
-                              PlaylistUrlHistoryDriftCompanion.insert(
-                                url: drift.Value(urlController.text.trim()),
-                              ),
-                            );
-                      }
+                      // TODO : Save history on hive
+
+                      // if (!isUrlExistOnPlaylisUrlHistory) {
+                      //   await driftDb
+                      //       .into(driftDb.playlistUrlHistoryDrift)
+                      //       .insert(
+                      //         PlaylistUrlHistoryDriftCompanion.insert(
+                      //           url: drift.Value(urlController.text.trim()),
+                      //         ),
+                      //       );
+                      // }
 
                       if (channel.isNotEmpty) {
                         await driftDb.batch((batch) {
@@ -229,7 +232,7 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                             driftDb.trackDrift,
                             channel.map<TrackDriftCompanion>((Track track) {
                               return TrackDriftCompanion(
-                                playlistId: drift.Value(playlistId),
+                                sourceId: drift.Value(playlistId),
                                 title: drift.Value(track.title),
                                 tvgId: drift.Value(track.tvgId),
                                 tvgLogo: drift.Value(track.tvgLogo),
@@ -262,7 +265,7 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
                         });
 
                         if (count == 0) {
-                          ref.read(activePlaylistProvider.notifier).perform();
+                          ref.read(activeSourceProvider.notifier).perform();
                           ref
                               .read(tvTrackCountProvider.notifier)
                               .perform(TrackFilterQuery(isLiveTv: true));

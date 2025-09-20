@@ -6,6 +6,7 @@ import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pusoo/core/extensions/string_ext.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 // import 'package:pusoo/core/utils/m3u_parse.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
@@ -32,9 +33,9 @@ class _SerieScreenState extends State<SerieScreen> {
     //http://ogietv.biz.id:80/get.php?username=maksin&password=123456&type=m3u_plus&output=mpegts
   }
 
-  List<ChannelDriftData> series = [];
+  List<Track> series = [];
 
-  List<ChannelDriftData> seriesTitle = [];
+  List<Track> seriesTitle = [];
 
   Map<dynamic, dynamic> categories = {};
 
@@ -44,38 +45,38 @@ class _SerieScreenState extends State<SerieScreen> {
     // );
 
     final filtered = await (driftDb.select(
-      driftDb.channelDrift,
-    )..where((tbl) => tbl.streamUrl.like("%series%"))).get();
+      driftDb.trackDrift,
+    )..where((tbl) => tbl.links.like("%series%"))).get();
 
     // seriesRow.then((data) {
-    setState(() {
-      series = filtered;
+    // setState(() {
+    //   series = filtered;
 
-      // Flatten kategori yang dipisah titik koma
-      List<Map> expandedSeries = [];
+    //   // Flatten kategori yang dipisah titik koma
+    //   List<Map> expandedSeries = [];
 
-      for (var ch in filtered) {
-        final rawCategories = ch.groupTitle?.split(';') ?? ["Miscellaneous"];
-        for (var cat in rawCategories) {
-          // buat salinan channel tapi dengan kategori tunggal
-          final newCh = Map<String, dynamic>.from(ch.toJson());
-          newCh['category'] = cat.trim();
-          expandedSeries.add(newCh);
-        }
+    //   for (var ch in filtered) {
+    //     final rawCategories = ch.groupTitle?.split(';') ?? ["Miscellaneous"];
+    //     for (var cat in rawCategories) {
+    //       // buat salinan channel tapi dengan kategori tunggal
+    //       final newCh = Map<String, dynamic>.from(ch.toJson());
+    //       newCh['category'] = cat.trim();
+    //       expandedSeries.add(newCh);
+    //     }
 
-        final String serieTitleCleaned = ch.name
-            .replaceAll(RegExp(r'\s*S\d+E\d+', caseSensitive: false), '')
-            .trim();
+    //     final String serieTitleCleaned = ch.name
+    //         .replaceAll(RegExp(r'\s*S\d+E\d+', caseSensitive: false), '')
+    //         .trim();
 
-        bool exists = seriesTitle.any((v) => v.name == serieTitleCleaned);
+    //     bool exists = seriesTitle.any((v) => v.name == serieTitleCleaned);
 
-        if (!exists) {
-          seriesTitle.add(ch.copyWith(name: serieTitleCleaned));
-        }
-      }
+    //     if (!exists) {
+    //       seriesTitle.add(ch.copyWith(name: serieTitleCleaned));
+    //     }
+    //   }
 
-      categories = groupBy(expandedSeries, (row) => row['category']);
-    });
+    //   categories = groupBy(expandedSeries, (row) => row['category']);
+    // });
   }
 
   @override
@@ -139,19 +140,19 @@ class _SerieScreenState extends State<SerieScreen> {
                                     // Bisa navigasi ke halaman detail channel per kategori
                                     debugPrint("All channel selected");
 
-                                    final channelTv =
-                                        await (driftDb.select(
-                                              driftDb.channelDrift,
-                                            )..where(
-                                              (tbl) =>
-                                                  tbl.tvgId.isNotNull() |
-                                                  tbl.tvgId.isNotIn([""]),
-                                            ))
-                                            .get();
+                                    // final channelTv =
+                                    //     await (driftDb.select(
+                                    //           driftDb.sourceDrift,
+                                    //         )..where(
+                                    //           (tbl) =>
+                                    //               tbl.ti.isNotNull() |
+                                    //               tbl.tvgId.isNotIn([""]),
+                                    //         ))
+                                    //         .get();
 
                                     // channelTv.then((data) {
                                     setState(() {
-                                      series = channelTv;
+                                      // series = channelTv;
 
                                       context.pop();
                                     });
@@ -171,19 +172,19 @@ class _SerieScreenState extends State<SerieScreen> {
                                     ),
                                     suffix: Icon(FIcons.chevronRight),
                                     onPress: () async {
-                                      final channelTv =
-                                          await (driftDb.select(
-                                                driftDb.channelDrift,
-                                              )..where(
-                                                (tbl) => tbl.groupTitle.like(
-                                                  "%$categoryName%",
-                                                ),
-                                              ))
-                                              .get();
+                                      // final channelTv =
+                                      //     await (driftDb.select(
+                                      //           driftDb.channelDrift,
+                                      //         )..where(
+                                      //           (tbl) => tbl.groupTitle.like(
+                                      //             "%$categoryName%",
+                                      //           ),
+                                      //         ))
+                                      //         .get();
 
                                       // channelTv.then((data) {
                                       setState(() {
-                                        series = channelTv;
+                                        // series = channelTv;
 
                                         context.pop();
                                       });
@@ -206,8 +207,8 @@ class _SerieScreenState extends State<SerieScreen> {
             icon: Icon(FIcons.power, size: 25),
             onPress: () async {
               // Hapus semua isi tabel 'playlist'
-              await driftDb.delete(driftDb.playlistDrift).go();
-              await driftDb.delete(driftDb.channelDrift).go();
+              // await driftDb.delete(driftDb.playlistDrift).go();
+              // await driftDb.delete(driftDb.channelDrift).go();
 
               debugPrint("All rows has been deleted");
 
@@ -289,52 +290,14 @@ class _SerieScreenState extends State<SerieScreen> {
                                 SizedBox(
                                   width: double.infinity,
                                   height: 120, // tinggi tetap
-                                  child:
-                                      seriesTitle[index].logo?.isNotEmpty ??
-                                          false
-                                      ? Padding(
-                                          padding: const EdgeInsets.all(1.0),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                            ),
-                                            clipBehavior: Clip.antiAlias,
-                                            child: CachedNetworkImage(
-                                              imageUrl:
-                                                  seriesTitle[index].logo ?? "",
-                                              placeholder: (_, __) =>
-                                                  const Center(
-                                                    child:
-                                                        FProgress.circularIcon(),
-                                                  ),
-                                              errorWidget: (_, __, ___) =>
-                                                  Center(
-                                                    child: Icon(
-                                                      FIcons.imageOff,
-                                                      color: context
-                                                          .theme
-                                                          .colors
-                                                          .background
-                                                          .withAlpha(200),
-                                                      size: 40,
-                                                    ),
-                                                  ),
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        )
-                                      : Center(
-                                          child: Icon(
-                                            FIcons.imageOff,
-                                            size: 40,
-                                            color: context
-                                                .theme
-                                                .colors
-                                                .background
-                                                .withAlpha(200),
-                                          ),
-                                        ),
+                                  child: Center(
+                                    child: Icon(
+                                      FIcons.imageOff,
+                                      size: 40,
+                                      color: context.theme.colors.background
+                                          .withAlpha(200),
+                                    ),
+                                  ),
                                 ),
                                 Positioned(
                                   left: 0,
@@ -345,7 +308,7 @@ class _SerieScreenState extends State<SerieScreen> {
                                     color: context.theme.colors.background
                                         .withAlpha(125),
                                     child: Text(
-                                      seriesTitle[index].name,
+                                      "Lorem",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(

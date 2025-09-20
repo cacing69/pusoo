@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'playlist.dart';
+part of 'source.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,23 +13,23 @@ part of 'playlist.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$Playlist {
+mixin _$Source {
 
  int? get id; String? get name; String get type; String? get contentType; String? get filePath; String? get template; String? get epgLink; String? get url; bool? get isActive;// Atribut untuk Xtream Codes
  String? get username; String? get password; String? get serverUrl;
-/// Create a copy of Playlist
+/// Create a copy of Source
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$PlaylistCopyWith<Playlist> get copyWith => _$PlaylistCopyWithImpl<Playlist>(this as Playlist, _$identity);
+$SourceCopyWith<Source> get copyWith => _$SourceCopyWithImpl<Source>(this as Source, _$identity);
 
-  /// Serializes this Playlist to a JSON map.
+  /// Serializes this Source to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Playlist&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&(identical(other.filePath, filePath) || other.filePath == filePath)&&(identical(other.template, template) || other.template == template)&&(identical(other.epgLink, epgLink) || other.epgLink == epgLink)&&(identical(other.url, url) || other.url == url)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.serverUrl, serverUrl) || other.serverUrl == serverUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Source&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&(identical(other.filePath, filePath) || other.filePath == filePath)&&(identical(other.template, template) || other.template == template)&&(identical(other.epgLink, epgLink) || other.epgLink == epgLink)&&(identical(other.url, url) || other.url == url)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.serverUrl, serverUrl) || other.serverUrl == serverUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -38,15 +38,15 @@ int get hashCode => Object.hash(runtimeType,id,name,type,contentType,filePath,te
 
 @override
 String toString() {
-  return 'Playlist(id: $id, name: $name, type: $type, contentType: $contentType, filePath: $filePath, template: $template, epgLink: $epgLink, url: $url, isActive: $isActive, username: $username, password: $password, serverUrl: $serverUrl)';
+  return 'Source(id: $id, name: $name, type: $type, contentType: $contentType, filePath: $filePath, template: $template, epgLink: $epgLink, url: $url, isActive: $isActive, username: $username, password: $password, serverUrl: $serverUrl)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $PlaylistCopyWith<$Res>  {
-  factory $PlaylistCopyWith(Playlist value, $Res Function(Playlist) _then) = _$PlaylistCopyWithImpl;
+abstract mixin class $SourceCopyWith<$Res>  {
+  factory $SourceCopyWith(Source value, $Res Function(Source) _then) = _$SourceCopyWithImpl;
 @useResult
 $Res call({
  int? id, String? name, String type, String? contentType, String? filePath, String? template, String? epgLink, String? url, bool? isActive, String? username, String? password, String? serverUrl
@@ -57,14 +57,14 @@ $Res call({
 
 }
 /// @nodoc
-class _$PlaylistCopyWithImpl<$Res>
-    implements $PlaylistCopyWith<$Res> {
-  _$PlaylistCopyWithImpl(this._self, this._then);
+class _$SourceCopyWithImpl<$Res>
+    implements $SourceCopyWith<$Res> {
+  _$SourceCopyWithImpl(this._self, this._then);
 
-  final Playlist _self;
-  final $Res Function(Playlist) _then;
+  final Source _self;
+  final $Res Function(Source) _then;
 
-/// Create a copy of Playlist
+/// Create a copy of Source
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? type = null,Object? contentType = freezed,Object? filePath = freezed,Object? template = freezed,Object? epgLink = freezed,Object? url = freezed,Object? isActive = freezed,Object? username = freezed,Object? password = freezed,Object? serverUrl = freezed,}) {
   return _then(_self.copyWith(
@@ -87,8 +87,8 @@ as String?,
 }
 
 
-/// Adds pattern-matching-related methods to [Playlist].
-extension PlaylistPatterns on Playlist {
+/// Adds pattern-matching-related methods to [Source].
+extension SourcePatterns on Source {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -101,10 +101,10 @@ extension PlaylistPatterns on Playlist {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Playlist value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Source value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _Playlist() when $default != null:
+case _Source() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -123,10 +123,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Playlist value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Source value)  $default,){
 final _that = this;
 switch (_that) {
-case _Playlist():
+case _Source():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -144,10 +144,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Playlist value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Source value)?  $default,){
 final _that = this;
 switch (_that) {
-case _Playlist() when $default != null:
+case _Source() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -167,7 +167,7 @@ return $default(_that);case _:
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? name,  String type,  String? contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  String? username,  String? password,  String? serverUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _Playlist() when $default != null:
+case _Source() when $default != null:
 return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,_that.template,_that.epgLink,_that.url,_that.isActive,_that.username,_that.password,_that.serverUrl);case _:
   return orElse();
 
@@ -188,7 +188,7 @@ return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? name,  String type,  String? contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  String? username,  String? password,  String? serverUrl)  $default,) {final _that = this;
 switch (_that) {
-case _Playlist():
+case _Source():
 return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,_that.template,_that.epgLink,_that.url,_that.isActive,_that.username,_that.password,_that.serverUrl);case _:
   throw StateError('Unexpected subclass');
 
@@ -208,7 +208,7 @@ return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? name,  String type,  String? contentType,  String? filePath,  String? template,  String? epgLink,  String? url,  bool? isActive,  String? username,  String? password,  String? serverUrl)?  $default,) {final _that = this;
 switch (_that) {
-case _Playlist() when $default != null:
+case _Source() when $default != null:
 return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,_that.template,_that.epgLink,_that.url,_that.isActive,_that.username,_that.password,_that.serverUrl);case _:
   return null;
 
@@ -220,9 +220,9 @@ return $default(_that.id,_that.name,_that.type,_that.contentType,_that.filePath,
 /// @nodoc
 @JsonSerializable()
 
-class _Playlist implements Playlist {
-  const _Playlist({this.id, this.name, this.type = "m3u", this.contentType, this.filePath, this.template, this.epgLink, this.url, this.isActive = false, this.username, this.password, this.serverUrl});
-  factory _Playlist.fromJson(Map<String, dynamic> json) => _$PlaylistFromJson(json);
+class _Source implements Source {
+  const _Source({this.id, this.name, this.type = "m3u", this.contentType, this.filePath, this.template, this.epgLink, this.url, this.isActive = false, this.username, this.password, this.serverUrl});
+  factory _Source.fromJson(Map<String, dynamic> json) => _$SourceFromJson(json);
 
 @override final  int? id;
 @override final  String? name;
@@ -238,20 +238,20 @@ class _Playlist implements Playlist {
 @override final  String? password;
 @override final  String? serverUrl;
 
-/// Create a copy of Playlist
+/// Create a copy of Source
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$PlaylistCopyWith<_Playlist> get copyWith => __$PlaylistCopyWithImpl<_Playlist>(this, _$identity);
+_$SourceCopyWith<_Source> get copyWith => __$SourceCopyWithImpl<_Source>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$PlaylistToJson(this, );
+  return _$SourceToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Playlist&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&(identical(other.filePath, filePath) || other.filePath == filePath)&&(identical(other.template, template) || other.template == template)&&(identical(other.epgLink, epgLink) || other.epgLink == epgLink)&&(identical(other.url, url) || other.url == url)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.serverUrl, serverUrl) || other.serverUrl == serverUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Source&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&(identical(other.filePath, filePath) || other.filePath == filePath)&&(identical(other.template, template) || other.template == template)&&(identical(other.epgLink, epgLink) || other.epgLink == epgLink)&&(identical(other.url, url) || other.url == url)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.serverUrl, serverUrl) || other.serverUrl == serverUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -260,15 +260,15 @@ int get hashCode => Object.hash(runtimeType,id,name,type,contentType,filePath,te
 
 @override
 String toString() {
-  return 'Playlist(id: $id, name: $name, type: $type, contentType: $contentType, filePath: $filePath, template: $template, epgLink: $epgLink, url: $url, isActive: $isActive, username: $username, password: $password, serverUrl: $serverUrl)';
+  return 'Source(id: $id, name: $name, type: $type, contentType: $contentType, filePath: $filePath, template: $template, epgLink: $epgLink, url: $url, isActive: $isActive, username: $username, password: $password, serverUrl: $serverUrl)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$PlaylistCopyWith<$Res> implements $PlaylistCopyWith<$Res> {
-  factory _$PlaylistCopyWith(_Playlist value, $Res Function(_Playlist) _then) = __$PlaylistCopyWithImpl;
+abstract mixin class _$SourceCopyWith<$Res> implements $SourceCopyWith<$Res> {
+  factory _$SourceCopyWith(_Source value, $Res Function(_Source) _then) = __$SourceCopyWithImpl;
 @override @useResult
 $Res call({
  int? id, String? name, String type, String? contentType, String? filePath, String? template, String? epgLink, String? url, bool? isActive, String? username, String? password, String? serverUrl
@@ -279,17 +279,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$PlaylistCopyWithImpl<$Res>
-    implements _$PlaylistCopyWith<$Res> {
-  __$PlaylistCopyWithImpl(this._self, this._then);
+class __$SourceCopyWithImpl<$Res>
+    implements _$SourceCopyWith<$Res> {
+  __$SourceCopyWithImpl(this._self, this._then);
 
-  final _Playlist _self;
-  final $Res Function(_Playlist) _then;
+  final _Source _self;
+  final $Res Function(_Source) _then;
 
-/// Create a copy of Playlist
+/// Create a copy of Source
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? type = null,Object? contentType = freezed,Object? filePath = freezed,Object? template = freezed,Object? epgLink = freezed,Object? url = freezed,Object? isActive = freezed,Object? username = freezed,Object? password = freezed,Object? serverUrl = freezed,}) {
-  return _then(_Playlist(
+  return _then(_Source(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable

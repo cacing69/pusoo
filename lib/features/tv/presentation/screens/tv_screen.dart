@@ -9,6 +9,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:pusoo/core/utils/theme_app.dart';
 import 'package:pusoo/features/playlist/presentation/providers/active_playlist_notifier.dart';
+import 'package:pusoo/features/source/presentation/providers/active_source_notifier.dart';
 import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_track_count_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_track_group_titles_notifier.dart';
@@ -35,7 +36,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(activePlaylistProvider.notifier).perform();
+      ref.read(activeSourceProvider.notifier).perform();
 
       ref
           .read(tvTrackGroupTitlesProvider.notifier)
@@ -140,7 +141,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
 
     final asyncGroupTitles = ref.watch(tvTrackGroupTitlesProvider);
 
-    final asyncActivePlaylist = ref.watch(activePlaylistProvider);
+    final asyncActivePlaylist = ref.watch(activeSourceProvider);
 
     MediaQuery.of(context).orientation == Orientation.portrait;
 

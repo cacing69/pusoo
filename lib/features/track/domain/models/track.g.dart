@@ -19,9 +19,9 @@ _Track _$TrackFromJson(Map<String, dynamic> json) => _Track(
   tvgName: json['tvgName'] as String? ?? "",
   desc: json['desc'] as String? ?? "",
   tvgLogo: json['tvgLogo'] as String? ?? "",
-  playlist: json['playlist'] == null
+  source: json['source'] == null
       ? null
-      : Playlist.fromJson(json['playlist'] as Map<String, dynamic>),
+      : Source.fromJson(json['source'] as Map<String, dynamic>),
   duration: (json['duration'] as num?)?.toInt() ?? 0,
   isNsfw: json['isNsfw'] as bool? ?? false,
   extXMedias:
@@ -65,7 +65,7 @@ Map<String, dynamic> _$TrackToJson(_Track instance) => <String, dynamic>{
   'tvgName': instance.tvgName,
   'desc': instance.desc,
   'tvgLogo': instance.tvgLogo,
-  'playlist': instance.playlist,
+  'source': instance.source,
   'duration': instance.duration,
   'isNsfw': instance.isNsfw,
   'extXMedias': instance.extXMedias,

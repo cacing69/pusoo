@@ -1,7 +1,7 @@
-import 'package:pusoo/features/playlist/domain/models/playlist.dart';
+import 'package:pusoo/features/source/domain/entities/source.dart';
 
-abstract class PlaylistDatasource {
-  Future<Playlist> getActive();
+abstract class SourceDatasource {
+  Future<Source> getActive();
   // Future<List<Playlist>> get();
   // Future<Playlist> find();
   // Future<int> create();

@@ -32,7 +32,7 @@ class _MovieScreenState extends State<MovieScreen> {
     //http://ogietv.biz.id:80/get.php?username=maksin&password=123456&type=m3u_plus&output=mpegts
   }
 
-  List<ChannelDriftData> movies = [];
+  List<Track> movies = [];
   Map<dynamic, dynamic> categories = {};
 
   Future<void> loadM3U() async {
@@ -40,44 +40,7 @@ class _MovieScreenState extends State<MovieScreen> {
     //   '(tvg_id IS NULL OR tvg_id = "")',
     // );
 
-    final filtered = await (driftDb.select(
-      driftDb.channelDrift,
-    )..where((tbl) => tbl.streamUrl.like("%movie%"))).get();
-
-    // await driftDb.select(driftDb.channel).get();
-
-    // final filtered = allRows
-    //     .where(
-    //       (c) =>
-    //           (c.tvgId == null || c.tvgId?.trim() == "") &&
-    //           !RegExp(r'S\d\dE\d\d').hasMatch(c.name) &&
-    //           !(c.category ?? "").contains(
-    //             RegExp(
-    //               r'\(Match Only\)|\(Only Match\)|\(OnlyMatch\)|\(Onlymatch\)|\(Event Only\)|\(Astro \& Optus\)',
-    //             ),
-    //           ),
-    //     )
-    //     .toList();
-
-    // moviesRow.then((data) {
-    setState(() {
-      movies = filtered;
-
-      // Flatten kategori yang dipisah titik koma
-      List<Map> expandedMovies = [];
-
-      for (var ch in filtered) {
-        final rawCategories = ch.groupTitle?.split(';') ?? ["Miscellaneous"];
-        for (var cat in rawCategories) {
-          // buat salinan channel tapi dengan kategori tunggal
-          final newCh = Map<String, dynamic>.from(ch.toJson());
-          newCh['category'] = cat.trim();
-          expandedMovies.add(newCh);
-        }
-      }
-
-      categories = groupBy(expandedMovies, (row) => row['category']);
-    });
+    final filtered = [];
   }
 
   bool listViewMode = true;
@@ -114,7 +77,6 @@ class _MovieScreenState extends State<MovieScreen> {
                     itemCount: 100,
                     itemBuilder: (context, index) {
                       return ListTrackWidget(track: Track());
-                      
                     },
                   )
                 : GridView.builder(

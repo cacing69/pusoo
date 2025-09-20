@@ -44,7 +44,7 @@ extension TrackTypedResultExt on TypedResult {
   Track toEntity() {
     dynamic json = readTable(driftDb.trackDrift).toJson();
 
-    final playlistJson = readTable(driftDb.playlistDrift).toJson();
+    final playlistJson = readTable(driftDb.sourceDrift).toJson();
 
     void convertStringToList(String fieldName) {
       final dynamic fieldValue = json[fieldName];

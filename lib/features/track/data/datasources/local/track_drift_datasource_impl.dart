@@ -26,7 +26,7 @@ class TrackDriftDatasourceImpl implements TrackDatasource {
       // Terapkan filter WHERE ... IN (...) pada kolom playlistId
       // Asumsi nama kolom di tabel Anda adalah 'playlistId'
       if (params!.playlistIds!.isNotEmpty) {
-        query.where(driftDb.trackDrift.playlistId.isIn(params.playlistIds!));
+        query.where(driftDb.trackDrift.sourceId.isIn(params.playlistIds!));
       }
     }
 
@@ -62,7 +62,7 @@ class TrackDriftDatasourceImpl implements TrackDatasource {
 
     // 2. Tambahkan filter dinamis berdasarkan parameter yang diberikan
     if (params?.playlistIds != null && params!.playlistIds!.isNotEmpty) {
-      whereClauses.add(driftDb.trackDrift.playlistId.isIn(params.playlistIds!));
+      whereClauses.add(driftDb.trackDrift.sourceId.isIn(params.playlistIds!));
     }
 
     if (params?.groupTitle != null) {
@@ -87,8 +87,8 @@ class TrackDriftDatasourceImpl implements TrackDatasource {
     // // 3. Bangun query select utama
     final query = driftDb.select(driftDb.trackDrift).join([
       drift.innerJoin(
-        driftDb.playlistDrift,
-        driftDb.playlistDrift.id.equalsExp(driftDb.trackDrift.playlistId),
+        driftDb.sourceDrift,
+        driftDb.sourceDrift.id.equalsExp(driftDb.trackDrift.sourceId),
       ),
     ]);
 
@@ -169,7 +169,7 @@ class TrackDriftDatasourceImpl implements TrackDatasource {
     final playlistIds = params?.playlistIds;
     if (playlistIds != null && playlistIds.isNotEmpty) {
       // Menambahkan kondisi: WHERE group_title LIKE '%keyword%'
-      query.where(driftDb.trackDrift.playlistId.isIn(playlistIds));
+      query.where(driftDb.trackDrift.sourceId.isIn(playlistIds));
     }
 
     return query.map((row) => row.read(driftDb.trackDrift.groupTitle)!).get();

@@ -9,13 +9,14 @@ import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:pusoo/core/configs/env.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MovieDetailScreen extends StatefulWidget {
-  final ChannelDriftData channel;
-  const MovieDetailScreen({super.key, required this.channel});
+  final Track track;
+  const MovieDetailScreen({super.key, required this.track});
 
   @override
   State<MovieDetailScreen> createState() => _MovieDetailScreenState();
@@ -27,10 +28,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     super.initState();
 
     setState(() {
-      poster = widget.channel.logo!;
+      poster = widget.track.tvgLogo!;
     });
 
-    loadTmdb(widget.channel);
+    loadTmdb(widget.track);
   }
 
   Map<dynamic, dynamic> tmdbRes = {};
@@ -40,8 +41,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   String tagline = "";
   String cleanedTitle = "";
 
-  void loadTmdb(ChannelDriftData channel) async {
-    final String title = channel.name
+  void loadTmdb(Track track) async {
+    final String title = track.title
         .replaceAll(RegExp(r'\(\d{4}\)$'), "")
         .trim();
 
@@ -52,7 +53,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     String year = "";
 
     final yearRegex = RegExp(r'\((\d{4})\)$');
-    final matchYear = yearRegex.firstMatch(channel.name);
+    final matchYear = yearRegex.firstMatch(track.title);
 
     if (matchYear != null) {
       year = "${matchYear.group(1)}";
@@ -76,8 +77,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       final response = await http.get(
         url,
         headers: {
-          "Authorization":
-              "Bearer ${Env.tmdbReadAccessToken}",
+          "Authorization": "Bearer ${Env.tmdbReadAccessToken}",
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
@@ -98,8 +98,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           final responseDetail = await http.get(
             urlDetail,
             headers: {
-              "Authorization":
-                  "Bearer ${Env.tmdbReadAccessToken}",
+              "Authorization": "Bearer ${Env.tmdbReadAccessToken}",
               "Content-Type": "application/json",
               "Accept": "application/json",
             },
@@ -131,8 +130,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           final responseVideos = await http.get(
             urlVideos,
             headers: {
-              "Authorization":
-                  "Bearer ${Env.tmdbReadAccessToken}",
+              "Authorization": "Bearer ${Env.tmdbReadAccessToken}",
               "Content-Type": "application/json",
               "Accept": "application/json",
             },

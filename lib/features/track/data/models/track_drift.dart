@@ -1,9 +1,10 @@
 import 'package:drift/drift.dart';
 import 'package:pusoo/features/playlist/data/models/playlist_drift.dart';
+import 'package:pusoo/features/source/data/models/source_drift.dart';
 
 class TrackDrift extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get playlistId => integer().references(PlaylistDrift, #id)();
+  IntColumn get sourceId => integer().references(SourceDrift, #id)();
   TextColumn get title => text()();
   TextColumn get contentType => text().nullable()();
   TextColumn get links => text().nullable()();

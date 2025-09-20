@@ -1,11 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'playlist.g.dart';
-part 'playlist.freezed.dart';
+part 'source.g.dart';
+part 'source.freezed.dart';
 
 @freezed
-abstract class Playlist with _$Playlist {
-  const factory Playlist({
+abstract class Source with _$Source {
+  const factory Source({
     int? id,
     String? name,
     @Default("m3u") String type,
@@ -20,8 +20,7 @@ abstract class Playlist with _$Playlist {
     String? username,
     String? password,
     String? serverUrl,
-  }) = _Playlist;
+  }) = _Source;
 
-  factory Playlist.fromJson(Map<String, dynamic> json) =>
-      _$PlaylistFromJson(json);
+  factory Source.fromJson(Map<String, dynamic> json) => _$SourceFromJson(json);
 }

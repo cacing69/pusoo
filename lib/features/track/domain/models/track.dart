@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pusoo/features/playlist/domain/models/playlist.dart';
+import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/features/track/domain/models/ext_x_media.dart';
 
 part 'track.g.dart';
@@ -18,7 +18,7 @@ abstract class Track with _$Track {
     @Default("") String tvgName,
     @Default("") String desc,
     @Default("") String tvgLogo,
-    @Default(null) Playlist? playlist,
+    @Default(null) Source? source,
     @Default(0) int duration,
     @Default(false) bool isNsfw,
 
