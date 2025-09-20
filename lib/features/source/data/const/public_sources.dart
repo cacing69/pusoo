@@ -12,7 +12,7 @@ final iptvOrgIptvSource = Source(
       "Collection of publicly available IPTV channels from all over the world",
   tracks: [
     Track(
-      title: "Grouped by Broadcast Area",
+      title: "All Country",
       links: ["https://iptv-org.github.io/iptv/index.country.m3u"],
     ),
     ...iptvOrgListCountries,

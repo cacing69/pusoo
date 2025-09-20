@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 FSidebarGroup(
                   children: [
                     FSidebarItem(
-                      icon: const Icon(FIcons.earth),
+                      icon: const Icon(FIcons.compass),
                       label: const Text('Explore'),
                       selected: selectedIndex == 0,
                       onPress: () {
@@ -95,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 FBottomNavigationBarItem(
                   icon: Icon(
-                    FIcons.earth,
+                    FIcons.compass,
                     color: selectedIndex == 0
                         ? context.theme.colors.primary
                         : null,

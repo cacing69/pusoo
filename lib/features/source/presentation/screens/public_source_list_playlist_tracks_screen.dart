@@ -97,17 +97,32 @@ class _PublicSourceListPlaylistChannelsScreenState
         children: [
           Row(
             children: [
+              Icon(FIcons.github),
+              Gap(5),
+              Expanded(
+                child: Text(
+                  widget.source.name!,
+                  style: context.theme.typography.base,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ],
+          ),
+          Gap(5),
+          Row(
+            children: [
               Icon(FIcons.folderGit2),
               Gap(5),
               Text(
                 "Channels : ${NumberFormat.decimalPattern().format(tracks.length)}",
                 style: context.theme.typography.base.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
           ),
-          Gap(10),
+          Gap(5),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
