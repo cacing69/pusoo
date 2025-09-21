@@ -1,7 +1,3 @@
-<div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=rounded&height=150&color=151514&text=Pusoo&reversal=true&section=header&fontColor=FFFFFF&animation=fadeIn&textBg=false&fontAlignY=40&desc=Open%20Source%20IPTV%20Player&descAlignY=80"/>
-</div>
-
 # Pusoo
 
 **Pusoo** is an **open-source IPTV Player** built with **Flutter**.
@@ -57,6 +53,10 @@ If you want to build **Pusoo IPTV Player** from source, follow these steps:
 - Emulator or physical device (Android or iOS)
 - Internet connection (for fetching streams)
 
+<div align="center">
+  <a href="https://github.com/srctool"><img src="https://raw.githubusercontent.com/srctool/.github/refs/heads/main/banner.svg" alt="SRC Tool logo"></a>
+</div>
+
 ## Download
 
 Since **Pusoo** is still under active development and not yet stable,
@@ -111,7 +111,3 @@ Your support helps us keep improving Pusoo - and keeps the coffee flowing.
 ### Sponsor Pusoo
 
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor%20on%20GitHub-❤-brightgreen)](https://github.com/sponsors/cacing69)
-
-<div align="center">
-  <a href="https://github.com/srctool"><img src="https://raw.githubusercontent.com/srctool/.github/refs/heads/main/banner.svg" alt="SRC Tool logo"></a>
-</div>
