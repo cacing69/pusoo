@@ -3,6 +3,8 @@
 // Pusoo - Open Source IPTV Player
 // GitHub: https://github.com/cacing69/pusoo
 
+import 'dart:io';
+
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
@@ -2073,6 +2075,71 @@ https://unifi-live08.secureswiftcontent.com/UnifiHD/live08.mpd
       );
     });
 
+    test('TestTrackShouldGiveHeaders:ClearKeyJsonPure:3', () async {
+      final String content = r'''
+#EXTM3U billed-msg="1 DEVICE SAHAJA"
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key={ "keys":[ { "kty":"oct", "k":"BW4eSVc9LK7ly0/nj4xPPQ", "kid":"qcYZB07TjCDiWtNsPFfBDA" } ], "type":"temporary" }
+#EXTINF:-1 tvg-id="8TV.my" tvg-name="8TV" group-title="NJOI TV" tvg-logo="https://divign0fdw3sv.cloudfront.net/Images/ChannelLogo/contenthub/115_144.png",8TV
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 12; Pixel 3a XL Build/SP2A.220505.008; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/114.0.5715.0 Mobile Safari/537.36
+#EXTVLCOPT:http-referrer=https://playtv.unifi.com.my
+https://unifi-live08.secureswiftcontent.com/UnifiHD/live08.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("8TV"));
+      expect(result[0].kodiProps.length, equals(1));
+
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "{ \"keys\":[ { \"kty\":\"oct\", \"k\":\"BW4eSVc9LK7ly0/nj4xPPQ\", \"kid\":\"qcYZB07TjCDiWtNsPFfBDA\" } ], \"type\":\"temporary\" }",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_type"],
+        equals("clearkey"),
+      );
+      expect(
+        result[0].links.first,
+        equals(
+          "https://unifi-live08.secureswiftcontent.com/UnifiHD/live08.mpd",
+        ),
+      );
+      expect(
+        result[0].extVlcOpts.first.containsKey("http-user-agent"),
+        equals(true),
+      );
+      expect(
+        result[0].extVlcOpts.first["http-user-agent"],
+        equals(
+          "Mozilla/5.0 (Linux; Android 12; Pixel 3a XL Build/SP2A.220505.008; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/114.0.5715.0 Mobile Safari/537.36",
+        ),
+      );
+      expect(
+        result[0].extVlcOpts.first.containsKey("http-referrer"),
+        equals(true),
+      );
+      expect(
+        result[0].extVlcOpts.first["http-referrer"],
+        equals("https://playtv.unifi.com.my"),
+      );
+    });
+
     test('TestTrackShouldGiveName:102 TV2 (SERVER 1)', () async {
       final String content = r'''
 #EXTINF:-1 tvg-id="TV2" ch-number="102" tvg-name="TV2 HD"" group-title="MALAYSIA" tvg-logo="https://divign0fdw3sv.cloudfront.net/Images/ChannelLogo/contenthub/396_144.png", 102 TV2 (SERVER 1)
@@ -2382,17 +2449,245 @@ http://192.168.1.4:7088/rtp/239.3.1.189:8000
       expect(result.length, equals(1));
     });
 
+    test('Test8TV:ShouldGiveTwoTracks', () async {
+      final String content = r'''
+#EXTM3U billed-msg="1 DEVICE SAHAJA"
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key={ "keys":[ { "kty":"oct", "k":"BW4eSVc9LK7ly0/nj4xPPQ", "kid":"qcYZB07TjCDiWtNsPFfBDA" } ], "type":"temporary" }
+#EXTINF:-1 tvg-id="8TV.my" tvg-name="8TV" group-title="MALAYSIA" tvg-logo="https://divign0fdw3sv.cloudfront.net/Images/ChannelLogo/contenthub/115_144.png",148 8TV
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 14; lontong-yuhu6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36
+#EXTVLCOPT:http-referrer=https://playtv.unifi.com.my
+https://unifi-live08.secureswiftcontent.com/UnifiHD/live08.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key={ "keys":[ { "kty":"oct", "k":"BW4eSVc9LK7ly0/nj4xPPQ", "kid":"qcYZB07TjCDiWtNsPFfBDA" } ], "type":"temporary" }
+#EXTINF:-1 tvg-id="8TV.my" tvg-name="8TV" group-title="ASTRXX NJOI" tvg-logo="https://divign0fdw3sv.cloudfront.net/Images/ChannelLogo/contenthub/115_144.png",8TV
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 12; Pixel 3a XL Build/SP2A.220505.008; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/114.0.5715.0 Mobile Safari/537.36
+#EXTVLCOPT:http-referrer=https://playtv.unifi.com.my
+https://unifi-live08.secureswiftcontent.com/UnifiHD/live08.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result.length, equals(2));
+
+      expect(result.first.title, equals("148 8TV"));
+      expect(result.last.title, equals("8TV"));
+      expect(result.first.kodiProps.length, equals(1));
+      expect(result.last.kodiProps.length, equals(1));
+      expect(
+        result.first.kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result.last.kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result.first.kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "{ \"keys\":[ { \"kty\":\"oct\", \"k\":\"BW4eSVc9LK7ly0/nj4xPPQ\", \"kid\":\"qcYZB07TjCDiWtNsPFfBDA\" } ], \"type\":\"temporary\" }",
+        ),
+      );
+      expect(
+        result.last.kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "{ \"keys\":[ { \"kty\":\"oct\", \"k\":\"BW4eSVc9LK7ly0/nj4xPPQ\", \"kid\":\"qcYZB07TjCDiWtNsPFfBDA\" } ], \"type\":\"temporary\" }",
+        ),
+      );
+      expect(
+        result.first.kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result.last.kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result.first.kodiProps.first["inputstream.adaptive.license_type"],
+        equals("clearkey"),
+      );
+      expect(
+        result.last.kodiProps.first["inputstream.adaptive.license_type"],
+        equals("clearkey"),
+      );
+      expect(result.first.links.length, equals(1));
+      expect(result.last.links.length, equals(1));
+      expect(
+        result.first.links.first,
+        equals(
+          "https://unifi-live08.secureswiftcontent.com/UnifiHD/live08.mpd",
+        ),
+      );
+      expect(
+        result.last.links.first,
+        equals(
+          "https://unifi-live08.secureswiftcontent.com/UnifiHD/live08.mpd",
+        ),
+      );
+      expect(result.first.extVlcOpts.length, equals(1));
+      expect(result.last.extVlcOpts.length, equals(1));
+      expect(
+        result.first.extVlcOpts.first.containsKey("http-user-agent"),
+        equals(true),
+      );
+      expect(
+        result.last.extVlcOpts.first.containsKey("http-user-agent"),
+        equals(true),
+      );
+      expect(
+        result.first.extVlcOpts.first["http-user-agent"],
+        equals(
+          "Mozilla/5.0 (Linux; Android 14; lontong-yuhu6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36",
+        ),
+      );
+      expect(
+        result.last.extVlcOpts.first["http-user-agent"],
+        equals(
+          "Mozilla/5.0 (Linux; Android 12; Pixel 3a XL Build/SP2A.220505.008; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/114.0.5715.0 Mobile Safari/537.36",
+        ),
+      );
+      expect(
+        result.first.extVlcOpts.first.containsKey("http-referrer"),
+        equals(true),
+      );
+      expect(
+        result.last.extVlcOpts.first.containsKey("http-referrer"),
+        equals(true),
+      );
+      expect(
+        result.first.extVlcOpts.first["http-referrer"],
+        equals("https://playtv.unifi.com.my"),
+      );
+      expect(
+        result.last.extVlcOpts.first["http-referrer"],
+        equals("https://playtv.unifi.com.my"),
+      );
+    });
+
     // TEST TEMPORARY WITH FILE
 
     // test('tmpTest:GenericCase:1', () async {
-    //   final file = File('fixtures/sample.m3u');
+    //   final file = File('fixtures/digital.m3u');
     //   final contentFile = await file.readAsString();
 
     //   final String content = contentFile;
 
     //   List<Track> result = M3UParser.parse(content);
 
-    //   expect(result.length, 15691);
+    //   final filter = result.where((element) => element.title.contains("8TV"));
+
+    //   expect(filter.length, equals(2));
+
+    //   expect(filter.first.title, equals("148 8TV"));
+    //   expect(filter.last.title, equals("8TV"));
+    //   expect(filter.first.kodiProps.length, equals(1));
+    //   expect(filter.last.kodiProps.length, equals(1));
+    //   expect(
+    //     filter.first.kodiProps.first.containsKey(
+    //       "inputstream.adaptive.license_key",
+    //     ),
+    //     equals(true),
+    //   );
+    //   expect(
+    //     filter.last.kodiProps.first.containsKey(
+    //       "inputstream.adaptive.license_key",
+    //     ),
+    //     equals(true),
+    //   );
+    //   expect(
+    //     filter.first.kodiProps.first["inputstream.adaptive.license_key"],
+    //     equals(
+    //       "{ \"keys\":[ { \"kty\":\"oct\", \"k\":\"BW4eSVc9LK7ly0/nj4xPPQ\", \"kid\":\"qcYZB07TjCDiWtNsPFfBDA\" } ], \"type\":\"temporary\" }",
+    //     ),
+    //   );
+    //   expect(
+    //     filter.last.kodiProps.first["inputstream.adaptive.license_key"],
+    //     equals(
+    //       "{ \"keys\":[ { \"kty\":\"oct\", \"k\":\"BW4eSVc9LK7ly0/nj4xPPQ\", \"kid\":\"qcYZB07TjCDiWtNsPFfBDA\" } ], \"type\":\"temporary\" }",
+    //     ),
+    //   );
+    //   expect(
+    //     filter.first.kodiProps.first.containsKey(
+    //       "inputstream.adaptive.license_type",
+    //     ),
+    //     equals(true),
+    //   );
+    //   expect(
+    //     filter.last.kodiProps.first.containsKey(
+    //       "inputstream.adaptive.license_type",
+    //     ),
+    //     equals(true),
+    //   );
+    //   expect(
+    //     filter.first.kodiProps.first["inputstream.adaptive.license_type"],
+    //     equals("clearkey"),
+    //   );
+    //   expect(
+    //     filter.last.kodiProps.first["inputstream.adaptive.license_type"],
+    //     equals("clearkey"),
+    //   );
+    //   expect(filter.first.links.length, equals(1));
+    //   expect(filter.last.links.length, equals(1));
+    //   expect(
+    //     filter.first.links.first,
+    //     equals(
+    //       "https://unifi-live08.secureswiftcontent.com/UnifiHD/live08.mpd",
+    //     ),
+    //   );
+    //   expect(
+    //     filter.last.links.first,
+    //     equals(
+    //       "https://unifi-live08.secureswiftcontent.com/UnifiHD/live08.mpd",
+    //     ),
+    //   );
+    //   expect(filter.first.extVlcOpts.length, equals(1));
+    //   expect(filter.last.extVlcOpts.length, equals(1));
+    //   expect(
+    //     filter.first.extVlcOpts.first.containsKey("http-user-agent"),
+    //     equals(true),
+    //   );
+    //   expect(
+    //     filter.last.extVlcOpts.first.containsKey("http-user-agent"),
+    //     equals(true),
+    //   );
+    //   expect(
+    //     filter.first.extVlcOpts.first["http-user-agent"],
+    //     equals(
+    //       "Mozilla/5.0 (Linux; Android 14; lontong-yuhu6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36",
+    //     ),
+    //   );
+    //   expect(
+    //     filter.last.extVlcOpts.first["http-user-agent"],
+    //     equals(
+    //       "Mozilla/5.0 (Linux; Android 12; Pixel 3a XL Build/SP2A.220505.008; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/114.0.5715.0 Mobile Safari/537.36",
+    //     ),
+    //   );
+    //   expect(
+    //     filter.first.extVlcOpts.first.containsKey("http-referrer"),
+    //     equals(true),
+    //   );
+    //   expect(
+    //     filter.last.extVlcOpts.first.containsKey("http-referrer"),
+    //     equals(true),
+    //   );
+    //   expect(
+    //     filter.first.extVlcOpts.first["http-referrer"],
+    //     equals("https://playtv.unifi.com.my"),
+    //   );
+    //   expect(
+    //     filter.last.extVlcOpts.first["http-referrer"],
+    //     equals("https://playtv.unifi.com.my"),
+    //   );
     // });
 
     // test('tmpTest:GenericCase:2', () async {

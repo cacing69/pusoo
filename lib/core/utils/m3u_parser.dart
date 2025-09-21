@@ -115,10 +115,6 @@ abstract class M3UParser {
             : currentTrack!.groupTitle,
       );
       tracks.add(currentTrack!);
-      tempExtVlcOptLists = {};
-      tempKodiPropLists = {};
-      tempExtXMedias = [];
-      tempHttpHeaders = [];
       tempDesc = '';
       tempGroupTitle = '';
     }
@@ -141,8 +137,6 @@ abstract class M3UParser {
       }
 
       if (trimmedLine.startsWith('#EXTINF')) {
-        finalizeAndAddTrack();
-
         var extInfLine = trimmedLine;
         if (i + 1 < lines.length) {
           final nextLine = lines[i + 1].trim();
@@ -538,6 +532,8 @@ abstract class M3UParser {
             attributes['group-title'] = groupTitle;
           }
 
+          finalizeAndAddTrack();
+
           currentTrack = Track(
             title: title,
             attributes: attributes,
@@ -546,6 +542,9 @@ abstract class M3UParser {
             tvgName: attributes['tvg-name'] ?? '',
             tvgLogo: attributes['tvg-logo'] ?? '',
           );
+
+          // Clear temporary lists for new track
+          tempExtXMedias.clear();
         } else {
           print('Skipped (regex mismatch): $extInfLine\n');
         }
@@ -712,6 +711,10 @@ abstract class M3UParser {
     }
 
     finalizeAndAddTrack();
+
+    // Clear temporary lists after all tracks are processed
+    tempExtVlcOptLists.clear();
+    tempKodiPropLists.clear();
 
     return tracks;
   }

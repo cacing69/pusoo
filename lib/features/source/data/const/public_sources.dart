@@ -105,7 +105,7 @@ final buddyChewChewXumoPlaylistGeneratorSource = Source(
 );
 
 final lituatuiM3uptSource = Source(
-  name: "https://github.com/LITUATUI/M3UPT",
+  name: "LITUATUI/M3UPT",
   isPublic: true,
   isEmpty: false,
   homepage: "https://github.com/BuddyChewChew/xumo-playlist-generator",
