@@ -3,8 +3,8 @@ name: Nightly Build
 on:
   push:
     branches:
-      - main   # jalan setiap ada push ke main
-  workflow_dispatch: # bisa dijalankan manual dari GitHub Actions tab
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -17,7 +17,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
+          flutter-version: '3.35.3'
+          channel: 'stable'
 
       - name: Install dependencies
         run: flutter pub get
