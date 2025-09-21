@@ -226,29 +226,13 @@ packages:
     source: hosted
     version: "4.11.0"
   collection:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: collection
       sha256: "2f5709ae4d3d59dd8f7cd309b4e023046b57d8a6c82130785d2b0e5868084e76"
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
-  connectivity_plus:
-    dependency: "direct main"
-    description:
-      name: connectivity_plus
-      sha256: b5e72753cf63becce2c61fd04dfe0f1c430cc5278b53a1342dc5ad839eab29ec
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.1.5"
-  connectivity_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: connectivity_plus_platform_interface
-      sha256: "42657c1715d48b167930d5f34d00222ac100475f73d10162ddf43e714932f204"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   convert:
     dependency: transitive
     description:
@@ -289,14 +273,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.8"
   custom_lint:
     dependency: "direct dev"
     description:
@@ -478,14 +454,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.21.3+1"
-  flutter_json_view:
-    dependency: "direct main"
-    description:
-      name: flutter_json_view
-      sha256: "7acbb6768eccfbc4081bf87bb7ffbe628d6ccfcbdd51b1e713030c44aa3daf49"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.5"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -686,7 +654,7 @@ packages:
     source: hosted
     version: "4.3.0"
   html:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: html
       sha256: "6d1264f2dffa1b1101c25a91dff0dc2daee4c18e87cd8538729773c073dbf602"
@@ -733,14 +701,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
-  internet_connection_checker_plus:
-    dependency: "direct main"
-    description:
-      name: internet_connection_checker_plus
-      sha256: "5aea4a1ee0fcca736980a7d04d96fe8c0b53dea330690053305a5c5392230112"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.7.2"
   intl:
     dependency: "direct main"
     description:
@@ -909,14 +869,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.0+1"
-  nm:
-    dependency: transitive
-    description:
-      name: nm
-      sha256: "2c9aae4127bdc8993206464fcc063611e0e36e72018696cd9631023a31b24254"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.0"
   node_preamble:
     dependency: transitive
     description:

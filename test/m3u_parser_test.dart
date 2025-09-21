@@ -1,6 +1,6 @@
 /*
  * Pusoo - IPTV Player
- * Copyright (C) 2025 Ibnul Mutaki
+ * Copyright (C) 2025 Ibnul Mutaki <ibnuul@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'dart:io';
-
-import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
