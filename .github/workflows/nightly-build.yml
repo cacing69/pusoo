@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    types: [opened, reopened, synchronize, edited]
   workflow_dispatch:
 
 permissions:
@@ -57,7 +59,7 @@ jobs:
 
       # Upload artifact untuk download langsung
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: app-apk
           path: build/app/outputs/flutter-apk/*.apk
@@ -99,6 +101,6 @@ jobs:
       - name: Update Release Draft
         uses: release-drafter/release-drafter@v6
         with:
-          config-name: .github/release-drafter.yml
+          config-name: release-drafter.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
