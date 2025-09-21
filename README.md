@@ -58,8 +58,8 @@ If you want to build **Pusoo IPTV Player** from source, follow these steps:
 Since **Pusoo** is still under active development and not yet stable,
 we provide **nightly builds** for testing purposes:
 
-<!-- - **Nightly Build (unstable)** → [Latest nightly](https://github.com/yourusername/pusoo/releases/tag/nightly)
-- **Pre-release APKs** → [Releases Page](https://github.com/yourusername/pusoo/releases) -->
+- **Nightly Build (unstable)** → [Latest nightly](https://github.com/yourusername/pusoo/releases/tag/nightly)
+- **Pre-release APKs** → [Releases Page](https://github.com/yourusername/pusoo/releases)
 
 ### Warning
 
@@ -91,3 +91,19 @@ Here are some screenshots of **Pusoo IPTV Player**:
 ### More Screenshots
 
 Check the [Screenshots Gallery](docs/images/features) for more.
+
+## Support & Contribute
+
+Pusoo is a community-driven project, built by me and awesome contributors in our free time.
+Your support helps us keep improving Pusoo - and keeps the coffee flowing.
+
+### How you can help
+
+- Star this repo - it means a lot!
+- Report bugs and suggest features
+- Contribute code, translations, or design ideas
+- Support development with a coffee
+
+### Sponsor Pusoo
+
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor%20on%20GitHub-❤-brightgreen)](https://github.com/sponsors/cacing69)
