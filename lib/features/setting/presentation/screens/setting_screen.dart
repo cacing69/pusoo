@@ -71,6 +71,14 @@ class _SettingScreenState extends State<SettingScreen> {
                   suffix: Icon(FIcons.chevronRight),
                   onPress: () {},
                 ),
+                FTile(
+                  prefix: Icon(FIcons.info),
+                  title: Text("About"),
+                  suffix: Icon(FIcons.chevronRight),
+                  onPress: () {
+                    context.pushNamed(RouteName.about.name);
+                  },
+                ),
               ],
             ),
           ],

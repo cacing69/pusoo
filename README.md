@@ -9,20 +9,24 @@ This project is currently under active development. I'm working on it in my spar
 
 ## Features
 
-- **Modern UI** – Clean and minimal design powered by [Forui](https://forui.dev/).
-- **Open Source** – Free to use and contribute.
+- **Modern UI** - Clean and minimal design powered by [Forui](https://forui.dev/).
+- **Open Source** - Free to use and contribute.
 
 ---
 
-## Installation
+## Development
 
-### 1. Clone the Repository
+If you want to build **Pusoo IPTV Player** from source, follow these steps:
 
-```bash
-git clone https://github.com/cacing69/pusoo.git
-cd pusoo
-```
+1. **Clone the repository**
 
+   ```bash
+   git clone https://github.com/cacing69/pusoo.git
+   cd pusoo
+
+   flutter build apk --release --split-per-abi
+   ```
+<!--
 ## Screenshoot
 
   Screen | Pictures
@@ -31,14 +35,59 @@ cd pusoo
  Setting (Manage Provider) | <img src="screens/setting_manage_provider.png" height= "800"/>&nbsp;<img src="screens/setting_manage_provider_add.png" height= "800"/>&nbsp;<img src="screens/setting_manage_add_playlist.png" height= "800"/>&nbsp;<img src="screens/setting_manage_provider_dialog_action_on_provider.png" height= "800"/>&nbsp;
  Home (Live TV) | <img src="screens/home_live_tv.png" height= "800"/>&nbsp;<img src="screens/home_live_tv_filter.png" height= "800"/>&nbsp;<img src="screens/home_live_tv_dialog_change_active_playlist.png" height= "800"/>&nbsp;<img src="screens/home_live_tv_player.png" height= "800"/>&nbsp;<img src="screens/home_live_tv_category.png" height= "800"/>
  Home (Movie) | <img src="screens/home_movies.jpeg" height= "800"/>&nbsp;<img src="screens/home_movie_detail_about.png" height= "800"/>&nbsp;<img src="screens/home_movie_detail_trailer.png" height= "800"/>
- Home (Series) | <img src="screens/home_series.png" height= "800"/>
+ Home (Series) | <img src="screens/home_series.png" height= "800"/> -->
 
-## Usage Policy
+## Usage Guidelines (Non-Legal)
 
-- Personal Use Only: These app are intended for personal, non-commercial use.
-- No Redistribution for Profit: Do not redistribute or sell these app for commercial purposes.
-- Respect Source Terms: Adhere to the terms of service of the original stream providers
+- Please use this app responsibly and for legal content only.
+- The app itself is free software under GPLv3, but the content you access may have its own terms of service.
+- Respect the terms of original stream providers.
+- This is a community project - commercial support or redistribution is allowed under GPLv3, but we encourage contributions back to the project.
 
 ## Requirements
 
-- A Working Brain 🧠
+- A working brain
+- Flutter SDK (latest stable) → [Install guide](https://docs.flutter.dev/get-started/install)
+- Dart SDK (bundled with Flutter)
+- Android Studio / VS Code (recommended for development)
+- Emulator or physical device (Android or iOS)
+- Internet connection (for fetching streams)
+
+## Download
+
+Since **Pusoo** is still under active development and not yet stable,
+we provide **nightly builds** for testing purposes:
+
+<!-- - **Nightly Build (unstable)** → [Latest nightly](https://github.com/yourusername/pusoo/releases/tag/nightly)
+- **Pre-release APKs** → [Releases Page](https://github.com/yourusername/pusoo/releases) -->
+
+### Warning
+
+- Nightly builds may contain bugs or incomplete features.
+- Use at your own risk - no warranty provided.
+- For the most reliable experience, you may prefer to [build from source](#development).
+
+### Notes
+
+- This app is free software under GPLv3.
+- Make sure your device meets the [Requirements](#requirements).
+- If you prefer, you can also build the app from source (see [Development](#development)).
+
+## Screenshots
+
+Here are some screenshots of **Pusoo IPTV Player**:
+
+<p align="center">
+  <img src="docs/images/features/home_main.png" width="250" alt="Home)"/>
+  <img src="docs/images/features/home_live_tv.png" width="250" alt="Home (TV)"/>
+  <img src="docs/images/features/home_live_tv_player.png" width="250" alt="TV Player Screen"/>
+  <img src="docs/images/features/home_movies_grid.png" width="250" alt="Home (Movies Grid)"/>
+  <img src="docs/images/features/home_movies_list.png" width="250" alt="Home (Movies List)"/>
+  <img src="docs/images/features/home_movie_detail_about.png" width="250" alt="Detail Mivie"/>
+  <img src="docs/images/features/setting.png" width="250" alt="Settings Screen"/>
+  <img src="docs/images/features/setting_manage_source_add_playlist.png" width="250" alt="Add New Playlist Screen"/>
+</p>
+
+### More Screenshots
+
+Check the [Screenshots Gallery](docs/images/features) for more.

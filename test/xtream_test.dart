@@ -1,7 +1,20 @@
-// Copyright (c) 2025, Ibnul Mutaki (@cacing69)
-// Licensed under the MIT License
-// Pusoo - Open Source IPTV Player
-// GitHub: https://github.com/cacing69/pusoo
+/*
+ * Pusoo - IPTV Player
+ * Copyright (C) 2025 Ibnul Mutaki
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pusoo/core/utils/xtream.dart';
@@ -13,7 +26,7 @@ void main() async {
           "http://larache.pro/get.php?username=45842714960542&password=24986462836423&type=m3u&output=ts";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://larache.pro"));
       expect(xtream.username, equals("45842714960542"));
       expect(xtream.password, equals("24986462836423"));
@@ -28,7 +41,7 @@ void main() async {
           "http://vipboacnn.top:8080/get.php?username=Germanaguilar&password=Germanaguilar2024&type=m3u";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://vipboacnn.top"));
       expect(xtream.username, equals("Germanaguilar"));
       expect(xtream.password, equals("Germanaguilar2024"));
@@ -43,7 +56,7 @@ void main() async {
           "http://vipvodtx.xyz:8080/get.php?username=VOD0176173538414492&password=91735384144872&type=m3u_plus&output=mpegts";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://vipvodtx.xyz"));
       expect(xtream.username, equals("VOD0176173538414492"));
       expect(xtream.password, equals("91735384144872"));
@@ -57,7 +70,7 @@ void main() async {
           "http://line.queen-4k.cc/get.php?username=6D2A4754&password=2F7488F9&type=m3u_plus&output=mpegts";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://line.queen-4k.cc"));
       expect(xtream.username, equals("6D2A4754"));
       expect(xtream.password, equals("2F7488F9"));
@@ -71,7 +84,7 @@ void main() async {
           "http://goats.one/get.php?username=829833711&password=292758303&type=m3u_plus&output=m3u8";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://goats.one"));
       expect(xtream.username, equals("829833711"));
       expect(xtream.password, equals("292758303"));
@@ -85,7 +98,7 @@ void main() async {
           "http://petica.info/get.php?username=Brankolukic023&password=6VMKzC&type=m3u_plus&output=ts";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://petica.info"));
       expect(xtream.username, equals("Brankolukic023"));
       expect(xtream.password, equals("6VMKzC"));
@@ -99,7 +112,7 @@ void main() async {
           "http://vipforj.top:8080/get.php?username=VIP0176173538414492&password=11735384144745&type=m3u_plus&output=mpegts";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://vipforj.top"));
       expect(xtream.username, equals("VIP0176173538414492"));
       expect(xtream.password, equals("11735384144745"));
@@ -113,7 +126,7 @@ void main() async {
           "http://talibanul.net:8080/get.php?username=Terturian_Marincas&password=efihewifheoijfoi&type=m3u_plus";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://talibanul.net"));
       expect(xtream.username, equals("Terturian_Marincas"));
       expect(xtream.password, equals("efihewifheoijfoi"));
@@ -126,7 +139,7 @@ void main() async {
           "http://pamporea.xyz:8080/get.php?username=AN227436&password=F5bfP3499iuRxKmm7pb2HjDZKITFDj&type=m3u_plus";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://pamporea.xyz"));
       expect(xtream.username, equals("AN227436"));
       expect(xtream.password, equals("F5bfP3499iuRxKmm7pb2HjDZKITFDj"));
@@ -139,7 +152,7 @@ void main() async {
           "http://vocotv.pro/get.php?username=10&password=12345&type=m3u_plus";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://vocotv.pro"));
       expect(xtream.username, equals("10"));
       expect(xtream.password, equals("12345"));
@@ -152,7 +165,7 @@ void main() async {
           "http://g-med.xyz:25461/get.php?username=snezana@fidancev&password=br3HbLDbmjTY&type=m3u&output=ts";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://g-med.xyz"));
       expect(xtream.username, equals("snezana@fidancev"));
       expect(xtream.password, equals("br3HbLDbmjTY"));
@@ -166,7 +179,7 @@ void main() async {
           "http://mains.vip/get.php?username=pmf0423&password=1aku0jt%40&type=m3u";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://mains.vip"));
       expect(xtream.username, equals("pmf0423"));
       expect(xtream.password, equals("1aku0jt@"));
@@ -179,7 +192,7 @@ void main() async {
           "http://164.215.98.132:2082/get.php?username=05312993875&password=52G826825G&type=m3u_plus&output=ts";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://164.215.98.132"));
       expect(xtream.username, equals("05312993875"));
       expect(xtream.password, equals("52G826825G"));
@@ -193,7 +206,7 @@ void main() async {
           "http://vipvodge.top:8080/get.php?username=VOD2661728938595004&password=293554fc0bb5&type=m3u_plus&output=mpegts";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://vipvodge.top"));
       expect(xtream.username, equals("VOD2661728938595004"));
       expect(xtream.password, equals("293554fc0bb5"));
@@ -207,7 +220,7 @@ void main() async {
           "http://hardcoremedia.xyz/get.php?username=ymgiaxkw&password=5Hr5ZQuVfU&type=m3u";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://hardcoremedia.xyz"));
       expect(xtream.username, equals("ymgiaxkw"));
       expect(xtream.password, equals("5Hr5ZQuVfU"));
@@ -220,7 +233,7 @@ void main() async {
           "http://vipvodle.top:8080/get.php?username=VOD2121741705273004&password=841cd28c1f31&type=m3u";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://vipvodle.top"));
       expect(xtream.username, equals("VOD2121741705273004"));
       expect(xtream.password, equals("841cd28c1f31"));
@@ -233,7 +246,7 @@ void main() async {
           "http://tvpromas.com:2082/get.php?username=2025XChinaxPor2025&password=56yCCTvdyF5H&type=m3u&output=mpegts";
 
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.host, equals("http://tvpromas.com"));
       expect(xtream.username, equals("2025XChinaxPor2025"));
       expect(xtream.password, equals("56yCCTvdyF5H"));
@@ -247,42 +260,45 @@ void main() async {
     test('test: invalid URL - missing username', () async {
       final String url = "http://example.com/get.php?password=123&type=m3u";
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.isValid, equals(false));
     });
 
     test('test: invalid URL - missing password', () async {
       final String url = "http://example.com/get.php?username=test&type=m3u";
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.isValid, equals(false));
     });
 
     test('test: invalid URL - missing type', () async {
-      final String url = "http://example.com/get.php?username=test&password=123";
+      final String url =
+          "http://example.com/get.php?username=test&password=123";
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.isValid, equals(false));
     });
 
     test('test: invalid URL - invalid type', () async {
-      final String url = "http://example.com/get.php?username=test&password=123&type=invalid";
+      final String url =
+          "http://example.com/get.php?username=test&password=123&type=invalid";
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.isValid, equals(false));
     });
 
     test('test: invalid URL - invalid port', () async {
-      final String url = "http://example.com:99999/get.php?username=test&password=123&type=m3u";
+      final String url =
+          "http://example.com:99999/get.php?username=test&password=123&type=m3u";
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.isValid, equals(false));
     });
 
     test('test: invalid URL - malformed URL', () async {
       final String url = "not-a-valid-url";
       final Xtream xtream = Xtream.fromUrl(url);
-      
+
       expect(xtream.isValid, equals(false));
     });
   });

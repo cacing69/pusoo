@@ -1,7 +1,20 @@
-// Copyright (c) 2025, Ibnul Mutaki (@cacing69)
-// Licensed under the MIT License
-// Pusoo - Open Source IPTV Player
-// GitHub: https://github.com/cacing69/pusoo
+/*
+ * Pusoo - IPTV Player
+ * Copyright (C) 2025 Ibnul Mutaki
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import 'dart:convert';
 import 'dart:core';
@@ -15,7 +28,7 @@ abstract class M3UParser {
   static final _attributeRegexMixed = RegExp(
     r'([a-zA-Z0-9_-]+)=([^,]+?)(?=,|$)',
   );
-  static final _extInfRegex = RegExp(r'#EXTINF:\s*(-?\d*),?\s*(.*)');
+  static final _extInfRegex = RegExp(r'#EXTINF:\s*(-?\d*)(?:,|\s+)(.*)');
   static final _extStreamInfRegex = RegExp(
     r'#EXT-X-STREAM-INF:.*?group-title="([^"]*)"\s+tvg-logo="([^"]*)"\s+tvg-id="([^"]*)"\s*,\s*(.*)',
   );
@@ -148,7 +161,30 @@ abstract class M3UParser {
 
         final match = _extInfRegex.firstMatch(extInfLine);
         if (match != null) {
-          final titlePart = match.group(2) ?? '';
+          var titlePart = match.group(2) ?? '';
+
+          // Handle malformed EXTINF with multiple #EXTINF in one line
+          // Example: #EXTINF:-1,#EXTINF:0,title
+          if (titlePart.startsWith('#EXTINF:')) {
+            final malformedMatch = _extInfRegex.firstMatch(titlePart);
+            if (malformedMatch != null) {
+              titlePart = malformedMatch.group(2) ?? '';
+            }
+          }
+
+          // Handle malformed EXTINF with EXTINF without # in one line
+          // Example: #EXTINF:-1,EXTINF:-1,title
+          if (titlePart.startsWith('EXTINF:')) {
+            final malformedExtInfRegex = RegExp(
+              r'EXTINF:\s*(-?\d*)(?:,|\s+)(.*)',
+            );
+            final malformedExtInfMatch = malformedExtInfRegex.firstMatch(
+              titlePart,
+            );
+            if (malformedExtInfMatch != null) {
+              titlePart = malformedExtInfMatch.group(2) ?? '';
+            }
+          }
 
           final attributes = <String, String>{};
           String remainingTitlePart = titlePart;
@@ -516,6 +552,53 @@ abstract class M3UParser {
             title = '${groupTitleValue},${titleAfterComma}';
           }
 
+          // Handle case where there's malformed content before group-title
+          // Example: House -  Trance, Electronic live" tvg-logo="" group-title="Radio stations",Party Vibe: Techno, House, Trance, Electronic live
+          final malformedBeforeGroupTitleRegex = RegExp(
+            r'^([^"]*"[^"]*)\s+tvg-logo=""\s+group-title="([^"]*)",(.*)$',
+          );
+          final malformedBeforeGroupTitleMatch = malformedBeforeGroupTitleRegex
+              .firstMatch(titlePart);
+          if (malformedBeforeGroupTitleMatch != null) {
+            final groupTitleValue = malformedBeforeGroupTitleMatch.group(2)!;
+            final actualTitle = malformedBeforeGroupTitleMatch.group(3)!;
+
+            // Override the attributes and title
+            attributes['group-title'] = groupTitleValue;
+            title = actualTitle.trim();
+
+            // Remove the malformed part from remainingTitlePart
+            final malformedPattern = malformedBeforeGroupTitleMatch.group(0)!;
+            remainingTitlePart = remainingTitlePart.replaceFirst(
+              malformedPattern,
+              '',
+            );
+          }
+
+          // Handle case where there's malformed content with dash separator
+          // Example: DC) | 09/20-04:00PM | ESPN+" tvg-logo="..." group-title="EVENT | NCAAF" - NCAAF 044 | HAMPTON VS HOWARD...
+          final malformedWithDashRegex = RegExp(
+            r'^([^"]*"[^"]*)\s+tvg-logo="[^"]*"\s+group-title="([^"]*)"\s+-\s+(.*)$',
+          );
+          final malformedWithDashMatch = malformedWithDashRegex.firstMatch(
+            titlePart,
+          );
+          if (malformedWithDashMatch != null) {
+            final groupTitleValue = malformedWithDashMatch.group(2)!;
+            final actualTitle = malformedWithDashMatch.group(3)!;
+
+            // Override the attributes and title
+            attributes['group-title'] = groupTitleValue;
+            title = actualTitle.trim();
+
+            // Remove the malformed part from remainingTitlePart
+            final malformedPattern = malformedWithDashMatch.group(0)!;
+            remainingTitlePart = remainingTitlePart.replaceFirst(
+              malformedPattern,
+              '',
+            );
+          }
+
           if (title.startsWith('group-title=')) {
             var groupTitleValue = title.substring('group-title='.length);
             if (groupTitleValue.startsWith('"')) {
@@ -667,7 +750,14 @@ abstract class M3UParser {
         }
       } else if (!trimmedLine.startsWith('#')) {
         // URL Line - only process if it looks like a valid URL
-        if (currentTrack != null && trimmedLine.isNotEmpty) {
+        if (trimmedLine.isNotEmpty) {
+          // If we don't have a current track but this looks like a URL,
+          // it might be a URL directly after #EXTINF without empty line
+          if (currentTrack == null) {
+            // This shouldn't happen in normal M3U format, but handle it gracefully
+            print('Warning: Found URL without #EXTINF: $trimmedLine');
+            return tracks;
+          }
           final urlParts = trimmedLine.split('|');
           final link = urlParts[0].trim();
 
@@ -681,8 +771,7 @@ abstract class M3UParser {
               link.startsWith('mms://') ||
               link.startsWith('file://')) {
             // Additional validation - reject obviously invalid URLs
-            if (!link.contains('--') &&
-                !link.startsWith('=') &&
+            if (!link.startsWith('=') &&
                 !link.startsWith('-') &&
                 link.length > 5) {
               // Minimum reasonable URL length

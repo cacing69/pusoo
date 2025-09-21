@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pusoo/features/source/data/const/github_sources.dart';
 import 'package:pusoo/features/source/data/const/public_sources.dart';
 import 'package:pusoo/router.dart';
 
@@ -28,10 +29,34 @@ class _PublicSourceListScreenState extends State<PublicSourceListScreen> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          Text("Github Sources"),
+          Text("Public Sources", style: TextStyle(fontWeight: FontWeight.w600)),
           FItemGroup(
             children: [
               ...publicSources.map(
+                (source) => FItem(
+                  prefix: Icon(FIcons.folderRoot),
+                  title: Text(source.name!),
+                  subtitle: Text(source.homepage!),
+                  suffix: Icon(FIcons.chevronRight),
+                  onPress: () {
+                    context.pushNamed(
+                      RouteName.publicSourcesPlaylist.name,
+
+                      extra: source,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+          FDivider(
+            style: (style) =>
+                style.copyWith(padding: EdgeInsets.symmetric(vertical: 5)),
+          ),
+          Text("Github Sources", style: TextStyle(fontWeight: FontWeight.w600)),
+          FItemGroup(
+            children: [
+              ...githubSources.map(
                 (source) => FItem(
                   prefix: Icon(FIcons.folderRoot),
                   title: Text(source.name!),

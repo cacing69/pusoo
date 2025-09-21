@@ -1,7 +1,20 @@
-// Copyright (c) 2025, Ibnul Mutaki (@cacing69)
-// Licensed under the MIT License
-// Pusoo - Open Source IPTV Player
-// GitHub: https://github.com/cacing69/pusoo
+/*
+ * Pusoo - IPTV Player
+ * Copyright (C) 2025 Ibnul Mutaki
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import 'dart:io';
 
@@ -721,8 +734,8 @@ udp://@225.2.0.130:1234
 
     test('TestPlaylistWithAlotSpaceInTitle', () async {
       final String content = r'''
-https://habetar.com/stream/HG0yxg6811DqlFTuVEC1Gw/kjhhiuahiuhgihdf/1755465140/55567685/master.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://images4.imagebam.com/ab/a2/c7/ME151SY1_o.jpg" group-title="Movies",    	Singsot: Siulan Kematian (2025)Tidak ada voting
+https://habetar.com/stream/HG0yxg6811DqlFTuVEC1Gw/kjhhiuahiuhgihdf/1755465140/55567685/master.m3u8
 ''';
 
       List<Track> result = M3UParser.parse(content);
@@ -1538,7 +1551,6 @@ https://stmv1.samcast.com.br/demaistv6503/demaistv6503/chunklist_w1316191273.m3u
 
     test('TestTrackShouldGiveTracks:Length2', () async {
       final String content = r'''
-IPV4,#genre#
 #EXTM3U x-tvg-url="https://fy.188766.xyz/e.xml"
 #EXTINF:-1 tvg-id="CCTV1" tvg-name="CCTV1" tvg-logo="https://fy.188766.xyz/logo/fanmingming/live/tv/CCTV1.png" group-title="央视频道",CCTV-1 综合
 http://192.168.1.8:35455/bst/cctv1hd@4000000.m3u8
@@ -2448,6 +2460,100 @@ http://192.168.1.4:7088/rtp/239.3.1.189:8000
 
       expect(result.length, equals(1));
     });
+
+    test('TestTrackShouldGiveName:Ambient Sleeping Pill [Opt-1]', () async {
+      // ini adalah malformed EXTINF
+      final String content = r'''
+#EXTINF:-1,#EXTINF:0,Ambient Sleeping Pill [Opt-1]
+http://tvmate.icu:8080/3KfKch/070831/14823
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result.length, equals(1));
+      expect(result[0].title, equals("Ambient Sleeping Pill [Opt-1]"));
+    });
+
+    test(
+      'TestTrackShouldGiveName:Party Vibe: Techno, House, Trance, Electronic live',
+      () async {
+        // ini adalah malformed = #EXTINF:-1,House -  Trance, Electronic live"
+        final String content = r'''
+#EXTINF:-1,House -  Trance, Electronic live" tvg-logo="" group-title="Radio stations",Party Vibe: Techno, House, Trance, Electronic live
+http://tvmate.icu:8080/3KfKch/070831/122865
+''';
+
+        List<Track> result = M3UParser.parse(content);
+
+        expect(result.length, equals(1));
+
+        expect(
+          result[0].title,
+          equals("Party Vibe: Techno, House, Trance, Electronic live"),
+        );
+        expect(result[0].groupTitle, equals("Radio stations"));
+      },
+    );
+
+    test(
+      'TestTrackShouldGiveName:NCAAF 044 | HAMPTON VS HOWARD (IN WASHINGTON, DC) | 09/20-04:00PM | ESPN+',
+      () async {
+        // ini adalah malformed = #EXTINF:-1,DC) | 09/20-04:00PM | "
+        final String content = r'''
+#EXTINF:-1,DC) | 09/20-04:00PM | ESPN+" tvg-logo="https://restream.tv4k.me:2096/images/AbD8VtJ_IyZz67zilLXsxhypO-MwxZHNGldlaZV2bRKMGtBbWbtdaBGlzHTdrQPV-77pvKrqV6aHQzg78jp75tIHOxmSMsfpXN8o9dl_euU.jpg" group-title="EVENT | NCAAF" - NCAAF 044 | HAMPTON VS HOWARD (IN WASHINGTON, DC) | 09/20-04:00PM | ESPN+
+http://tvmate.icu:8080/3KfKch/070831/251662
+''';
+
+        List<Track> result = M3UParser.parse(content);
+
+        expect(result.length, equals(1));
+
+        expect(
+          result[0].title,
+          equals(
+            "NCAAF 044 | HAMPTON VS HOWARD (IN WASHINGTON, DC) | 09/20-04:00PM | ESPN+",
+          ),
+        );
+        expect(result[0].groupTitle, equals("EVENT | NCAAF"));
+      },
+    );
+
+    test(
+      'TestTrackShouldGiveName:NCAAF 044 | HAMPTON VS HOWARD (IN WASHINGTON, DC) | 09/20-04:00PM | ESPN+',
+      () async {
+        // ini adalah malformed = #EXTINF:-1,EXTINF:-1,
+        final String content = r'''
+#EXTINF:-1,EXTINF:-1,RADIO 60s&70s(1.fm) – UK (70e, 60e)
+http://tvmate.icu:8080/3KfKch/070831/14749
+''';
+
+        List<Track> result = M3UParser.parse(content);
+
+        expect(result.length, equals(1));
+
+        expect(result[0].title, equals("RADIO 60s&70s(1.fm) – UK (70e, 60e)"));
+      },
+    );
+
+    test(
+      'TestTrackShouldGiveName:Meet the Pickles: The Making of "Win or Lose" (2025)',
+      () async {
+        // ini adalah malformed = #EXTINF:-1,DC) | 09/20-04:00PM | "
+        final String content = r'''
+#EXTINF:-1,Meet the Pickles: The Making of "Win or Lose" (2025)
+http://tvmate.icu:8080/movie/3KfKch/070831/249994.mp4
+''';
+
+        List<Track> result = M3UParser.parse(content);
+
+        expect(result.length, equals(1));
+
+        expect(
+          result[0].title,
+          equals("Meet the Pickles: The Making of \"Win or Lose\" (2025)"),
+        );
+      },
+    );
 
     test('Test8TV:ShouldGiveTwoTracks', () async {
       final String content = r'''

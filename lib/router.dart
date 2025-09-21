@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:pusoo/features/about/presentation/screens/about_screen.dart';
 import 'package:pusoo/features/playlist/presentation/screens/manage_personal_playlist_screen.dart';
 import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/features/source/presentation/screens/add_new_source_screen.dart';
@@ -20,6 +21,9 @@ enum RouteName {
   welcome,
   home,
   detail,
+  about,
+
+  // staging
   videoPlayer,
 
   // tv
@@ -58,6 +62,12 @@ final List<GoRoute> defaultRouter = [
     path: '/home',
     name: RouteName.home.name,
     builder: (context, state) => HomeScreen(),
+  ),
+
+  GoRoute(
+    path: '/about',
+    name: RouteName.about.name,
+    builder: (context, state) => AboutScreen(),
   ),
   GoRoute(
     path: '/playlist/add',

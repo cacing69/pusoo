@@ -97,7 +97,7 @@ class _PublicSourceListPlaylistChannelsScreenState
         children: [
           Row(
             children: [
-              Icon(FIcons.github),
+              Icon(FIcons.earth),
               Gap(5),
               Expanded(
                 child: Text(
