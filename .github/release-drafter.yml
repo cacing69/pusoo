@@ -1,5 +1,8 @@
+# File: .github/release-drafter.yml
+
 name-template: 'nightly-$SHORT_SHA'
 tag-template: 'nightly-$SHORT_SHA'
+# Template untuk judul kategori changelog
 categories:
   - title: 'Features'
     labels:
@@ -13,8 +16,24 @@ categories:
     labels:
       - chore
       - refactor
+  - title: 'Documentation'
+    labels:
+      - docs
+  - title: 'Performance'
+    labels:
+      - perf
+  - title: 'Tests'
+    labels:
+      - test
+# Template untuk setiap perubahan
 change-template: '- $TITLE (#$NUMBER) @${AUTHOR}'
+# Template jika tidak ada perubahan
 no-changes-template: '- No changes'
+# Template utama draft release
 template: |
   ## Nightly Build Changes
   $CHANGES
+
+# Optional: bisa include commit messages jika PR tidak ada label
+# release-drafter secara default sudah membaca PR title / commit title
+# sehingga commit conventional commits (feat:, fix:, chore:) tetap muncul

@@ -36,10 +36,11 @@ class PlaylistNameExtractor {
         final lastSegment = pathSegments.last;
         // Clean up the filename by removing special characters at the beginning and end
         String cleanedSegment = lastSegment;
-        
+
         // Remove special characters from the beginning (keep only alphanumeric)
         // But if the string starts with special chars, try to find the first alphanumeric char
-        if (cleanedSegment.isNotEmpty && !RegExp(r'^[a-zA-Z0-9]').hasMatch(cleanedSegment)) {
+        if (cleanedSegment.isNotEmpty &&
+            !RegExp(r'^[a-zA-Z0-9]').hasMatch(cleanedSegment)) {
           // Find the first alphanumeric character
           final match = RegExp(r'[a-zA-Z0-9]').firstMatch(cleanedSegment);
           if (match != null) {
@@ -55,19 +56,19 @@ class PlaylistNameExtractor {
           if (parts.length > 1) {
             final extension = parts.last;
             final nameWithoutExt = parts.sublist(0, parts.length - 1).join('.');
-            
+
             // Clean the name part, keeping alphanumeric, -, and _
             final cleanedName = nameWithoutExt.replaceAll(
               RegExp(r'[^a-zA-Z0-9_-]+'),
               '',
             );
-            
+
             // Clean the extension, keeping only alphanumeric
             final cleanedExtension = extension.replaceAll(
               RegExp(r'[^a-zA-Z0-9]+'),
               '',
             );
-            
+
             if (cleanedName.isNotEmpty && cleanedExtension.isNotEmpty) {
               cleanedSegment = '$cleanedName.$cleanedExtension';
             } else if (cleanedName.isNotEmpty) {
