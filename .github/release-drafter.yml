@@ -1,7 +1,8 @@
 # File: .github/release-drafter.yml
 
-name-template: 'nightly-$SHORT_SHA'
+name-template: 'Nightly Build - $SHORT_SHA'
 tag-template: 'nightly-$SHORT_SHA'
+prerelease: true
 # Template untuk judul kategori changelog
 categories:
   - title: 'Features'
@@ -32,7 +33,17 @@ no-changes-template: '- No changes'
 # Template utama draft release
 template: |
   ## Nightly Build Changes
+
+  This is an automatic nightly build from the latest commit on `main`.
+  Use at your own risk — features may be unstable.
+
+  ### Changes
   $CHANGES
+
+  ### Downloads
+  - **Universal APK**: Works on all Android devices
+  - **Split APKs**: Optimized for specific architectures (arm64, armeabi-v7a, x86_64)
+  - **AAB**: Google Play format (for Play Store uploads)
 
 # Optional: bisa include commit messages jika PR tidak ada label
 # release-drafter secara default sudah membaca PR title / commit title

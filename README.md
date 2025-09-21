@@ -1,7 +1,7 @@
 # Pusoo
 
 <div align="center">
-  <a href="https://github.com/cacing69/pusoo"><img width="300" src="assets/icon.svg" alt="SRC Tool logo"></a>
+  [![Pusoo logo](assets/icon.svg)](https://github.com/cacing69/pusoo)
 </div>
 
 **Pusoo** is an **open-source IPTV Player** built with **Flutter**.
