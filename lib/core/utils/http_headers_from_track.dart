@@ -7,47 +7,128 @@ import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/core/utils/stream_headers_extractor.dart';
 import 'package:pusoo/core/utils/ext_vlc_opt_headers_extractor.dart';
 
+/// Builds HTTP headers from track data using multiple extractors
+///
+/// This class provides a unified interface for extracting HTTP headers from various sources
+/// in a track object. It uses a priority-based system where higher priority sources
+/// override lower priority ones.
 abstract class HttpHeadersFromTrack {
+  /// Priority levels for header sources
+  static const int _priorityHttpHeaders = 3; // Lowest priority
+  static const int _priorityExtVlcOpts = 2; // Medium priority
+  static const int _priorityStreamHeaders = 1; // Highest priority
+
+  /// Builds HTTP headers from track data using priority-based extraction
+  ///
+  /// [track] - The track object containing various header sources
+  /// Returns a map of normalized HTTP headers
   static Map<String, String> build(Track track) {
-    final Map<String, String> headers = {};
+    if (track == null) return <String, String>{};
+
     final Map<String, String> normalizedHeaders = {};
 
-    // Priority 3: Extract headers from httpHeaders (lowest priority)
-    for (final httpHeader in track.httpHeaders) {
-      for (final entry in httpHeader.entries) {
-        final normalizedKey = _normalizeHeaderName(entry.key);
-        if (!normalizedHeaders.containsKey(normalizedKey)) {
-          normalizedHeaders[normalizedKey] = entry.value;
-        }
-      }
-    }
+    try {
+      // Priority 3: Extract headers from httpHeaders (lowest priority)
+      _extractHttpHeaders(track, normalizedHeaders);
 
-    // Priority 2: Extract headers from extVlcOpts (medium priority)
-    // This will override httpHeaders
-    final extVlcOptHeaders = ExtVlcOptHeadersExtractor.extract(
-      track.extVlcOpts,
-    );
-    for (final entry in extVlcOptHeaders.entries) {
-      final normalizedKey = _normalizeHeaderName(entry.key);
-      normalizedHeaders[normalizedKey] =
-          entry.value; // Override with extVlcOpts
-    }
+      // Priority 2: Extract headers from extVlcOpts (medium priority)
+      _extractExtVlcOptHeaders(track, normalizedHeaders);
 
-    // Priority 1: Extract headers from kodiProps stream_headers (highest priority)
-    // This will override any existing headers
-    for (final kodiProp in track.kodiProps) {
-      if (kodiProp.containsKey('inputstream.adaptive.stream_headers')) {
-        final streamHeaders = kodiProp['inputstream.adaptive.stream_headers']!;
-        final streamHeadersMap = StreamHeadersExtractor.extract(streamHeaders);
-        for (final entry in streamHeadersMap.entries) {
-          final normalizedKey = _normalizeHeaderName(entry.key);
-          normalizedHeaders[normalizedKey] =
-              entry.value; // Always override with stream_headers
-        }
-      }
+      // Priority 1: Extract headers from kodiProps stream_headers (highest priority)
+      _extractStreamHeaders(track, normalizedHeaders);
+    } catch (e) {
+      // Log error but return what we have so far
+      print('Warning: Failed to build HTTP headers from track: $e');
     }
 
     return normalizedHeaders;
+  }
+
+  /// Extracts headers from track.httpHeaders
+  static void _extractHttpHeaders(
+    Track track,
+    Map<String, String> normalizedHeaders,
+  ) {
+    if (track.httpHeaders.isEmpty) return;
+
+    for (final httpHeader in track.httpHeaders) {
+      if (httpHeader.isEmpty) continue;
+
+      for (final entry in httpHeader.entries) {
+        final key = entry.key.trim();
+        final value = entry.value.trim();
+
+        if (key.isEmpty || value.isEmpty) continue;
+
+        final normalizedKey = _normalizeHeaderName(key);
+        if (!normalizedHeaders.containsKey(normalizedKey)) {
+          normalizedHeaders[normalizedKey] = value;
+        }
+      }
+    }
+  }
+
+  /// Extracts headers from track.extVlcOpts using ExtVlcOptHeadersExtractor
+  static void _extractExtVlcOptHeaders(
+    Track track,
+    Map<String, String> normalizedHeaders,
+  ) {
+    if (track.extVlcOpts.isEmpty) return;
+
+    try {
+      final extVlcOptHeaders = ExtVlcOptHeadersExtractor.extract(
+        track.extVlcOpts,
+      );
+
+      for (final entry in extVlcOptHeaders.entries) {
+        final key = entry.key.trim();
+        final value = entry.value.trim();
+
+        if (key.isEmpty || value.isEmpty) continue;
+
+        final normalizedKey = _normalizeHeaderName(key);
+        normalizedHeaders[normalizedKey] = value; // Override with extVlcOpts
+      }
+    } catch (e) {
+      print('Warning: Failed to extract EXTVLCOPT headers: $e');
+    }
+  }
+
+  /// Extracts headers from track.kodiProps using StreamHeadersExtractor
+  static void _extractStreamHeaders(
+    Track track,
+    Map<String, String> normalizedHeaders,
+  ) {
+    if (track.kodiProps.isEmpty) return;
+
+    for (final kodiProp in track.kodiProps) {
+      if (kodiProp.isEmpty) continue;
+
+      if (kodiProp.containsKey('inputstream.adaptive.stream_headers')) {
+        final streamHeaders = kodiProp['inputstream.adaptive.stream_headers']
+            ?.toString();
+        if (streamHeaders == null || streamHeaders.isEmpty) continue;
+
+        try {
+          final streamHeadersMap = StreamHeadersExtractor.extract(
+            streamHeaders,
+          );
+
+          for (final entry in streamHeadersMap.entries) {
+            final key = entry.key.trim();
+            final value = entry.value.trim();
+
+            if (key.isEmpty || value.isEmpty) continue;
+
+            final normalizedKey = _normalizeHeaderName(key);
+            normalizedHeaders[normalizedKey] =
+                value; // Always override with stream_headers
+          }
+        } catch (e) {
+          print('Warning: Failed to extract stream headers: $e');
+        }
+      }
+    }
   }
 
   /// Normalizes header names to standard format (Title-Case)
@@ -223,5 +304,82 @@ abstract class HttpHeadersFromTrack {
     });
 
     return titleCaseParts.join('-');
+  }
+
+  /// Validates if a header name is valid
+  static bool _isValidHeaderName(String headerName) {
+    if (headerName.isEmpty) return false;
+
+    // Check for invalid characters
+    final invalidChars = RegExp(r'[^\w\-]');
+    return !invalidChars.hasMatch(headerName);
+  }
+
+  /// Validates if a header value is valid
+  static bool _isValidHeaderValue(String headerValue) {
+    if (headerValue.isEmpty) return false;
+
+    // Check for control characters (except tab)
+    final controlChars = RegExp(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]');
+    return !controlChars.hasMatch(headerValue);
+  }
+
+  /// Sanitizes a header value by removing invalid characters
+  static String _sanitizeHeaderValue(String value) {
+    if (value.isEmpty) return value;
+
+    // Remove control characters (except tab and newline)
+    return value.replaceAll(RegExp(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]'), '');
+  }
+
+  /// Gets the priority level for a header source
+  static int getPriorityForSource(String source) {
+    switch (source.toLowerCase()) {
+      case 'httpheaders':
+        return _priorityHttpHeaders;
+      case 'extvlcopt':
+        return _priorityExtVlcOpts;
+      case 'streamheaders':
+        return _priorityStreamHeaders;
+      default:
+        return 999; // Unknown source has lowest priority
+    }
+  }
+
+  /// Merges headers from multiple sources with priority handling
+  static Map<String, String> mergeHeaders(
+    Map<String, String> baseHeaders,
+    Map<String, String> newHeaders,
+    int priority,
+  ) {
+    final merged = Map<String, String>.from(baseHeaders);
+
+    for (final entry in newHeaders.entries) {
+      final key = entry.key.trim();
+      final value = entry.value.trim();
+
+      if (key.isEmpty || value.isEmpty) continue;
+
+      // Always override for higher priority sources
+      merged[key] = value;
+    }
+
+    return merged;
+  }
+
+  /// Debug method to print header extraction details
+  static void debugHeaders(Track track) {
+    print('=== HTTP Headers Debug ===');
+    print('Track ID: ${track.id}');
+    print('HTTP Headers count: ${track.httpHeaders.length}');
+    print('EXTVLCOPT count: ${track.extVlcOpts.length}');
+    print('Kodi Props count: ${track.kodiProps.length}');
+
+    final headers = build(track);
+    print('Final headers count: ${headers.length}');
+    headers.forEach((key, value) {
+      print('  $key: $value');
+    });
+    print('========================');
   }
 }

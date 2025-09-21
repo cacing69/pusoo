@@ -2010,6 +2010,378 @@ http://192.168.1.4:7088/rtp/239.3.1.189:8000
       expect(result.length, equals(1));
     });
 
+    test('TestTrackShouldGiveHeaders:ClearKeyJsonPure:2', () async {
+      final String content = r'''
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key={ "keys":[ { "kty":"oct", "k":"BW4eSVc9LK7ly0/nj4xPPQ", "kid":"qcYZB07TjCDiWtNsPFfBDA" } ], "type":"temporary" }
+#EXTINF:-1 tvg-id="8TV.my" tvg-name="8TV" group-title="NJOI TV" tvg-logo="https://divign0fdw3sv.cloudfront.net/Images/ChannelLogo/contenthub/115_144.png",8TV
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 12; Pixel 3a XL Build/SP2A.220505.008; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/114.0.5715.0 Mobile Safari/537.36
+#EXTVLCOPT:http-referrer=https://playtv.unifi.com.my
+https://unifi-live08.secureswiftcontent.com/UnifiHD/live08.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("8TV"));
+      expect(result[0].kodiProps.length, equals(1));
+
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "{ \"keys\":[ { \"kty\":\"oct\", \"k\":\"BW4eSVc9LK7ly0/nj4xPPQ\", \"kid\":\"qcYZB07TjCDiWtNsPFfBDA\" } ], \"type\":\"temporary\" }",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_type"],
+        equals("clearkey"),
+      );
+      expect(
+        result[0].links.first,
+        equals(
+          "https://unifi-live08.secureswiftcontent.com/UnifiHD/live08.mpd",
+        ),
+      );
+      expect(
+        result[0].extVlcOpts.first.containsKey("http-user-agent"),
+        equals(true),
+      );
+      expect(
+        result[0].extVlcOpts.first["http-user-agent"],
+        equals(
+          "Mozilla/5.0 (Linux; Android 12; Pixel 3a XL Build/SP2A.220505.008; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/114.0.5715.0 Mobile Safari/537.36",
+        ),
+      );
+      expect(
+        result[0].extVlcOpts.first.containsKey("http-referrer"),
+        equals(true),
+      );
+      expect(
+        result[0].extVlcOpts.first["http-referrer"],
+        equals("https://playtv.unifi.com.my"),
+      );
+    });
+
+    test('TestTrackShouldGiveName:102 TV2 (SERVER 1)', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="TV2" ch-number="102" tvg-name="TV2 HD"" group-title="MALAYSIA" tvg-logo="https://divign0fdw3sv.cloudfront.net/Images/ChannelLogo/contenthub/396_144.png", 102 TV2 (SERVER 1)
+https://d25tgymtnqzu8s.cloudfront.net/smil:tv2/manifest.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("102 TV2 (SERVER 1)"));
+      expect(result[0].kodiProps.length, equals(1));
+    });
+
+    test('TestTrackShouldGiveLength:1', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-name="卡酷动画",BRTV卡酷少儿[高清]
+http://192.168.1.4:7088/rtp/239.3.1.189:8000
+# #EXTINF:-1 tvg-name="北京纪实",BRTV冬奥纪实[高清]
+# http://192.168.1.4:7088/rtp/239.3.1.243:8000
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result.length, equals(1));
+    });
+
+    test('TestTrackShouldGiveName:501 Astro Awani', () async {
+      final String content = r'''
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
+#KODIPROP:inputstream.adaptive.license_key={ "keys":[ { "kty":"oct", "k":"UlUQz6Y0vWMK+MlfqTV2yg", "kid":"bwbzs898utDMiyHiyU37EA" } ], "type":"temporary" }
+#EXTINF:-1 tvg-id="501" ch-number:"AstroAwani" ch-number=" " tvg-name="Astro Awani HD" group-title="NEWS" group-logo="https://iili.io/dMQO9t4.png" tvg-logo="https://divign0fdw3sv.cloudfront.net/Images/ChannelLogo/contenthub/84_144.png",501 Astro Awani
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 14; lontong-yuhu6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36
+http://linearjitp-playback.astro.com.my/dash-wv/linear/5025/default_ott.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("501 Astro Awani"));
+      expect(result[0].kodiProps.length, equals(1));
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "{ \"keys\":[ { \"kty\":\"oct\", \"k\":\"UlUQz6Y0vWMK+MlfqTV2yg\", \"kid\":\"bwbzs898utDMiyHiyU37EA\" } ], \"type\":\"temporary\" }",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_type"],
+        equals("org.w3.clearkey"),
+      );
+      expect(
+        result[0].links.first,
+        equals(
+          "http://linearjitp-playback.astro.com.my/dash-wv/linear/5025/default_ott.mpd",
+        ),
+      );
+      expect(
+        result[0].extVlcOpts.first.containsKey("http-user-agent"),
+        equals(true),
+      );
+      expect(
+        result[0].extVlcOpts.first["http-user-agent"],
+        equals(
+          "Mozilla/5.0 (Linux; Android 14; lontong-yuhu6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36",
+        ),
+      );
+    });
+    test('TestTrackShouldGiveName:Vevo \'70s', () async {
+      final String content = r'''
+#EXTINF:-1   tvg-logo="https://i.postimg.cc/P5YwxwPj/Screenshot-3.png" group-title="VIDEO MUSIC"", Vevo '70s
+http://stitcher-ipv4.pluto.tv/v1/stitch/embed/hls/channel/5f32f26bcd8aea00071240e5/master.m3u8?deviceType=samsung-tvplus&deviceMake=samsung&deviceModel=samsung&deviceVersion=unknown&appVersion=unknown&deviceLat=0&deviceLon=0&deviceDNT=%7BTARGETOPT%7D&deviceId=%7BPSID%7D&advertisingId=%7BPSID%7D&us_privacy=1YNY&samsung_app_domain=%7BAPP_DOMAIN%7D&samsung_app_name=%7BAPP_NAME%7D&profileLimit=&profileFloor=&embedPartner=samsung-tvplus
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("Vevo '70s"));
+      expect(result[0].kodiProps.length, equals(1));
+    });
+
+    test('TestTrackShouldGiveName:617 Nick Jr', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="NickJr" tvg-name"Nickelodeon Junior" group-title="KIDS" tvg-logo="https://divign0fdw3sv.cloudfront.net/Images/ChannelLogo/contenthub/392_144.png" ch-number="617",617 Nick Jr
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key={ "keys":[ { "kty":"oct", "k":"tKu+6Vtps+gKDRQScshw2w", "kid":"+mUiDJ925CQXOJnfUzptEA" } ], "type":"temporary" }
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 14; lontong-yuhu6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36
+https://linearjitp-playback.astro.com.my/dash-wv/linear/9982/default_ott.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("617 Nick Jr"));
+    });
+
+    test('TestTrackShouldGiveName:617 Nick Jr', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="NickJr" tvg-name"Nickelodeon Junior" group-title="KIDS" tvg-logo="https://divign0fdw3sv.cloudfront.net/Images/ChannelLogo/contenthub/392_144.png" ch-number="617",617 Nick Jr
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key={ "keys":[ { "kty":"oct", "k":"tKu+6Vtps+gKDRQScshw2w", "kid":"+mUiDJ925CQXOJnfUzptEA" } ], "type":"temporary" }
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 14; lontong-yuhu6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36
+https://linearjitp-playback.astro.com.my/dash-wv/linear/9982/default_ott.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("617 Nick Jr"));
+    });
+
+    test('TestTrackShouldGiveName:616 Nickelodeon', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="Nickelodeon" tvg-name"Nickelodeon HD" group-title="KIDS" tvg-logo="https://divign0fdw3sv.cloudfront.net/Images/ChannelLogo/contenthub/370_144.png" ch-number="616",616 Nickelodeon
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key={ "keys":[ { "kty":"oct", "k":"vaX3u8HkQJb3eaBhn+mIHw", "kid":"2FIOlqEoOrblvlOEdL+oEA" } ], "type":"temporary" }
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 14; lontong-yuhu6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36
+https://linearjitp-playback.astro.com.my/dash-wv/linear/2511/default_ott.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("616 Nickelodeon"));
+    });
+
+    test('TestTrackShouldGiveName:DreamWorks ⁱⁿᵈⁱʰᵒᵐᵉ ᵗᵛ', () async {
+      final String content = r'''
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
+#KODIPROP:inputstream.adaptive.license_key=69646b755f3130303030303030303030:e4a2359b05563399f1d9adfce641724a
+#EXTINF:-1 tvg-id="DreamWorksChannelAsia.us.id" tvg-name"Dreamworks Channel" tvg-logo="https://dl.dropboxusercontent.com/s/9rzjsn0q24b37y6/dreamworks.png" group-title="KIDS",DreamWorks ⁱⁿᵈⁱʰᵒᵐᵉ ᵗᵛ
+https://cdn08jtedge.indihometv.com/dassdvr/133/dreamworks_dash/manifest_wuseetv_qRFZS.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("DreamWorks ⁱⁿᵈⁱʰᵒᵐᵉ ᵗᵛ"));
+    });
+
+    test('TestTrackShouldGiveName:702 HITS Now', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="HITSNow" group-title="MOVIES" group-logo="https://aqfadtv.xyz/images/entertainment.png" tvg-logo="https://aqfadtv.xyz/logos/HITSNow.png", ch-number="702",702 HITS Now
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=https://ck-server.danng.me/?username=HishamKamarul&channelid=5110
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 14; lontong-yuhu6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36
+https://linearjitp-playback.astro.com.my/dash-wv/linear/5110/default_ott.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("702 HITS Now"));
+    });
+
+    test('TestTrackShouldGiveName:TV1', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="101.astro" tvg-logo="http://linear-poster.astro.com.my/prod/logo/TV1_v1.png" group-logo="" group-title="MYTV",TV1
+https://raw.githubusercontent.com/mystery75/m3u8/main/TV1.m3u8
+#https://d25tgymtnqzu8s.cloudfront.net/smil:tv1/manifest.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("TV1"));
+    });
+
+    test('TestTrackShouldGiveName:CARTOON NETWORK (IndiHomeTV)', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Cartoon_Network_2010_logo.svg/1200px-Cartoon_Network_2010_logo.svg.png" group-logo="" group-title="KIDS",CARTOON NETWORK (IndiHomeTV)
+https://github.com/MIFNtechnology/siaranMy/raw/refs/heads/main/channels/CartoonNetwork/index.m3u8
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("CARTOON NETWORK (IndiHomeTV)"));
+    });
+
+    test('TestTrackShouldGiveName:Animax (3)', () async {
+      final String content = r'''
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
+#KODIPROP:inputstream.adaptive.license_key={ "keys":[ { "kty":"oct", "k":"L1oxmbJum2k66IGvf/hkzw", "kid":"7fGnFd6XSGON0vrXWkGa8g" } ], "type":"temporary" }
+#EXTINF:-1 group-title="ANIME" tvg-id="" tvg-chno="" group-logo="" tvg-logo="https://i.ibb.co/zsDGJDK/trtrtrt.jpg",Animax (3)
+https://tglmp01.akamaized.net/out/v1/de55fad9216e4fe7ad8d2eed456ba1ec/manifest.mpd
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("Animax (3)"));
+    });
+
+    test(
+      'TestTrackShouldGiveName:Kompleks Sukan Shah Alam (KSSA) Teaser',
+      () async {
+        final String content = r'''
+#EXTINF:-1 tvg-id="" tvg-logo="https://assets.bharian.com.my/images/articles/sshahaha_1674979001.jpg" group-logo="" group-title="TEST",Kompleks Sukan Shah Alam (KSSA) Teaser
+https://v.redd.it/x2e69l46vdea1/HLS_576.m3u8
+''';
+
+        List<Track> result = M3UParser.parse(content);
+
+        expect(
+          result[0].title,
+          equals("Kompleks Sukan Shah Alam (KSSA) Teaser"),
+        );
+        expect(result[0].groupTitle, equals("TEST"));
+        expect(result[0].tvgId, equals(""));
+        expect(
+          result[0].tvgLogo,
+          equals(
+            "https://assets.bharian.com.my/images/articles/sshahaha_1674979001.jpg",
+          ),
+        );
+        expect(
+          result[0].links.first,
+          equals("https://v.redd.it/x2e69l46vdea1/HLS_576.m3u8"),
+        );
+      },
+    );
+
+    test('TestTrackShouldGiveName:Hot FM', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="" ch-number="976" tvg-name="Hot FM" group-title="RADIO" tvg-logo"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzuZAw9V6Gej63cikLeVuX4cx-hJB3d7ftSQ&s",Hot FM
+https://n30a-eu.rcs.revma.com/drakdf8mtd3vv/48_1vmr9fw8eh2ml02/playlist.m3u8?rj-ttl=5&rj-tok=AAABlC_DOo8Ac734sTC2N2aVIQ
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("Hot FM"));
+    });
+
+    test('TestTrackShouldGiveName:Hot FM', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-id="" ch-number="976" tvg-name="Hot FM" group-title="RADIO" tvg-logo"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzuZAw9V6Gej63cikLeVuX4cx-hJB3d7ftSQ&s",Hot FM
+https://n30a-eu.rcs.revma.com/drakdf8mtd3vv/48_1vmr9fw8eh2ml02/playlist.m3u8?rj-ttl=5&rj-tok=AAABlC_DOo8Ac734sTC2N2aVIQ
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("Hot FM"));
+    });
+
+    test('TestTrackShouldGiveName:ANIMAX', () async {
+      final String content = r'''
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
+#KODIPROP:inputstream.adaptive.license_key={ "keys":[ { "kty":"oct", "k":"L1oxmbJum2k66IGvf/hkzw", "kid":"7fGnFd6XSGON0vrXWkGa8g" } ], "type":"temporary" }
+#EXTINF:-1 group-title="KIDS" tvg-id="472.unifi" group-logo=" tvg-logo="https://www.animax-asia.com/sites/animax-asia.com/files/logos/animax-logo_0.png",ANIMAX
+https://tglmp01.akamaized.net/out/v1/de55fad9216e4fe7ad8d2eed456ba1ec/manifest.mpd
+
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("ANIMAX"));
+      expect(result[0].kodiProps.length, equals(1));
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "{ \"keys\":[ { \"kty\":\"oct\", \"k\":\"L1oxmbJum2k66IGvf/hkzw\", \"kid\":\"7fGnFd6XSGON0vrXWkGa8g\" } ], \"type\":\"temporary\" }",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_type"],
+        equals("org.w3.clearkey"),
+      );
+      expect(
+        result[0].links.first,
+        equals(
+          "https://tglmp01.akamaized.net/out/v1/de55fad9216e4fe7ad8d2eed456ba1ec/manifest.mpd",
+        ),
+      );
+    });
+
+    test('TestTrackShouldGiveLength:1', () async {
+      final String content = r'''
+#EXTINF:-1 tvg-name="卡酷动画",BRTV卡酷少儿[高清]
+http://192.168.1.4:7088/rtp/239.3.1.189:8000
+# #EXTINF:-1 tvg-name="北京纪实",BRTV冬奥纪实[高清]
+# http://192.168.1.4:7088/rtp/239.3.1.243:8000
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result.length, equals(1));
+    });
+
     // TEST TEMPORARY WITH FILE
 
     // test('tmpTest:GenericCase:1', () async {

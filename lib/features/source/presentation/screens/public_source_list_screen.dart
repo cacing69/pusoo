@@ -60,18 +60,6 @@ class _PublicSourceListScreenState extends State<PublicSourceListScreen> {
               //   subtitle: Text("https://github.com/ghokun/tv"),
               //   suffix: Icon(FIcons.chevronRight),
               // ),
-              // FItem(
-              //   prefix: Icon(FIcons.folderRoot),
-              //   title: Text("Mikhel/EPG-para-m3u"),
-              //   subtitle: Text("https://github.com/Mikhel/EPG-para-m3u"),
-              //   suffix: Icon(FIcons.chevronRight),
-              // ),
-              // FItem(
-              //   prefix: Icon(FIcons.folderRoot),
-              //   title: Text("LITUATUI/M3UPT"),
-              //   subtitle: Text("https://github.com/LITUATUI/M3UPT"),
-              //   suffix: Icon(FIcons.chevronRight),
-              // ),
 
               // FItem(
               //   prefix: Icon(FIcons.folderRoot),

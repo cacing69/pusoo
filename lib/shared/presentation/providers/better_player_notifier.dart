@@ -288,6 +288,9 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
 
       if (track.kodiProps.isNotEmpty) {
         final kodiProps = track.kodiProps.first;
+
+        log.d("kodiProps: $kodiProps");
+
         final bool hasLicenseType = kodiProps.containsKey(
           "inputstream.adaptive.license_type",
         );
@@ -324,7 +327,8 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
                   licenseKey,
                   headers: httpHeaders,
                 );
-                log.i("clearKeyData: $clearKeyData");
+
+                log.d("clearKeyData: $clearKeyData");
 
                 if (clearKeyData.isNotEmpty) {
                   // Extract keyId and key from the response
@@ -368,7 +372,7 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         );
       }
 
-      log.i("httpHeaders:final $httpHeaders");
+      log.d("httpHeaders:final $httpHeaders");
 
       final BetterPlayerDataSource betterPlayerDataSource =
           BetterPlayerDataSource(

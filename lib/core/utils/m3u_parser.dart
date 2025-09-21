@@ -12,9 +12,13 @@ import 'package:pusoo/features/track/domain/models/ext_x_media.dart';
 abstract class M3UParser {
   static final _attributeRegex = RegExp(r'([a-zA-Z0-9_-]+)=\"([^\"]*)\"');
   static final _attributeRegexQuoted = RegExp(r'([a-zA-Z0-9_-]+)="([^"]*)"');
-  static final _attributeRegexMixed = RegExp(r'([a-zA-Z0-9_-]+)=([^,]+?)(?=,|$)');
+  static final _attributeRegexMixed = RegExp(
+    r'([a-zA-Z0-9_-]+)=([^,]+?)(?=,|$)',
+  );
   static final _extInfRegex = RegExp(r'#EXTINF:\s*(-?\d*),?\s*(.*)');
-  static final _extStreamInfRegex = RegExp(r'#EXT-X-STREAM-INF:.*?group-title="([^"]*)"\s+tvg-logo="([^"]*)"\s+tvg-id="([^"]*)"\s*,\s*(.*)');
+  static final _extStreamInfRegex = RegExp(
+    r'#EXT-X-STREAM-INF:.*?group-title="([^"]*)"\s+tvg-logo="([^"]*)"\s+tvg-id="([^"]*)"\s*,\s*(.*)',
+  );
 
   static List<Track> parse(String m3u) {
     final lines = m3u.split('\n');
@@ -102,9 +106,13 @@ abstract class M3UParser {
         extVlcOpts: finalExtVlcOpt,
         kodiProps: finalKodiProp,
         extXMedias: tempExtXMedias,
-        httpHeaders: tempHttpHeaders.isNotEmpty ? tempHttpHeaders : currentTrack!.httpHeaders,
+        httpHeaders: tempHttpHeaders.isNotEmpty
+            ? tempHttpHeaders
+            : currentTrack!.httpHeaders,
         desc: tempDesc,
-        groupTitle: tempGroupTitle.isNotEmpty ? tempGroupTitle : currentTrack!.groupTitle,
+        groupTitle: tempGroupTitle.isNotEmpty
+            ? tempGroupTitle
+            : currentTrack!.groupTitle,
       );
       tracks.add(currentTrack!);
       tempExtVlcOptLists = {};
@@ -150,54 +158,69 @@ abstract class M3UParser {
 
           final attributes = <String, String>{};
           String remainingTitlePart = titlePart;
-          
+
           // Handle malformed attributes like "tvg-chno-"5"" (dash before quote)
           final malformedAttributeRegex = RegExp(r'([a-zA-Z0-9_-]+)-"([^"]*)"');
-          final malformedMatches = malformedAttributeRegex.allMatches(titlePart).toList();
+          final malformedMatches = malformedAttributeRegex
+              .allMatches(titlePart)
+              .toList();
           for (var match in malformedMatches) {
             final fullMatch = match.group(0)!;
             final matchedKey = match.group(1)!;
             final value = match.group(2)!;
-            
+
             // If this is at the start of the string (or after whitespace), it's likely a complete malformed attribute
-            if (match.start == 0 || (match.start == 1 && remainingTitlePart.startsWith(' '))) {
+            if (match.start == 0 ||
+                (match.start == 1 && remainingTitlePart.startsWith(' '))) {
               attributes[matchedKey] = value;
               // Remove this attribute from the remaining title part
-              remainingTitlePart = remainingTitlePart.replaceFirst(fullMatch, '');
+              remainingTitlePart = remainingTitlePart.replaceFirst(
+                fullMatch,
+                '',
+              );
             } else {
               // Look backwards to see if there's more context for the key
               final beforeMatch = remainingTitlePart.substring(0, match.start);
               final wordBoundary = RegExp(r'(\s|^)([a-zA-Z0-9_-]+)$');
               final wordMatch = wordBoundary.firstMatch(beforeMatch);
-              
+
               if (wordMatch != null) {
                 final fullKey = wordMatch.group(2)! + '-' + matchedKey;
                 attributes[fullKey] = value;
                 // Remove this attribute from the remaining title part
                 final fullPattern = wordMatch.group(2)! + '-' + fullMatch;
-                remainingTitlePart = remainingTitlePart.replaceFirst(fullPattern, '');
+                remainingTitlePart = remainingTitlePart.replaceFirst(
+                  fullPattern,
+                  '',
+                );
               }
             }
           }
-          
+
           // Try quoted format (key="value")
           final quotedMatches = _attributeRegexQuoted
               .allMatches(remainingTitlePart)
               .toList();
           for (var match in quotedMatches) {
             attributes[match.group(1)!] = match.group(2)!;
-            remainingTitlePart = remainingTitlePart.replaceFirst(match.group(0)!, '');
+            remainingTitlePart = remainingTitlePart.replaceFirst(
+              match.group(0)!,
+              '',
+            );
           }
-          
+
           // Try standard format (key="value" with escaped quotes)
           final attributeMatches = _attributeRegex
               .allMatches(remainingTitlePart)
               .toList();
           for (var match in attributeMatches) {
             attributes[match.group(1)!] = match.group(2)!;
-            remainingTitlePart = remainingTitlePart.replaceFirst(match.group(0)!, '');
+            remainingTitlePart = remainingTitlePart.replaceFirst(
+              match.group(0)!,
+              '',
+            );
           }
-          
+
           // Try mixed format (key=value with quotes inside)
           final mixedMatches = _attributeRegexMixed
               .allMatches(remainingTitlePart)
@@ -210,139 +233,290 @@ abstract class M3UParser {
               value = value.substring(1, value.length - 1);
             }
             attributes[key] = value;
-            remainingTitlePart = remainingTitlePart.replaceFirst(match.group(0)!, '');
+            remainingTitlePart = remainingTitlePart.replaceFirst(
+              match.group(0)!,
+              '',
+            );
           }
-          
+
           // Extract title from remaining part
           String title = remainingTitlePart.trim();
           if (title.startsWith(',')) {
             title = title.substring(1).trim();
           }
-          
+
+          // Clean up malformed attributes that might be left in title
+          // Remove patterns like $1="$2" or similar artifacts
+          title = title.replaceAll(RegExp(r'\$\d+="[^"]*"'), '');
+          title = title.replaceAll(RegExp(r'\$\d+='), '');
+          title = title.replaceAll(RegExp(r'\$\d+'), '');
+
+          // Clean up any remaining malformed attributes
+          title = title.replaceAll(RegExp(r'[a-zA-Z0-9_-]+:"[^"]*"'), '');
+          title = title.replaceAll(RegExp(r'[a-zA-Z0-9_-]+"[^"]*"'), '');
+
+          // Clean up double quotes at the beginning
+          title = title.replaceAll(RegExp(r'^"+'), '');
+
+          // Clean up extra commas and spaces
+          title = title.replaceAll(RegExp(r'^[,\s]+'), '');
+          title = title.trim();
+
+          // Handle case where tvg-logo is missing equals sign (tvg-logo"https://...)
+          // This regex handles both cases: tvg-logo"value" and tvg-logo"value,title
+          final missingEqualsTvgLogoRegex = RegExp(r'tvg-logo"([^"]*?)(?:"|,)');
+          final missingEqualsTvgLogoMatch = missingEqualsTvgLogoRegex
+              .firstMatch(title);
+          if (missingEqualsTvgLogoMatch != null) {
+            final tvgLogoValue = missingEqualsTvgLogoMatch.group(1)!;
+            attributes['tvg-logo'] = tvgLogoValue;
+            title = title.replaceFirst(missingEqualsTvgLogoMatch.group(0)!, '');
+          }
+
+          // Handle case where group-logo has malformed tvg-logo (group-logo=" tvg-logo="https://...)
+          // This regex handles both cases: group-logo=" tvg-logo="value" and group-logo=" tvg-logo="value",title
+          final malformedGroupLogoTvgLogoRegex = RegExp(
+            r'group-logo="\s*tvg-logo="([^"]*?)(?:"|,)',
+          );
+          final malformedGroupLogoTvgLogoMatch = malformedGroupLogoTvgLogoRegex
+              .firstMatch(title);
+          if (malformedGroupLogoTvgLogoMatch != null) {
+            final tvgLogoValue = malformedGroupLogoTvgLogoMatch.group(1)!;
+            attributes['tvg-logo'] = tvgLogoValue;
+            title = title.replaceFirst(
+              malformedGroupLogoTvgLogoMatch.group(0)!,
+              '',
+            );
+          }
+
+          // Handle case where tvg-logo URL is not properly closed (tvg-logo="https://...",title)
+          // This handles URLs that don't have closing quotes
+          final unclosedTvgLogoUrlRegex = RegExp(
+            r'tvg-logo="([^"]*?)",([^"]*)$',
+          );
+          final unclosedTvgLogoUrlMatch = unclosedTvgLogoUrlRegex.firstMatch(
+            title,
+          );
+          if (unclosedTvgLogoUrlMatch != null) {
+            final tvgLogoValue = unclosedTvgLogoUrlMatch.group(1)!;
+            final titleValue = unclosedTvgLogoUrlMatch.group(2)!;
+            attributes['tvg-logo'] = tvgLogoValue;
+            title = titleValue.trim();
+          }
+
+          // Handle case where URL is not properly closed and followed by comma and title
+          // Pattern: https://...",title
+          final unclosedUrlRegex = RegExp(r'https://[^"]*",([^"]*)$');
+          final unclosedUrlMatch = unclosedUrlRegex.firstMatch(title);
+          if (unclosedUrlMatch != null) {
+            final titleValue = unclosedUrlMatch.group(1)!;
+            title = titleValue.trim();
+          }
+
+          // Clean up any remaining malformed attributes after the above fixes
+          title = title.replaceAll(RegExp(r'[a-zA-Z0-9_-]+:"[^"]*"'), '');
+          title = title.replaceAll(RegExp(r'[a-zA-Z0-9_-]+"[^"]*"'), '');
+
+          // Clean up double quotes at the beginning
+          title = title.replaceAll(RegExp(r'^"+'), '');
+
+          // Clean up extra commas and spaces
+          title = title.replaceAll(RegExp(r'^[,\s]+'), '');
+          title = title.trim();
+
           // Handle case where tvg-logo is not properly closed (malformed)
           // Look for tvg-logo=" without closing quote followed by group-title, but not if properly quoted
-          final unclosedTvgLogoRegex = RegExp(r'tvg-logo="([^"]*)\s+group-title="([^"]*)"');
-          final unclosedTvgLogoMatch = unclosedTvgLogoRegex.firstMatch(titlePart);
-          if (unclosedTvgLogoMatch != null && !titlePart.contains('tvg-logo="' + unclosedTvgLogoMatch.group(1)! + '"')) {
+          final unclosedTvgLogoRegex = RegExp(
+            r'tvg-logo="([^"]*)\s+group-title="([^"]*)"',
+          );
+          final unclosedTvgLogoMatch = unclosedTvgLogoRegex.firstMatch(
+            titlePart,
+          );
+          if (unclosedTvgLogoMatch != null &&
+              !titlePart.contains(
+                'tvg-logo="' + unclosedTvgLogoMatch.group(1)! + '"',
+              )) {
             // This is a malformed tvg-logo, fix it
             final tvgLogoValue = unclosedTvgLogoMatch.group(1)!;
             final groupTitleValue = unclosedTvgLogoMatch.group(2)!;
-            
+
             // Override the attributes
             attributes['tvg-logo'] = tvgLogoValue;
             attributes['group-title'] = groupTitleValue;
-            
+
             // Remove the malformed part from remainingTitlePart
-            final malformedPattern = 'tvg-logo="' + tvgLogoValue + ' group-title="' + groupTitleValue + '"';
-            remainingTitlePart = remainingTitlePart.replaceFirst(malformedPattern, '');
+            final malformedPattern =
+                'tvg-logo="' +
+                tvgLogoValue +
+                ' group-title="' +
+                groupTitleValue +
+                '"';
+            remainingTitlePart = remainingTitlePart.replaceFirst(
+              malformedPattern,
+              '',
+            );
           }
 
           // Handle case where tvg-logo is not properly closed (malformed)
           // Look for pattern like tvg-logo="value without closing quote followed by group-title="value"
-          final unclosedTvgLogoGeneralRegex = RegExp(r'tvg-logo="([^"]*)\s+group-title="([^"]*)"');
-          final unclosedTvgLogoGeneralMatch = unclosedTvgLogoGeneralRegex.firstMatch(remainingTitlePart);
+          final unclosedTvgLogoGeneralRegex = RegExp(
+            r'tvg-logo="([^"]*)\s+group-title="([^"]*)"',
+          );
+          final unclosedTvgLogoGeneralMatch = unclosedTvgLogoGeneralRegex
+              .firstMatch(remainingTitlePart);
           if (unclosedTvgLogoGeneralMatch != null) {
             final tvgLogoValue = unclosedTvgLogoGeneralMatch.group(1)!;
             final groupTitleValue = unclosedTvgLogoGeneralMatch.group(2)!;
-            
+
             // Fix the attributes
             attributes['tvg-logo'] = tvgLogoValue;
             attributes['group-title'] = groupTitleValue;
-            
+
             // Remove the malformed part from remainingTitlePart
-            final malformedPattern = 'tvg-logo="' + tvgLogoValue + ' group-title="' + groupTitleValue + '"';
-            remainingTitlePart = remainingTitlePart.replaceFirst(malformedPattern, '');
+            final malformedPattern =
+                'tvg-logo="' +
+                tvgLogoValue +
+                ' group-title="' +
+                groupTitleValue +
+                '"';
+            remainingTitlePart = remainingTitlePart.replaceFirst(
+              malformedPattern,
+              '',
+            );
           }
 
           // Handle case where tvg-logo is not properly closed (malformed) - more specific pattern
           // Look for pattern like tvg-logo="value without closing quote followed by group-title="value",title
-          final unclosedTvgLogoWithCommaRegex = RegExp(r'tvg-logo="([^"]*)\s+group-title="([^"]*)",(.*)');
-          final unclosedTvgLogoWithCommaMatch = unclosedTvgLogoWithCommaRegex.firstMatch(remainingTitlePart);
+          final unclosedTvgLogoWithCommaRegex = RegExp(
+            r'tvg-logo="([^"]*)\s+group-title="([^"]*)",(.*)',
+          );
+          final unclosedTvgLogoWithCommaMatch = unclosedTvgLogoWithCommaRegex
+              .firstMatch(remainingTitlePart);
           if (unclosedTvgLogoWithCommaMatch != null) {
             final tvgLogoValue = unclosedTvgLogoWithCommaMatch.group(1)!;
             final groupTitleValue = unclosedTvgLogoWithCommaMatch.group(2)!;
             final titleValue = unclosedTvgLogoWithCommaMatch.group(3)!;
-            
+
             // Fix the attributes
             attributes['tvg-logo'] = tvgLogoValue;
             attributes['group-title'] = groupTitleValue;
-            
+
             // Set the title
             title = titleValue.trim();
-            
+
             // Remove the malformed part from remainingTitlePart
-            final malformedPattern = 'tvg-logo="' + tvgLogoValue + ' group-title="' + groupTitleValue + '",' + titleValue;
-            remainingTitlePart = remainingTitlePart.replaceFirst(malformedPattern, '');
+            final malformedPattern =
+                'tvg-logo="' +
+                tvgLogoValue +
+                ' group-title="' +
+                groupTitleValue +
+                '",' +
+                titleValue;
+            remainingTitlePart = remainingTitlePart.replaceFirst(
+              malformedPattern,
+              '',
+            );
           }
 
           // Handle case where tvg-logo is not properly closed (malformed) - even more specific pattern
           // Look for pattern like tvg-logo="value without closing quote followed by group-title="value",title
-          final unclosedTvgLogoWithCommaRegex2 = RegExp(r'tvg-logo="([^"]*)\s+group-title="([^"]*)",(.*)');
-          final unclosedTvgLogoWithCommaMatch2 = unclosedTvgLogoWithCommaRegex2.firstMatch(titlePart);
+          final unclosedTvgLogoWithCommaRegex2 = RegExp(
+            r'tvg-logo="([^"]*)\s+group-title="([^"]*)",(.*)',
+          );
+          final unclosedTvgLogoWithCommaMatch2 = unclosedTvgLogoWithCommaRegex2
+              .firstMatch(titlePart);
           if (unclosedTvgLogoWithCommaMatch2 != null) {
             final tvgLogoValue = unclosedTvgLogoWithCommaMatch2.group(1)!;
             final groupTitleValue = unclosedTvgLogoWithCommaMatch2.group(2)!;
             final titleValue = unclosedTvgLogoWithCommaMatch2.group(3)!;
-            
+
             // Fix the attributes
             attributes['tvg-logo'] = tvgLogoValue;
             attributes['group-title'] = groupTitleValue;
-            
+
             // Set the title
             title = titleValue.trim();
-            
+
             // Remove the malformed part from remainingTitlePart
-            final malformedPattern = 'tvg-logo="' + tvgLogoValue + ' group-title="' + groupTitleValue + '",' + titleValue;
-            remainingTitlePart = remainingTitlePart.replaceFirst(malformedPattern, '');
+            final malformedPattern =
+                'tvg-logo="' +
+                tvgLogoValue +
+                ' group-title="' +
+                groupTitleValue +
+                '",' +
+                titleValue;
+            remainingTitlePart = remainingTitlePart.replaceFirst(
+              malformedPattern,
+              '',
+            );
           }
 
           // Handle case where tvg-logo is not properly closed (malformed) - pattern with comma directly after tvg-logo
           // Look for pattern like tvg-logo="value,title
-          final unclosedTvgLogoWithCommaDirectRegex = RegExp(r'tvg-logo="([^"]*),([^"]*)$');
-          final unclosedTvgLogoWithCommaDirectMatch = unclosedTvgLogoWithCommaDirectRegex.firstMatch(remainingTitlePart);
+          final unclosedTvgLogoWithCommaDirectRegex = RegExp(
+            r'tvg-logo="([^"]*),([^"]*)$',
+          );
+          final unclosedTvgLogoWithCommaDirectMatch =
+              unclosedTvgLogoWithCommaDirectRegex.firstMatch(
+                remainingTitlePart,
+              );
           if (unclosedTvgLogoWithCommaDirectMatch != null) {
             final tvgLogoValue = unclosedTvgLogoWithCommaDirectMatch.group(1)!;
             final titleValue = unclosedTvgLogoWithCommaDirectMatch.group(2)!;
-            
+
             // Fix the attributes
             attributes['tvg-logo'] = tvgLogoValue;
-            
+
             // Set the title
             title = titleValue.trim();
-            
+
             // Remove the malformed part from remainingTitlePart
-            final malformedPattern = 'tvg-logo="' + tvgLogoValue + ',' + titleValue;
-            remainingTitlePart = remainingTitlePart.replaceFirst(malformedPattern, '');
+            final malformedPattern =
+                'tvg-logo="' + tvgLogoValue + ',' + titleValue;
+            remainingTitlePart = remainingTitlePart.replaceFirst(
+              malformedPattern,
+              '',
+            );
           }
 
           // Handle case where tvg-logo is not properly closed (malformed) - pattern with comma directly after tvg-logo in titlePart
           // Look for pattern like tvg-logo="value,title
-          final unclosedTvgLogoWithCommaDirectRegex2 = RegExp(r'tvg-logo="([^"]*),([^"]*)$');
-          final unclosedTvgLogoWithCommaDirectMatch2 = unclosedTvgLogoWithCommaDirectRegex2.firstMatch(titlePart);
+          final unclosedTvgLogoWithCommaDirectRegex2 = RegExp(
+            r'tvg-logo="([^"]*),([^"]*)$',
+          );
+          final unclosedTvgLogoWithCommaDirectMatch2 =
+              unclosedTvgLogoWithCommaDirectRegex2.firstMatch(titlePart);
           if (unclosedTvgLogoWithCommaDirectMatch2 != null) {
             final tvgLogoValue = unclosedTvgLogoWithCommaDirectMatch2.group(1)!;
             final titleValue = unclosedTvgLogoWithCommaDirectMatch2.group(2)!;
-            
+
             // Fix the attributes
             attributes['tvg-logo'] = tvgLogoValue;
-            
+
             // Set the title
             title = titleValue.trim();
-            
+
             // Remove the malformed part from remainingTitlePart
-            final malformedPattern = 'tvg-logo="' + tvgLogoValue + ',' + titleValue;
-            remainingTitlePart = remainingTitlePart.replaceFirst(malformedPattern, '');
+            final malformedPattern =
+                'tvg-logo="' + tvgLogoValue + ',' + titleValue;
+            remainingTitlePart = remainingTitlePart.replaceFirst(
+              malformedPattern,
+              '',
+            );
           }
 
           // Handle case where group-title is not properly closed (malformed)
           // Look for group-title=" without closing quote followed by comma, but not if properly quoted
           final unclosedGroupTitleRegex = RegExp(r'group-title="([^"]*),(.*)');
           final unclosedMatch = unclosedGroupTitleRegex.firstMatch(titlePart);
-          if (unclosedMatch != null && !titlePart.contains('group-title="' + unclosedMatch.group(1)! + '"')) {
+          if (unclosedMatch != null &&
+              !titlePart.contains(
+                'group-title="' + unclosedMatch.group(1)! + '"',
+              )) {
             // This is a malformed group-title, treat everything after comma as title
             final groupTitleValue = unclosedMatch.group(1)!;
             final titleAfterComma = unclosedMatch.group(2)!;
-            
+
             // Override the attributes and title
             attributes['group-title'] = groupTitleValue;
             title = '${groupTitleValue},${titleAfterComma}';
@@ -409,7 +583,9 @@ abstract class M3UParser {
             tvgLogo: tvgLogo,
           );
         } else {
-          print('Skipped (EXT-X-STREAM-INF regex mismatch): $extStreamInfLine\n');
+          print(
+            'Skipped (EXT-X-STREAM-INF regex mismatch): $extStreamInfLine\n',
+          );
         }
       } else if (trimmedLine.startsWith('#EXTVLCOPT')) {
         final optionString = trimmedLine.substring(11);
@@ -434,14 +610,13 @@ abstract class M3UParser {
         final jsonString = trimmedLine.substring(9);
         try {
           final headers = json.decode(jsonString) as Map<String, dynamic>;
-          final newHeaders =
-              headers.map((key, value) => MapEntry(key, value.toString()));
+          final newHeaders = headers.map(
+            (key, value) => MapEntry(key, value.toString()),
+          );
 
           if (currentTrack != null) {
             if (currentTrack!.httpHeaders.isEmpty) {
-              currentTrack = currentTrack!.copyWith(
-                httpHeaders: [newHeaders],
-              );
+              currentTrack = currentTrack!.copyWith(httpHeaders: [newHeaders]);
             } else {
               final existingHeaders = currentTrack!.httpHeaders.first;
               existingHeaders.addAll(newHeaders);
@@ -460,7 +635,7 @@ abstract class M3UParser {
         if (currentTrack != null) {
           final mediaString = trimmedLine.substring(13); // Skip #EXT-X-MEDIA:
           final Map<String, String> mediaMap = {};
-          
+
           // Parse comma-separated attributes
           final attributes = mediaString.split(',');
           for (final attr in attributes) {
@@ -475,7 +650,7 @@ abstract class M3UParser {
               mediaMap[key] = value;
             }
           }
-          
+
           final extXMedia = ExtXMedia.fromMap(mediaMap);
           tempExtXMedias.add(extXMedia);
         }
@@ -496,9 +671,9 @@ abstract class M3UParser {
         if (currentTrack != null && trimmedLine.isNotEmpty) {
           final urlParts = trimmedLine.split('|');
           final link = urlParts[0].trim();
-          
+
           // Validate URL - must start with a valid protocol and contain valid characters
-          if (link.startsWith('http://') || 
+          if (link.startsWith('http://') ||
               link.startsWith('https://') ||
               link.startsWith('udp://') ||
               link.startsWith('rtp://') ||
@@ -507,11 +682,12 @@ abstract class M3UParser {
               link.startsWith('mms://') ||
               link.startsWith('file://')) {
             // Additional validation - reject obviously invalid URLs
-            if (!link.contains('--') && 
-                !link.startsWith('=') && 
+            if (!link.contains('--') &&
+                !link.startsWith('=') &&
                 !link.startsWith('-') &&
-                link.length > 5) { // Minimum reasonable URL length
-              
+                link.length > 5) {
+              // Minimum reasonable URL length
+
               Map<String, String> headers = {};
 
               if (urlParts.length > 1) {

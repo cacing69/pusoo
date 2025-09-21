@@ -7,6 +7,8 @@ import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pusoo/core/utils/helpers.dart';
+import 'package:pusoo/core/utils/player_detector.dart';
+import 'package:pusoo/core/utils/youtube_id_extractor.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/presentation/providers/better_player_notifier.dart';
@@ -24,30 +26,79 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
   final GlobalKey _playerKey = GlobalKey();
   YoutubePlayerController? _youtubePlayerController;
 
-  bool isYoutube = false;
+  late PlayerDetector? player;
 
   @override
   void initState() {
     super.initState();
 
-    isYoutube = false;
+    // isYoutube = false;
+    debugPrint("widget.track.links.first: ${widget.track.links.first}");
+
+    player = PlayerDetector.fromUrl(widget.track.links.first);
+    // player.
+
+    debugPrint("player: ${player?.type}");
+    debugPrint("youtubeVideoId: ${player?.youtubeVideoId}");
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (isYoutube) {
-        _youtubePlayerController = YoutubePlayerController.fromVideoId(
-          videoId: "6jZDSSZZxjQ",
-          autoPlay: true,
-          params: const YoutubePlayerParams(
-            showFullscreenButton: true,
-            showControls: true,
-          ),
-        );
+      if (player?.type == PlayerType.youtube) {
+        // Static video ID untuk uji coba
+        final videoId = YoutubeIdExtractor.fromUrl(
+          widget.track.links.first,
+        ).videoId;
+
+        debugPrint("Using video ID for testing: $videoId");
+
+        try {
+          _youtubePlayerController = YoutubePlayerController.fromVideoId(
+            videoId: videoId!,
+            autoPlay: true,
+            params: const YoutubePlayerParams(
+              showFullscreenButton: true,
+              showControls: true,
+            ),
+          );
+
+          debugPrint("YouTube controller created successfully");
+          debugPrint("Controller: $_youtubePlayerController");
+
+          // Force rebuild after controller is created
+          setState(() {});
+        } catch (e) {
+          debugPrint("Error creating YouTube controller: $e");
+        }
       } else {
+        debugPrint("Using Better Player for non-YouTube content");
         ref
             .read(betterPlayerProvider.notifier)
             .openMediaStream(widget.track, isLiveStream: true);
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _youtubePlayerController?.close();
+    super.dispose();
+  }
+
+  /// Handles fullscreen for both YouTube and BetterPlayer
+  void _handleFullscreen(
+    BuildContext context,
+    BetterPlayerController? controller,
+  ) {
+    if (player?.type == PlayerType.youtube) {
+      // For YouTube player, we can't control fullscreen directly
+      // YouTube player handles its own fullscreen through the player UI
+      showFlutterToast(
+        message: " Tap the fullscreen button on the YouTube player",
+        context: context,
+      );
+    } else {
+      // For BetterPlayer, use the controller's toggleFullScreen method
+      controller?.toggleFullScreen();
+    }
   }
 
   @override
@@ -98,6 +149,7 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
   }
 
   Widget _buildButtonFavoriteSubtitleAndFullscreen(
+    BuildContext context,
     BetterPlayerController? controller,
   ) {
     return SafeArea(
@@ -108,7 +160,8 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
             style: FButtonStyle.outline(),
             onPress: () async {
               if (controller != null) {
-                if (controller.isPlaying()!) {
+                final isPlaying = controller.isPlaying();
+                if (isPlaying == true) {
                   controller.pause();
                 }
               }
@@ -119,7 +172,8 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
 
               if (reuslt == true) {
                 if (controller != null) {
-                  if (!controller.isPlaying()!) {
+                  final isPlaying = controller.isPlaying();
+                  if (isPlaying != true) {
                     controller.play();
                   }
                 }
@@ -143,7 +197,7 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
               FButton.icon(
                 style: FButtonStyle.outline(),
                 onPress: () {
-                  controller?.toggleFullScreen();
+                  _handleFullscreen(context, controller);
                 },
                 child: const Padding(
                   padding: EdgeInsets.all(5.0),
@@ -296,27 +350,11 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
   }
 
   Widget _buildYoutubePlayer(YoutubePlayerController controller) {
-    return SizedBox(
+    return Container(
       width: double.infinity,
       height: MediaQuery.of(context).size.width * 9.0 / 16.0,
-      child: YoutubePlayerScaffold(
-        aspectRatio: 16 / 9,
-        builder: (context, player) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              player,
-              Gap(5),
-              Text("Lorem"),
-              Gap(5),
-
-              Text("Other Trailers"),
-              Gap(5),
-            ],
-          );
-        },
-        controller: controller,
-      ),
+      color: Colors.black,
+      child: YoutubePlayer(controller: controller, aspectRatio: 16 / 9),
     );
   }
 
@@ -330,8 +368,15 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
       children: [
         Expanded(
           flex: 1,
-          child: isYoutube
-              ? _buildYoutubePlayer(_youtubePlayerController!)
+          child: player?.type == PlayerType.youtube
+              ? _youtubePlayerController != null
+                    ? _buildYoutubePlayer(_youtubePlayerController!)
+                    : const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [FProgress.circularIcon()],
+                        ),
+                      )
               : _buildVideoPlayer(controller),
         ),
 
@@ -350,7 +395,7 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
               const Gap(5),
               Expanded(child: _buildContentScrollable()),
               const Gap(10),
-              _buildButtonFavoriteSubtitleAndFullscreen(controller),
+              _buildButtonFavoriteSubtitleAndFullscreen(context, controller),
               const Gap(15),
             ],
           ),
@@ -366,7 +411,19 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
   ) {
     return Row(
       children: [
-        Expanded(flex: 2, child: _buildVideoPlayer(controller)),
+        Expanded(
+          flex: 2,
+          child: player?.type == PlayerType.youtube
+              ? _youtubePlayerController != null
+                    ? _buildYoutubePlayer(_youtubePlayerController!)
+                    : const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [FProgress.circularIcon()],
+                        ),
+                      )
+              : _buildVideoPlayer(controller),
+        ),
         const Gap(10),
         Expanded(
           flex: 1,
@@ -380,7 +437,7 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
               const Gap(5),
               Expanded(child: _buildContentScrollable()),
               const Gap(5),
-              _buildButtonFavoriteSubtitleAndFullscreen(controller),
+              _buildButtonFavoriteSubtitleAndFullscreen(context, controller),
             ],
           ),
         ),
