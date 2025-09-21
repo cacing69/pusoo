@@ -91,3 +91,19 @@ Here are some screenshots of **Pusoo IPTV Player**:
 ### More Screenshots
 
 Check the [Screenshots Gallery](docs/images/features) for more.
+
+## Support & Contribute
+
+Pusoo is a community-driven project, built by me and awesome contributors in our free time.
+Your support helps us keep improving Pusoo - and keeps the coffee flowing.
+
+### How you can help
+
+- Star this repo - it means a lot!
+- Report bugs and suggest features
+- Contribute code, translations, or design ideas
+- Support development with a coffee
+
+### Sponsor Pusoo
+
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor%20on%20GitHub-❤-brightgreen)](https://github.com/sponsors/cacing69)
