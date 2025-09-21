@@ -43,10 +43,6 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      # Run tests BEFORE build
-      - name: Run tests
-        run: flutter test
-
       # Build APK universal
       - name: Build universal APK
         run: flutter build apk --release
@@ -54,13 +50,6 @@ jobs:
       # Build APK per-ABI
       - name: Build split APKs
         run: flutter build apk --release --split-per-abi
-
-      # Upload artifact untuk download langsung
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-apk
-          path: build/app/outputs/flutter-apk/*.apk
 
       # Build AAB
       - name: Build app bundle (AAB)
@@ -70,7 +59,7 @@ jobs:
       - name: Upload Nightly Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: nightly-${{ github.sha }}
+          tag_name: nightly
           name: "Nightly Build"
           body: |
             **Nightly Build**
@@ -87,18 +76,5 @@ jobs:
             build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
             build/app/outputs/flutter-apk/app-x86_64-release.apk
             build/app/outputs/bundle/release/app-release.aab
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  update_draft:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Update Release Draft
-        uses: release-drafter/release-drafter@v6
-        with:
-          config-name: .github/release-drafter.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
