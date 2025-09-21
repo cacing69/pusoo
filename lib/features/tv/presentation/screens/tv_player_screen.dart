@@ -1,6 +1,5 @@
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
@@ -91,10 +90,12 @@ class _TVPlayerScreenState extends ConsumerState<TVPlayerScreen>
     if (player?.type == PlayerType.youtube) {
       // For YouTube player, we can't control fullscreen directly
       // YouTube player handles its own fullscreen through the player UI
-      showFlutterToast(
-        message: " Tap the fullscreen button on the YouTube player",
-        context: context,
-      );
+      // showFlutterToast(
+      //   message: " Tap the fullscreen button on the YouTube player",
+      //   context: context,
+      // );
+
+      _youtubePlayerController?.toggleFullScreen();
     } else {
       // For BetterPlayer, use the controller's toggleFullScreen method
       controller?.toggleFullScreen();
