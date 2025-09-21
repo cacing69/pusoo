@@ -56,8 +56,8 @@ If you want to build **Pusoo IPTV Player** from source, follow these steps:
 Since **Pusoo** is still under active development and not yet stable,
 we provide **nightly builds** for testing purposes:
 
-- **Nightly Build (unstable)** → [Latest nightly](https://github.com/yourusername/pusoo/releases/tag/nightly)
-- **Pre-release APKs** → [Releases Page](https://github.com/yourusername/pusoo/releases)
+- **Nightly Build (unstable)** → [Latest nightly](https://github.com/cacing69/pusoo/releases/tag/nightly)
+- **Pre-release APKs** → [Releases Page](https://github.com/cacing69/pusoo/releases)
 
 ### Warning
 
