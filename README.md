@@ -1,11 +1,10 @@
 # Pusoo
 
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-Copyright (C) 2025 Ibnul Mutaki <ibnuul@gmail.com>
-
 <div align="center">
-  [![Pusoo logo](assets/icon.svg)](https://github.com/cacing69/pusoo)
+  <a href="https://github.com/cacing69/pusoo"><img width="300" src="assets/icon.svg" alt="SRC Tool logo"></a>
 </div>
 
 **Pusoo** is an **open-source IPTV Player** built with **Flutter**.
