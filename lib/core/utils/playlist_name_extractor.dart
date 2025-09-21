@@ -27,41 +27,65 @@ class PlaylistNameExtractor {
     String? extractedName;
 
     try {
-      final uri = Uri.parse(url);
+      // Handle URLs with fragments by replacing # with %23 before parsing
+      final normalizedUrl = url.replaceAll('#', '%23');
+      final uri = Uri.parse(normalizedUrl);
       final pathSegments = uri.pathSegments;
 
       if (pathSegments.isNotEmpty) {
         final lastSegment = pathSegments.last;
         // Clean up the filename by removing special characters at the beginning and end
         String cleanedSegment = lastSegment;
-
+        
         // Remove special characters from the beginning (keep only alphanumeric)
-        cleanedSegment = cleanedSegment.replaceAll(
-          RegExp(r'^[^a-zA-Z0-9]+'),
-          '',
-        );
+        // But if the string starts with special chars, try to find the first alphanumeric char
+        if (cleanedSegment.isNotEmpty && !RegExp(r'^[a-zA-Z0-9]').hasMatch(cleanedSegment)) {
+          // Find the first alphanumeric character
+          final match = RegExp(r'[a-zA-Z0-9]').firstMatch(cleanedSegment);
+          if (match != null) {
+            cleanedSegment = cleanedSegment.substring(match.start);
+          } else {
+            cleanedSegment = '';
+          }
+        }
 
-        // Remove special characters from the end (but keep the last dot if it's part of extension)
+        // Handle extension properly
         if (cleanedSegment.contains('.')) {
           final parts = cleanedSegment.split('.');
           if (parts.length > 1) {
             final extension = parts.last;
             final nameWithoutExt = parts.sublist(0, parts.length - 1).join('.');
-            // Clean the name part, keeping only alphanumeric
+            
+            // Clean the name part, keeping alphanumeric, -, and _
             final cleanedName = nameWithoutExt.replaceAll(
+              RegExp(r'[^a-zA-Z0-9_-]+'),
+              '',
+            );
+            
+            // Clean the extension, keeping only alphanumeric
+            final cleanedExtension = extension.replaceAll(
               RegExp(r'[^a-zA-Z0-9]+'),
               '',
             );
-            cleanedSegment = '$cleanedName.$extension';
+            
+            if (cleanedName.isNotEmpty && cleanedExtension.isNotEmpty) {
+              cleanedSegment = '$cleanedName.$cleanedExtension';
+            } else if (cleanedName.isNotEmpty) {
+              cleanedSegment = cleanedName;
+            } else {
+              cleanedSegment = '';
+            }
           } else {
+            // Only one part, clean it
             cleanedSegment = cleanedSegment.replaceAll(
-              RegExp(r'[^a-zA-Z0-9]+$'),
+              RegExp(r'[^a-zA-Z0-9_-]+'),
               '',
             );
           }
         } else {
+          // No extension, clean the whole string
           cleanedSegment = cleanedSegment.replaceAll(
-            RegExp(r'[^a-zA-Z0-9]+$'),
+            RegExp(r'[^a-zA-Z0-9_-]+'),
             '',
           );
         }
