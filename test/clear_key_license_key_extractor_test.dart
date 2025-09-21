@@ -107,7 +107,6 @@ f429292dc744f284355308561577ac10:b12e1f894129c517dc8845baaeebec8a
     // seperti di test:4
 
     // URL test might fail due to network issues, so we just check that it returns a Map
-    expect(result is Map<String, dynamic>, equals(true));
     expect(result.containsKey("type"), equals(true));
     expect(result.containsKey("keys"), equals(true));
     expect(result["type"], equals("temporary"));

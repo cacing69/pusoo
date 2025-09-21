@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -25,8 +24,6 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:pusoo/features/subtitle/data/repository_impl/subtitle_open_subtitle_repository_impl.dart';
 import 'package:pusoo/shared/data/datasources/remote/open_subtitles_client.dart';
 import 'package:pusoo/shared/domain/entities/open_subtitles/search_subtitle_query_params.dart';
-import 'package:pusoo/shared/domain/entities/open_subtitles/subtitle.dart';
-import 'package:pusoo/shared/domain/entities/open_subtitles/t_open_subtitle_search_response.dart';
 
 void main() {
   group('SubtitleOpenSubtitleRepositoryImpl Simple Tests', () {
