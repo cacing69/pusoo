@@ -86,7 +86,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     FTile(
                       title: Text("Frequently asked questions"),
                       subtitle: Text(
-                        "If you are having trouble using the app, be sure to check out these answers to common questions",
+                        "Got issues with the app? Check the answers to common questions first.",
                         maxLines: 2,
                       ),
                       suffix: Icon(FIcons.chevronRight),
@@ -95,9 +95,38 @@ class _AboutScreenState extends State<AboutScreen> {
                     FTile(
                       title: Text("Contribute"),
                       subtitle: Text(
-                        "Whether you have ideas of; translation, design changes, code cleaning, or real havy code changes - help is always welcome. The more is done the better it gets!",
+                        "No matter if it's small fixes or heavy coding - translations, design, cleanup, or new features - all contributions are appreciated. The more you add, the better it gets!",
                         maxLines: 2,
                       ),
+
+                      suffix: Icon(FIcons.chevronRight),
+                    ),
+                    Gap(10),
+                    FTile(
+                      title: Text("Donate"),
+                      subtitle: Text(
+                        "Pusoo is a community-driven project, developed by me and contributors in our free time. Every bit of support makes it easier for us to keep improving Pusoo — and enjoy a coffee while coding.",
+                        maxLines: 2,
+                      ),
+
+                      suffix: Icon(FIcons.chevronRight),
+                    ),
+                    FTile(
+                      title: Text("Website"),
+                      subtitle: Text(
+                        "Visit the Pusoo Homepage for more info and news",
+                        maxLines: 2,
+                      ),
+
+                      suffix: Icon(FIcons.chevronRight),
+                    ),
+                    FTile(
+                      title: Text("Pusoo's Privacy Policy"),
+                      subtitle: Text(
+                        "Your privacy matters to us. Pusoo doesn't collect any data without your permission. If you decide to send a crash report, our Privacy Policy explains what info is shared and how it's stored.",
+                        maxLines: 2,
+                      ),
+
                       suffix: Icon(FIcons.chevronRight),
                     ),
                   ],
