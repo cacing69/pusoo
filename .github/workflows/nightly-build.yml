@@ -57,7 +57,7 @@ jobs:
 
       # Upload artifact untuk download langsung
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: app-apk
           path: build/app/outputs/flutter-apk/*.apk
