@@ -32,9 +32,12 @@ class PlaylistNameExtractor {
       final uri = Uri.parse(normalizedUrl);
       final pathSegments = uri.pathSegments;
 
+      String? lastSegment;
       if (pathSegments.isNotEmpty) {
-        final lastSegment = pathSegments.last;
-        // Clean up the filename by removing special characters at the beginning and end
+        lastSegment = pathSegments.lastWhere((s) => s.isNotEmpty, orElse: () => '');
+      }
+
+      if (lastSegment != null && lastSegment.isNotEmpty) {
         String cleanedSegment = lastSegment;
 
         // Remove special characters from the beginning (keep only alphanumeric)

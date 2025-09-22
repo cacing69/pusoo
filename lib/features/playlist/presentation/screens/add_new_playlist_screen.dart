@@ -212,9 +212,12 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
 
                       if (nameController.text.trim().isEmpty &&
                           urlController.text.isValidUrl()) {
-                        name = PlaylistNameExtractor.fromUrl(
+                        final extractedName = PlaylistNameExtractor.fromUrl(
                           urlController.text,
-                        ).name!;
+                        ).name;
+                        name = extractedName?.isNotEmpty == true
+                            ? extractedName!
+                            : "M3U-${DateTime.now().millisecondsSinceEpoch.toString()}";
                       }
 
                       final count =

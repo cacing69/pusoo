@@ -1,7 +1,5 @@
 # Pusoo
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-
 <div align="center">
   <a href="https://github.com/cacing69/pusoo"><img width="300" src="assets/icon.svg" alt="SRC Tool logo"></a>
 </div>
@@ -36,14 +34,12 @@ This project is currently under active development. I'm working on it in my spar
 
 ## License
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 Pusoo is released under the **GNU General Public License v3 (GPLv3)**.
 See the [LICENSE](LICENSE) file for more details.
 
 ---
-
-### Sponsor Pusoo
-
-[![GitHub Sponsors](https://img.shields.io/badge/Sponsor%20on%20GitHub-❤-brightgreen)](https://github.com/sponsors/cacing69)
 
 ## Development
 
@@ -122,3 +118,7 @@ Your support helps us keep improving Pusoo - and keeps the coffee flowing.
 - Report bugs and suggest features
 - Contribute code, translations, or design ideas
 - Support development with a coffee
+
+### Sponsor Pusoo
+
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor%20on%20GitHub-❤-brightgreen)](https://github.com/sponsors/cacing69)
