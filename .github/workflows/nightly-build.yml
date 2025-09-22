@@ -67,28 +67,28 @@ jobs:
         run: flutter build appbundle --release
 
       # Upload hasil build ke Release dengan tag "nightly"
-      - name: Upload Nightly Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: nightly-${{ github.sha }}
-          name: "Nightly Build"
-          body: |
-            **Nightly Build**
-            This is an automatic build from the latest commit on `main`.
-            Use at your own risk — features may be unstable.
+      # - name: Upload Nightly Release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     tag_name: nightly-${{ github.sha }}
+      #     name: "Nightly Build"
+      #     body: |
+      #       **Nightly Build**
+      #       This is an automatic build from the latest commit on `main`.
+      #       Use at your own risk — features may be unstable.
 
-            Includes:
-            - Universal APK
-            - Split APKs (arm64, armeabi-v7a, x86_64)
-            - AAB (Google Play format)
-          files: |
-            build/app/outputs/flutter-apk/app-release.apk
-            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-            build/app/outputs/flutter-apk/app-x86_64-release.apk
-            build/app/outputs/bundle/release/app-release.aab
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #       Includes:
+      #       - Universal APK
+      #       - Split APKs (arm64, armeabi-v7a, x86_64)
+      #       - AAB (Google Play format)
+      #     files: |
+      #       build/app/outputs/flutter-apk/app-release.apk
+      #       build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+      #       build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+      #       build/app/outputs/flutter-apk/app-x86_64-release.apk
+      #       build/app/outputs/bundle/release/app-release.aab
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   update_draft:
     needs: build
@@ -103,5 +103,7 @@ jobs:
         uses: release-drafter/release-drafter@v6
         with:
           config-name: release-drafter.yml
+          name: "Nightly Build - ${{ github.sha }}"
+          tag: "nightly-${{ github.sha }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
