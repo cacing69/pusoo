@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'dart:convert';
 
 import 'package:drift/drift.dart' as drift;
@@ -30,6 +29,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pusoo/core/extensions/string_ext.dart';
 import 'package:pusoo/core/utils/helpers.dart';
 import 'package:pusoo/core/utils/m3u_parser.dart';
+import 'package:pusoo/core/utils/playlist_name_extractor.dart';
 import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/features/source/presentation/providers/active_source_notifier.dart';
 import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
@@ -95,7 +95,7 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
             controller: nameController,
             label: Text("Name"),
             description: Text(
-              "If the name is blank, the URL will be used as the name.",
+              "If the name is left blank, the playlist name from the URL will be used instead.",
             ),
           ),
           Gap(10),
@@ -212,7 +212,9 @@ class _AddNewPlaylistScreenState extends ConsumerState<AddNewPlaylistScreen> {
 
                       if (nameController.text.trim().isEmpty &&
                           urlController.text.isValidUrl()) {
-                        name = urlController.text.getHostUrl();
+                        name = PlaylistNameExtractor.fromUrl(
+                          urlController.text,
+                        ).name!;
                       }
 
                       final count =
