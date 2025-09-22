@@ -16,6 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import 'package:go_router/go_router.dart';
+import 'package:pusoo/features/about/presentation/screens/about_license_screen.dart';
 import 'package:pusoo/features/about/presentation/screens/about_screen.dart';
 import 'package:pusoo/features/playlist/presentation/screens/manage_personal_playlist_screen.dart';
 import 'package:pusoo/features/source/domain/entities/source.dart';
@@ -30,15 +31,16 @@ import 'package:pusoo/features/source/presentation/screens/public_source_list_pl
 import 'package:pusoo/features/source/presentation/screens/public_source_list_screen.dart';
 import 'package:pusoo/features/subtitle/presentation/screens/search_subtitle_screen.dart';
 import 'package:pusoo/features/tv/presentation/screens/tv_player_screen.dart';
-import 'package:pusoo/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/shared/presentation/screens/youtube_iframe_player_screen.dart';
 
 enum RouteName {
   welcome,
+  root,
   home,
   detail,
   about,
+  aboutLicense,
 
   // staging
   videoPlayer,
@@ -72,8 +74,8 @@ enum RouteName {
 final List<GoRoute> defaultRouter = [
   GoRoute(
     path: '/',
-    name: RouteName.welcome.name,
-    builder: (context, state) => WellcomeScreen(),
+    name: RouteName.root.name,
+    builder: (context, state) => HomeScreen(),
   ),
   GoRoute(
     path: '/home',
@@ -86,6 +88,13 @@ final List<GoRoute> defaultRouter = [
     name: RouteName.about.name,
     builder: (context, state) => AboutScreen(),
   ),
+
+  GoRoute(
+    path: '/about/license',
+    name: RouteName.aboutLicense.name,
+    builder: (context, state) => AboutLicenseScreen(),
+  ),
+
   GoRoute(
     path: '/playlist/add',
     name: RouteName.addPlaylist.name,

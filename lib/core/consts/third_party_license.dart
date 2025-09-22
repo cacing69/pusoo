@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 class ThirdPartyLicense {
   final String name;
   final String license;
@@ -45,11 +44,6 @@ List<ThirdPartyLicense> thirdPartyLicenses = [
   // UI Framework
   ThirdPartyLicense(
     name: "Forui",
-    license: "MIT License",
-    url: "https://github.com/forus-labs/forui",
-  ),
-  ThirdPartyLicense(
-    name: "Forui Hooks",
     license: "MIT License",
     url: "https://github.com/forus-labs/forui",
   ),
@@ -282,5 +276,10 @@ List<ThirdPartyLicense> thirdPartyLicenses = [
     name: "Custom Lint",
     license: "MIT License",
     url: "https://github.com/invertase/custom_lint",
+  ),
+  ThirdPartyLicense(
+    name: "Google Fonts",
+    license: "BSD-3-Clause",
+    url: "https://github.com/flutter/packages/tree/main/packages/google_fonts",
   ),
 ];
