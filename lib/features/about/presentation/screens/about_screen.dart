@@ -1,11 +1,29 @@
+/*
+ * Pusoo - IPTV Player
+ * Copyright (C) 2025 Ibnul Mutaki <ibnuul@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:forui/forui.dart';
-import 'package:forui/widgets/scaffold.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pusoo/core/consts/third_party_license.dart';
+import 'package:pusoo/router.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -21,9 +39,16 @@ class _AboutScreenState extends State<AboutScreen> {
   Future<void> _loadVersion() async {
     final info = await PackageInfo.fromPlatform();
     setState(() {
-      _version = info.version; // contoh: "1.2.3"
-      _buildNumber = info.buildNumber; // contoh: "45"
+      _version = info.version;
+      _buildNumber = info.buildNumber;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadVersion();
   }
 
   @override
@@ -75,7 +100,13 @@ class _AboutScreenState extends State<AboutScreen> {
                   ),
                 ),
                 Text(
-                  "Version: $_version ($_buildNumber)",
+                  "Version: $_version",
+                  style: context.theme.typography.sm.copyWith(
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Text(
+                  "Build Number: $_buildNumber",
                   style: context.theme.typography.sm.copyWith(
                     fontWeight: FontWeight.w400,
                   ),
@@ -130,9 +161,9 @@ class _AboutScreenState extends State<AboutScreen> {
                     ),
                     Gap(10),
                     FTile(
-                      title: Text("Pusoo's Privacy Policy"),
+                      title: Text("Privacy Policy"),
                       subtitle: Text(
-                        "Your privacy matters to us. Pusoo doesn't collect any data without your permission. If you decide to send a crash report, our Privacy Policy explains what info is shared and how it's stored.",
+                        "Your privacy is matters. Pusoo doesn't collect any data without your permission. If you decide to send a crash report, Privacy Policy explains what info is shared and how it's stored.",
                         maxLines: 5,
                       ),
 
@@ -159,7 +190,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     FButton(
                       style: FButtonStyle.outline(),
                       onPress: () {
-                        context.push("/license");
+                        context.pushNamed(RouteName.aboutLicense.name);
                       },
                       child: Text("GNU General Public License v3.0"),
                     ),

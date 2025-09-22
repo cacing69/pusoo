@@ -2,14 +2,12 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-Copyright (C) 2025 Ibnul Mutaki <ibnuul@gmail.com>
-
 <div align="center">
-  [![Pusoo logo](assets/icon.svg)](https://github.com/cacing69/pusoo)
+  <a href="https://github.com/cacing69/pusoo"><img width="300" src="assets/icon.svg" alt="SRC Tool logo"></a>
 </div>
 
-**Pusoo** is an **open-source IPTV Player** built with **Flutter**.
-It is designed to make IPTV streaming simple, lightweight, and modern - running across multiple platforms.
+**Pusoo** is an **IPTV Player built with Flutter**, licensed under GPLv3.
+It is designed to play a wide range of IPTV streams, both live and on-demand, with support for modern streaming formats and DRM.
 
 This project is currently under active development. I'm working on it in my spare time and will release a beta version as soon as possible.
 
@@ -19,8 +17,33 @@ This project is currently under active development. I'm working on it in my spar
 
 - **Modern UI** - Clean and minimal design powered by [Forui](https://forui.dev/).
 - **Open Source** - Free to use and contribute.
+- **Popular formats support**: HLS (`.m3u8`), DASH (`.mpd`), MP4, MKV, and more.
+- **YouTube support** with YouTube IFrame Player.
+- **Public & GitHub Sources** Browse and load playlists from curated Public IPTV sources
+- **Subtitle search and integration** (external SRT/VTT).
+- **DRM support**: ClearKey & Widevine (when provided by the content provider).
+- **Multiple source playlist** with automatic fallback on failure.
+- **Subtitles**: external subtitle support (SRT, VTT) with customizable display.
+
+## Notes
+
+- This app **does not provide any IPTV content by default**.
+- Users must add their own playlists.
+- All channels come from **public sources** or **user-provided playlists**.
+- **For legal content only** — the app is not intended to bypass DRM or access paid services without authorization.
+- Make sure your device meets the [Requirements](#requirements).
+- If you prefer, you can also build the app from source (see [Development](#development)).
+
+## License
+
+Pusoo is released under the **GNU General Public License v3 (GPLv3)**.
+See the [LICENSE](LICENSE) file for more details.
 
 ---
+
+### Sponsor Pusoo
+
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor%20on%20GitHub-❤-brightgreen)](https://github.com/sponsors/cacing69)
 
 ## Development
 
@@ -69,12 +92,6 @@ we provide **nightly builds** for testing purposes:
 - Use at your own risk - no warranty provided.
 - For the most reliable experience, you may prefer to [build from source](#development).
 
-### Notes
-
-- This app is free software under GPLv3.
-- Make sure your device meets the [Requirements](#requirements).
-- If you prefer, you can also build the app from source (see [Development](#development)).
-
 ## Screenshots
 
 Here are some screenshots of **Pusoo IPTV Player**:
@@ -105,7 +122,3 @@ Your support helps us keep improving Pusoo - and keeps the coffee flowing.
 - Report bugs and suggest features
 - Contribute code, translations, or design ideas
 - Support development with a coffee
-
-### Sponsor Pusoo
-
-[![GitHub Sponsors](https://img.shields.io/badge/Sponsor%20on%20GitHub-❤-brightgreen)](https://github.com/sponsors/cacing69)
