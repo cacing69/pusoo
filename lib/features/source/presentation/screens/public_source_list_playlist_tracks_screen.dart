@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
@@ -26,9 +25,9 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:pusoo/core/utils/helpers.dart';
-import 'package:pusoo/core/utils/m3u_parser.dart';
-import 'package:pusoo/core/utils/usecase.dart';
+import 'package:pusoo/shared/utils/helpers.dart';
+import 'package:pusoo/shared/utils/m3u_parser.dart';
+import 'package:pusoo/shared/utils/usecase.dart';
 import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:http/http.dart' as http;

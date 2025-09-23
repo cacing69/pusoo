@@ -22,7 +22,7 @@ import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:pusoo/core/consts/third_party_license.dart';
+import 'package:pusoo/shared/consts/third_party_license.dart';
 import 'package:pusoo/router.dart';
 
 class AboutScreen extends StatefulWidget {

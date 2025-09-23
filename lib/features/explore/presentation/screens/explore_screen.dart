@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -25,8 +24,8 @@ import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:pusoo/core/extensions/string_ext.dart';
-import 'package:pusoo/core/utils/helpers.dart';
+import 'package:pusoo/shared/extensions/string_ext.dart';
+import 'package:pusoo/shared/utils/helpers.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/router.dart';
 

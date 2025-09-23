@@ -18,7 +18,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pusoo/core/configs/env.dart';
+import 'package:pusoo/shared/configs/env.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 // ignore: unnecessary_import
 import 'package:flutter_riverpod/flutter_riverpod.dart';

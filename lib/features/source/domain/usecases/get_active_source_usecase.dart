@@ -16,11 +16,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:dartz/dartz.dart';
 import 'package:logger/logger.dart';
-import 'package:pusoo/core/errors/failure.dart';
-import 'package:pusoo/core/utils/usecase.dart';
+import 'package:pusoo/shared/errors/failure.dart';
+import 'package:pusoo/shared/utils/usecase.dart';
 import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/features/source/domain/repository/source_repository.dart';
 

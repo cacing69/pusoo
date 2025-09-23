@@ -17,7 +17,7 @@
  */
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pusoo/core/utils/playlist_name_extractor.dart';
+import 'package:pusoo/shared/utils/playlist_name_extractor.dart';
 
 void main() async {
   group('PlaylistNameExtractorTest', () {

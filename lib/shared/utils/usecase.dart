@@ -18,7 +18,7 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pusoo/core/errors/failure.dart';
+import 'package:pusoo/shared/errors/failure.dart';
 
 part 'usecase.freezed.dart';
 

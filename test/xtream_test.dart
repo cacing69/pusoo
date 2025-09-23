@@ -17,7 +17,7 @@
  */
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pusoo/core/utils/xtream.dart';
+import 'package:pusoo/shared/utils/xtream.dart';
 
 void main() async {
   group('XtreamTest', () {

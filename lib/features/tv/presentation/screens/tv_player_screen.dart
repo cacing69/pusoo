@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +23,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pusoo/core/utils/helpers.dart';
-import 'package:pusoo/core/utils/player_detector.dart';
-import 'package:pusoo/core/utils/youtube_id_extractor.dart';
+import 'package:pusoo/shared/utils/helpers.dart';
+import 'package:pusoo/shared/utils/player_detector.dart';
+import 'package:pusoo/shared/utils/youtube_id_extractor.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/presentation/providers/better_player_notifier.dart';

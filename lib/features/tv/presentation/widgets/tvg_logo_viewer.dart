@@ -16,11 +16,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
-import 'package:pusoo/core/utils/theme_app.dart';
+import 'package:pusoo/shared/utils/theme_app.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 
 class TvgLogoViewer extends StatelessWidget {

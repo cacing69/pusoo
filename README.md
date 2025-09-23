@@ -4,8 +4,12 @@
   <a href="https://github.com/cacing69/pusoo"><img width="300" src="assets/icon.svg" alt="SRC Tool logo"></a>
 </div>
 
+
+
 **Pusoo** is an **IPTV Player built with Flutter**, licensed under GPLv3.
 It is designed to play a wide range of IPTV streams, both live and on-demand, with support for modern streaming formats and DRM.
+
+> All Channels, One Player, Infinite Play.
 
 This project is currently under active development. I'm working on it in my spare time and will release a beta version as soon as possible.
 
@@ -101,6 +105,9 @@ Here are some screenshots of **Pusoo IPTV Player**:
   <img src="docs/images/features/home_movie_detail_about.png" width="250" alt="Detail Mivie"/>
   <img src="docs/images/features/setting.png" width="250" alt="Settings Screen"/>
   <img src="docs/images/features/setting_manage_source_add_playlist.png" width="250" alt="Add New Playlist Screen"/>
+  <img src="docs/images/features/home_setting_public_source.png" width="250" alt="home_setting_public_source"/>
+  <img src="docs/images/features/home_setting_public_source_playlist.png" width="250" alt="home_setting_public_source_playlist"/>
+  <img src="docs/images/features/home_setting_public_source_playlist_channel.png" width="250" alt="home_setting_public_source_playlist_channel"/>
 </p>
 
 ### More Screenshots

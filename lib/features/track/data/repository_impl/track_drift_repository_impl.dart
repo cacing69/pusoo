@@ -16,9 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:dartz/dartz.dart';
-import 'package:pusoo/core/errors/failure.dart';
+import 'package:pusoo/shared/errors/failure.dart';
 import 'package:pusoo/features/track/data/datasources/local/track_datasource.dart';
 import 'package:pusoo/features/track/domain/repostiory/track_repository.dart';
 import 'package:pusoo/features/track/domain/models/track_filter_query.dart';

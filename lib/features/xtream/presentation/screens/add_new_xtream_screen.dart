@@ -16,26 +16,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:dartz/dartz.dart';
-import 'package:logger/logger.dart';
-import 'package:pusoo/shared/errors/failure.dart';
-import 'package:pusoo/shared/utils/usecase.dart';
-import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
-import 'package:pusoo/features/track/domain/repostiory/track_repository.dart';
+import 'package:flutter/material.dart';
+import 'package:forui/forui.dart';
 
-class GetGroupTitlesTrackUsecase
-    implements UseCase<List<String>, TrackFilterQuery> {
-  final TrackRepository _repository;
-  final Logger _log;
-
-  GetGroupTitlesTrackUsecase(this._repository, this._log);
+class AddNewXtreamScreen extends StatefulWidget {
+  const AddNewXtreamScreen({super.key});
 
   @override
-  Future<Either<Failure, List<String>>> call(TrackFilterQuery? params) async {
-    _log.i(params);
+  State<AddNewXtreamScreen> createState() => _AddNewXtreamScreenState();
+}
 
-    final result = await _repository.getGroupTitle(params);
-
-    return result;
+class _AddNewXtreamScreenState extends State<AddNewXtreamScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return FScaffold(child: Placeholder());
   }
 }
