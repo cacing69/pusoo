@@ -16,50 +16,40 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:collection/collection.dart';
-import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
-import 'package:pusoo/features/movie/presentation/widgets/grid_track_widget.dart';
-import 'package:pusoo/features/movie/presentation/widgets/list_track_widget.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:pusoo/features/movie/presentation/providers/movie_track_group_titles_notifier.dart';
+import 'package:pusoo/features/movie/presentation/providers/movie_tracks_filter_notifier.dart';
+import 'package:pusoo/features/movie/presentation/providers/movie_tracks_paging_notifier.dart';
+import 'package:pusoo/features/track/presentation/widgets/list_track_widget.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
-// import 'package:pusoo/core/utils/m3u_parse.dart';
-import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
+import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
+import 'package:pusoo/features/tv/presentation/providers/tv_track_count_notifier.dart';
 
-class MovieScreen extends StatefulWidget {
+class MovieScreen extends StatefulHookConsumerWidget {
   const MovieScreen({super.key});
 
   @override
-  State<MovieScreen> createState() => _MovieScreenState();
+  ConsumerState<MovieScreen> createState() => _MovieScreenState();
 }
 
-class _MovieScreenState extends State<MovieScreen> {
+class _MovieScreenState extends ConsumerState<MovieScreen> {
   @override
   void initState() {
     super.initState();
 
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.portraitUp,
-    //   DeviceOrientation.portraitDown,
-    // ]);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(movieTrackGroupTitlesProvider.notifier)
+          .perform(TrackFilterQuery(isMovie: true));
 
-    loadM3U();
-    // https://github.com/iptv-org/iptv/blob/master/streams/id.m3u
-    //http://ogietv.biz.id:80/get.php?username=maksin&password=123456&type=m3u_plus&output=mpegts
-  }
-
-  List<Track> movies = [];
-  Map<dynamic, dynamic> categories = {};
-
-  Future<void> loadM3U() async {
-    // const condition = drift.CustomExpression<bool>(
-    //   '(tvg_id IS NULL OR tvg_id = "")',
-    // );
-
-    final filtered = [];
+      ref
+          .read(tvTrackCountProvider.notifier)
+          .perform(TrackFilterQuery(isMovie: true));
+    });
   }
 
   bool listViewMode = true;
@@ -68,6 +58,8 @@ class _MovieScreenState extends State<MovieScreen> {
   Widget build(BuildContext context) {
     final isPotrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
+
+    final asyncGroupTitles = ref.watch(movieTrackGroupTitlesProvider);
 
     return FScaffold(
       childPad: false,
@@ -102,27 +94,50 @@ class _MovieScreenState extends State<MovieScreen> {
               ? FTextField(hint: "Find something to watch...")
               : SizedBox.shrink(),
           Expanded(
-            child: listViewMode
-                ? ListView.builder(
-                    padding: EdgeInsets.zero,
-                    itemCount: 100,
-                    itemBuilder: (context, index) {
-                      return ListTrackWidget(track: Track());
-                    },
-                  )
-                : GridView.builder(
-                    padding: EdgeInsets.zero,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: isPotrait ? 3 : 6,
-                      childAspectRatio: 0.57,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 5,
+            child: RefreshIndicator(
+              child: PagingListener(
+                controller: ref.watch(movieTracksPagingProvider),
+                builder: (BuildContext context, state, fetchNextPage) =>
+                    PagedListView(
+                      padding: EdgeInsets.zero,
+                      state: state,
+                      fetchNextPage: fetchNextPage,
+                      builderDelegate: PagedChildBuilderDelegate(
+                        itemBuilder: (context, Track item, index) =>
+                            ListTrackWidget(track: item),
+                        firstPageProgressIndicatorBuilder: (context) =>
+                            FProgress.circularIcon(),
+                        newPageProgressIndicatorBuilder: (context) =>
+                            FProgress.circularIcon(),
+                      ),
                     ),
-                    itemCount: 100,
-                    itemBuilder: (context, index) {
-                      return GridTrackWidget(track: Track());
-                    },
-                  ),
+              ),
+
+              // ListView.builder(
+              //     padding: EdgeInsets.zero,
+              //     itemCount: 100,
+              //     itemBuilder: (context, index) {
+              //       return ListTrackWidget(track: Track());
+              //     },
+              //   )
+              // : GridView.builder(
+              //     padding: EdgeInsets.zero,
+              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //       crossAxisCount: isPotrait ? 3 : 6,
+              //       childAspectRatio: 0.57,
+              //       crossAxisSpacing: 5,
+              //       mainAxisSpacing: 5,
+              //     ),
+              //     itemCount: 100,
+              //     itemBuilder: (context, index) {
+              //       return GridTrackWidget(track: Track());
+              //     },
+              //   ),
+              onRefresh: () async {
+                ref.read(movieTracksFilterProvider.notifier).reset();
+                ref.read(movieTracksPagingProvider).refresh();
+              },
+            ),
           ),
         ],
       ),

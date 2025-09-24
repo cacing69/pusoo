@@ -46,7 +46,7 @@ final class MovieTracksPagingNotifierProvider
 }
 
 String _$movieTracksPagingNotifierHash() =>
-    r'0b7c772378d84685e582f0f9bdf3e3c3f23f11d9';
+    r'ff078467c8a590de5c00bbb1abd66aa671672177';
 
 abstract class _$MovieTracksPagingNotifier
     extends $Notifier<PagingController<int, Track>> {

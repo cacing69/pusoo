@@ -18,6 +18,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:pusoo/features/movie/presentation/providers/movie_tracks_filter_notifier.dart';
 import 'package:pusoo/features/track/presentation/providers/track_notifier.dart';
 import 'package:pusoo/features/tv/presentation/providers/tv_tracks_filter_notifier.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
@@ -65,7 +66,7 @@ class MovieTracksPagingNotifier extends _$MovieTracksPagingNotifier {
         return nextPageKey;
       },
       fetchPage: (pageKey) async {
-        final filterState = ref.read(tvTracksFilterProvider);
+        final filterState = ref.read(movieTracksFilterProvider);
 
         try {
           await ref

@@ -42,7 +42,7 @@ final class MovieTracksFilterNotifierProvider
 }
 
 String _$movieTracksFilterNotifierHash() =>
-    r'74086a6a083be262b3862b00782f148d1954d179';
+    r'f4b187c7eda79684703ae47a78817810c17bd3b3';
 
 abstract class _$MovieTracksFilterNotifier extends $Notifier<TrackFilterQuery> {
   TrackFilterQuery build();

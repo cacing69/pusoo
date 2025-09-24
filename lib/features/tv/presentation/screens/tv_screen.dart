@@ -35,7 +35,6 @@ import 'package:pusoo/features/tv/presentation/providers/tv_tracks_filter_notifi
 import 'package:pusoo/features/tv/presentation/widgets/tvg_logo_viewer.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
-// import 'package:pusoo/shared/presentation/providers/better_player_notifier.dart';
 
 class TvScreen extends StatefulHookConsumerWidget {
   const TvScreen({super.key});
@@ -424,12 +423,6 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                         newPageProgressIndicatorBuilder: (context) =>
                             FProgress.circularIcon(),
                       ),
-                      // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      //   crossAxisCount: isPotrait ? 4 : 8,
-                      //   crossAxisSpacing: 5,
-                      //   mainAxisSpacing: 5,
-                      //   childAspectRatio: 1,
-                      // ),
                     ),
               ),
               onRefresh: () async {

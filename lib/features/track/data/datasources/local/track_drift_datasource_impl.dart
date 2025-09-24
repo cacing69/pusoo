@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:logger/logger.dart';
 import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
@@ -68,15 +67,15 @@ class TrackDriftDatasourceImpl implements TrackDatasource {
     ];
 
     if (params?.isLiveTv != null) {
-      whereClauses.add(driftDb.trackDrift.isLiveTv.equals(true));
+      whereClauses.add(driftDb.trackDrift.isLiveTv.equals(params!.isLiveTv!));
     }
 
     if (params?.isMovie != null) {
-      whereClauses.add(driftDb.trackDrift.isMovie.equals(true));
+      whereClauses.add(driftDb.trackDrift.isMovie.equals(params!.isMovie!));
     }
 
     if (params?.isTvSerie != null) {
-      whereClauses.add(driftDb.trackDrift.isTvSerie.equals(true));
+      whereClauses.add(driftDb.trackDrift.isTvSerie.equals(params!.isTvSerie!));
     }
 
     // 2. Tambahkan filter dinamis berdasarkan parameter yang diberikan

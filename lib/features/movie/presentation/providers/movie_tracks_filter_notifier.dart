@@ -25,7 +25,7 @@ part 'movie_tracks_filter_notifier.g.dart';
 class MovieTracksFilterNotifier extends _$MovieTracksFilterNotifier {
   @override
   TrackFilterQuery build() {
-    return TrackFilterQuery(isLiveTv: true, limit: 20);
+    return TrackFilterQuery(isMovie: true, limit: 20);
   }
 
   void changeTitle(String? query) {
@@ -37,6 +37,6 @@ class MovieTracksFilterNotifier extends _$MovieTracksFilterNotifier {
   }
 
   void reset() {
-    state = TrackFilterQuery(isLiveTv: true, limit: 20);
+    state = TrackFilterQuery(isMovie: true, limit: 20);
   }
 }

@@ -16,12 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
-import 'package:pusoo/features/movie/presentation/widgets/grid_track_widget.dart';
-import 'package:pusoo/features/movie/presentation/widgets/list_track_widget.dart';
+import 'package:pusoo/features/track/presentation/widgets/grid_track_widget.dart';
+import 'package:pusoo/features/track/presentation/widgets/list_track_widget.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 
 class SerieScreen extends StatefulWidget {
