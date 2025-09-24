@@ -16,12 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 // import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:logger/logger.dart';
-import 'package:pusoo/core/errors/failure.dart';
+import 'package:pusoo/shared/errors/failure.dart';
 import 'package:pusoo/shared/data/datasources/remote/open_subtitles_client.dart';
 import 'package:pusoo/shared/domain/entities/open_subtitles/search_subtitle_query_params.dart';
 import 'package:pusoo/shared/domain/entities/open_subtitles/subtitle.dart';

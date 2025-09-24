@@ -17,7 +17,7 @@
  */
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pusoo/core/utils/m3u_parser.dart';
+import 'package:pusoo/shared/utils/m3u_parser.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 
 void main() async {
@@ -2408,6 +2408,53 @@ https://n30a-eu.rcs.revma.com/drakdf8mtd3vv/48_1vmr9fw8eh2ml02/playlist.m3u8?rj-
 #KODIPROP:inputstream.adaptive.license_key={ "keys":[ { "kty":"oct", "k":"L1oxmbJum2k66IGvf/hkzw", "kid":"7fGnFd6XSGON0vrXWkGa8g" } ], "type":"temporary" }
 #EXTINF:-1 group-title="KIDS" tvg-id="472.unifi" group-logo=" tvg-logo="https://www.animax-asia.com/sites/animax-asia.com/files/logos/animax-logo_0.png",ANIMAX
 https://tglmp01.akamaized.net/out/v1/de55fad9216e4fe7ad8d2eed456ba1ec/manifest.mpd
+
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("ANIMAX"));
+      expect(result[0].kodiProps.length, equals(1));
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "{ \"keys\":[ { \"kty\":\"oct\", \"k\":\"L1oxmbJum2k66IGvf/hkzw\", \"kid\":\"7fGnFd6XSGON0vrXWkGa8g\" } ], \"type\":\"temporary\" }",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_type"],
+        equals("org.w3.clearkey"),
+      );
+      expect(
+        result[0].links.first,
+        equals(
+          "https://tglmp01.akamaized.net/out/v1/de55fad9216e4fe7ad8d2eed456ba1ec/manifest.mpd",
+        ),
+      );
+    });
+
+    test('TestTrackShouldGiveValidUrlWithInvalidOrder:ANIMAX', () async {
+      final String content = r'''
+#EXTM3U
+
+#EXTINF:-1 group-title="KIDS" tvg-id="472.unifi" group-logo=" tvg-logo="https://www.animax-asia.com/sites/animax-asia.com/files/logos/animax-logo_0.png",ANIMAX
+https://tglmp01.akamaized.net/out/v1/de55fad9216e4fe7ad8d2eed456ba1ec/manifest.mpd
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
+#KODIPROP:inputstream.adaptive.license_key={ "keys":[ { "kty":"oct", "k":"L1oxmbJum2k66IGvf/hkzw", "kid":"7fGnFd6XSGON0vrXWkGa8g" } ], "type":"temporary" }
 
 ''';
 

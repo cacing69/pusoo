@@ -17,8 +17,8 @@
  */
 
 import 'package:pusoo/features/track/domain/models/track.dart';
-import 'package:pusoo/core/utils/stream_headers_extractor.dart';
-import 'package:pusoo/core/utils/ext_vlc_opt_headers_extractor.dart';
+import 'package:pusoo/shared/utils/stream_headers_extractor.dart';
+import 'package:pusoo/shared/utils/ext_vlc_opt_headers_extractor.dart';
 
 /// Builds HTTP headers from track data using multiple extractors
 ///

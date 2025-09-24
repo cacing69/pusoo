@@ -1,0 +1,17 @@
+#EXTVLCOPT:http-user-agent=plaYtv/7.1.5 (Linux;Android 12) ExoPlayerLib/2.11.7
+#EXTHTTP:{"cookie":"__hdnea__=st=1758557405~exp=1758643805~acl=/*~hmac=a3a0429513ff424b459a35cae851f0487a7e2c842ca7ad1c7e99004a57b52489"}
+https://jiotvbpkmob.cdn.jio.com/bpk-tv/Jalsha_Movies_BTS/output/index.mpd?__hdnea__=st=1758557405~exp=1758643805~acl=/*~hmac=a3a0429513ff424b459a35cae851f0487a7e2c842ca7ad1c7e99004a57b52489&xxx=%7Ccookie=__hdnea__=st=1758557405~exp=1758643805~acl=/*~hmac=a3a0429513ff424b459a35cae851f0487a7e2c842ca7ad1c7e99004a57b52489
+#EXTINF:-1 tvg-id="1119" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Star_Gold_Select.png" group-title="Movies",Star Gold Select
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=09706397be655eb6a26c6ba99b65e6d5:acb1ebe04e2a29fe098d532d7a506846
+
+#EXTINF:-1 tvg-id="1373" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Disney_Channel.png" group-title="Kids",Disney Channel
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=5181d3e6698055578cedc5bfc86b3e56:3dca7917d8cf9bb7095dc72b48bdcd3c
+
+#EXTVLCOPT:http-user-agent=plaYtv/7.1.5 (Linux;Android 12) ExoPlayerLib/2.11.7
+#EXTHTTP:{"cookie":"__hdnea__=st=1758557405~exp=1758643805~acl=/*~hmac=a3a0429513ff424b459a35cae851f0487a7e2c842ca7ad1c7e99004a57b52489"}
+https://jiotvbpkmob.cdn.jio.com/bpk-tv/Disney_Channel_BTS/output/index.mpd?__hdnea__=st=1758557405~exp=1758643805~acl=/*~hmac=a3a0429513ff424b459a35cae851f0487a7e2c842ca7ad1c7e99004a57b52489&xxx=%7Ccookie=__hdnea__=st=1758557405~exp=1758643805~acl=/*~hmac=a3a0429513ff424b459a35cae851f0487a7e2c842ca7ad1c7e99004a57b52489
+#EXTINF:-1 tvg-id="1391" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Hungama.png" group-title="Kids",Hungama
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=454f8353caac500d95d641e0c7cfe048:0aaca46ea0f5096335598781fbe590e4

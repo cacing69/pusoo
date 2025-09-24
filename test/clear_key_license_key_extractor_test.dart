@@ -17,7 +17,7 @@
  */
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pusoo/core/utils/clear_key_license_key_extractor.dart';
+import 'package:pusoo/shared/utils/clear_key_license_key_extractor.dart';
 
 void main() async {
   group('ClearKeyLicenseKeyExtractorTest', () {

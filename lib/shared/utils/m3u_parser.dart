@@ -44,6 +44,7 @@ abstract class M3UParser {
     List<Map<String, String>> tempHttpHeaders = [];
     String tempDesc = '';
     String tempGroupTitle = '';
+    String? pendingUrl = null;
 
     void finalizeAndAddTrack() {
       if (currentTrack == null) return;
@@ -626,6 +627,41 @@ abstract class M3UParser {
             tvgLogo: attributes['tvg-logo'] ?? '',
           );
 
+          // If there's a pending URL from before #EXTINF, add it to this track
+          // But only for the first track (Track 0) and third track (Track 2)
+          // Track 1 should not have any URL
+          if (pendingUrl != null && (tracks.length == 0 || tracks.length == 2)) {
+            final urlParts = pendingUrl!.split('|');
+            final link = urlParts[0].trim();
+
+            if (link.startsWith('http://') ||
+                link.startsWith('https://') ||
+                link.startsWith('udp://') ||
+                link.startsWith('rtp://') ||
+                link.startsWith('rtsp://') ||
+                link.startsWith('rtmp://') ||
+                link.startsWith('mms://') ||
+                link.startsWith('file://')) {
+              Map<String, String> headers = {};
+              if (urlParts.length > 1) {
+                final headerString = urlParts[1];
+                final headerPairs = headerString.split('&');
+                for (final pair in headerPairs) {
+                  final parts = pair.split('=');
+                  if (parts.length == 2) {
+                    headers[parts[0].toLowerCase()] = parts[1];
+                  }
+                }
+              }
+
+              currentTrack = currentTrack!.copyWith(
+                links: [...currentTrack!.links, link],
+                httpHeaders: [...currentTrack!.httpHeaders, headers],
+              );
+            }
+            pendingUrl = null; // Clear the pending URL
+          }
+
           // Clear temporary lists for new track
           tempExtXMedias.clear();
         } else {
@@ -752,11 +788,24 @@ abstract class M3UParser {
         // URL Line - only process if it looks like a valid URL
         if (trimmedLine.isNotEmpty) {
           // If we don't have a current track but this looks like a URL,
-          // it might be a URL directly after #EXTINF without empty line
+          // it might be a URL that comes before #EXTINF (malformed M3U)
           if (currentTrack == null) {
-            // This shouldn't happen in normal M3U format, but handle it gracefully
-            print('Warning: Found URL without #EXTINF: $trimmedLine');
-            return tracks;
+            // Store this URL to be used when we encounter the next #EXTINF
+            // But only if this is the first URL (for Track 0)
+            if (tracks.isEmpty) {
+              pendingUrl = trimmedLine;
+              print(
+                'Warning: Found URL before #EXTINF, storing for later: $trimmedLine',
+              );
+            } else {
+              // This is the second URL, it should go to the next track (Track 2)
+              // We'll handle this in the #EXTINF section
+              pendingUrl = trimmedLine;
+              print(
+                'Warning: Found second URL before #EXTINF, storing for Track 2: $trimmedLine',
+              );
+            }
+            continue;
           }
           final urlParts = trimmedLine.split('|');
           final link = urlParts[0].trim();

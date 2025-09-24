@@ -16,9 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:dartz/dartz.dart';
-import 'package:pusoo/core/errors/failure.dart';
+import 'package:pusoo/shared/errors/failure.dart';
 import 'package:pusoo/features/source/data/datasource/source_datasource.dart';
 import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/features/source/domain/repository/source_repository.dart';

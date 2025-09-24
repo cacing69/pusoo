@@ -17,7 +17,7 @@
  */
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pusoo/core/utils/playlist_name_extractor.dart';
+import 'package:pusoo/shared/utils/playlist_name_extractor.dart';
 
 void main() async {
   group('PlaylistNameExtractorTest', () {
@@ -54,7 +54,7 @@ void main() async {
 
       expect(result.name, equals("IPTV-ipv4.m3u"));
     });
-    test('test:2.2', () async {
+    test('test:2.3', () async {
       final url = "https://example.com/patg/sub/_-I-PTV-ipv4";
       final result = PlaylistNameExtractor.fromUrl(url);
 
@@ -95,6 +95,14 @@ void main() async {
       final result = PlaylistNameExtractor.fromUrl(url);
 
       expect(result.name, equals("IPTV-ipv4.m3u"));
+    });
+
+    test('test:8', () async {
+      // hanya memperbolehkan karakter alfanumerik -_
+      final url = "https://example.com/patg/sub/";
+      final result = PlaylistNameExtractor.fromUrl(url);
+
+      expect(result.name, equals("sub.m3u"));
     });
   });
 }

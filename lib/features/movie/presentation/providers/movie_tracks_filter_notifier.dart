@@ -16,17 +16,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:dartz/dartz.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pusoo/core/errors/failure.dart';
+import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'usecase.freezed.dart';
+part 'movie_tracks_filter_notifier.g.dart';
 
-abstract class UseCase<T, Params> {
-  Future<Either<Failure, T>> call(Params params);
-}
+@Riverpod(keepAlive: true)
+class MovieTracksFilterNotifier extends _$MovieTracksFilterNotifier {
+  @override
+  TrackFilterQuery build() {
+    return TrackFilterQuery(isMovie: true, limit: 20);
+  }
 
-@freezed
-class NoParams with _$NoParams {
-  const factory NoParams() = _NoParams;
+  void changeTitle(String? query) {
+    state = state.copyWith(title: query);
+  }
+
+  void changeGroupTitle(String? query) {
+    state = state.copyWith(groupTitle: query);
+  }
+
+  void reset() {
+    state = TrackFilterQuery(isMovie: true, limit: 20);
+  }
 }

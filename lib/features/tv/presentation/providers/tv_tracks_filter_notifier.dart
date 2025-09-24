@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -24,10 +23,9 @@ part 'tv_tracks_filter_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
 class TvTracksFilterNotifier extends _$TvTracksFilterNotifier {
-  // Metode build ini akan dipanggil pertama kali oleh Riverpod
   @override
   TrackFilterQuery build() {
-    return TrackFilterQuery(limit: 20);
+    return TrackFilterQuery(isLiveTv: true, limit: 20);
   }
 
   void changeTitle(String? query) {
@@ -39,6 +37,6 @@ class TvTracksFilterNotifier extends _$TvTracksFilterNotifier {
   }
 
   void reset() {
-    state = TrackFilterQuery(limit: 20);
+    state = TrackFilterQuery(isLiveTv: true, limit: 20);
   }
 }

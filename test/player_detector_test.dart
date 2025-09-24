@@ -17,7 +17,7 @@
  */
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pusoo/core/utils/player_detector.dart';
+import 'package:pusoo/shared/utils/player_detector.dart';
 
 void main() async {
   group('PlayerDetectorTest', () {

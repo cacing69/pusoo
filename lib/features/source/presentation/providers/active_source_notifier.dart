@@ -16,8 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-import 'package:pusoo/core/utils/usecase.dart';
+import 'package:pusoo/shared/utils/usecase.dart';
 import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/features/source/presentation/providers/source_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

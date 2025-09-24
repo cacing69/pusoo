@@ -17,7 +17,7 @@
  */
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pusoo/core/utils/youtube_id_extractor.dart';
+import 'package:pusoo/shared/utils/youtube_id_extractor.dart';
 
 void main() async {
   group('YoutubeIdExtractorTest', () {
