@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
 import 'package:pusoo/features/track/presentation/providers/track_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,17 +24,12 @@ part 'tv_track_group_titles_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
 class TvTrackGroupTitlesNotifier extends _$TvTrackGroupTitlesNotifier {
-  // Metode build ini akan dipanggil pertama kali oleh Riverpod
   @override
   AsyncValue<List<String>?> build() {
-    // perform(GetTvTracksParams(limit: 20));
     return const AsyncValue.loading();
   }
 
   Future<void> perform(TrackFilterQuery? params) async {
-    // Return null sebagai state awal.
-    // Provider ini akan di-dispose secara otomatis berkat @riverpod.
-    // Kita tidak perlu lagi menulis logika onDispose.
     state = AsyncValue.loading();
 
     final result = await ref

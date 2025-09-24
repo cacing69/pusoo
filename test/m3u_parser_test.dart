@@ -2445,6 +2445,53 @@ https://tglmp01.akamaized.net/out/v1/de55fad9216e4fe7ad8d2eed456ba1ec/manifest.m
       );
     });
 
+    test('TestTrackShouldGiveValidUrlWithInvalidOrder:ANIMAX', () async {
+      final String content = r'''
+#EXTM3U
+
+#EXTINF:-1 group-title="KIDS" tvg-id="472.unifi" group-logo=" tvg-logo="https://www.animax-asia.com/sites/animax-asia.com/files/logos/animax-logo_0.png",ANIMAX
+https://tglmp01.akamaized.net/out/v1/de55fad9216e4fe7ad8d2eed456ba1ec/manifest.mpd
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
+#KODIPROP:inputstream.adaptive.license_key={ "keys":[ { "kty":"oct", "k":"L1oxmbJum2k66IGvf/hkzw", "kid":"7fGnFd6XSGON0vrXWkGa8g" } ], "type":"temporary" }
+
+''';
+
+      List<Track> result = M3UParser.parse(content);
+
+      expect(result[0].title, equals("ANIMAX"));
+      expect(result[0].kodiProps.length, equals(1));
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_key",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_key"],
+        equals(
+          "{ \"keys\":[ { \"kty\":\"oct\", \"k\":\"L1oxmbJum2k66IGvf/hkzw\", \"kid\":\"7fGnFd6XSGON0vrXWkGa8g\" } ], \"type\":\"temporary\" }",
+        ),
+      );
+      expect(
+        result[0].kodiProps.first.containsKey(
+          "inputstream.adaptive.license_type",
+        ),
+        equals(true),
+      );
+      expect(
+        result[0].kodiProps.first["inputstream.adaptive.license_type"],
+        equals("org.w3.clearkey"),
+      );
+      expect(
+        result[0].links.first,
+        equals(
+          "https://tglmp01.akamaized.net/out/v1/de55fad9216e4fe7ad8d2eed456ba1ec/manifest.mpd",
+        ),
+      );
+    });
+
     test('TestTrackShouldGiveLength:1', () async {
       final String content = r'''
 #EXTINF:-1 tvg-name="卡酷动画",BRTV卡酷少儿[高清]
