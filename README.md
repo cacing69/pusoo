@@ -99,6 +99,7 @@ Here are some screenshots of **Pusoo IPTV Player**:
 <p align="center">
   <img src="docs/images/features/home_main.png" width="250" alt="Home)"/>
   <img src="docs/images/features/home_live_tv.png" width="250" alt="Home (TV)"/>
+  <img src="docs/images/features/home_live_tv_grid.png" width="250" alt="Home Grid (TV)"/>
   <img src="docs/images/features/home_live_tv_player.png" width="250" alt="TV Player Screen"/>
   <img src="docs/images/features/home_movies_grid.png" width="250" alt="Home (Movies Grid)"/>
   <img src="docs/images/features/home_movies_list.png" width="250" alt="Home (Movies List)"/>

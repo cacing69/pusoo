@@ -26,8 +26,7 @@ import 'package:pusoo/features/serie/presentation/providers/serie_track_group_ti
 import 'package:pusoo/features/serie/presentation/providers/serie_tracks_filter_notifier.dart';
 import 'package:pusoo/features/serie/presentation/providers/serie_tracks_paging_notifier.dart';
 import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
-import 'package:pusoo/features/track/presentation/widgets/list_track_widget.dart';
-import 'package:pusoo/features/track/domain/models/track.dart';
+import 'package:pusoo/features/track/presentation/widgets/paged_track_view.dart';
 
 class SerieScreen extends StatefulHookConsumerWidget {
   const SerieScreen({super.key});
@@ -96,18 +95,10 @@ class _SerieScreenState extends ConsumerState<SerieScreen> {
               child: PagingListener(
                 controller: ref.watch(serieTracksPagingProvider),
                 builder: (BuildContext context, state, fetchNextPage) =>
-                    PagedListView(
-                      padding: EdgeInsets.zero,
-                      state: state,
+                    PagedTrackView(
+                      pagingState: state,
                       fetchNextPage: fetchNextPage,
-                      builderDelegate: PagedChildBuilderDelegate(
-                        itemBuilder: (context, Track item, index) =>
-                            ListTrackWidget(track: item),
-                        firstPageProgressIndicatorBuilder: (context) =>
-                            FProgress.circularIcon(),
-                        newPageProgressIndicatorBuilder: (context) =>
-                            FProgress.circularIcon(),
-                      ),
+                      isListView: listViewMode,
                     ),
               ),
               onRefresh: () async {
@@ -115,28 +106,6 @@ class _SerieScreenState extends ConsumerState<SerieScreen> {
                 ref.read(serieTracksPagingProvider).refresh();
               },
             ),
-
-            // listViewMode
-            //       ? ListView.builder(
-            //           padding: EdgeInsets.zero,
-            //           itemCount: 100,
-            //           itemBuilder: (context, index) {
-            //             return ListTrackWidget(track: Track());
-            //           },
-            //         )
-            //       : GridView.builder(
-            //           padding: EdgeInsets.zero,
-            //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //             crossAxisCount: isPotrait ? 3 : 6,
-            //             childAspectRatio: 0.57,
-            //             crossAxisSpacing: 5,
-            //             mainAxisSpacing: 5,
-            //           ),
-            //           itemCount: 100,
-            //           itemBuilder: (context, index) {
-            //             return GridTrackWidget(track: Track());
-            //           },
-            //         ),
           ),
         ],
       ),
