@@ -16,153 +16,462 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:better_player_plus/better_player_plus.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:forui/forui.dart';
+import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pusoo/shared/utils/helpers.dart';
+import 'package:pusoo/shared/utils/player_detector.dart';
+import 'package:pusoo/shared/utils/youtube_id_extractor.dart';
+import 'package:pusoo/features/track/domain/models/track.dart';
+import 'package:pusoo/router.dart';
+import 'package:pusoo/shared/presentation/providers/better_player_notifier.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-// import 'dart:convert';
+class VideoPlayerScreen extends ConsumerStatefulWidget {
+  final Track track;
+  final bool isLiveStream;
 
-// // import 'package:chewie/chewie.dart';
-// import 'package:flutter/material.dart';
-// // import 'package:flutter_vlc_player/flutter_vlc_player.dart';
-// import 'package:forui/forui.dart';
-// import 'package:media_kit/media_kit.dart';
-// import 'package:media_kit_video/media_kit_video.dart';
-// // import 'package:pusoo/router.dart';
-// import 'package:pusoo/shared/data/datasources/local/drift_database.dart';
-// // import 'package:video_player/video_player.dart';
+  const VideoPlayerScreen({
+    super.key,
+    required this.track,
+    this.isLiveStream = true,
+  });
 
-// class VideoPlayerScreen extends StatefulWidget {
-//   final ChannelDriftData channel;
-//   const VideoPlayerScreen({super.key, required this.channel});
+  ConsumerState<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
+}
 
-//   @override
-//   State<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
-// }
+class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
+    with SingleTickerProviderStateMixin {
+  final GlobalKey _playerKey = GlobalKey();
+  YoutubePlayerController? _youtubePlayerController;
 
-// class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-//   // Create a [Player] to control playback.
-//   late Player _player;
+  late PlayerDetector? player;
 
-//   // Create a [VideoController] to handle video output from [Player].
-//   late VideoController controller;
+  @override
+  void initState() {
+    super.initState();
 
-//   // bool _isLoading = true;
+    // isYoutube = false;
+    debugPrint("widget.track.links.first: ${widget.track.links.first}");
 
-//   bool _isBuffering = true;
+    player = PlayerDetector.fromUrl(widget.track.links.first);
+    // player.
 
-//   // late VideoPlayerController _videoPlayerController;
-//   // ChewieController? _chewieController;
+    debugPrint("player: ${player?.type}");
+    debugPrint("youtubeVideoId: ${player?.youtubeVideoId}");
 
-//   // late VlcPlayerController _vlcController;
-//   // bool _showControls = false;
-//   // bool _isPaused = false;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (player?.type == PlayerType.youtube) {
+        // Static video ID untuk uji coba
+        final videoId = YoutubeIdExtractor.fromUrl(
+          widget.track.links.first,
+        ).videoId;
 
-//   // bool showAds = true;
+        debugPrint("Using video ID for testing: $videoId");
 
-//   @override
-//   void initState() {
-//     super.initState();
+        try {
+          _youtubePlayerController = YoutubePlayerController.fromVideoId(
+            videoId: videoId!,
+            autoPlay: true,
+            params: const YoutubePlayerParams(
+              showFullscreenButton: true,
+              showControls: true,
+            ),
+          );
 
-//     _player = Player();
+          debugPrint("YouTube controller created successfully");
+          debugPrint("Controller: $_youtubePlayerController");
 
-//     _player.stream.buffering.listen((isPlaying) {
-//       if (isPlaying && _isBuffering) {
-//         setState(() {
-//           _isBuffering = false;
-//         });
-//       }
-//     });
+          // Force rebuild after controller is created
+          setState(() {});
+        } catch (e) {
+          debugPrint("Error creating YouTube controller: $e");
+        }
+      } else {
+        debugPrint("Using Better Player for non-YouTube content");
+        ref
+            .read(betterPlayerProvider.notifier)
+            .openMediaStream(widget.track, isLiveStream: widget.isLiveStream);
+      }
+    });
+  }
 
-//     final List urls = (jsonDecode(widget.channel.streamUrl) as List<dynamic>);
-//     debugPrint("urls.toString(): $urls");
+  @override
+  void dispose() {
+    _youtubePlayerController?.close();
+    super.dispose();
+  }
 
-//     _player.open(Media(urls.first));
+  /// Handles fullscreen for both YouTube and BetterPlayer
+  void _handleFullscreen(
+    BuildContext context,
+    BetterPlayerController? controller,
+  ) {
+    if (player?.type == PlayerType.youtube) {
+      // For YouTube player, we can't control fullscreen directly
+      // YouTube player handles its own fullscreen through the player UI
+      // showFlutterToast(
+      //   message: " Tap the fullscreen button on the YouTube player",
+      //   context: context,
+      // );
 
-//     controller = VideoController(_player);
+      _youtubePlayerController?.toggleFullScreen();
+    } else {
+      // For BetterPlayer, use the controller's toggleFullScreen method
+      controller?.toggleFullScreen();
+    }
+  }
 
-//     // _vlcController = VlcPlayerController.network(
-//     //   urls.first,
-//     //   hwAcc: HwAcc.full, // hardware acceleration
-//     //   autoPlay: true, // otomatis mulai
-//     //   options: VlcPlayerOptions(
-//     //     // http: VlcHttpOptions([
-//     //     //   // User-Agent modern, mirip browser / ExoPlayer
-//     //     //   'user-agent=Mozilla/5.0 (Linux; Android 13; Pixel 7 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36',
-//     //     // ]),
-//     //     extras: [
-//     //       '--http-user-agent=Mozilla/5.0 (Linux; Android 13; Pixel 7 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36',
-//     //       '--network-caching=2000', // 2 detik buffer
-//     //       '--file-caching=2000',
-//     //       '--drop-late-frames',
-//     //       '--skip-frames', // skip frame jika decoding lambat
-//     //       '--avcodec-hw=any', // paksa hardware decoding jika tersedia
-//     //       '--no-sub-autodetect-file', // matikan deteksi subtitle otomatis
-//     //       '--no-stats', // matikan statistik untuk performa
-//     //       '--http-continuous',
-//     //     ],
-//     //   ), // caching untuk streaming HLS
-//     // );
+  @override
+  Widget build(BuildContext context) {
+    final orientation = MediaQuery.of(context).orientation;
+    final isPotrait = orientation == Orientation.portrait;
 
-//     // _videoPlayerController =
-//     //     VideoPlayerController.networkUrl(Uri.parse(urls.first))
-//     //       ..initialize().then((_) {
-//     //         setState(() {}); // refresh setelah video siap
-//     //         _videoPlayerController.play();
-//     //       });
+    final betterPlayerController = ref.watch(betterPlayerProvider);
 
-//     // _chewieController = ChewieController(
-//     //   videoPlayerController: _videoPlayerController,
-//     //   autoPlay: true,
-//     //   looping: false,
-//     //   allowFullScreen: true,
-//     //   allowPlaybackSpeedChanging: false,
-//     //   aspectRatio: 16 / 9,
-//     //   fullScreenByDefault: false,
-//     // );
-//   }
+    return FScaffold(
+      header: isPotrait
+          ? FHeader.nested(
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: context.theme.colors.destructive,
+                      ),
+                    ),
+                  ),
+                  const Gap(10),
+                  const Text("Live TV "),
+                ],
+              ),
+              prefixes: [
+                FHeaderAction.back(
+                  onPress: () {
+                    context.pop();
+                  },
+                ),
+              ],
+            )
+          : SizedBox.shrink(),
+      child: isPotrait
+          ? _buildPotraitLayout(context, betterPlayerController, widget.track)
+          : _buildLandscapeLayout(
+              context,
+              betterPlayerController,
+              widget.track,
+            ),
+    );
+  }
 
-//   @override
-//   void dispose() {
-//     // _chewieController?.pause();
-//     // _chewieController?.dispose();
-//     // _videoPlayerController.pause();
-//     // _videoPlayerController.dispose();
+  Widget _buildButtonFavoriteSubtitleAndFullscreen(
+    BuildContext context,
+    BetterPlayerController? controller,
+  ) {
+    final orientation = MediaQuery.of(context).orientation;
+    final isPotrait = orientation == Orientation.portrait;
+    return SafeArea(
+      top: false,
+      child: Column(
+        children: [
+          widget.isLiveStream
+              ? SizedBox.shrink()
+              : FButton(
+                  style: FButtonStyle.outline(),
+                  onPress: () async {
+                    if (controller != null) {
+                      final isPlaying = controller.isPlaying();
+                      if (isPlaying == true) {
+                        controller.pause();
+                      }
+                    }
 
-//     // _vlcController.stop();
-//     // _vlcController.dispose();
-//     // controller.;
-//     _player.dispose();
-//     super.dispose();
-//   }
+                    final reuslt = await context.pushNamed(
+                      RouteName.subtitleSearch.name,
+                    );
 
-//   // void _toggleControls() {
-//   //   setState(() {
-//   //     _showControls = !_showControls;
-//   //   });
-//   // }
+                    if (reuslt == true) {
+                      if (controller != null) {
+                        final isPlaying = controller.isPlaying();
+                        if (isPlaying != true) {
+                          controller.play();
+                        }
+                      }
+                    }
+                  },
+                  prefix: Icon(FIcons.captions),
+                  child: Text("Search subtitle"),
+                ),
+          Gap(10),
+          Row(
+            children: [
+              Expanded(
+                child: FButton(
+                  style: FButtonStyle.outline(),
+                  onPress: () {},
+                  prefix: const Icon(FIcons.heart),
+                  child: const Text("Add to favorite"),
+                ),
+              ),
+              const Gap(10),
+              FButton.icon(
+                style: FButtonStyle.outline(),
+                onPress: () {
+                  _handleFullscreen(context, controller);
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: Icon(FIcons.fullscreen),
+                ),
+              ),
+            ],
+          ),
+          isPotrait ? SizedBox.shrink() : Gap(10),
+        ],
+      ),
+    );
+  }
 
-//   // void _toggleFullscreen() {
-//   //   context.pushNamed(RouteName.iptvPlayerFull.name, extra: widget.channel);
-//   // }
+  Widget _buildChannelInformation(Track track) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            SizedBox(
+              width: 45,
+              height: 45,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  color: context.theme.colors.disable(
+                    context.theme.colors.foreground,
+                  ),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(4)),
+                      color: context.theme.colors.disable(
+                        context.theme.colors.foreground,
+                      ),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: CachedNetworkImage(
+                      imageUrl: track.tvgLogo,
+                      placeholder: (_, __) =>
+                          const Center(child: FProgress.circularIcon()),
+                      errorWidget: (_, __, ___) => Center(
+                        child: Icon(
+                          FIcons.tvMinimal,
+                          color: context.theme.colors.background.withAlpha(200),
+                          size: 20,
+                        ),
+                      ),
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const Gap(10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    track.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                  ),
+                  const Gap(5),
+                  Text(
+                    track.tvgId.isEmpty ? "@tvg-id: n/a" : track.tvgId,
+                    style: context.theme.typography.xs.copyWith(
+                      color: context.theme.colors.disable(
+                        context.theme.colors.foreground,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        Gap(10),
+      ],
+    );
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return FScaffold(
-//       childPad: false,
-//       // appBar: AppBar(title: const Text('Chewie IPTV Player')),
-//       child: Expanded(
-//         child: Center(
-//           child: SizedBox(
-//             width: MediaQuery.of(context).size.width,
-//             height: MediaQuery.of(context).size.width * 9.0 / 16.0,
-//             // Use [Video] widget to display video output.
-//             child: _isBuffering
-//                 ? Center(child: FProgress.circularIcon())
-//                 : Video(
-//                     controller: controller,
-//                     // controls: CupertinoVideoControls,
-//                   ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+  Widget _buildAvailableUrls(Track track) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Gap(5),
+        Text("Available URL Sources"),
+        const Gap(5),
+        Wrap(
+          children: [
+            ...widget.track.links.asMap().entries.map((entry) {
+              int index = entry.key;
+
+              return Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: SizedBox(
+                  width: 65,
+                  child: FButton(
+                    style: FButtonStyle.outline(),
+                    child: Text("${index + 1}"),
+                    onPress: () {
+                      showFlutterToast(
+                        message: "Changed to URL #${index + 1}",
+                        context: context,
+                      );
+
+                      ref
+                          .read(betterPlayerProvider.notifier)
+                          .openMediaStream(
+                            widget.track,
+                            isLiveStream: true,
+                            useUrlOnIndex: index,
+                          );
+                    },
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildContentScrollable() {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [Text("No information available")],
+    );
+  }
+
+  Widget _buildVideoPlayer(BetterPlayerController? controller) {
+    return SizedBox(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.width * 9.0 / 16.0,
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: controller == null
+            ? const Center(child: FProgress.circularIcon())
+            : BetterPlayer(key: _playerKey, controller: controller),
+      ),
+    );
+  }
+
+  Widget _buildYoutubePlayer(YoutubePlayerController controller) {
+    return Container(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.width * 9.0 / 16.0,
+      color: Colors.black,
+      child: YoutubePlayer(controller: controller, aspectRatio: 16 / 9),
+    );
+  }
+
+  Widget _buildPotraitLayout(
+    BuildContext context,
+    BetterPlayerController? controller,
+    Track track,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 1,
+          child: player?.type == PlayerType.youtube
+              ? _youtubePlayerController != null
+                    ? _buildYoutubePlayer(_youtubePlayerController!)
+                    : const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [FProgress.circularIcon()],
+                        ),
+                      )
+              : _buildVideoPlayer(controller),
+        ),
+
+        FDivider(
+          style: (style) =>
+              style.copyWith(padding: const EdgeInsets.symmetric(vertical: 10)),
+        ),
+        Expanded(
+          flex: 3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildChannelInformation(track),
+              const Gap(5),
+              _buildAvailableUrls(track),
+              const Gap(5),
+              Expanded(child: _buildContentScrollable()),
+              const Gap(10),
+              _buildButtonFavoriteSubtitleAndFullscreen(context, controller),
+              const Gap(15),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLandscapeLayout(
+    BuildContext context,
+    BetterPlayerController? controller,
+    Track track,
+  ) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: player?.type == PlayerType.youtube
+              ? _youtubePlayerController != null
+                    ? _buildYoutubePlayer(_youtubePlayerController!)
+                    : const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [FProgress.circularIcon()],
+                        ),
+                      )
+              : _buildVideoPlayer(controller),
+        ),
+        const Gap(10),
+        Expanded(
+          flex: 1,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Gap(10),
+              _buildChannelInformation(track),
+              const Gap(5),
+              _buildAvailableUrls(track),
+              const Gap(5),
+              Expanded(child: _buildContentScrollable()),
+              const Gap(5),
+              _buildButtonFavoriteSubtitleAndFullscreen(context, controller),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}

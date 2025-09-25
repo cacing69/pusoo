@@ -19,6 +19,7 @@
 // import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:pusoo/shared/errors/failure.dart';
 import 'package:pusoo/shared/data/datasources/remote/open_subtitles_client.dart';
@@ -38,7 +39,17 @@ class SubtitleOpenSubtitleRepositoryImpl implements SubtitleRepository {
   Future<Either<Failure, TOpenSubtitleSearchResponse<List<Subtitle>>>> search(
     SearchSubtitleQueryParams params,
   ) async {
-    return Right(await client.search(params));
+    try {
+      final result = await client.search(params);
+      return Right(result);
+    } on DioException catch (e) {
+      return Left(
+        ClientRepositoryFailure(message: e.message ?? 'Network error'),
+      );
+    } catch (e) {
+      return Left(ServerFailure(message: 'Unexpected error: ${e.toString()}'));
+    }
+    // return Right(await client.search(params));
     // try {
     //   // final result = await client.searchSubtitle(params);
 

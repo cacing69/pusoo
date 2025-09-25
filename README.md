@@ -31,7 +31,7 @@ This project is currently under active development. I'm working on it in my spar
 - This app **does not provide any IPTV content by default**.
 - Users must add their own playlists.
 - All channels come from **public sources** or **user-provided playlists**.
-- **For legal content only** — the app is not intended to bypass DRM or access paid services without authorization.
+- **For legal content only** - the app is not intended to bypass DRM or access paid services without authorization.
 - Make sure your device meets the [Requirements](#requirements).
 - If you prefer, you can also build the app from source (see [Development](#development)).
 

@@ -19,6 +19,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pusoo/features/about/presentation/screens/about_license_screen.dart';
 import 'package:pusoo/features/about/presentation/screens/about_screen.dart';
 import 'package:pusoo/features/playlist/presentation/screens/manage_personal_playlist_screen.dart';
+import 'package:pusoo/features/serie/presentation/screens/serie_detail_screen.dart';
 import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/features/source/presentation/screens/add_new_source_screen.dart';
 import 'package:pusoo/features/playlist/presentation/screens/add_new_playlist_screen.dart';
@@ -30,8 +31,8 @@ import 'package:pusoo/features/source/presentation/screens/public_source_list_pl
 import 'package:pusoo/features/source/presentation/screens/public_source_list_playlist_tracks_screen.dart';
 import 'package:pusoo/features/source/presentation/screens/public_source_list_screen.dart';
 import 'package:pusoo/features/subtitle/presentation/screens/search_subtitle_screen.dart';
-import 'package:pusoo/features/tv/presentation/screens/tv_player_screen.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
+import 'package:pusoo/features/video_player/presentation/screens/video_player_screen.dart';
 import 'package:pusoo/shared/presentation/screens/youtube_iframe_player_screen.dart';
 
 enum RouteName {
@@ -50,6 +51,9 @@ enum RouteName {
 
   // movie
   movieDetail,
+
+  // serie
+  serieDetail,
 
   // source
   manageSource,
@@ -122,10 +126,15 @@ final List<GoRoute> defaultRouter = [
   //   },
   // ),
   GoRoute(
-    path: '/tv-player',
-    name: RouteName.tvPlayer.name,
+    path: '/video-player',
+    name: RouteName.videoPlayer.name,
     builder: (context, state) {
-      return TVPlayerScreen(track: state.extra as Track);
+      return VideoPlayerScreen(
+        isLiveStream: state.uri.queryParameters["isLiveStream"] == "true"
+            ? true
+            : false,
+        track: state.extra as Track,
+      );
     },
   ),
   // GoRoute(
@@ -140,6 +149,14 @@ final List<GoRoute> defaultRouter = [
     name: RouteName.movieDetail.name,
     builder: (context, state) {
       return MovieDetailScreen(track: state.extra as Track);
+    },
+  ),
+
+  GoRoute(
+    path: '/serie-detail',
+    name: RouteName.serieDetail.name,
+    builder: (context, state) {
+      return SerieDetailScreen(track: state.extra as Track);
     },
   ),
   // GoRoute(

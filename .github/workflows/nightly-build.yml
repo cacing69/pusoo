@@ -88,7 +88,7 @@ jobs:
           body: |
             **Nightly Build**
             This is an automatic build from the latest commit on `main`.
-            Use at your own risk — features may be unstable.
+            Use at your own risk - features may be unstable.
 
             Includes:
             - Universal APK
@@ -118,7 +118,7 @@ jobs:
           publish: true
           config-name: release-drafter.yml
           # name: "Nightly Build - ${{ github.sha }}"
-          name: "Nightly Build"
+          name: "Pre-release Build"
           tag: "nightly-${{ github.sha }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

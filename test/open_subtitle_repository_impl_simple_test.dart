@@ -16,17 +16,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:pusoo/features/subtitle/data/repository_impl/subtitle_open_subtitle_repository_impl.dart';
+import 'package:pusoo/shared/configs/env.dart';
 import 'package:pusoo/shared/data/datasources/remote/open_subtitles_client.dart';
 import 'package:pusoo/shared/domain/entities/open_subtitles/search_subtitle_query_params.dart';
+import 'package:pusoo/shared/domain/entities/open_subtitles/subtitle.dart';
+import 'package:pusoo/shared/domain/entities/open_subtitles/t_open_subtitle_search_response.dart';
 
 void main() {
-  group('SubtitleOpenSubtitleRepositoryImpl Simple Tests', () {
+  group('OpenSubtitleRepositoryImpl Simple Tests', () {
     late SubtitleOpenSubtitleRepositoryImpl repository;
     late OpenSubtitlesClient client;
     late Logger logger;
@@ -42,8 +46,8 @@ void main() {
             'Accept-Encoding': 'gzip, deflate',
             'Accept-Language': 'en-US',
             'Connection': 'keep-alive',
-            'User-Agent': 'Pusoo v1.0.0',
-            'Api-Key': '6CpnKXZPWSiJJl8sjzPb7id8taErmFlO',
+            'X-User-Agent': 'Pusoo v1.0',
+            'Api-Key': Env.openSubtitlesApiKey,
           },
         ),
       );
@@ -74,32 +78,31 @@ void main() {
           query: 'breaking bad',
           languages: 'id',
           page: 1,
-          userAgent: 'Pusoo v1.0.0',
         );
 
         // Act
-        // final result = await repository.search(queryParams);
+        final result = await repository.search(queryParams);
 
         // Assert - Cek bahwa tidak ada exception dan mendapat response
-        // expect(
-        //   result,
-        //   isA<Right<dynamic, TOpenSubtitleSearchResponse<List<Subtitle>>>>(),
-        // );
+        expect(
+          result,
+          isA<Right<dynamic, TOpenSubtitleSearchResponse<List<Subtitle>>>>(),
+        );
 
-        // result.fold(
-        //   (failure) => fail('Expected success but got failure: $failure'),
-        //   (response) {
-        //     // Cek struktur response dasar
-        //     // expect(response.page, equals(2));
-        //     expect(response.perPage, greaterThan(0));
-        //     expect(response.totalCount, greaterThanOrEqualTo(0));
-        //     expect(response.data, isNotNull);
+        result.fold(
+          (failure) => fail('Expected success but got failure: $failure'),
+          (response) {
+            // Cek struktur response dasar
+            // expect(response.page, equals(2));
+            expect(response.perPage, greaterThan(0));
+            expect(response.totalCount, greaterThanOrEqualTo(0));
+            expect(response.data, isNotNull);
 
-        //     print(
-        //       '[200] API Response - Page: ${response.page}, Total: ${response.totalCount}',
-        //     );
-        //   },
-        // );
+            print(
+              '[200] API Response - Page: ${response.page}, Total: ${response.totalCount}',
+            );
+          },
+        );
       });
     });
   });

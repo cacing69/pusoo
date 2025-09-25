@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'search_subtitle_query_params.g.dart';
@@ -55,7 +54,6 @@ abstract class SearchSubtitleQueryParams with _$SearchSubtitleQueryParams {
     @JsonKey(includeIfNull: false) String? type,
     @JsonKey(name: "uploader_id", includeIfNull: false) int? uploaderId,
     @JsonKey(includeIfNull: false) int? year,
-    @JsonKey(name: "User-Agent", includeIfNull: false) String? userAgent,
   }) = _SearchSubtitleQueryParams;
 
   factory SearchSubtitleQueryParams.fromJson(Map<String, dynamic> json) =>

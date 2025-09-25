@@ -31,16 +31,15 @@ part 'dio_open_subtitles.g.dart';
 Dio dioOpenSubtitles(Ref ref) {
   final dio = Dio(
     BaseOptions(
-      baseUrl: "",
+      baseUrl: "https://api.opensubtitles.com",
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Accept-Encoding': 'gzip, deflate',
         'Accept-Language': 'en-US',
         'Connection': 'keep-alive',
-        'Api-Key':
-            Env.openSubtitlesApiKey, // 41a97db583e09927f82691dea4c69876eeb5b270
-        'User-Agent': 'Pusoo v1.0.0',
+        'X-User-Agent': 'Pusoo v1.0',
+        'Api-Key': Env.openSubtitlesApiKey,
       },
     ),
   );

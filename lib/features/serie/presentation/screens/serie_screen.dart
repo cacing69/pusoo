@@ -99,6 +99,7 @@ class _SerieScreenState extends ConsumerState<SerieScreen> {
                       pagingState: state,
                       fetchNextPage: fetchNextPage,
                       isListView: listViewMode,
+                      contentType: TrackContentType.serie,
                     ),
               ),
               onRefresh: () async {
