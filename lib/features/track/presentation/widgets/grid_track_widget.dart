@@ -16,11 +16,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/widgets.dart';
 import 'package:forui/forui.dart';
-import 'package:forui/theme.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 
 class GridTrackWidget extends StatefulWidget {
@@ -44,8 +42,7 @@ class _GridTrackWidgetState extends State<GridTrackWidget> {
               Stack(
                 children: [
                   CachedNetworkImage(
-                    imageUrl:
-                        "https://m.media-amazon.com/images/I/71OZeGjkmbL._UF894,1000_QL80_.jpg",
+                    imageUrl: widget.track.tvgLogo,
                     fit: BoxFit.cover,
                     placeholder: (_, __) =>
                         const Center(child: FProgress.circularIcon()),
@@ -70,7 +67,14 @@ class _GridTrackWidgetState extends State<GridTrackWidget> {
                       child: Padding(
                         padding: const EdgeInsets.all(4.0),
                         child: Text(
-                          "Action",
+                          widget.track.groupTitle.isNotEmpty
+                              ? widget.track.groupTitle.substring(
+                                  0,
+                                  widget.track.groupTitle.length > 15
+                                      ? 15
+                                      : widget.track.groupTitle.length,
+                                )
+                              : "-",
                           style: context.theme.typography.xs.copyWith(
                             fontWeight: FontWeight.w500,
                           ),
@@ -85,7 +89,7 @@ class _GridTrackWidgetState extends State<GridTrackWidget> {
         ),
         Expanded(
           child: Text(
-            "Do non aliquip officia ipsum in deserunt magna.",
+            widget.track.title,
 
             maxLines: 2,
             overflow: TextOverflow.ellipsis,

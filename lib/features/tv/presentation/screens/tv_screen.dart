@@ -146,6 +146,8 @@ class _TvScreenState extends ConsumerState<TvScreen> {
     );
   }
 
+  bool listViewMode = true;
+
   @override
   Widget build(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
@@ -255,14 +257,22 @@ class _TvScreenState extends ConsumerState<TvScreen> {
         suffixes: [
           !isPotrait
               ? FHeaderAction(
-                  icon: Icon(FIcons.antenna, size: 25),
+                  icon: Icon(FIcons.antenna),
                   onPress: () {
                     openDialogChangePlaylist(context);
                   },
                 )
               : SizedBox.shrink(),
           FHeaderAction(
-            icon: Icon(FIcons.menu, size: 25),
+            icon: Icon(listViewMode ? FIcons.grid2x2 : FIcons.rows3),
+            onPress: () async {
+              setState(() {
+                listViewMode = !listViewMode;
+              });
+            },
+          ),
+          FHeaderAction(
+            icon: Icon(FIcons.menu),
             onPress: () async {
               showFSheet(
                 context: context,
@@ -377,53 +387,84 @@ class _TvScreenState extends ConsumerState<TvScreen> {
               child: PagingListener(
                 controller: ref.watch(tvTracksPagingProvider),
                 builder: (BuildContext context, state, fetchNextPage) =>
-                    PagedListView(
-                      padding: EdgeInsets.zero,
-                      state: state,
-                      fetchNextPage: fetchNextPage,
-                      builderDelegate: PagedChildBuilderDelegate(
-                        itemBuilder: (context, Track item, index) => Column(
-                          children: [
-                            FItem(
-                              onPress: () {
-                                context.pushNamed(
-                                  RouteName.tvPlayer.name,
-                                  extra: item,
-                                );
-                              },
-                              prefix: TvgLogoViewer(
-                                size: 50,
-                                track: item,
-                                showLabel: false,
+                    listViewMode
+                    ? PagedListView(
+                        padding: EdgeInsets.zero,
+                        state: state,
+                        fetchNextPage: fetchNextPage,
+                        builderDelegate: PagedChildBuilderDelegate(
+                          itemBuilder: (context, Track item, index) => Column(
+                            children: [
+                              FItem(
+                                onPress: () {
+                                  context.pushNamed(
+                                    RouteName.tvPlayer.name,
+                                    extra: item,
+                                  );
+                                },
+                                prefix: TvgLogoViewer(
+                                  size: 50,
+                                  track: item,
+                                  showLabel: false,
+                                ),
+                                title: Text(item.title.trim(), maxLines: 2),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    item.groupTitle.trim().isNotEmpty
+                                        ? Text(item.groupTitle.trim())
+                                        : Text("Unknown"),
+                                    item.tvgId.trim().isNotEmpty
+                                        ? Text(item.tvgId.trim(), maxLines: 2)
+                                        : Text("@tvg-id: n/a"),
+                                  ],
+                                ),
+                                suffix: Icon(FIcons.play),
                               ),
-                              title: Text(item.title.trim(), maxLines: 2),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  item.groupTitle.trim().isNotEmpty
-                                      ? Text(item.groupTitle.trim())
-                                      : Text("Unknown"),
-                                  item.tvgId.trim().isNotEmpty
-                                      ? Text(item.tvgId.trim(), maxLines: 2)
-                                      : Text("@tvg-id: n/a"),
-                                ],
+                              FDivider(
+                                style: (style) => style.copyWith(
+                                  padding: EdgeInsets.symmetric(vertical: 2),
+                                  width: 1,
+                                ),
                               ),
-                              suffix: Icon(FIcons.play),
-                            ),
-                            FDivider(
-                              style: (style) => style.copyWith(
-                                padding: EdgeInsets.symmetric(vertical: 2),
-                                width: 1,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
+                          firstPageProgressIndicatorBuilder: (context) =>
+                              FProgress.circularIcon(),
+                          newPageProgressIndicatorBuilder: (context) =>
+                              FProgress.circularIcon(),
                         ),
-                        firstPageProgressIndicatorBuilder: (context) =>
-                            FProgress.circularIcon(),
-                        newPageProgressIndicatorBuilder: (context) =>
-                            FProgress.circularIcon(),
+                      )
+                    : PagedGridView(
+                        padding: EdgeInsets.zero,
+                        state: state,
+                        fetchNextPage: fetchNextPage,
+                        builderDelegate: PagedChildBuilderDelegate(
+                          itemBuilder: (context, Track item, index) =>
+                              GestureDetector(
+                                onTap: () {
+                                  context.pushNamed(
+                                    RouteName.tvPlayer.name,
+                                    extra: item,
+                                  );
+                                },
+                                child: TvgLogoViewer(
+                                  // size: 50,
+                                  track: item,
+                                  showLabel: true,
+                                ),
+                              ),
+                          firstPageProgressIndicatorBuilder: (context) =>
+                              FProgress.circularIcon(),
+                          newPageProgressIndicatorBuilder: (context) =>
+                              FProgress.circularIcon(),
+                        ),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: isPotrait ? 4 : 8,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5,
+                        ),
                       ),
-                    ),
               ),
               onRefresh: () async {
                 searchController.text = "";

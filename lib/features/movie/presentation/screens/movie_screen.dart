@@ -21,13 +21,12 @@ import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:pusoo/features/movie/presentation/providers/movie_track_count_notifier.dart';
 import 'package:pusoo/features/movie/presentation/providers/movie_track_group_titles_notifier.dart';
 import 'package:pusoo/features/movie/presentation/providers/movie_tracks_filter_notifier.dart';
 import 'package:pusoo/features/movie/presentation/providers/movie_tracks_paging_notifier.dart';
-import 'package:pusoo/features/track/presentation/widgets/list_track_widget.dart';
-import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
-import 'package:pusoo/features/tv/presentation/providers/tv_track_count_notifier.dart';
+import 'package:pusoo/features/track/presentation/widgets/paged_track_view.dart';
 
 class MovieScreen extends StatefulHookConsumerWidget {
   const MovieScreen({super.key});
@@ -47,7 +46,7 @@ class _MovieScreenState extends ConsumerState<MovieScreen> {
           .perform(TrackFilterQuery(isMovie: true));
 
       ref
-          .read(tvTrackCountProvider.notifier)
+          .read(movieTrackCountProvider.notifier)
           .perform(TrackFilterQuery(isMovie: true));
     });
   }
@@ -98,41 +97,12 @@ class _MovieScreenState extends ConsumerState<MovieScreen> {
               child: PagingListener(
                 controller: ref.watch(movieTracksPagingProvider),
                 builder: (BuildContext context, state, fetchNextPage) =>
-                    PagedListView(
-                      padding: EdgeInsets.zero,
-                      state: state,
+                    PagedTrackView(
+                      pagingState: state,
                       fetchNextPage: fetchNextPage,
-                      builderDelegate: PagedChildBuilderDelegate(
-                        itemBuilder: (context, Track item, index) =>
-                            ListTrackWidget(track: item),
-                        firstPageProgressIndicatorBuilder: (context) =>
-                            FProgress.circularIcon(),
-                        newPageProgressIndicatorBuilder: (context) =>
-                            FProgress.circularIcon(),
-                      ),
+                      isListView: listViewMode,
                     ),
               ),
-
-              // ListView.builder(
-              //     padding: EdgeInsets.zero,
-              //     itemCount: 100,
-              //     itemBuilder: (context, index) {
-              //       return ListTrackWidget(track: Track());
-              //     },
-              //   )
-              // : GridView.builder(
-              //     padding: EdgeInsets.zero,
-              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              //       crossAxisCount: isPotrait ? 3 : 6,
-              //       childAspectRatio: 0.57,
-              //       crossAxisSpacing: 5,
-              //       mainAxisSpacing: 5,
-              //     ),
-              //     itemCount: 100,
-              //     itemBuilder: (context, index) {
-              //       return GridTrackWidget(track: Track());
-              //     },
-              //   ),
               onRefresh: () async {
                 ref.read(movieTracksFilterProvider.notifier).reset();
                 ref.read(movieTracksPagingProvider).refresh();
