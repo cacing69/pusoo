@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:pusoo/features/track/domain/models/track.dart';
 
 final iptvOrgListCountries = [
@@ -261,10 +260,6 @@ final iptvOrgListCountries = [
     links: ["https://iptv-org.github.io/iptv/countries/ge.m3u"],
   ),
   Track(
-    title: "Abkhazia",
-    links: ["https://iptv-org.github.io/iptv/subdivisions/ge-ab.m3u"],
-  ),
-  Track(
     title: "🇩🇪 Germany",
     links: ["https://iptv-org.github.io/iptv/countries/de.m3u"],
   ),
@@ -347,10 +342,6 @@ final iptvOrgListCountries = [
   Track(
     title: "🇮🇹 Italy",
     links: ["https://iptv-org.github.io/iptv/countries/it.m3u"],
-  ),
-  Track(
-    title: "Trentino-Alto Adige",
-    links: ["https://iptv-org.github.io/iptv/subdivisions/it-32.m3u"],
   ),
   Track(
     title: "🇨🇮 Ivory Coast",

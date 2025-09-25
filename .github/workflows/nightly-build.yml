@@ -66,19 +66,19 @@ jobs:
       - name: Build app bundle (AAB)
         run: flutter build appbundle --release
 
-      - name: Upload Assets to Release Drafter
-        uses: ncipollo/release-action@v1
-        with:
-          tag: nightly-${{ github.sha }}
-          artifacts: |
-            build/app/outputs/flutter-apk/app-release.apk,
-            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk,
-            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk,
-            build/app/outputs/flutter-apk/app-x86_64-release.apk,
-            build/app/outputs/bundle/release/app-release.aab
-          allowUpdates: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Upload Assets to Release Drafter
+      #   uses: ncipollo/release-action@v1
+      #   with:
+      #     tag: nightly-${{ github.sha }}
+      #     artifacts: |
+      #       build/app/outputs/flutter-apk/app-release.apk,
+      #       build/app/outputs/flutter-apk/app-arm64-v8a-release.apk,
+      #       build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk,
+      #       build/app/outputs/flutter-apk/app-x86_64-release.apk,
+      #       build/app/outputs/bundle/release/app-release.aab
+      #     allowUpdates: true
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: Upload Nightly Release
       #   uses: softprops/action-gh-release@v1

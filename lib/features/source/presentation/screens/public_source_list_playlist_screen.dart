@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
@@ -69,7 +68,7 @@ class _PublicSourceListPlaylistScreenState
               //   ],
               // ),
               FTile(
-                prefix: Icon(FIcons.github),
+                prefix: Icon(FIcons.globe),
                 title: Text(source.name!),
                 suffix: Icon(FIcons.externalLink),
                 subtitle: Text(source.description!, maxLines: 3),

@@ -6,8 +6,7 @@
 
 
 
-**Pusoo** is an **IPTV Player built with Flutter**, licensed under GPLv3.
-It is designed to play a wide range of IPTV streams, both live and on-demand, with support for modern streaming formats and DRM.
+**Pusoo** is an **IPTV Player built with Flutter**, It is designed to play a wide range of IPTV streams, both live and on-demand, with support for modern streaming formats and DRM.
 
 > All Channels, One Player, Infinite Play.
 
