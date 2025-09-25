@@ -27,7 +27,7 @@ categories:
     labels:
       - test
 # Template untuk setiap perubahan
-change-template: '- $TITLE ([#$NUMBER]($URL)) by [@$AUTHOR](https://github.com/${AUTHOR})'
+change-template: '- $TITLE ([#$NUMBER]($URL)) by [@$AUTHOR](https://github.com/$AUTHOR)'
 # Template jika tidak ada perubahan
 no-changes-template: '- No changes'
 # Template utama draft release
