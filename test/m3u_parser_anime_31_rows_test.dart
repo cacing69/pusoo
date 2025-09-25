@@ -88,7 +88,7 @@ https://r2---sn-gpv7ener.googlevideo.com/videoplayback?requiressl=yes&id=8385fa5
 https://r5---sn-gpv7enez.googlevideo.com/videoplayback?requiressl=yes&id=3f5cd111871980e1&itag=18&source=blogger&app=blogger&ip=2804:14d:5c62:975c:495f:76da:dcae:d71d&ipbits=0&expire=1497926140&sparams=expire,id,ip,ipbits,itag,mm,mn,ms,mv,pl,requiressl,sc,source&signature=2BDC3C5DDFD01CC22D81911B2F10B063A2AEF2E4.6485B904F4B4AA9AEE877BEEC8721EE3009A290B&key=cms1&cms_redirect=yes&mm=30&mn=sn-gpv7enez&ms=nxu&mt=1495778544&mv=m&pl=46&sc=yes
 ''';
 
-    test('test:1:listCountryShouldHave188Length', () async {
+    test('test:1', () async {
       final tracks = M3UParser.parse(content);
 
       // #EXTINF:-1 group-title="Hora De Aventura ova 2",Hora De Aventura ova 2

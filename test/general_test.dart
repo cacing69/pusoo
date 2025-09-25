@@ -21,10 +21,10 @@ import 'package:pusoo/features/source/data/const/github/iptv_org_list_countries.
 
 void main() async {
   group('GeneralTest', () {
-    test('test:1:listCountryShouldHave188Length', () async {
+    test('test:1:listCountryShouldHave186Length', () async {
       final result = iptvOrgListCountries;
 
-      expect(result.length, equals(188));
+      expect(result.length, equals(186));
     });
   });
 }
