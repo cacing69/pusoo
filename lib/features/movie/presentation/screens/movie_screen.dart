@@ -21,13 +21,13 @@ import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:pusoo/features/movie/presentation/providers/movie_track_count_notifier.dart';
 import 'package:pusoo/features/movie/presentation/providers/movie_track_group_titles_notifier.dart';
 import 'package:pusoo/features/movie/presentation/providers/movie_tracks_filter_notifier.dart';
 import 'package:pusoo/features/movie/presentation/providers/movie_tracks_paging_notifier.dart';
 import 'package:pusoo/features/track/presentation/widgets/list_track_widget.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
-import 'package:pusoo/features/tv/presentation/providers/tv_track_count_notifier.dart';
 
 class MovieScreen extends StatefulHookConsumerWidget {
   const MovieScreen({super.key});
@@ -47,7 +47,7 @@ class _MovieScreenState extends ConsumerState<MovieScreen> {
           .perform(TrackFilterQuery(isMovie: true));
 
       ref
-          .read(tvTrackCountProvider.notifier)
+          .read(movieTrackCountProvider.notifier)
           .perform(TrackFilterQuery(isMovie: true));
     });
   }

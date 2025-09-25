@@ -19,21 +19,37 @@
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
-import 'package:pusoo/features/track/presentation/widgets/grid_track_widget.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:pusoo/features/serie/presentation/providers/serie_track_count_notifier.dart';
+import 'package:pusoo/features/serie/presentation/providers/serie_track_group_titles_notifier.dart';
+import 'package:pusoo/features/serie/presentation/providers/serie_tracks_filter_notifier.dart';
+import 'package:pusoo/features/serie/presentation/providers/serie_tracks_paging_notifier.dart';
+import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
 import 'package:pusoo/features/track/presentation/widgets/list_track_widget.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 
-class SerieScreen extends StatefulWidget {
+class SerieScreen extends StatefulHookConsumerWidget {
   const SerieScreen({super.key});
 
   @override
-  State<SerieScreen> createState() => _SerieScreenState();
+  ConsumerState<SerieScreen> createState() => _SerieScreenState();
 }
 
-class _SerieScreenState extends State<SerieScreen> {
+class _SerieScreenState extends ConsumerState<SerieScreen> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(serieTrackGroupTitlesProvider.notifier)
+          .perform(TrackFilterQuery(isMovie: true));
+
+      ref
+          .read(serieTrackCountProvider.notifier)
+          .perform(TrackFilterQuery(isMovie: true));
+    });
   }
 
   bool listViewMode = true;
@@ -76,27 +92,51 @@ class _SerieScreenState extends State<SerieScreen> {
               ? FTextField(hint: "Find something to watch...")
               : SizedBox.shrink(),
           Expanded(
-            child: listViewMode
-                ? ListView.builder(
-                    padding: EdgeInsets.zero,
-                    itemCount: 100,
-                    itemBuilder: (context, index) {
-                      return ListTrackWidget(track: Track());
-                    },
-                  )
-                : GridView.builder(
-                    padding: EdgeInsets.zero,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: isPotrait ? 3 : 6,
-                      childAspectRatio: 0.57,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 5,
+            child: RefreshIndicator(
+              child: PagingListener(
+                controller: ref.watch(serieTracksPagingProvider),
+                builder: (BuildContext context, state, fetchNextPage) =>
+                    PagedListView(
+                      padding: EdgeInsets.zero,
+                      state: state,
+                      fetchNextPage: fetchNextPage,
+                      builderDelegate: PagedChildBuilderDelegate(
+                        itemBuilder: (context, Track item, index) =>
+                            ListTrackWidget(track: item),
+                        firstPageProgressIndicatorBuilder: (context) =>
+                            FProgress.circularIcon(),
+                        newPageProgressIndicatorBuilder: (context) =>
+                            FProgress.circularIcon(),
+                      ),
                     ),
-                    itemCount: 100,
-                    itemBuilder: (context, index) {
-                      return GridTrackWidget(track: Track());
-                    },
-                  ),
+              ),
+              onRefresh: () async {
+                ref.read(serieTracksFilterProvider.notifier).reset();
+                ref.read(serieTracksPagingProvider).refresh();
+              },
+            ),
+
+            // listViewMode
+            //       ? ListView.builder(
+            //           padding: EdgeInsets.zero,
+            //           itemCount: 100,
+            //           itemBuilder: (context, index) {
+            //             return ListTrackWidget(track: Track());
+            //           },
+            //         )
+            //       : GridView.builder(
+            //           padding: EdgeInsets.zero,
+            //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //             crossAxisCount: isPotrait ? 3 : 6,
+            //             childAspectRatio: 0.57,
+            //             crossAxisSpacing: 5,
+            //             mainAxisSpacing: 5,
+            //           ),
+            //           itemCount: 100,
+            //           itemBuilder: (context, index) {
+            //             return GridTrackWidget(track: Track());
+            //           },
+            //         ),
           ),
         ],
       ),
