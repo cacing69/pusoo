@@ -32,10 +32,10 @@ change-template: '- $TITLE ([#$NUMBER]($URL)) by [@$AUTHOR](https://github.com/$
 no-changes-template: '- No changes'
 # Template utama draft release
 template: |
-  ## Nightly Build Changes
+  ## Pre-release Build Changes
 
   This is an automatic nightly build from the latest commit on `main`.
-  Use at your own risk — features may be unstable.
+  Use at your own risk - features may be unstable.
 
   ### Changes
   $CHANGES

@@ -143,7 +143,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     FTile(
                       title: Text("Donate"),
                       subtitle: Text(
-                        "Pusoo is a community-driven project, developed by me and contributors in our free time. Every bit of support makes it easier for us to keep improving Pusoo — and enjoy a coffee while coding.",
+                        "Pusoo is a community-driven project, developed by me and contributors in our free time. Every bit of support makes it easier for us to keep improving Pusoo - and enjoy a coffee while coding.",
                         maxLines: 5,
                       ),
 

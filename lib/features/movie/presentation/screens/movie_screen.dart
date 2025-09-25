@@ -101,6 +101,7 @@ class _MovieScreenState extends ConsumerState<MovieScreen> {
                       pagingState: state,
                       fetchNextPage: fetchNextPage,
                       isListView: listViewMode,
+                      contentType: TrackContentType.movie,
                     ),
               ),
               onRefresh: () async {

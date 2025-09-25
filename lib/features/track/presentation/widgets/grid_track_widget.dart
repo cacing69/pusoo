@@ -20,10 +20,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/widgets.dart';
 import 'package:forui/forui.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
+import 'package:pusoo/features/track/presentation/widgets/paged_track_view.dart';
 
 class GridTrackWidget extends StatefulWidget {
   final Track track;
-  const GridTrackWidget({super.key, required this.track});
+  final TrackContentType contentType;
+  const GridTrackWidget({
+    super.key,
+    required this.track,
+    required this.contentType,
+  });
 
   @override
   State<GridTrackWidget> createState() => _GridTrackWidgetState();

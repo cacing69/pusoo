@@ -19,14 +19,21 @@
 import 'package:flutter/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:forui/forui.dart';
-import 'package:forui/theme.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
-import 'package:pusoo/shared/utils/helpers.dart';
+import 'package:pusoo/features/track/presentation/widgets/paged_track_view.dart';
+import 'package:pusoo/router.dart';
 
 class ListTrackWidget extends StatefulWidget {
   final Track track;
-  const ListTrackWidget({super.key, required this.track});
+  final TrackContentType contentType;
+
+  const ListTrackWidget({
+    super.key,
+    required this.track,
+    required this.contentType,
+  });
 
   @override
   State<ListTrackWidget> createState() => _ListTrackWidgetState();
@@ -36,8 +43,16 @@ class _ListTrackWidgetState extends State<ListTrackWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
-        showFlutterToast(message: "Under development", context: context);
+        // showFlutterToast(message: "Under development", context: context);
+        context.pushNamed(
+          TrackContentType.movie == widget.contentType
+              ? RouteName.movieDetail.name
+              : RouteName.serieDetail.name,
+
+          extra: widget.track,
+        );
       },
       child: Padding(
         padding: const EdgeInsets.all(5.0),

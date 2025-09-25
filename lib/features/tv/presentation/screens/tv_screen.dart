@@ -398,7 +398,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                               FItem(
                                 onPress: () {
                                   context.pushNamed(
-                                    RouteName.tvPlayer.name,
+                                    RouteName.videoPlayer.name,
                                     extra: item,
                                   );
                                 },
@@ -444,7 +444,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                               GestureDetector(
                                 onTap: () {
                                   context.pushNamed(
-                                    RouteName.tvPlayer.name,
+                                    RouteName.videoPlayer.name,
                                     extra: item,
                                   );
                                 },

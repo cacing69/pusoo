@@ -188,7 +188,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     if (url.trim().isNotEmpty) {
       if (url.trim().isValidUrl()) {
         context.pushNamed(
-          RouteName.tvPlayer.name,
+          RouteName.videoPlayer.name,
           extra: Track(
             title: "Pusoo - Open Source IPTV Player",
             tvgId: "Online Video Player",

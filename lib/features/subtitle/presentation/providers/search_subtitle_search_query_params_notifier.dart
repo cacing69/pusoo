@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:pusoo/shared/domain/entities/open_subtitles/search_subtitle_query_params.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -28,7 +27,7 @@ class SearchSubtitleQueryParamsNotifier
   @override
   SearchSubtitleQueryParams build() {
     return SearchSubtitleQueryParams(
-      languages: 'id', // Default language
+      languages: 'en', // Default language
     );
   }
 

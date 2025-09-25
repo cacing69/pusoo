@@ -4,13 +4,17 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pusoo/features/track/presentation/widgets/grid_track_widget.dart';
 import 'package:pusoo/features/track/presentation/widgets/list_track_widget.dart';
 
+enum TrackContentType { tv, movie, serie }
+
 class PagedTrackView extends StatefulWidget {
   final bool isListView;
+  final TrackContentType contentType;
   final PagingState pagingState;
   final Function() fetchNextPage;
   const PagedTrackView({
     super.key,
     this.isListView = true,
+    required this.contentType,
     required this.pagingState,
     required this.fetchNextPage,
   });
@@ -32,7 +36,7 @@ class _PagedTrackViewState extends State<PagedTrackView> {
             fetchNextPage: widget.fetchNextPage,
             builderDelegate: PagedChildBuilderDelegate(
               itemBuilder: (context, dynamic item, index) =>
-                  ListTrackWidget(track: item),
+                  ListTrackWidget(track: item, contentType: widget.contentType),
               firstPageProgressIndicatorBuilder: (context) =>
                   FProgress.circularIcon(),
               newPageProgressIndicatorBuilder: (context) =>
@@ -45,7 +49,7 @@ class _PagedTrackViewState extends State<PagedTrackView> {
             fetchNextPage: widget.fetchNextPage,
             builderDelegate: PagedChildBuilderDelegate(
               itemBuilder: (context, dynamic item, index) =>
-                  GridTrackWidget(track: item),
+                  GridTrackWidget(track: item, contentType: widget.contentType),
               firstPageProgressIndicatorBuilder: (context) => SizedBox(
                 width: double.infinity,
                 height: double.infinity,

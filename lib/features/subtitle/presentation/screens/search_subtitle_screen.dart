@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -28,7 +27,6 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pusoo/features/subtitle/presentation/providers/search_subtitle_paging_notifier.dart';
 import 'package:pusoo/features/subtitle/presentation/providers/search_subtitle_search_query_params_notifier.dart';
 import 'package:pusoo/shared/domain/entities/open_subtitles/subtitle.dart';
-import 'package:pusoo/shared/domain/entities/open_subtitles/search_subtitle_query_params.dart';
 import 'package:pusoo/shared/presentation/providers/logger_provider.dart';
 
 class SearchSubtitleScreen extends StatefulHookConsumerWidget {
@@ -43,24 +41,22 @@ class _SearchSubtitleScreenState extends ConsumerState<SearchSubtitleScreen> {
   @override
   Widget build(BuildContext context) {
     final TextEditingController queryController = useTextEditingController();
-    final TextEditingController languageController = useTextEditingController(
-      text: "id",
-    );
+    final TextEditingController languageController = useTextEditingController();
 
     // Listen to query params changes and refresh paging when needed
-    ref.listen<SearchSubtitleQueryParams>(searchSubtitleQueryParamsProvider, (
-      previous,
-      next,
-    ) {
-      // Only refresh when query actually changes (not when page changes)
-      if (previous?.query != next.query) {
-        final log = ref.read(loggerProvider);
-        log.i(
-          "Query changed from '${previous?.query}' to '${next.query}', refreshing paging...",
-        );
-        ref.read(searchSubtitlePagingProvider).refresh();
-      }
-    });
+    // ref.listen<SearchSubtitleQueryParams>(searchSubtitleQueryParamsProvider, (
+    //   previous,
+    //   next,
+    // ) {
+    //   // Only refresh when query actually changes (not when page changes)
+    //   if (previous?.query != next.query) {
+    //     final log = ref.read(loggerProvider);
+    //     log.i(
+    //       "Query changed from '${previous?.query}' to '${next.query}', refreshing paging...",
+    //     );
+    //     ref.read(searchSubtitlePagingProvider).refresh();
+    //   }
+    // });
 
     return FScaffold(
       header: FHeader.nested(
@@ -82,11 +78,14 @@ class _SearchSubtitleScreenState extends ConsumerState<SearchSubtitleScreen> {
               spacing: 10,
               children: [
                 Flexible(child: FTextField(label: Text("IMDb ID"))),
-                Flexible(child: FTextField(label: Text("Language (id)"))),
+                Flexible(
+                  child: FTextField(
+                    controller: languageController,
+                    label: Text("Language (id)"),
+                  ),
+                ),
               ],
             ),
-            Gap(5),
-
             Gap(5),
             FTextField(controller: queryController, label: Text("Title/Query")),
             Gap(5),
@@ -119,12 +118,14 @@ class _SearchSubtitleScreenState extends ConsumerState<SearchSubtitleScreen> {
                         ref
                             .read(searchSubtitleQueryParamsProvider.notifier)
                             .updateLanguage(
-                              language.isNotEmpty ? language : "id",
+                              language.isNotEmpty ? language : "en",
                             );
 
                         log.i(
                           "Updated query params - listener will handle refresh",
                         );
+
+                        ref.read(searchSubtitlePagingProvider).refresh();
                       } else {
                         log.w("Query is empty, not searching");
                       }
@@ -189,7 +190,7 @@ class _SearchSubtitleScreenState extends ConsumerState<SearchSubtitleScreen> {
                                         padding: EdgeInsets.all(2),
                                         child: Icon(
                                           FIcons.user,
-                                          size: 17,
+                                          size: 12,
                                           color:
                                               context.theme.colors.background,
                                         ),
@@ -239,41 +240,10 @@ class _SearchSubtitleScreenState extends ConsumerState<SearchSubtitleScreen> {
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             suffix: Icon(FIcons.download),
-                                            // details: Text(
-                                            //     "${file.format?.toUpperCase() ?? "N/A"} - ${file.encoding ?? "N/A"}"),
-                                            // subtitle: Text(
-                                            //     "Size: ${file.fileSize ?? "N/A"} - ${item.attributes?.language ?? "N/A"}"),
-                                            // onPress: () async {
-                                            //   // Load subtitle into video player
-                                            //   // For demo, just show a toast
-                                            //   showFlutterToast(
-                                            //     message:
-                                            //         "Load subtitle: ${file.fileName}",
-                                            //     context: context,
-                                            //   );
-                                            // },
                                           ),
                                         )
                                         .toList() ??
                                     [],
-                                // FItem(
-                                //   prefix: Icon(FIcons.captions),
-                                //   title: Text(item.type ?? "No Type"),
-                                //   suffix: Icon(FIcons.download),
-                                //   details: Text("English"),
-                                // ),
-                                // FItem(
-                                //   prefix: Icon(FIcons.captions),
-                                //   title: Text(item.type ?? "No Type"),
-                                //   suffix: Icon(FIcons.download),
-                                //   details: Text("English"),
-                                // ),
-                                // FItem(
-                                //   prefix: Icon(FIcons.captions),
-                                //   title: Text(item.type ?? "No Type"),
-                                //   suffix: Icon(FIcons.download),
-                                //   details: Text("English"),
-                                // ),
                               ],
                             ),
                             FDivider(

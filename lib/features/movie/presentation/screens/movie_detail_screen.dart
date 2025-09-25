@@ -29,7 +29,6 @@ import 'package:intl/intl.dart';
 import 'package:pusoo/shared/configs/env.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/router.dart';
-import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MovieDetailScreen extends StatefulWidget {
@@ -46,7 +45,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     super.initState();
 
     setState(() {
-      poster = widget.track.tvgLogo!;
+      poster = widget.track.tvgLogo;
     });
 
     loadTmdb(widget.track);
@@ -86,7 +85,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     //     .trim();
 
     final Uri url = Uri.parse(
-      "https://api.themoviedb.org/3/search/movie?query=${title}&include_adult=true&language=en-US&page=1&year=$year",
+      "https://api.themoviedb.org/3/search/movie?query=$title&include_adult=true&language=en-US&page=1&year=$year",
     );
 
     // debugPrint("url.toString(): $url");
@@ -327,10 +326,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             style: FButtonStyle.outline(),
             prefix: Icon(FIcons.play),
             onPress: () {
-              // context.pushNamed(
-              //   RouteName.videoPlayerFull.name,
-              //   extra: widget.channel,
-              // );
+              context.pushNamed(
+                RouteName.videoPlayer.name,
+                extra: widget.track,
+                queryParameters: {"isLiveStream": "false"},
+              );
             },
             child: Text("Watch Now"),
           ),
