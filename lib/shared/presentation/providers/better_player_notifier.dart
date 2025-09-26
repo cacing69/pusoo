@@ -163,6 +163,7 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
     int useUrlOnIndex = 0,
   }) async {
     final log = ref.read(loggerProvider);
+    log.d("track.toString():$track");
     if (_isChangingDataSource) {
       log.w("Data source change already in progress. Ignoring.");
       return;
@@ -275,6 +276,7 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         if (extOnUrl.contains("mpd")) {
           videoFormat = BetterPlayerVideoFormat.dash;
         } else if (extOnUrl.contains("m3u8")) {
+          log.d("videoFormat = BetterPlayerVideoFormat.hls");
           videoFormat = BetterPlayerVideoFormat.hls;
         } else if ([
           "mkv",
@@ -390,7 +392,11 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         );
       }
 
-      log.d("httpHeaders:final $httpHeaders");
+      log.d("videoUrl:final $videoUrl");
+      log.d("videoFormat:final $videoFormat");
+      log.d("headers:final $httpHeaders");
+      log.d("liveStream:final $isLiveStream");
+      log.d("drmConfiguration:final $drmConfiguration");
 
       final BetterPlayerDataSource betterPlayerDataSource =
           BetterPlayerDataSource(

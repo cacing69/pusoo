@@ -2158,7 +2158,7 @@ https://d25tgymtnqzu8s.cloudfront.net/smil:tv2/manifest.mpd
       List<Track> result = M3UParser.parse(content);
 
       expect(result[0].title, equals("102 TV2 (SERVER 1)"));
-      expect(result[0].kodiProps.length, equals(1));
+      expect(result[0].kodiProps.length, equals(0));
     });
 
     test('TestTrackShouldGiveLength:1', () async {
@@ -2237,7 +2237,7 @@ http://stitcher-ipv4.pluto.tv/v1/stitch/embed/hls/channel/5f32f26bcd8aea00071240
       List<Track> result = M3UParser.parse(content);
 
       expect(result[0].title, equals("Vevo '70s"));
-      expect(result[0].kodiProps.length, equals(1));
+      expect(result[0].kodiProps.length, equals(0));
     });
 
     test('TestTrackShouldGiveName:617 Nick Jr', () async {

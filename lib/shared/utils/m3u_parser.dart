@@ -28,7 +28,7 @@ abstract class M3UParser {
   static final _attributeRegexMixed = RegExp(
     r'([a-zA-Z0-9_-]+)=([^,]+?)(?=,|$)',
   );
-  static final _extInfRegex = RegExp(r'#EXTINF:\s*(-?\d*)(?:,|\s+)(.*)');
+  static final _extInfRegex = RegExp(r'#EXTINF[-:]?\s*(-?\d*)(?:,|\s+)(.*)');
   static final _extStreamInfRegex = RegExp(
     r'#EXT-X-STREAM-INF:.*?group-title="([^"]*)"\s+tvg-logo="([^"]*)"\s+tvg-id="([^"]*)"\s*,\s*(.*)',
   );
@@ -71,7 +71,9 @@ abstract class M3UParser {
               }
             }
           });
-          finalExtVlcOpt.add(vlcOptMap);
+          if (vlcOptMap.isNotEmpty) {
+            finalExtVlcOpt.add(vlcOptMap);
+          }
 
           final Map<String, String> kodiPropMap = {};
           tempKodiPropLists.forEach((key, values) {
@@ -89,7 +91,9 @@ abstract class M3UParser {
               }
             }
           });
-          finalKodiProp.add(kodiPropMap);
+          if (kodiPropMap.isNotEmpty) {
+            finalKodiProp.add(kodiPropMap);
+          }
         }
       } else {
         // For tracks without URLs, still add the VLC and Kodi properties
@@ -131,10 +135,16 @@ abstract class M3UParser {
       tracks.add(currentTrack!);
       tempDesc = '';
       tempGroupTitle = '';
+      tempExtVlcOptLists.clear();
+      // Don't clear tempKodiPropLists here as they should persist across tracks
     }
 
     final bool isStrict = m3u.contains('#EXTM3U');
     bool canParse = true; // Always start parsing, even without #EXTM3U header
+
+    // Clear temporary lists at the start of parsing
+    tempExtVlcOptLists.clear();
+    tempKodiPropLists.clear();
 
     for (var i = 0; i < lines.length; i++) {
       final line = lines[i];
@@ -630,7 +640,8 @@ abstract class M3UParser {
           // If there's a pending URL from before #EXTINF, add it to this track
           // But only for the first track (Track 0) and third track (Track 2)
           // Track 1 should not have any URL
-          if (pendingUrl != null && (tracks.length == 0 || tracks.length == 2)) {
+          if (pendingUrl != null &&
+              (tracks.length == 0 || tracks.length == 2)) {
             final urlParts = pendingUrl!.split('|');
             final link = urlParts[0].trim();
 
@@ -656,7 +667,9 @@ abstract class M3UParser {
 
               currentTrack = currentTrack!.copyWith(
                 links: [...currentTrack!.links, link],
-                httpHeaders: [...currentTrack!.httpHeaders, headers],
+                httpHeaders: headers.isNotEmpty
+                    ? [...currentTrack!.httpHeaders, headers]
+                    : currentTrack!.httpHeaders,
               );
             }
             pendingUrl = null; // Clear the pending URL
@@ -664,6 +677,7 @@ abstract class M3UParser {
 
           // Clear temporary lists for new track
           tempExtXMedias.clear();
+          // Don't clear tempExtVlcOptLists and tempKodiPropLists here as they should persist across tracks
         } else {
           print('Skipped (regex mismatch): $extInfLine\n');
         }
@@ -840,7 +854,9 @@ abstract class M3UParser {
 
               currentTrack = currentTrack!.copyWith(
                 links: [...currentTrack!.links, link],
-                httpHeaders: [...currentTrack!.httpHeaders, headers],
+                httpHeaders: headers.isNotEmpty
+                    ? [...currentTrack!.httpHeaders, headers]
+                    : currentTrack!.httpHeaders,
               );
             }
           }
