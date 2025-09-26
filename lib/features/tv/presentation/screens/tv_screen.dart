@@ -400,6 +400,7 @@ class _TvScreenState extends ConsumerState<TvScreen> {
                                   context.pushNamed(
                                     RouteName.videoPlayer.name,
                                     extra: item,
+                                    queryParameters: {"isLiveStream": "true"},
                                   );
                                 },
                                 prefix: TvgLogoViewer(

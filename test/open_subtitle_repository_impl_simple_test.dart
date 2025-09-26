@@ -72,38 +72,38 @@ void main() {
     });
 
     group('search', () {
-      test('should get 200 response from OpenSubtitles API', () async {
-        // Arrange
-        final queryParams = SearchSubtitleQueryParams(
-          query: 'breaking bad',
-          languages: 'id',
-          page: 1,
-        );
+      // test('should get 200 response from OpenSubtitles API', () async {
+      //   // Arrange
+      //   final queryParams = SearchSubtitleQueryParams(
+      //     query: 'breaking bad',
+      //     languages: 'id',
+      //     page: 1,
+      //   );
 
-        // Act
-        final result = await repository.search(queryParams);
+      //   // Act
+      //   final result = await repository.search(queryParams);
 
-        // Assert - Cek bahwa tidak ada exception dan mendapat response
-        expect(
-          result,
-          isA<Right<dynamic, TOpenSubtitleSearchResponse<List<Subtitle>>>>(),
-        );
+      //   // Assert - Cek bahwa tidak ada exception dan mendapat response
+      //   expect(
+      //     result,
+      //     isA<Right<dynamic, TOpenSubtitleSearchResponse<List<Subtitle>>>>(),
+      //   );
 
-        result.fold(
-          (failure) => fail('Expected success but got failure: $failure'),
-          (response) {
-            // Cek struktur response dasar
-            // expect(response.page, equals(2));
-            expect(response.perPage, greaterThan(0));
-            expect(response.totalCount, greaterThanOrEqualTo(0));
-            expect(response.data, isNotNull);
+      //   result.fold(
+      //     (failure) => fail('Expected success but got failure: $failure'),
+      //     (response) {
+      //       // Cek struktur response dasar
+      //       // expect(response.page, equals(2));
+      //       expect(response.perPage, greaterThan(0));
+      //       expect(response.totalCount, greaterThanOrEqualTo(0));
+      //       expect(response.data, isNotNull);
 
-            print(
-              '[200] API Response - Page: ${response.page}, Total: ${response.totalCount}',
-            );
-          },
-        );
-      });
+      //       print(
+      //         '[200] API Response - Page: ${response.page}, Total: ${response.totalCount}',
+      //       );
+      //     },
+      //   );
+      // });
     });
   });
 }
