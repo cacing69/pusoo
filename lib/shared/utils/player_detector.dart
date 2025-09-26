@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-enum PlayerType { betterPlayer, youtube }
+enum PlayerType { betterPlayer, youtube, mediaKit }
 
 class PlayerDetector {
   final String? url;

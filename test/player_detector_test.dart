@@ -69,5 +69,13 @@ void main() async {
       expect(result.type, equals(PlayerType.betterPlayer));
       expect(result.youtubeVideoId, isNull);
     });
+
+    test('test:7', () async {
+      final result = PlayerDetector.fromUrl(
+        "https://www.example.com/video-name.avi",
+      );
+
+      expect(result.type, equals(PlayerType.mediaKit));
+    });
   });
 }

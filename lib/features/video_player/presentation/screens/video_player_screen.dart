@@ -30,6 +30,7 @@ import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/presentation/providers/better_player_notifier.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class VideoPlayerScreen extends ConsumerStatefulWidget {
   final Track track;
@@ -47,6 +48,7 @@ class VideoPlayerScreen extends ConsumerStatefulWidget {
 class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
     with SingleTickerProviderStateMixin {
   final GlobalKey _playerKey = GlobalKey();
+
   YoutubePlayerController? _youtubePlayerController;
 
   late PlayerDetector? player;
@@ -97,12 +99,16 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
             .read(betterPlayerProvider.notifier)
             .openMediaStream(widget.track, isLiveStream: widget.isLiveStream);
       }
+
+      // Aktifkan wake lock ketika video mulai diputar
+      WakelockPlus.enable();
     });
   }
 
   @override
   void dispose() {
     _youtubePlayerController?.close();
+    WakelockPlus.disable();
     super.dispose();
   }
 

@@ -214,6 +214,12 @@ List<ThirdPartyLicense> thirdPartyLicenses = [
     url:
         "https://github.com/fluttercommunity/plus_plugins/tree/main/packages/package_info_plus",
   ),
+  ThirdPartyLicense(
+    name: "Wakelock Plus",
+    license: "BSD-3-Clause",
+    url:
+        "https://github.com/fluttercommunity/wakelock_plus/tree/main/wakelock_plus",
+  ),
 
   // Video & Media
   ThirdPartyLicense(
