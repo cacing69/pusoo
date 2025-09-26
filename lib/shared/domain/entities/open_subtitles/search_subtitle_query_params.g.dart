@@ -32,7 +32,6 @@ _SearchSubtitleQueryParams _$SearchSubtitleQueryParamsFromJson(
   type: json['type'] as String?,
   uploaderId: (json['uploader_id'] as num?)?.toInt(),
   year: (json['year'] as num?)?.toInt(),
-  userAgent: json['User-Agent'] as String?,
 );
 
 Map<String, dynamic> _$SearchSubtitleQueryParamsToJson(
@@ -61,5 +60,4 @@ Map<String, dynamic> _$SearchSubtitleQueryParamsToJson(
   'type': ?instance.type,
   'uploader_id': ?instance.uploaderId,
   'year': ?instance.year,
-  'User-Agent': ?instance.userAgent,
 };

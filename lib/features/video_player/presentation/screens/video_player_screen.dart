@@ -23,6 +23,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pusoo/features/video_player/domain/entities/video_player_type.dart';
 import 'package:pusoo/shared/utils/helpers.dart';
 import 'package:pusoo/shared/utils/player_detector.dart';
 import 'package:pusoo/shared/utils/youtube_id_extractor.dart';
@@ -67,7 +68,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
     debugPrint("youtubeVideoId: ${player?.youtubeVideoId}");
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (player?.type == PlayerType.youtube) {
+      if (player?.type == VideoPlayerType.youtube) {
         // Static video ID untuk uji coba
         final videoId = YoutubeIdExtractor.fromUrl(
           widget.track.links.first,
@@ -117,7 +118,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
     BuildContext context,
     BetterPlayerController? controller,
   ) {
-    if (player?.type == PlayerType.youtube) {
+    if (player?.type == VideoPlayerType.youtube) {
       // For YouTube player, we can't control fullscreen directly
       // YouTube player handles its own fullscreen through the player UI
       // showFlutterToast(
@@ -404,7 +405,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
       children: [
         Expanded(
           flex: 1,
-          child: player?.type == PlayerType.youtube
+          child: player?.type == VideoPlayerType.youtube
               ? _youtubePlayerController != null
                     ? _buildYoutubePlayer(_youtubePlayerController!)
                     : const Center(
@@ -449,7 +450,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
       children: [
         Expanded(
           flex: 2,
-          child: player?.type == PlayerType.youtube
+          child: player?.type == VideoPlayerType.youtube
               ? _youtubePlayerController != null
                     ? _buildYoutubePlayer(_youtubePlayerController!)
                     : const Center(
