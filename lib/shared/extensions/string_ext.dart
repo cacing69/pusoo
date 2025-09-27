@@ -17,7 +17,6 @@
  */
 
 import 'dart:convert';
-import 'dart:typed_data';
 
 extension StringExt on String {
   String capitalizeWords() {

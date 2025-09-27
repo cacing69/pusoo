@@ -36,12 +36,29 @@ class PlayerDetector {
     if (uri == null) return VideoPlayerType.betterPlayer;
 
     final host = uri.host.toLowerCase();
+    final path = uri.path.toLowerCase();
 
     // YouTube detection
     if (host.contains('youtube.com') ||
         host.contains('youtu.be') ||
         host.contains('m.youtube.com')) {
       return VideoPlayerType.youtube;
+    }
+
+    // HLS detection
+    if (path.endsWith('.m3u8') || path.endsWith('.m3u')) {
+      return VideoPlayerType.betterPlayer;
+    }
+
+    // Common video formats for MediaKit
+    final videoExtensions = [
+      '.mp4', '.mkv', '.avi', '.mov', '.wmv', '.flv', '.webm',
+      '.3gp', '.ogg', '.mpg', '.mpeg', '.ts'
+      // Add other extensions if needed
+    ];
+
+    if (videoExtensions.any((ext) => path.endsWith(ext))) {
+      return VideoPlayerType.mediaKit;
     }
 
     // Default to better player for all other URLs

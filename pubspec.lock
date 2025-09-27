@@ -61,10 +61,10 @@ packages:
     dependency: "direct main"
     description:
       name: better_player_plus
-      sha256: fc8804f837b450b1b614d5e624a9312894d3089c9194330542ab04a4afa82127
+      sha256: "3e827b9aaf116e92f19312f2ec992e8124f8c7ca3fadeb44eebb687397d4fd65"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.8"
+    version: "1.1.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -513,10 +513,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_widget_from_html_core
-      sha256: b1048fd119a14762e2361bd057da608148a895477846d6149109b2151d2f7abf
+      sha256: "1120ee6ed3509ceff2d55aa6c6cbc7b6b1291434422de2411b5a59364dd6ff03"
       url: "https://pub.dev"
     source: hosted
-    version: "0.15.2"
+    version: "0.17.0"
   fluttertoast:
     dependency: "direct main"
     description:

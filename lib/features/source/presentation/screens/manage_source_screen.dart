@@ -24,8 +24,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pusoo/shared/utils/helpers.dart';
 import 'package:pusoo/shared/utils/usecase.dart';
 import 'package:pusoo/features/track/presentation/providers/track_providers.dart';
-import 'package:pusoo/features/tv/presentation/providers/tv_tracks_filter_notifier.dart';
-import 'package:pusoo/features/tv/presentation/providers/tv_tracks_paging_notifier.dart';
 import 'package:pusoo/router.dart';
 import 'package:pusoo/shared/data/datasources/local/drift/drift_database.dart';
 import 'package:drift/drift.dart' as drift;

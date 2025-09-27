@@ -58,7 +58,7 @@ class _MovieScreenState extends ConsumerState<MovieScreen> {
     final isPotrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
-    final asyncGroupTitles = ref.watch(movieTrackGroupTitlesProvider);
+    // final asyncGroupTitles = ref.watch(movieTrackGroupTitlesProvider);
 
     return FScaffold(
       childPad: false,

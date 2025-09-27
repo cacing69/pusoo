@@ -16,11 +16,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pusoo/router.dart';
 
 class ManagePersonalPlaylistScreen extends StatefulWidget {
   const ManagePersonalPlaylistScreen({super.key});

@@ -79,7 +79,7 @@ dependencies:
   # internet_connection_checker_plus: ^2.7.2
   dartz: ^0.10.1
   flutter_debouncer: ^2.0.0
-  better_player_plus: ^1.0.8
+  better_player_plus: ^1.1.0
   crypto: ^3.0.6
   # flutter_json_view: ^1.1.5
   flutter_svg: ^2.2.1
