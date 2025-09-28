@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 
@@ -28,7 +27,7 @@ final gambiarrasLegalIptvSource = Source(
   description: "No description, website, or topics provided.",
   tracks: [
     Track(
-      title: "Main Playlist",
+      title: "playlist.m3u",
       links: [
         "https://raw.githubusercontent.com/gambiarras/legal-iptv/refs/heads/main/playlist.m3u",
       ],

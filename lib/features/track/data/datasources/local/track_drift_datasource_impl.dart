@@ -167,26 +167,25 @@ class TrackDriftDatasourceImpl implements TrackDatasource {
       ..addColumns([driftDb.trackDrift.groupTitle])
       ..groupBy([driftDb.trackDrift.groupTitle]);
 
-    // Selalu filter groupTitle yang null untuk memenuhi tipe return Future<List<String>>
     query.where(driftDb.trackDrift.groupTitle.isNotNull());
 
-    // 1. Filter berdasarkan keyword jika ada
-    // final keyword = params?.isMovie;
     if (params?.isMovie != null) {
-      query.where(driftDb.trackDrift.isMovie.equals(params!.isMovie!));
+      _log.i("getGroupTitle isMovie: ${params!.isMovie!}");
+      query.where(driftDb.trackDrift.isMovie.equals(params.isMovie!));
     }
 
     if (params?.isLiveTv != null) {
-      query.where(driftDb.trackDrift.isLiveTv.equals(params!.isLiveTv!));
+      _log.i("getGroupTitle isLiveTv: ${params!.isLiveTv!}");
+      query.where(driftDb.trackDrift.isLiveTv.equals(params.isLiveTv!));
     }
 
     if (params?.isTvSerie != null) {
-      query.where(driftDb.trackDrift.isTvSerie.equals(params!.isTvSerie!));
+      _log.i("getGroupTitle isTvSerie: ${params!.isTvSerie!}");
+      query.where(driftDb.trackDrift.isTvSerie.equals(params.isTvSerie!));
     }
 
     final playlistIds = params?.playlistIds;
     if (playlistIds != null && playlistIds.isNotEmpty) {
-      // Menambahkan kondisi: WHERE group_title LIKE '%keyword%'
       query.where(driftDb.trackDrift.sourceId.isIn(playlistIds));
     }
 

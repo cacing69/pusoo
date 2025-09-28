@@ -23,6 +23,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:media_kit/media_kit.dart' as media_kit;
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:pusoo/features/video_player/domain/entities/video_player_type.dart';
 import 'package:pusoo/shared/utils/helpers.dart';
 import 'package:pusoo/shared/utils/player_detector.dart';
@@ -51,8 +53,11 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
   final GlobalKey _playerKey = GlobalKey();
 
   YoutubePlayerController? _youtubePlayerController;
+  media_kit.Player? _mediaKitPlayer;
+  // Create a [VideoController] to handle video output from [Player].
+  VideoController? mediaKitController;
 
-  late PlayerDetector? player;
+  late PlayerDetector? playerDetector;
 
   @override
   void initState() {
@@ -61,14 +66,14 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
     // isYoutube = false;
     debugPrint("widget.track.links.first: ${widget.track.links.first}");
 
-    player = PlayerDetector.fromUrl(widget.track.links.first);
+    playerDetector = PlayerDetector.fromUrl(widget.track.links.first);
     // player.
 
-    debugPrint("player: ${player?.type}");
-    debugPrint("youtubeVideoId: ${player?.youtubeVideoId}");
+    debugPrint("player: ${playerDetector?.type}");
+    debugPrint("youtubeVideoId: ${playerDetector?.youtubeVideoId}");
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (player?.type == VideoPlayerType.youtube) {
+      if (playerDetector?.type == VideoPlayerType.youtube) {
         // Static video ID untuk uji coba
         final videoId = YoutubeIdExtractor.fromUrl(
           widget.track.links.first,
@@ -94,6 +99,13 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
         } catch (e) {
           debugPrint("Error creating YouTube controller: $e");
         }
+      } else if (playerDetector?.type == VideoPlayerType.mediaKit) {
+        _mediaKitPlayer = media_kit.Player();
+        mediaKitController = VideoController(_mediaKitPlayer!);
+
+        _mediaKitPlayer?.open(media_kit.Media(widget.track.links.first));
+
+        setState(() {});
       } else {
         debugPrint("Using Better Player for non-YouTube content");
         ref
@@ -109,29 +121,32 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
   @override
   void dispose() {
     _youtubePlayerController?.close();
+
+    _mediaKitPlayer?.stop();
+
     WakelockPlus.disable();
     super.dispose();
   }
 
   /// Handles fullscreen for both YouTube and BetterPlayer
-  void _handleFullscreen(
-    BuildContext context,
-    BetterPlayerController? controller,
-  ) {
-    if (player?.type == VideoPlayerType.youtube) {
-      // For YouTube player, we can't control fullscreen directly
-      // YouTube player handles its own fullscreen through the player UI
-      // showFlutterToast(
-      //   message: " Tap the fullscreen button on the YouTube player",
-      //   context: context,
-      // );
-
-      _youtubePlayerController?.toggleFullScreen();
-    } else {
-      // For BetterPlayer, use the controller's toggleFullScreen method
-      controller?.toggleFullScreen();
-    }
-  }
+  // void _handleFullscreen(
+  //   BuildContext context,
+  //   BetterPlayerController? controller,
+  // ) {
+  //   if (playerDetector?.type == VideoPlayerType.youtube) {
+  //     // For YouTube player, we can't control fullscreen directly
+  //     // YouTube player handles its own fullscreen through the player UI
+  //     // showFlutterToast(
+  //     //   message: " Tap the fullscreen button on the YouTube player",
+  //     //   context: context,
+  //     // );
+  //     _youtubePlayerController?.toggleFullScreen();
+  //   } else if (playerDetector?.type == VideoPlayerType.mediaKit) {
+  //   } else {
+  //     // For BetterPlayer, use the controller's toggleFullScreen method
+  //     controller?.toggleFullScreen();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -180,10 +195,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
     );
   }
 
-  Widget _buildButtonFavoriteSubtitleAndFullscreen(
-    BuildContext context,
-    BetterPlayerController? controller,
-  ) {
+  Widget _buildButtonFavoriteSubtitle(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
     final isPotrait = orientation == Orientation.portrait;
     return SafeArea(
@@ -195,25 +207,25 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
               : FButton(
                   style: FButtonStyle.outline(),
                   onPress: () async {
-                    if (controller != null) {
-                      final isPlaying = controller.isPlaying();
-                      if (isPlaying == true) {
-                        controller.pause();
-                      }
-                    }
+                    // if (controller != null) {
+                    //   final isPlaying = controller.isPlaying();
+                    //   if (isPlaying == true) {
+                    //     controller.pause();
+                    //   }
+                    // }
 
-                    final reuslt = await context.pushNamed(
+                    final result = await context.pushNamed(
                       RouteName.subtitleSearch.name,
                     );
 
-                    if (reuslt == true) {
-                      if (controller != null) {
-                        final isPlaying = controller.isPlaying();
-                        if (isPlaying != true) {
-                          controller.play();
-                        }
-                      }
-                    }
+                    // if (reuslt == true) {
+                    //   if (controller != null) {
+                    //     final isPlaying = controller.isPlaying();
+                    //     if (isPlaying != true) {
+                    //       controller.play();
+                    //     }
+                    //   }
+                    // }
                   },
                   prefix: Icon(FIcons.captions),
                   child: Text("Search subtitle"),
@@ -230,16 +242,16 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                 ),
               ),
               const Gap(10),
-              FButton.icon(
-                style: FButtonStyle.outline(),
-                onPress: () {
-                  _handleFullscreen(context, controller);
-                },
-                child: const Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: Icon(FIcons.fullscreen),
-                ),
-              ),
+              // FButton.icon(
+              //   style: FButtonStyle.outline(),
+              //   onPress: () {
+              //     _handleFullscreen(context, controller);
+              //   },
+              //   child: const Padding(
+              //     padding: EdgeInsets.all(5.0),
+              //     child: Icon(FIcons.fullscreen),
+              //   ),
+              // ),
             ],
           ),
           isPotrait ? SizedBox.shrink() : Gap(10),
@@ -366,14 +378,50 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
     );
   }
 
+  String _getVideoPlayerName(PlayerDetector? playerDetector) {
+    return playerDetector?.type == VideoPlayerType.youtube
+        ? "YouTube Player"
+        : playerDetector?.type == VideoPlayerType.mediaKit
+        ? "Media Kit"
+        : "Better Player";
+  }
+
   Widget _buildContentScrollable() {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [Text("No information available")],
+      children: [Text(_getVideoPlayerName(playerDetector))],
     );
   }
 
-  Widget _buildVideoPlayer(BetterPlayerController? controller) {
+  Widget _buildMediaKitPlayer(VideoController? controller) {
+    return SizedBox(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.width * 9.0 / 16.0,
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: mediaKitController == null
+            ? const Center(child: FProgress.circularIcon())
+            : Video(
+                controller: mediaKitController!,
+                fit: BoxFit.contain,
+                subtitleViewConfiguration: SubtitleViewConfiguration(
+                  style: TextStyle(
+                    height: 1.4,
+                    fontSize: ((22 * 2) + (22 / 4)).floor().toDouble(),
+                    letterSpacing: 0.0,
+                    wordSpacing: 0.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.normal,
+                    backgroundColor: Colors.black.withAlpha(100),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+      ),
+    );
+  }
+
+  Widget _buildBetterPlayer(BetterPlayerController? controller) {
     return SizedBox(
       width: double.infinity,
       height: MediaQuery.of(context).size.width * 9.0 / 16.0,
@@ -405,7 +453,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
       children: [
         Expanded(
           flex: 1,
-          child: player?.type == VideoPlayerType.youtube
+          child: playerDetector?.type == VideoPlayerType.youtube
               ? _youtubePlayerController != null
                     ? _buildYoutubePlayer(_youtubePlayerController!)
                     : const Center(
@@ -414,7 +462,9 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                           children: [FProgress.circularIcon()],
                         ),
                       )
-              : _buildVideoPlayer(controller),
+              : playerDetector?.type == VideoPlayerType.mediaKit
+              ? _buildMediaKitPlayer(mediaKitController)
+              : _buildBetterPlayer(controller),
         ),
 
         FDivider(
@@ -432,7 +482,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
               const Gap(5),
               Expanded(child: _buildContentScrollable()),
               const Gap(10),
-              _buildButtonFavoriteSubtitleAndFullscreen(context, controller),
+              _buildButtonFavoriteSubtitle(context),
               const Gap(15),
             ],
           ),
@@ -450,7 +500,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
       children: [
         Expanded(
           flex: 2,
-          child: player?.type == VideoPlayerType.youtube
+          child: playerDetector?.type == VideoPlayerType.youtube
               ? _youtubePlayerController != null
                     ? _buildYoutubePlayer(_youtubePlayerController!)
                     : const Center(
@@ -459,7 +509,9 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                           children: [FProgress.circularIcon()],
                         ),
                       )
-              : _buildVideoPlayer(controller),
+              : playerDetector?.type == VideoPlayerType.mediaKit
+              ? _buildMediaKitPlayer(mediaKitController)
+              : _buildBetterPlayer(controller),
         ),
         const Gap(10),
         Expanded(
@@ -474,7 +526,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
               const Gap(5),
               Expanded(child: _buildContentScrollable()),
               const Gap(5),
-              _buildButtonFavoriteSubtitleAndFullscreen(context, controller),
+              _buildButtonFavoriteSubtitle(context),
             ],
           ),
         ),

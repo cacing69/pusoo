@@ -17,6 +17,14 @@
  */
 
 import 'package:dartz/dartz.dart';
+import 'package:pusoo/features/movie/presentation/providers/movie_track_count_notifier.dart';
+import 'package:pusoo/features/movie/presentation/providers/movie_track_group_titles_notifier.dart';
+import 'package:pusoo/features/movie/presentation/providers/movie_tracks_filter_notifier.dart';
+import 'package:pusoo/features/movie/presentation/providers/movie_tracks_paging_notifier.dart';
+import 'package:pusoo/features/serie/presentation/providers/serie_track_count_notifier.dart';
+import 'package:pusoo/features/serie/presentation/providers/serie_track_group_titles_notifier.dart';
+import 'package:pusoo/features/serie/presentation/providers/serie_tracks_filter_notifier.dart';
+import 'package:pusoo/features/serie/presentation/providers/serie_tracks_paging_notifier.dart';
 import 'package:pusoo/shared/errors/failure.dart';
 import 'package:pusoo/shared/utils/usecase.dart';
 import 'package:pusoo/features/track/domain/models/track_filter_query.dart';
@@ -48,8 +56,28 @@ class RefreshAllTrackUsecase implements UseCase<void, NoParams> {
     ref.read(tvTracksPagingProvider).refresh();
 
     // MOVIE
+    ref
+        .read(movieTrackGroupTitlesProvider.notifier)
+        .perform(TrackFilterQuery(isLiveTv: true));
+
+    ref
+        .read(movieTrackCountProvider.notifier)
+        .perform(TrackFilterQuery(isLiveTv: true));
+
+    ref.read(movieTracksFilterProvider.notifier).reset();
+    ref.read(movieTracksPagingProvider).refresh();
 
     // SERIES
+    ref
+        .read(serieTrackGroupTitlesProvider.notifier)
+        .perform(TrackFilterQuery(isLiveTv: true));
+
+    ref
+        .read(serieTrackCountProvider.notifier)
+        .perform(TrackFilterQuery(isLiveTv: true));
+
+    ref.read(serieTracksFilterProvider.notifier).reset();
+    ref.read(serieTracksPagingProvider).refresh();
 
     return Right(null);
   }

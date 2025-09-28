@@ -52,8 +52,12 @@ class PlayerDetector {
 
     // Common video formats for MediaKit
     final videoExtensions = [
-      '.mp4', '.mkv', '.avi', '.mov', '.wmv', '.flv', '.webm',
-      '.3gp', '.ogg', '.mpg', '.mpeg', '.ts'
+      // '.mp4', '.mkv', '.avi', '.mov', '.wmv', '.flv', '.webm',
+      // '.3gp', '.ogg', '.mpg', '.mpeg', '.ts',
+      '.3gp',
+      '.avi',
+      '.flv',
+      '.mkv',
       // Add other extensions if needed
     ];
 
