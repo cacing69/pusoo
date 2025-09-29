@@ -17,6 +17,7 @@
  */
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pusoo/features/video_player/domain/entities/video_player_type.dart';
 import 'package:pusoo/shared/utils/player_detector.dart';
 
 void main() async {
@@ -26,13 +27,13 @@ void main() async {
         "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
       );
 
-      expect(result.type, equals(PlayerType.youtube));
+      expect(result.type, equals(VideoPlayerType.youtube));
     });
 
     test('test:2', () async {
       final result = PlayerDetector.fromUrl("https://youtu.be/dQw4w9WgXcQ");
 
-      expect(result.type, equals(PlayerType.youtube));
+      expect(result.type, equals(VideoPlayerType.youtube));
       expect(result.youtubeVideoId, equals("dQw4w9WgXcQ"));
     });
 
@@ -41,14 +42,14 @@ void main() async {
         "https://m.youtube.com/watch?v=dQw4w9WgXcQ",
       );
 
-      expect(result.type, equals(PlayerType.youtube));
+      expect(result.type, equals(VideoPlayerType.youtube));
       expect(result.youtubeVideoId, equals("dQw4w9WgXcQ"));
     });
 
     test('test:4', () async {
       final result = PlayerDetector.fromUrl("https://example.com/video.m3u8");
 
-      expect(result.type, equals(PlayerType.betterPlayer));
+      expect(result.type, equals(VideoPlayerType.betterPlayer));
       expect(result.isBetterPlayer, equals(true));
     });
 
@@ -66,8 +67,16 @@ void main() async {
     test('test:6', () async {
       final result = PlayerDetector.fromUrl("invalid-url");
 
-      expect(result.type, equals(PlayerType.betterPlayer));
+      expect(result.type, equals(VideoPlayerType.betterPlayer));
       expect(result.youtubeVideoId, isNull);
+    });
+
+    test('test:7', () async {
+      final result = PlayerDetector.fromUrl(
+        "https://www.example.com/video-name.avi",
+      );
+
+      expect(result.type, equals(VideoPlayerType.mediaKit));
     });
   });
 }

@@ -20,7 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pusoo/features/movie/presentation/providers/movie_tracks_filter_notifier.dart';
 import 'package:pusoo/features/track/presentation/providers/track_notifier.dart';
-import 'package:pusoo/features/tv/presentation/providers/tv_tracks_filter_notifier.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

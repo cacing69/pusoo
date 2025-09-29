@@ -642,7 +642,7 @@ abstract class M3UParser {
           // Track 1 should not have any URL
           if (pendingUrl != null &&
               (tracks.length == 0 || tracks.length == 2)) {
-            final urlParts = pendingUrl!.split('|');
+            final urlParts = pendingUrl.split('|');
             final link = urlParts[0].trim();
 
             if (link.startsWith('http://') ||

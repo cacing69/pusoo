@@ -16,25 +16,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-import 'package:pusoo/features/source/domain/entities/source.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
+import 'package:pusoo/features/video_player/domain/entities/video_player_state.dart';
 
-final ghokunTvSource = Source(
-  name: "ghokun/tv",
-  isPublic: true,
-  isEmpty: false,
-  homepage: "https://github.com/ghokun/tv",
-  description:
-      "This is an IPTV playlist and EPG generator. On a scheduled run (hourly)",
-  epgLink:
-      "https://raw.githubusercontent.com/ghokun/tv/refs/heads/main/bin/guide.xml",
-  tracks: [
-    Track(
-      title: "Hà Nội IPTV",
-      links: [
-        "https://raw.githubusercontent.com/ghokun/tv/refs/heads/main/bin/playlist.m3u",
-      ],
-    ),
-  ],
-);
+abstract class VideoPlayerAdapter {
+  Future<void> open({required Track track, required bool isLiveStream});
+  Future<void> play();
+  Future<void> pause();
+  Future<void> stop();
+  void dispose(); // Tambahkan method dispose
+
+  ValueNotifier<VideoPlayerState> get state;
+
+  Widget buildPlayer({Key key});
+
+  Object? get controller; // expose kalau UI butuh controller asli
+}

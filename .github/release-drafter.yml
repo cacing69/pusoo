@@ -1,7 +1,8 @@
 # File: .github/release-drafter.yml
 
-name-template: 'Nightly Build'
-tag-template: 'nightly-$SHORT_SHA'
+name-template: 'Pre-release Build'
+# tag-template: 'nightly-$SHORT_SHA'
+tag-template: 'pre-release'
 prerelease: true
 # Template untuk judul kategori changelog
 categories:

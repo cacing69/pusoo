@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 
@@ -31,7 +30,7 @@ final buddyChewChewXumoPlaylistGeneratorSource = Source(
       "https://raw.githubusercontent.com/BuddyChewChew/xumo-playlist-generator/refs/heads/main/playlists/xumo_epg.xml.gz",
   tracks: [
     Track(
-      title: "Xumo Playlist",
+      title: "xumo_playlist.m3u",
       links: [
         "https://raw.githubusercontent.com/BuddyChewChew/xumo-playlist-generator/refs/heads/main/playlists/xumo_playlist.m3u",
       ],

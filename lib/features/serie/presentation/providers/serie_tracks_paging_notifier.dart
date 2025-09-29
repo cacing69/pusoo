@@ -32,19 +32,19 @@ class SerieTracksPagingNotifier extends _$SerieTracksPagingNotifier {
     final controller = PagingController<int, Track>(
       getNextPageKey: (state) {
         debugPrint(
-          '[PagingSerieTrscksController] getNextPageKey called. Current state: ${state.toString()}',
+          '[PagingSerieTracksController] getNextPageKey called. Current state: ${state.toString()}',
         );
 
         if (state.pages == null || state.pages!.isEmpty) {
           debugPrint(
-            '[PagingSerieTrscksController] getNextPageKey: No pages yet, returning 0 (first page key).',
+            '[PagingSerieTracksController] getNextPageKey: No pages yet, returning 0 (first page key).',
           );
           return 0;
         }
 
         if (!state.hasNextPage) {
           debugPrint(
-            '[PagingSerieTrscksController] getNextPageKey: hasNextPage is false, returning null.',
+            '[PagingSerieTracksController] getNextPageKey: hasNextPage is false, returning null.',
           );
           return null;
         }
@@ -53,14 +53,14 @@ class SerieTracksPagingNotifier extends _$SerieTracksPagingNotifier {
 
         if (lastFetchedPage.length < 20) {
           debugPrint(
-            '[PagingSerieTrscksController] getNextPageKey: Last page had ${lastFetchedPage.length} items (<20), returning null.',
+            '[PagingSerieTracksController] getNextPageKey: Last page had ${lastFetchedPage.length} items (<20), returning null.',
           );
           return null;
         }
 
         final nextPageKey = lastFetchedPage.last.id;
         debugPrint(
-          '[PagingSerieTrscksController] getNextPageController] getNextPageKey: Returning next page key: $nextPageKey',
+          '[PagingSerieTracksController] getNextPageController] getNextPageKey: Returning next page key: $nextPageKey',
         );
         return nextPageKey;
       },

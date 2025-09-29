@@ -36,6 +36,7 @@ abstract class HttpHeadersFromTrack {
   /// [track] - The track object containing various header sources
   /// Returns a map of normalized HTTP headers
   static Map<String, String> build(Track track) {
+    // ignore: dead_code, unnecessary_null_comparison
     if (track == null) return <String, String>{};
 
     final Map<String, String> normalizedHeaders = {};
@@ -317,32 +318,6 @@ abstract class HttpHeadersFromTrack {
     });
 
     return titleCaseParts.join('-');
-  }
-
-  /// Validates if a header name is valid
-  static bool _isValidHeaderName(String headerName) {
-    if (headerName.isEmpty) return false;
-
-    // Check for invalid characters
-    final invalidChars = RegExp(r'[^\w\-]');
-    return !invalidChars.hasMatch(headerName);
-  }
-
-  /// Validates if a header value is valid
-  static bool _isValidHeaderValue(String headerValue) {
-    if (headerValue.isEmpty) return false;
-
-    // Check for control characters (except tab)
-    final controlChars = RegExp(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]');
-    return !controlChars.hasMatch(headerValue);
-  }
-
-  /// Sanitizes a header value by removing invalid characters
-  static String _sanitizeHeaderValue(String value) {
-    if (value.isEmpty) return value;
-
-    // Remove control characters (except tab and newline)
-    return value.replaceAll(RegExp(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]'), '');
   }
 
   /// Gets the priority level for a header source

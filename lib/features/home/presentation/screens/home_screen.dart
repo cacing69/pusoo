@@ -18,7 +18,6 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:forui/forui.dart';
-import 'package:gap/gap.dart';
 import 'package:pusoo/features/explore/presentation/screens/explore_screen.dart';
 import 'package:pusoo/features/movie/presentation/screens/movie_screen.dart';
 import 'package:pusoo/features/serie/presentation/screens/serie_screen.dart';
@@ -38,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
-    final width = MediaQuery.of(context).size.width;
     final isPotrait = orientation == Orientation.portrait;
 
     return FScaffold(

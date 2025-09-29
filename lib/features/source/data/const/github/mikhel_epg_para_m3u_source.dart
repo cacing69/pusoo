@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:pusoo/features/source/domain/entities/source.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 
@@ -25,7 +24,7 @@ final mikhelEpgParaM3uSource = Source(
   isPublic: true,
   isEmpty: false,
   homepage: "https://github.com/Mikhel/EPG-para-m3u",
-  description: "Originalmente de y con agradecimientos a él por la ayuda",
+  description: "Originally shared, with thanks for the help",
   tracks: [
     Track(
       title: "Pluto TV",

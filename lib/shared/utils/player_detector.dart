@@ -16,43 +16,64 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-enum PlayerType { betterPlayer, youtube }
+import 'package:pusoo/features/video_player/domain/entities/video_player_type.dart';
 
 class PlayerDetector {
   final String? url;
-  final PlayerType? type;
+  final VideoPlayerType? type;
 
   PlayerDetector({this.url, this.type});
 
   /// Factory constructor to detect player type from URL
   factory PlayerDetector.fromUrl(String url) {
-    final playerType = _detectPlayerType(url);
+    final playerType = _detectVideoPlayerType(url);
     return PlayerDetector(url: url, type: playerType);
   }
 
   /// Detects the appropriate player type based on the URL
-  static PlayerType _detectPlayerType(String url) {
+  static VideoPlayerType _detectVideoPlayerType(String url) {
     final uri = Uri.tryParse(url);
-    if (uri == null) return PlayerType.betterPlayer;
+    if (uri == null) return VideoPlayerType.betterPlayer;
 
     final host = uri.host.toLowerCase();
+    final path = uri.path.toLowerCase();
 
     // YouTube detection
     if (host.contains('youtube.com') ||
         host.contains('youtu.be') ||
         host.contains('m.youtube.com')) {
-      return PlayerType.youtube;
+      return VideoPlayerType.youtube;
+    }
+
+    // HLS detection
+    if (path.endsWith('.m3u8') || path.endsWith('.m3u')) {
+      return VideoPlayerType.betterPlayer;
+    }
+
+    // Common video formats for MediaKit
+    final videoExtensions = [
+      // '.mp4', '.mkv', '.avi', '.mov', '.wmv', '.flv', '.webm',
+      // '.3gp', '.ogg', '.mpg', '.mpeg', '.ts',
+      '.3gp',
+      '.avi',
+      '.flv',
+      '.mkv',
+      // Add other extensions if needed
+    ];
+
+    if (videoExtensions.any((ext) => path.endsWith(ext))) {
+      return VideoPlayerType.mediaKit;
     }
 
     // Default to better player for all other URLs
-    return PlayerType.betterPlayer;
+    return VideoPlayerType.betterPlayer;
   }
 
   /// Checks if the URL is a YouTube URL
-  bool get isYouTube => type == PlayerType.youtube;
+  bool get isYouTube => type == VideoPlayerType.youtube;
 
   /// Checks if the URL should use better player
-  bool get isBetterPlayer => type == PlayerType.betterPlayer;
+  bool get isBetterPlayer => type == VideoPlayerType.betterPlayer;
 
   /// Gets the YouTube video ID if it's a YouTube URL
   String? get youtubeVideoId {

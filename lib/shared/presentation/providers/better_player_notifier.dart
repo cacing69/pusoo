@@ -278,14 +278,8 @@ class BetterPlayerNotifier extends _$BetterPlayerNotifier {
         } else if (extOnUrl.contains("m3u8")) {
           log.d("videoFormat = BetterPlayerVideoFormat.hls");
           videoFormat = BetterPlayerVideoFormat.hls;
-        } else if ([
-          "mkv",
-          "mp4",
-          "webm",
-          "avi",
-          "mov",
-          "flv",
-        ].contains(extOnUrl)) {
+        } else if (["mp4", "mkv", "webm", "mov", "flv"].contains(extOnUrl)) {
+          // use mediakit = avi, wmv, flv, mpg, vob, 3gp, mkv, mov
           videoFormat = BetterPlayerVideoFormat.other;
         } else {
           log.w(
