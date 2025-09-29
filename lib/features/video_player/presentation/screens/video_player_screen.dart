@@ -411,7 +411,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                     letterSpacing: 0.0,
                     wordSpacing: 0.0,
                     color: Colors.white,
-                    fontWeight: FontWeight.normal,
+                    fontWeight: FontWeight.w600,
                     backgroundColor: Colors.black.withAlpha(100),
                   ),
                   textAlign: TextAlign.center,
