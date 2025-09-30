@@ -58,6 +58,7 @@ class PlayerDetector {
       '.avi',
       '.flv',
       '.mkv',
+      '.mp4',
       // Add other extensions if needed
     ];
 
