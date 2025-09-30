@@ -195,7 +195,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
     );
   }
 
-  Widget _buildButtonFavoriteSubtitle(BuildContext context) {
+  Widget _buildButtonFavorite(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
     final isPotrait = orientation == Orientation.portrait;
     return SafeArea(
@@ -241,7 +241,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                   child: const Text("Add to favorite"),
                 ),
               ),
-              const Gap(10),
+              // const Gap(10),
               // FButton.icon(
               //   style: FButtonStyle.outline(),
               //   onPress: () {
@@ -482,7 +482,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
               const Gap(5),
               Expanded(child: _buildContentScrollable()),
               const Gap(10),
-              _buildButtonFavoriteSubtitle(context),
+              _buildButtonFavorite(context),
               const Gap(15),
             ],
           ),
@@ -526,7 +526,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
               const Gap(5),
               Expanded(child: _buildContentScrollable()),
               const Gap(5),
-              _buildButtonFavoriteSubtitle(context),
+              _buildButtonFavorite(context),
             ],
           ),
         ),
