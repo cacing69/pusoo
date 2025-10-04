@@ -18,6 +18,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:forui/forui.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pusoo/features/track/domain/models/track.dart';
 import 'package:pusoo/router.dart';
@@ -38,6 +39,7 @@ class _SerieDetailScreenState extends State<SerieDetailScreen> {
       child: ListView(
         children: [
           Placeholder(),
+          Gap(10),
           FButton(
             style: FButtonStyle.outline(),
             prefix: Icon(FIcons.play),
